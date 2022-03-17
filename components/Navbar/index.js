@@ -1,9 +1,16 @@
 import {useTheme} from 'next-themes'
 import { useSession, signIn, signOut } from 'next-auth/react'
+import { useState, useEffect } from 'react'
 
 const Navbar = () => {
   const {theme, setTheme} = useTheme()
   const {data:session} = useSession()
+  const [mounted, setMounted] = useState(false);
+
+  // When mounted on client, now we can show the UI
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
 
   if (session) {
     return (
