@@ -12,9 +12,10 @@ export default NextAuth({
         }),
     ],
     adapter: MongoDBAdapter(clientPromise),
+    session: {
     jwt: {
         encryption: true
-    },
-    secret: "Iam awesome and I know it",
+    }},
+    secret: process.env.NEXTAUTH_SECRET,
 
 });
