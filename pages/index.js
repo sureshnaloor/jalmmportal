@@ -1,8 +1,24 @@
 import Head from 'next/head'
 import {useState, useEffect} from 'react'
 import Navbar from '../components/Navbar'
- 
+import Usercomponent from '../components/Usercomponent'
+
+
 export default function Home() {
+  const [users, setUsers] = useState([])
+    
+  useEffect(  () => {
+      const fetchUser = async () => {
+      const response = await fetch('/api/mongodbexample')
+      const json = await response.json()        
+      setUsers(json)
+      
+      
+  }
+      fetchUser()
+      
+      
+  }, [])
   
   return (
     <div className='bg-light-primary dark:bg-dark-primary h-screen'>
@@ -15,7 +31,11 @@ export default function Home() {
         <Navbar />
         <h1 className='text-xl font-bold p-5 text-dark-primary dark:text-light-primary'>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>      
+        </h1>   
+
+        <div className='flex justify-center bg-slate-100'>
+        <Usercomponent users={users} />
+        </div>
     </div>
   )
 }

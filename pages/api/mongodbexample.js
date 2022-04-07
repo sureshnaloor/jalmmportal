@@ -5,11 +5,9 @@ const handler =  async (req, res) => {
   switch (req.method) {
     case "GET": {
       const { db } = await connectToDatabase();
-
-      const movies = await db.collection("users").find({}).toArray();
-
-      return res.json(movies);
-      break;
+      const users = await db.collection("users").find({}).toArray();
+      return res.json(users);
+      
     }
     default:
       return res.json({ error: "Method not supported" });
