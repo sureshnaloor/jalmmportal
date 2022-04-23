@@ -11,8 +11,12 @@ module.exports = {
         'light-secondary':'#D1D5DB',
         'dark-primary':'#1F2937',
         'dark-secondary':'#111827'
-      }
+      },
+      fontFamily:{
+        Rampart:["Rampart One", "Helvetica", "Arial", "sans-serif"],
+        Montserrat:["Montserrat", "Helvetica", "Arial", "sans-serif"]
     },
   },
   plugins: [],
+}
 }

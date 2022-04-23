@@ -1,12 +1,13 @@
 
-function Usercomponent({users}) {
+function Usercomponent({matgroups}) {
   return (
     <div className="bg-slate-50 dark:bg-dark-primary">
-      {users.map((user) => (
-        <>
-          <p>{user.email}</p>
-          <p>{user.name}</p>
-        </>
+      {matgroups.map((matgroup) => (
+        <div key={matgroup._id}>
+          <p>{matgroup["material-group"]}</p>
+          <p>{matgroup["matgroup-primary-desc"]}</p>
+          <p>{matgroup["matgroup-secondary-desc"]}</p>
+        </div>
       ))}
     </div>
   );

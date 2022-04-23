@@ -5,8 +5,8 @@ const handler =  async (req, res) => {
   switch (req.method) {
     case "GET": {
       const { db } = await connectToDatabase();
-      const users = await db.collection("users").find({}).toArray();
-      return res.json(users);
+      const matgroup = await db.collection("matgroup").find({}).toArray();
+      return res.json(matgroup);
       
     }
     default:
