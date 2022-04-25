@@ -2,6 +2,9 @@ import Head from 'next/head'
 import {useState, useEffect} from 'react'
 import Navbar from '../components/Navbar'
 import Usercomponent from '../components/Usercomponent'
+import SectionComponent from '../components/SectionComponent'
+import FooterComponent from '../components/FooterComponent'
+// import Switch from '../components/Switch'
 
 
 export default function Home() {
@@ -30,10 +33,18 @@ export default function Home() {
         Welcome to <a href="https://nextjs.org">Next.js!</a>
       </h1>
       
-
+      {/* <Switch /> */}
       <div className="flex justify-center bg-slate-100 dark:bg-dark-primary">
         <Usercomponent matgroups={matgroups} />
       </div>
+
+      <section>
+        <SectionComponent />
+      </section>
+
+      <footer>
+        <FooterComponent />
+      </footer>
         
     </div>
   );
