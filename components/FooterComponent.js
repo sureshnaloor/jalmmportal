@@ -1,8 +1,8 @@
 import React from 'react'
 
-function FooterComponent() {
+function FooterComponent({id}) {
   return (
-    <div className='flex align-middle bg-slate-500'>FooterComponent</div>
+    <div className='flex align-middle bg-slate-500' id={id}>FooterComponent</div>
   )
 }
 

@@ -6,6 +6,8 @@ import SectionComponent from '../components/SectionComponent'
 import FooterComponent from '../components/FooterComponent'
 // import Switch from '../components/Switch'
 
+import { Link, animateScroll as scroll } from "react-scroll";
+
 
 export default function Home() {
   const [matgroups, setmatgroups] = useState([]);
@@ -51,15 +53,15 @@ export default function Home() {
 
       {/* <Switch /> */}
       <div className="flex justify-center bg-slate-100 dark:bg-dark-primary">
-        <Usercomponent matgroups={matgroups} />
+        <Usercomponent matgroups={matgroups} id="user1"/>
       </div>
 
       <section>
-        <SectionComponent />
+        <SectionComponent id="section1" />
       </section>
 
       <footer>
-        <FooterComponent />
+        <FooterComponent id="footer1" />
       </footer>
     </div>
   );

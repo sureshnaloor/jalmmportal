@@ -1,7 +1,7 @@
 
-function Usercomponent({matgroups}) {
+function Usercomponent({matgroups, id}) {
   return (
-    <div className="bg-slate-50 dark:bg-dark-primary">
+    <div className="bg-slate-50 dark:bg-dark-primary" id={id}>
       {matgroups.map((matgroup) => (
         <div key={matgroup._id}>
           <p>{matgroup["material-group"]}</p>

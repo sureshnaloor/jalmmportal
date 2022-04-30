@@ -5,6 +5,9 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import SwitchComponent from "../../components/Switch";
 
+import { Link, animateScroll as scroll } from "react-scroll";
+
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAddressBook,
@@ -62,28 +65,66 @@ const Navbar = () => {
           >
             {theme === "dark" ? "light" : "dark"}
           </button> */}
-          <div className="mt-5 flex flex-col"><SwitchComponent setTheme={setTheme} theme={theme} /><p className="text-xs"> toggle dark/light</p></div>
+          <div className="mt-5 flex flex-col">
+            <SwitchComponent setTheme={setTheme} theme={theme} />
+            <p className="text-xs"> toggle dark/light</p>
+          </div>
 
           <button className="bg-rose-500 hover:bg-red-700 text-white text-sm px-6 mx-3 my-3 rounded-md outline-none focus:outline-none">
-            Help
+            <li className="list-none">
+              <Link
+                activeClass="active"
+                to="user1"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+                Help
+              </Link>
+            </li>
             <FontAwesomeIcon
               icon={faCircleQuestion}
               className="color-primary fa-thin ml-2"
             />
           </button>
           <button className="bg-rose-500 hover:bg-red-700 text-white text-sm px-6 my-3 mx-3 rounded-md outline-none focus:outline-none">
-            About
+            <li className="list-none">
+              <Link
+                activeClass="active"
+                to="section1"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+                {" "}
+                About{" "}
+              </Link>
+            </li>
+
             <FontAwesomeIcon
               icon={faAddressCard}
               className="color-primary fa-thin ml-2"
             />
           </button>
           <button className="bg-rose-500 hover:bg-red-700 text-white text-sm p-1 mx-3 my-3 rounded-md outline-none focus:outline-none">
-            Contact{" "}
+          <li className="list-none">
+              <Link
+                activeClass="active"
+                to="footer1"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+            
+            Contact
             <FontAwesomeIcon
               icon={faAddressBook}
               className="color-primary fa-thin ml-2"
             />
+            </Link> </li>
           </button>
         </nav>
         <div>
@@ -98,9 +139,9 @@ const Navbar = () => {
               >
                 Sign Out
                 <FontAwesomeIcon
-                icon={faRightFromBracket}
-                className="color-primary fa-thin ml-2"
-            />
+                  icon={faRightFromBracket}
+                  className="color-primary fa-thin ml-2"
+                />
               </button>
             </div>
           ) : (
