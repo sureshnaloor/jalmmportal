@@ -11,13 +11,20 @@
         left: 0;
         width: 100%;
         z-index: 999;
-        /* box-shadow: 0 2px 24px 0 rgb(0 0 0 / 15%);
-        /* background-color: #ffffff !important; */
-        /* animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
-         transition: all 2.5s ease;
-        animation: smoothScroll 1s forwards;  */
+        box-shadow: 2px 24px 24px 0 rgb(0 0 0 / 25%);
+        background-color: #fffffe !important;
+        /* animation: 500ms ease-in-out 0s normal none 1 running fadeInDown; */
+        animation: show 600ms 100ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
+        
         padding-top: 0px;
         padding-bottom: 0px;
     }
+
+    @keyframes show {
+        100% {
+          opacity: 0.9;
+          transform: scale(0.98);
+        }
+      }
 
 }

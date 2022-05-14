@@ -7,7 +7,6 @@ import SwitchComponent from "../../components/Switch";
 
 import { Link, animateScroll as scroll } from "react-scroll";
 
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAddressBook,
@@ -30,12 +29,12 @@ const Navbar = () => {
   return (
     <>
       <Head>
-        <title>Home App</title>
+        
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
       </Head>
 
-      <header className="flex justify-between  bg-light-secondary dark:bg-dark-secondary text-dark-primary dark:text-light-primary">
+      <header className="flex justify-between   dark:bg-gray-600 text-dark-primary dark:text-light-primary">
         <Image
           src="/JAHR.jpg"
           width={200}
@@ -70,7 +69,7 @@ const Navbar = () => {
             <p className="text-xs"> toggle dark/light</p>
           </div>
 
-          <button className="bg-rose-500 hover:bg-red-700 text-white text-sm px-6 mx-3 my-3 rounded-md outline-none focus:outline-none">
+          <button className="bg-rose-500 hover:bg-red-700 text-white text-xs px-6 mx-3 my-3 rounded-md outline-none focus:outline-none">
             <li className="list-none">
               <Link
                 activeClass="active"
@@ -78,17 +77,17 @@ const Navbar = () => {
                 spy={true}
                 smooth={true}
                 offset={-70}
-                duration={500}
+                duration={900}
               >
                 Help
+                <FontAwesomeIcon
+                  icon={faCircleQuestion}
+                  className="color-primary fa-thin ml-2"
+                />
               </Link>
             </li>
-            <FontAwesomeIcon
-              icon={faCircleQuestion}
-              className="color-primary fa-thin ml-2"
-            />
           </button>
-          <button className="bg-rose-500 hover:bg-red-700 text-white text-sm px-6 my-3 mx-3 rounded-md outline-none focus:outline-none">
+          <button className="bg-rose-500 hover:bg-red-700 text-white text-xs px-6 my-3 mx-3 rounded-md outline-none focus:outline-none">
             <li className="list-none">
               <Link
                 activeClass="active"
@@ -98,18 +97,16 @@ const Navbar = () => {
                 offset={-70}
                 duration={500}
               >
-                {" "}
-                About{" "}
+                About
+                <FontAwesomeIcon
+                  icon={faAddressCard}
+                  className="color-primary fa-thin ml-2"
+                />
               </Link>
             </li>
-
-            <FontAwesomeIcon
-              icon={faAddressCard}
-              className="color-primary fa-thin ml-2"
-            />
           </button>
-          <button className="bg-rose-500 hover:bg-red-700 text-white text-sm p-1 mx-3 my-3 rounded-md outline-none focus:outline-none">
-          <li className="list-none">
+          <button className="bg-rose-500 hover:bg-red-700 text-white text-xs px-6 mx-3 my-3 rounded-md outline-none focus:outline-none">
+            <li className="list-none">
               <Link
                 activeClass="active"
                 to="footer1"
@@ -118,13 +115,13 @@ const Navbar = () => {
                 offset={-70}
                 duration={500}
               >
-            
-            Contact
-            <FontAwesomeIcon
-              icon={faAddressBook}
-              className="color-primary fa-thin ml-2"
-            />
-            </Link> </li>
+                Contact
+                <FontAwesomeIcon
+                  icon={faAddressBook}
+                  className="color-primary fa-thin ml-2"
+                />
+              </Link>{" "}
+            </li>
           </button>
         </nav>
         <div>

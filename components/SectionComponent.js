@@ -2,7 +2,7 @@ import React from 'react'
 
 function SectionComponent({id}) {
   return (
-    <div className='bg-gray-300' id={id} >
+    <div className='bg-gray-300 dark:bg-gray-600' id={id} >
       SectionComponent. Lorem ipsum dolor sit amet consectetur adipisicing elit.
       Soluta repellat aut inventore doloremque. A velit possimus, similique in
       enim suscipit cupiditate harum vitae quos vero, aliquid molestiae
