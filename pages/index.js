@@ -2,6 +2,7 @@ import Head from 'next/head'
 import {useState, useEffect} from 'react'
 import Navbar from '../components/Navbar'
 import Usercomponent from '../components/Usercomponent'
+import Herocomponent from '../components/Herocomponent'
 import SectionComponent from '../components/SectionComponent'
 import FooterComponent from '../components/FooterComponent'
 // import Switch from '../components/Switch'
@@ -48,9 +49,13 @@ export default function Home() {
 
       <div id="sticky" ><Navbar  /></div>
       
-      <h1 className="text-xl font-bold p-5 text-dark-primary dark:text-light-primary">
+      {/* <h1 className="text-xl font-bold p-5 text-dark-primary dark:text-light-primary">
         Welcome to <a href="https://nextjs.org">Next.js!</a>
-      </h1>
+      </h1> */}
+
+      <div >
+        <Herocomponent />
+      </div>
 
       {/* <Switch /> */}
       <div className="flex justify-center bg-slate-100 dark:bg-dark-primary">

@@ -48,10 +48,10 @@ const Navbar = () => {
         ></Image>
 
         <div inline-block list-none>
-          <h2 className="font-Rampart font-extrabold my-auto text-2xl  text-red-900 dark:text-white">
+          <h2 className="font-Rampart font-extrabold my-auto text-l  text-red-900 dark:text-red-300 pb-2">
             JAL SAP DAWP
           </h2>
-          <p className="font-Montserrat font-semibold text-white dark:text-slate-900 bg-zinc-900 dark:bg-white">
+          <p className="font-Montserrat font-semibold pt-2 pl-2 pr-2 text-white text-xs dark:text-slate-900 bg-zinc-600 dark:bg-white">
             {" "}
             Data accessed from SAP for web
           </p>
@@ -66,10 +66,10 @@ const Navbar = () => {
           </button> */}
           <div className="mt-5 flex flex-col">
             <SwitchComponent setTheme={setTheme} theme={theme} />
-            <p className="text-xs"> toggle dark/light</p>
+            <p className="text-[8px] font-bold"> toggle dark/light</p>
           </div>
 
-          <button className="bg-rose-500 hover:bg-red-700 text-white text-xs px-6 mx-3 my-3 rounded-md outline-none focus:outline-none">
+          <button className="bg-stone-200 hover:bg-stone-300  text-stone-900 font-bold  text-[10px] px-6 mx-3 my-3 rounded-md outline-none focus:outline-none">
             <li className="list-none">
               <Link
                 activeClass="active"
@@ -87,7 +87,7 @@ const Navbar = () => {
               </Link>
             </li>
           </button>
-          <button className="bg-rose-500 hover:bg-red-700 text-white text-xs px-6 my-3 mx-3 rounded-md outline-none focus:outline-none">
+          <button className="bg-stone-200 hover:bg-stone-300 text-stone-900 font-bold text-[10px] px-3 my-3 mx-3 rounded-md outline-none focus:outline-none">
             <li className="list-none">
               <Link
                 activeClass="active"
@@ -105,7 +105,7 @@ const Navbar = () => {
               </Link>
             </li>
           </button>
-          <button className="bg-rose-500 hover:bg-red-700 text-white text-xs px-6 mx-3 my-3 rounded-md outline-none focus:outline-none">
+          <button className="bg-stone-200 hover:bg-stone-300 text-stone-900 font-bold text-[10px] px-6 mx-3 my-3 rounded-md outline-none focus:outline-none">
             <li className="list-none">
               <Link
                 activeClass="active"
@@ -127,11 +127,11 @@ const Navbar = () => {
         <div>
           {session?.user ? (
             <div className="flex">
-              <p className="pt-5 text-xs dark:text-white  text-pink-900">
+              <p className="pt-5 text-[12px]   dark:text-white  text-pink-900">
                 Welcome <span className="font-bold">{session.user.email}</span>
               </p>
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-sm px-6 py-2 my-3 mx-3 rounded-md outline-none focus:outline-none text-white"
+                className="bg-stone-200 hover:bg-stone-300 text-[12px] px-6 py-2 my-3 mx-3 rounded-md outline-none focus:outline-none text-emerald-900"
                 onClick={() => signOut()}
               >
                 Sign Out

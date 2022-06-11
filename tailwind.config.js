@@ -14,7 +14,8 @@ module.exports = {
       },
       fontFamily:{
         Rampart:["Rampart One", "Helvetica", "Arial", "sans-serif"],
-        Montserrat:["Montserrat", "Helvetica", "Arial", "sans-serif"]
+        Montserrat:["Montserrat", "Helvetica", "Arial", "sans-serif"],
+        Lato:["Lato", "Helvetica", "Arial", "sans-serif"],
     },
   },
   plugins: [],
