@@ -47,7 +47,7 @@ const Navbar = () => {
           alt="JAL"
         ></Image>
 
-        <div inline-block list-none>
+        <div inline-block="true" list-none="true">
           <h2 className="font-Rampart font-extrabold my-auto text-l  text-red-900 dark:text-red-300 pb-2">
             JAL SAP DAWP
           </h2>

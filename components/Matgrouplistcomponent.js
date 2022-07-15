@@ -1,5 +1,5 @@
 
-function Usercomponent({matgroups, id}) {
+function Matgrouplistcomponent({matgroups, id}) {
   return (
     <div className="bg-slate-50 dark:bg-dark-primary" id={id}>
       {matgroups.map((matgroup) => (
@@ -13,4 +13,4 @@ function Usercomponent({matgroups, id}) {
   );
 }
 
-export default Usercomponent
+export default Matgrouplistcomponent

@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import {useState, useEffect} from 'react'
 import Navbar from '../components/Navbar'
-import Usercomponent from '../components/Usercomponent'
+import Matgrouplistcomponent from '../components/Matgrouplistcomponent'
 import Herocomponent from '../components/Herocomponent'
 import SectionComponent from '../components/SectionComponent'
 import FooterComponent from '../components/FooterComponent'
@@ -15,7 +15,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchMatgroups = async () => {
-      const response = await fetch("/api/mongodbexample");
+      const response = await fetch("/api/matgrouplist");
       const json = await response.json();
       setmatgroups(json);
     };
@@ -59,7 +59,7 @@ export default function Home() {
 
       {/* <Switch /> */}
       <div className="flex justify-center bg-slate-100 dark:bg-dark-primary">
-        <Usercomponent matgroups={matgroups} id="user1"/>
+        <Matgrouplistcomponent matgroups={matgroups} id="user1"/>
       </div>
 
       <section>
