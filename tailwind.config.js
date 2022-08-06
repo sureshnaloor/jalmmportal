@@ -1,5 +1,9 @@
 module.exports = {
   darkMode:'class',
+  i18n: {
+    locales: ["en-US"],
+    defaultLocale: "en-US",
+  },
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -19,5 +23,8 @@ module.exports = {
     },
   },
   plugins: [],
+  future: {
+    purgeLayersByDefault: true,
+  },
 }
 }

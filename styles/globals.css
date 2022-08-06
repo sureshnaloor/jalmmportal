@@ -23,8 +23,8 @@
 
     @keyframes show {
         100% {
-          opacity: 0.9;
-          transform: scale(0.98);
+          opacity: 0.8;
+          transform: scale(0.99);
         }
       }
 

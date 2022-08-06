@@ -1,8 +1,10 @@
 import Head from 'next/head'
 import {useState, useEffect} from 'react'
-import Navbar from '../components/Navbar'
-import Matgrouplistcomponent from '../components/Matgrouplistcomponent'
-import Herocomponent from '../components/Herocomponent'
+// import Navbar from '../components/Navbar'
+import HeaderComponent from '../components/HeaderComponent'
+import Matgrouplist from '../components/Matgrouplist'
+// import Herocomponent from '../components/Herocomponent'
+import FeaturesComponent from '../components/FeaturesComponent'
 import SectionComponent from '../components/SectionComponent'
 import FooterComponent from '../components/FooterComponent'
 // import Switch from '../components/Switch'
@@ -15,7 +17,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchMatgroups = async () => {
-      const response = await fetch("/api/matgrouplist");
+      const response = await fetch("/api/matgroup");
       const json = await response.json();
       setmatgroups(json);
     };
@@ -47,19 +49,23 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div id="sticky" ><Navbar  /></div>
+      <div id="sticky" ><HeaderComponent/></div>
       
       {/* <h1 className="text-xl font-bold p-5 text-dark-primary dark:text-light-primary">
         Welcome to <a href="https://nextjs.org">Next.js!</a>
       </h1> */}
 
-      <div >
+      {/* <div >
         <Herocomponent />
+      </div> */}
+
+      <div>
+        <FeaturesComponent id="features1" />
       </div>
 
       {/* <Switch /> */}
       <div className="flex justify-center bg-slate-100 dark:bg-dark-primary">
-        <Matgrouplistcomponent matgroups={matgroups} id="user1"/>
+        <Matgrouplist matgroups={matgroups} id="user1"/>
       </div>
 
       <section>
