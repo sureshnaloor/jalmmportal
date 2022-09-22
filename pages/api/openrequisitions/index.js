@@ -7,7 +7,7 @@ const handler =  async (req, res) => {
         case "GET": {
           const { db } = await connectToDatabase();
           const openreqlist = await db.collection("openrequisitions").find({}).limit(100).toArray();
-          return res.json(matlist);
+          return res.json(openreqlist);
           
         } 
 
