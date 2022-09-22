@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 function Matgrouplist({ matgroups, id }) {
   return (
-    <div>
+    <div >
       <section className="pt-10 lg:pt-[120px] pb-10 lg:pb-20 bg-[#F3F4F6]">
         <div className="container">
           <div className="flex flex-wrap -mx-4">
@@ -17,7 +17,7 @@ function Matgrouplist({ matgroups, id }) {
                 <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
                   <h3>
                     <a
-                      href="javascript:void(0)"
+                      href="#"
                       className="
                         font-semibold
                         text-dark text-xl
@@ -58,7 +58,7 @@ function Matgrouplist({ matgroups, id }) {
                     </select>
                   </p>
                   <a
-                    href="javascript:void(0)"
+                    href="#"
                     className="
                      inline-block
                      py-2
@@ -66,12 +66,13 @@ function Matgrouplist({ matgroups, id }) {
                      border border-[#E5E7EB]
                      rounded-full
                      text-base text-body-color
+                     dark: text-orange-900
                      font-medium
-                     hover:border-primary hover:bg-primary hover:text-white
+                     hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-red-500
                      transition
                      "
                   >
-                    View Materials
+                    View Details
                   </a>
                 </div>
               </div>
@@ -87,7 +88,7 @@ function Matgrouplist({ matgroups, id }) {
                 <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
                   <h3>
                     <a
-                      href="javascript:void(0)"
+                      href="#"
                       className="
                         font-semibold
                         text-dark text-xl
@@ -128,7 +129,7 @@ function Matgrouplist({ matgroups, id }) {
                     </select>
                   </p>
                   <a
-                    href="javascript:void(0)"
+                    href="#"
                     className="
                      inline-block
                      py-2
@@ -157,7 +158,7 @@ function Matgrouplist({ matgroups, id }) {
                 <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
                   <h3>
                     <a
-                      href="javascript:void(0)"
+                      href="#"
                       className="
                         font-semibold
                         text-dark text-xl
@@ -198,7 +199,7 @@ function Matgrouplist({ matgroups, id }) {
                     </select>
                   </p>
                   <a
-                    href="javascript:void(0)"
+                    href="#"
                     className="
                      inline-block
                      py-2
@@ -227,7 +228,7 @@ function Matgrouplist({ matgroups, id }) {
                 <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
                   <h3>
                     <a
-                      href="javascript:void(0)"
+                      href="#"
                       className="
                         font-semibold
                         text-dark text-xl
@@ -268,7 +269,7 @@ function Matgrouplist({ matgroups, id }) {
                     </select>
                   </p>
                   <a
-                    href="javascript:void(0)"
+                    href="#"
                     className="
                      inline-block
                      py-2
@@ -297,7 +298,7 @@ function Matgrouplist({ matgroups, id }) {
                 <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
                   <h3>
                     <a
-                      href="javascript:void(0)"
+                      href="#"
                       className="
                         font-semibold
                         text-dark text-xl
@@ -338,7 +339,7 @@ function Matgrouplist({ matgroups, id }) {
                     </select>
                   </p>
                   <a
-                    href="javascript:void(0)"
+                    href="#"
                     className="
                      inline-block
                      py-2
@@ -367,7 +368,7 @@ function Matgrouplist({ matgroups, id }) {
                 <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
                   <h3>
                     <a
-                      href="javascript:void(0)"
+                      href="#"
                       className="
                         font-semibold
                         text-dark text-xl
@@ -408,7 +409,7 @@ function Matgrouplist({ matgroups, id }) {
                     </select>
                   </p>
                   <a
-                    href="javascript:void(0)"
+                    href="#"
                     className="
                      inline-block
                      py-2

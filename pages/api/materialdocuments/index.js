@@ -6,7 +6,7 @@ const handler =  async (req, res) => {
     switch (req.method) {
         case "GET": {
           const { db } = await connectToDatabase();
-          const matdoclist = await db.collection("materialdocuments").find({}).limit(100).toArray();
+          const matdoclist = await db.collection("materialdocuments").find({}).sort({"doc-date":-1}).limit(100).toArray();
           return res.json(matdoclist);
           
         }         

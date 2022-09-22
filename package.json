@@ -15,6 +15,7 @@
     "@heroicons/react": "^1.0.6",
     "@next-auth/mongodb-adapter": "^1.0.3",
     "autoprefixer": "^10.4.2",
+    "daisyui": "^2.22.0",
     "mongodb": "^4.4.1",
     "next": "12.1.0",
     "next-auth": "^4.3.3",

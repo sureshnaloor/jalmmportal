@@ -1,16 +1,13 @@
-import Head from 'next/head'
-import {useState, useEffect} from 'react'
+import Head from "next/head";
+import { useState, useEffect } from "react";
 // import Navbar from '../components/Navbar'
-import HeaderComponent from '../components/HeaderComponent'
-import Matgrouplist from '../components/Matgrouplist'
-// import Herocomponent from '../components/Herocomponent'
-import FeaturesComponent from '../components/FeaturesComponent'
-import SectionComponent from '../components/SectionComponent'
-import FooterComponent from '../components/FooterComponent'
-// import Switch from '../components/Switch'
+import HeaderComponent from "../components/HeaderComponent";
+import Matgrouplist from "../components/Matgrouplist";
 
-// import { Link, animateScroll as scroll } from "react-scroll";
-
+import FeaturesComponent from "../components/FeaturesComponent";
+import CarousalComponent from "../components/CarousalComponent";
+import SectionComponent from "../components/SectionComponent";
+import FooterComponent from "../components/FooterComponent";
 
 export default function Home() {
   const [matgroups, setmatgroups] = useState([]);
@@ -49,24 +46,21 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div id="sticky" ><HeaderComponent/></div>
-      
-      {/* <h1 className="text-xl font-bold p-5 text-dark-primary dark:text-light-primary">
-        Welcome to <a href="https://nextjs.org">Next.js!</a>
-      </h1> */}
-
-      {/* <div >
-        <Herocomponent />
-      </div> */}
+      <div id="sticky">
+        <HeaderComponent />
+      </div>
 
       <div>
         <FeaturesComponent id="features1" />
       </div>
 
-      {/* <Switch /> */}
       <div className="flex justify-center bg-slate-100 dark:bg-dark-primary">
-        <Matgrouplist matgroups={matgroups} id="user1"/>
+        <Matgrouplist matgroups={matgroups} id="user1" />
       </div>
+
+      {/* <div>
+        <CarousalComponent />
+      </div> */}
 
       <section>
         <SectionComponent id="section1" />
@@ -78,6 +72,3 @@ export default function Home() {
     </div>
   );
 }
-
-
-

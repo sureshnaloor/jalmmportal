@@ -22,7 +22,7 @@ module.exports = {
         Lato:["Lato", "Helvetica", "Arial", "sans-serif"],
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
   future: {
     purgeLayersByDefault: true,
   },
