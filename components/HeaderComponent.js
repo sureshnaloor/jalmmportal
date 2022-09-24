@@ -78,7 +78,7 @@ function HeaderComponent() {
         </div>
 
         <div
-          className="block lg:inline-block mt-4 lg:mt-0 mr-10 text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
+          className="block lg:inline-block mt-4 lg:mt-0 mr-10 cursor-pointer text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
           <Link
             activeClass="active"
             to="section1"

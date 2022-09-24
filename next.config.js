@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images:{
-    domains: ['cdn.tailgrids.com', 'placeimg.com']
+    domains: ['cdn.tailgrids.com', 'placeimg.com', 'dummyimage.com']
   },
   experimental: {
     images: {
