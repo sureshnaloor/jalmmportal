@@ -51,7 +51,7 @@ function Matgrouplist({ matgroups, id }) {
                         return mg["material-group"][0]=="C" 
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
-                        <option value={mg["material-group"]}>
+                        <option key={mg["_id"]} value={mg["material-group"]}>
                           {mg["matgroup-primary-desc"]}
                         </option>
                       ))}
@@ -122,7 +122,7 @@ function Matgrouplist({ matgroups, id }) {
                         return mg["material-group"][0]=="E" 
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
-                        <option value={mg["material-group"]}>
+                        <option key={mg["_id"]} value={mg["material-group"]}>
                           {mg["matgroup-primary-desc"]}
                         </option>
                       ))}
@@ -192,7 +192,7 @@ function Matgrouplist({ matgroups, id }) {
                         return mg["material-group"][0]=="M" 
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
-                        <option value={mg["material-group"]}>
+                        <option key={mg["_id"]} value={mg["material-group"]}>
                           {mg["matgroup-primary-desc"]}
                         </option>
                       ))}
@@ -262,7 +262,7 @@ function Matgrouplist({ matgroups, id }) {
                         return mg["material-group"][0]=="I" && mg["material-group"][1] == "M"
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
-                        <option value={mg["material-group"]}>
+                        <option key={mg["_id"]} value={mg["material-group"]}>
                           {mg["matgroup-primary-desc"]}
                         </option>
                       ))}
@@ -332,7 +332,7 @@ function Matgrouplist({ matgroups, id }) {
                         return mg["material-group"][0]=="I" && mg["material-group"][1] == "T"
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
-                        <option value={mg["material-group"]}>
+                        <option key={mg["_id"]} value={mg["material-group"]}>
                           {mg["matgroup-primary-desc"]}
                         </option>
                       ))}
@@ -402,7 +402,7 @@ function Matgrouplist({ matgroups, id }) {
                         return mg["material-group"][0] == "A"
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
-                        <option value={mg["material-group"]}>
+                        <option key={mg["_id"]} value={mg["material-group"]}>
                           {mg["matgroup-primary-desc"]}
                         </option>
                       ))}

@@ -10,7 +10,7 @@ const handler = async (req, res) => {
         
         const material = await db
           .collection("specialstock")
-          .findOne({ "material-code": materialid });
+          .find({ "material-code": materialid }).toArray();
           
         return res.json(material);
       }  

@@ -10,7 +10,7 @@ const handler = async (req, res) => {
         
         const material = await db
           .collection("openrequisitions")
-          .findOne({ "materialcode": materialid });
+          .find({ "materialcode": materialid }).toArray();
           
         return res.json(material);
       }  
