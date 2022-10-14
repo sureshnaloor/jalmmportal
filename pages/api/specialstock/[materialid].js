@@ -12,7 +12,7 @@ const handler = async (req, res) => {
           .collection("specialstock")
           .find({ "material-code": materialid }).toArray();
           
-        return res.json(material);
+          return  res.json(material);
       }  
       
       default:

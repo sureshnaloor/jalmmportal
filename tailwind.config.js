@@ -20,6 +20,9 @@ module.exports = {
         Rampart:["Rampart One", "Helvetica", "Arial", "sans-serif"],
         Montserrat:["Montserrat", "Helvetica", "Arial", "sans-serif"],
         Lato:["Lato", "Helvetica", "Arial", "sans-serif"],
+        Ubuntu:["Ubuntu","Arial","sans-serif"],
+        Freehand:["Freehand","Arial"],
+        
     },
   },
   plugins: [require("daisyui")],

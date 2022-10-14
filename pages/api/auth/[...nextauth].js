@@ -16,6 +16,12 @@ export default NextAuth({
           required: true,
           placeholder: "email",
         },
+        name: {
+          label: "name",
+          type: "text",
+          required: true,
+          placeholder: "username"
+        },
         password: {
           label: "Password",
           type: "password",

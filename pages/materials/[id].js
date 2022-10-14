@@ -2,32 +2,69 @@ import React from "react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import moment from "moment";
+import { useRouter } from 'next/router';
 
 function Materials() {
   const [materials, setmaterials] = useState({});
   const [purchases, setPurchases] = useState([]);
+  const [completestock, setCompletestock] = useState({})
+  const [specialStock, setSpecialstock] = useState([])
+
+  // let materialcode = "10200562"
+  const router = useRouter();
+  let materialcode = router.query.id
+  console.log(materialcode)
 
   useEffect(() => {
     const fetchMaterials = async () => {
-      const response = await fetch("/api/materials/10600011");
-      const json = await response.json();
-      setmaterials(json);
+      try {
+        const response = await fetch(`/api/materials/${materialcode}`);
+        const json = await response.json();
+        setmaterials(json);
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchMaterials();
-  }, []);
+  }, [materialcode]);
 
   useEffect(() => {
     const fetchPurchases = async () => {
-      const response = await fetch("/api/purchaseorders/10600011");
+      const response = await fetch(`/api/purchaseorders/${materialcode}`);
       const json = await response.json();
       setPurchases(json);
     };
     fetchPurchases();
-  }, []);
+  }, [materialcode]);
+
+  useEffect(() => {
+        const fetchSpecialStock = async () => {
+      const response = await fetch(`/api/specialstock/${materialcode}`);
+      const json = await response.json();
+      setSpecialstock(json);
+    };
+        fetchSpecialStock();
+  }, [materialcode]);
+
+  useEffect(() => {
+    const fetchCompleteStock = async () => {
+      try {
+        const response = await fetch(`/api/completestock/${materialcode}`);
+        const json = await response.json();
+        setCompletestock(json);
+      } catch (error) {
+        console.log(error)
+      }
+ 
+};
+    fetchCompleteStock();
+}, [materialcode]);
 
   console.log(materials);
   console.log(purchases);
-
+  console.log(completestock)
+  console.log(specialStock)
+  
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto">
@@ -69,7 +106,8 @@ function Materials() {
               />
             </div>
             <h2 className="text-md font-medium title-font text-gray-900 mt-5 flex align-middle justify-center">
-              Purchase Orders for {materials["material-code"]}
+              {/* Purchase Orders for {materials["material-code"]} */}
+              purchase order
             </h2>
             <div className="p-3 w-full max-w-md bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
               <div className="overflow-x-auto relative">
@@ -146,11 +184,11 @@ function Materials() {
               />
             </div>
             <h2 className="text-md font-medium title-font text-gray-900 mt-5 flex align-middle justify-center">
-              Purchases under orders, costcenter and projects for{" "}
-              {materials["material-code"]}
+              Account assignments for{" "}
+              {/* {materials["material-code"]} */}
             </h2>
             <div className="p-3 w-full max-w-md bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
-              <p>
+              <div>
                 {Object.entries(
                   purchases.reduce(
                     (next, purchase) => (
@@ -171,14 +209,31 @@ function Materials() {
                 ).map((row, index) => (
                   <p key={index} className="pb-3">
                     {" "}
-                    <span className="text-red-400">
+                    <span className="text-red-400 font-semibold text-sm">
                       {" "}
-                      quantity {row[1]}
+                       {row[1]} {row[1] == 1 ? 'time\u00a0' : 'times'}
                     </span>{" "}
-                    <span>{row[0]}</span>{" "}
+                    <span className="text-purple-900  text-sm"> for {row[0]}</span>{" "}
                   </p>
                 ))}
-              </p>
+              </div>
+              <p className="text-sm leading-relaxed mt-2 font-bold">
+                <span className="word-break pt-3 pb-3 text-amber-800 uppercase text-xs"> Total value of this material purchased: </span>
+              {purchases.reduce(
+                (acc, purchase) => acc + purchase["po-value-sar"],
+                0.0
+              ).toLocaleString('en-US')}
+              <span> {purchases[0]?.currency} </span>
+            </p>
+
+            <p className="text-sm leading-relaxed mt-2 font-bold">
+                <span className="word-break pt-3 pb-3 text-amber-800 uppercase text-xs"> Total QUANTITY of this material purchased: </span>
+              {purchases.reduce(
+                (acc, purchase) => acc + Number(purchase["po-quantity"].$numberDecimal),
+                0
+              ) }
+              {/* <span> {materials["unit-measure"]}</span> */}
+            </p>
             </div>
           </div>
           <div className="p-4 md:w-1/3 sm:mb-0 mb-6">
@@ -193,10 +248,11 @@ function Materials() {
                 src="/images/suppliers.jpg"
               />
             </div>
-            <h2 className="text-xl font-medium title-font text-gray-900 mt-5">
-              The Vendors
+            <h2 className="text-md font-medium title-font text-gray-900 mt-5 flex align-middle justify-center">
+              Vendors  for{" "}
+              {/* {materials["material-code"]} */}
             </h2>
-            <p className="text-base leading-relaxed mt-2">
+            <div className="p-3 w-full max-w-md bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
               {Object.entries(
                 purchases.reduce(
                   (next, purchase) => (
@@ -209,25 +265,12 @@ function Materials() {
               ).map((row, index) => (
                 <p key={index}>
                   {" "}
-                  <span className="text-red-400">{row[1]}</span>{" "}
-                  <span>{row[0]}</span>{" "}
+                  <span className="text-red-400">{row[1]} {row[1]==1 ? `time\u00a0 from`:"times from"}  </span>{" "}
+                  <span className="text-sm font-semibold">{row[0]}</span>{" "}
                 </p>
               ))}
-            </p>
-            <a className="text-blue-500 inline-flex items-center mt-3">
-              Learn More
-              <svg
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                className="w-4 h-4 ml-2"
-                viewBox="0 0 24 24"
-              >
-                <path d="M5 12h14M12 5l7 7-7 7"></path>
-              </svg>
-            </a>
+            </div>
+            
           </div>
         </div>
       </div>

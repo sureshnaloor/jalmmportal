@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 // import Navbar from '../components/Navbar'
+
+import {getSession} from "next-auth/react"
 import HeaderComponent from "../components/HeaderComponent";
 import Matgrouplist from "../components/Matgrouplist";
 
@@ -9,7 +11,7 @@ import CarousalComponent from "../components/CarousalComponent";
 import SectionComponent from "../components/SectionComponent";
 import FooterComponent from "../components/FooterComponent";
 
-export default function Home() {
+function Home() {
   const [matgroups, setmatgroups] = useState([]);
 
   useEffect(() => {
@@ -70,5 +72,24 @@ export default function Home() {
         <FooterComponent id="footer1" />
       </footer>
     </div>
-  );
+  );  
 }
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: { session }
+  }
+}
+
+export default Home
