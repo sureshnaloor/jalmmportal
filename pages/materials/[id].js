@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import moment from "moment";
 import { useRouter } from 'next/router';
+import {getSession} from 'next-auth/react'
 
 function Materials() {
   const [materials, setmaterials] = useState({});
@@ -276,6 +277,23 @@ function Materials() {
       </div>
     </section>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: { session }
+  }
 }
 
 export default Materials;

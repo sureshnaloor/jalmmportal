@@ -128,7 +128,7 @@ const Navbar = () => {
           {session?.user ? (
             <div className="flex">
               <p className="pt-5 text-[12px]   dark:text-white  text-pink-900">
-                Welcome <span className="font-bold">{session.user.email}</span>
+                Welcome <span className="font-bold">{session.user.id}</span>
               </p>
               <button
                 className="bg-stone-200 hover:bg-stone-300 text-[12px] px-6 py-2 my-3 mx-3 rounded-md outline-none focus:outline-none text-emerald-900"
