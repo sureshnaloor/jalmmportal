@@ -8,16 +8,16 @@ const handler = async (req, res) => {
     switch (req.method) {
       case "GET": {       
         
-        const specialstk = await db
-          .collection("specialstock")
+        const purchaseorders = await db
+          .collection("purchaseorders")
           .find(
             {$expr: {
-              $eq: [{ $substr: ["$wbs-element", 0, 12] }, projectid]
+              $eq: [{ $substr: ["$account.wbs", 0, 12] }, projectid]
             }
             } 
-          ).sort({"stock-val":1}).toArray()
+          ).toArray()
           
-          return  res.json(specialstk);
+          return  res.json(purchaseorders);
       }  
       
       default:
