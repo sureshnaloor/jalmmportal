@@ -4,6 +4,7 @@ import { useSession, getSession } from "next-auth/react";
 import { Pie } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import moment from "moment";
+import ProjdocUpload from '../components/ProjdocuploadComponent'
 
 function Projectdetails() {
   const [project, setProject] = useState({});
@@ -66,7 +67,7 @@ function Projectdetails() {
   // console.log(project)
   // console.log(specialstk);
   // console.log(purchaseorders)
-  console.log(openrequisitions);
+  // console.log(openrequisitions);
 
   return (
     <div>
@@ -126,10 +127,7 @@ function Projectdetails() {
                 <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
                   PROJECT DOCUMENTS
                 </h2>
-                <p className="leading-relaxed text-base">
-                  Fingerstache flexitarian street art 8-bit waist co, subway
-                  tile poke farm.
-                </p>
+                  <ProjdocUpload wbs={project["project-wbs"]} />
               </div>
             </div>
             <div className="xl:w-1/3 md:w-1/2 p-4">
