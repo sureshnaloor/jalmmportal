@@ -23,7 +23,7 @@ const apiRoute = nextConnect({
 });
 
 // Returns middleware that processes multiple files sharing the same field name.
-const uploadMiddleware = upload.array("upldFiles");
+const uploadMiddleware = upload.array("upldFiles",3);
 
 // Adds the middleware to Next-Connect
 apiRoute.use(uploadMiddleware);
@@ -32,13 +32,17 @@ apiRoute.use(uploadMiddleware);
 apiRoute.post(async (req, res) => {
   try {
     const { db } = await connectToDatabase();
-    console.log(req.body)
+    // console.log(req.files)
+    const fileArr = []
+    req.files.map((file,_) => {
+      fileArr.push(file.originalname)
+    })
     const projectList = await db.collection("projectsfiles").insertOne({
       test: "successnew",
       projectid: req.body.projectid,
       name: req.body.name,
       email: req.body.email,  
-      filename: req.files[0].originalname    
+      filename: fileArr  
       
     });
     res.status(200).json({ data: projectList });
