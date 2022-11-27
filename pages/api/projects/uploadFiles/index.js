@@ -37,7 +37,8 @@ apiRoute.post(async (req, res) => {
       test: "successnew",
       projectid: req.body.projectid,
       name: req.body.name,
-      email: req.body.email,      
+      email: req.body.email,  
+      filename: req.files[0].originalname    
       
     });
     res.status(200).json({ data: projectList });
