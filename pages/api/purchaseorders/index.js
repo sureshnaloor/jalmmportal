@@ -10,7 +10,7 @@ const handler =  async (req, res) => {
         case "GET": {
           const { db } = await connectToDatabase();
           const polist = await db.collection("purchaseorders").find({}).sort({"po-date":-1}).limit(limit).skip(skip).toArray();
-          return res.json(polist);
+          return res.json({message:"success"});
           
         } 
       
