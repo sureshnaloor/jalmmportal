@@ -1,189 +1,141 @@
-import React from "react";
+import React, { Component } from "react";
+import { useState, useEffect } from "react";
+import Modal from './modal'
 
-const index = () => {
+import moment from "moment";
+
+const Vendor = () => {
+  const [polist, setPolist] = useState([]);
+  const [showModal, setShowModal] = useState(false)
+  const [CurrentPurchaseorder, setCurrentPurchaseorder] = useState(null);
+
+  let projectid = "IS%2FGP.22.001";
+
+  useEffect(() => {
+    const fetchPolist = async () => {
+      const response = await fetch(
+        `/api/purchaseorders/project/consolidated/${projectid}`
+      );
+      const json = await response.json();
+      setPolist(json);
+    };
+    fetchPolist();
+  }, [projectid]);
+
+  console.log(polist);
+
+  const setActivePo = (ponum, index) => {
+    setCurrentPurchaseorder(ponum);
+    
+  };
+
   return (
     <div>
-      <section className="flex flex-col justify-center antialiased bg-gray-100 text-gray-600 min-h-screen p-4">
-        <div className="h-full">
-          {/* <!-- Table --> */}
-          <div className="w-full max-w-6xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
-            <header className="px-5 py-4 border-b border-gray-100">
-              <h2 className="font-semibold text-gray-800">Customers</h2>
-            </header>
-            <div className="p-3">
-              <div className="overflow-x-auto">
-                <table className="table-auto w-full">
-                  <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
-                    <tr>
-                      <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-left">Name</div>
-                      </th>
-                      <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-left">Email</div>
-                      </th>
-                      <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-left">Spent</div>
-                      </th>
-                      <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-center">Country</div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-sm divide-y divide-gray-100">
-                    <tr>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                            <img
-                              className="rounded-full"
-                              src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-05.jpg"
-                              width="40"
-                              height="40"
-                              alt="Alex Shatov"
-                            />
-                          </div>
-                          <div className="font-medium text-gray-800">
-                            Alex Shatov
-                          </div>
-                        </div>
+      <div className="flex flex-col container mx-auto">
+        <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="py-2 inline-block min-w-full sm:px-3 lg:px-8">
+            <div className="overflow-hidden">
+              <table className="min-w-full">
+                <thead className="bg-white border-b">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                    >
+                      #
+                    </th>
+                    <th
+                      scope="col"
+                      className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                    >
+                      PO Number
+                    </th>
+                    <th
+                      scope="col"
+                      className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                    >
+                      Vendor
+                    </th>
+                    <th
+                      scope="col"
+                      className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                    >
+                      PO Value
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                    >
+                      Pending PO Value
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                    >
+                      PO Date
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {polist.map((row, index) => (
+                    <tr
+                      key={index}
+                      className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100"
+                    >
+                      <td className="px-3 py-4 whitespace-nowrap text-[10px] font-medium text-gray-900">
+                        {index + 1}
                       </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-left">alexshatov@gmail.com</div>
+                      <td className="text-[10px] text-gray-900 font-semibold px-3 py-4 whitespace-nowrap">
+                        {row.ponum}
                       </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-left font-medium text-green-500">
-                          $2,890.6600000000000000000000000000000000000000000000000000000000000000000000
-                        </div>
+                      <td className="text-[10px] text-gray-900 font-light px-3 py-4 whitespace-nowrap">
+                        {row.vendor}
                       </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-lg text-center">🇺🇸</div>
+                      <td className="text-xs text-gray-900 font-semibold px-3 py-4 whitespace-nowrap">
+                        {Math.round(row.poval * 100) / 100}
                       </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                            <img
-                              className="rounded-full"
-                              src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-06.jpg"
-                              width="40"
-                              height="40"
-                              alt="Philip Harbach"
-                            />
-                          </div>
-                          <div className="font-medium text-gray-800">
-                            Philip Harbach
-                          </div>
-                        </div>
+
+                      <td className="text-xs text-gray-900 font-semibold px-3 py-4 whitespace-nowrap">
+                        {Math.round(row.balgrval * 100) / 100}
                       </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-left">philip.h@gmail.com</div>
+
+                      <td className="text-xs text-gray-800 font-semibold px-3 py-4 whitespace-nowrap">
+                        {moment(row.podate).format("MM-DD-YYYY")}
                       </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-left font-medium text-green-500">
-                          $2,767.04
-                        </div>
+                      <td>
+                        <p className="md:space-x-1 space-y-1 md:space-y-0 mb-4">
+                          <button
+                            className="inline-block px-3 py-1.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseExample"
+                            aria-expanded="false"
+                            aria-controls="collapseExample"
+                            onClick={() => {
+                              setShowModal(true);
+                              setActivePo(row.ponum, index)
+                            }
+                          }
+                          >
+                            Details
+                          </button>
+                        </p>
                       </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-lg text-center">🇩🇪</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                            <img
-                              className="rounded-full"
-                              src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-07.jpg"
-                              width="40"
-                              height="40"
-                              alt="Mirko Fisuk"
-                            />
-                          </div>
-                          <div className="font-medium text-gray-800">
-                            Mirko Fisuk
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-left">mirkofisuk@gmail.com</div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-left font-medium text-green-500">
-                          $2,996.00
-                        </div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-lg text-center">🇫🇷</div>
+                      <td>
+                      <Modal isVisible={showModal} CurrentPurchaseorder={CurrentPurchaseorder} onClose={()=> setShowModal(false)}/>
                       </td>
                     </tr>
-                    <tr>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                            <img
-                              className="rounded-full"
-                              src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-08.jpg"
-                              width="40"
-                              height="40"
-                              alt="Olga Semklo"
-                            />
-                          </div>
-                          <div className="font-medium text-gray-800">
-                            Olga Semklo
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-left">olga.s@cool.design</div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-left font-medium text-green-500">
-                          $1,220.66
-                        </div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-lg text-center">🇮🇹</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                            <img
-                              className="rounded-full"
-                              src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-09.jpg"
-                              width="40"
-                              height="40"
-                              alt="Burak Long"
-                            />
-                          </div>
-                          <div className="font-medium text-gray-800">
-                            Burak Long
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-left">longburak@gmail.com</div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-left font-medium text-green-500">
-                          $1,890.66
-                        </div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="text-lg text-center">🇬🇧</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
 
-export default index;
+export default Vendor;

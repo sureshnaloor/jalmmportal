@@ -5,8 +5,9 @@ module.exports = {
     defaultLocale: "en-US",
   },
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{html,js,ts,jsx,tsx}",
+    "./components/**/*.{html,js,ts,jsx,tsx}",
+    './node_modules/tw-elements/dist/js/**/*.js',
   ],
   theme: {
     extend: {
@@ -25,7 +26,7 @@ module.exports = {
         
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [require('tw-elements/dist/plugin'), require("daisyui"), ],
   future: {
     purgeLayersByDefault: true,
   },

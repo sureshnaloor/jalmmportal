@@ -26,7 +26,8 @@ const handler = async (req, res) => {
           purchaseorders.reduce((res,value) => {
             if (!res[value["po-number"]]){
               res[value["po-number"]] = {ponum: value["po-number"], podate: value["po-date"], vendor: value["vendorname"], poval:0, balgrval:0}
-              result.push(res[value["po-number"]], res[value["po-date", res[value["vendorname"]]]])
+              
+              result.push(res[value["po-number"]])
               
             }
             res[value["po-number"]].poval += value["po-value-sar"];

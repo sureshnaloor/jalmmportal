@@ -6,7 +6,7 @@ const handler =  async (req, res) => {
     switch (req.method) {
         case "GET": {
           const { db } = await connectToDatabase();
-          const vendorlist = await db.collection("vendors").find({}).toArray();
+          const vendorlist = await db.collection("vendors").find({}).limit(100).toArray();
           return res.json(vendorlist);
           
         } 

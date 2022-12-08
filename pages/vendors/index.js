@@ -1,12 +1,14 @@
-import React from 'react'
-import Vendor from '../../components/Vendor/index'
+import React from "react";
+import Vendor from "../../components/Vendor/index";
+import Vendorcards from "../../components/Vendor/cards";
 
 function index() {
   return (
     <div>
-        <Vendor />
+      <Vendorcards />
+      <Vendor />
     </div>
-  )
+  );
 }
 
-export default index
+export default index;
