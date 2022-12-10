@@ -4,6 +4,8 @@ import { SessionProvider } from "next-auth/react";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {useRouter} from 'next/router'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 
 import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
@@ -37,6 +39,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
         }}
         >
         <Component {...pageProps} />
+        <ToastContainer />
         </motion.div>
       </ThemeProvider>
     </SessionProvider>

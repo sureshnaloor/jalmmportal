@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import {toast} from 'react-toastify'
 
 function ProjdocuploadComponent({ wbs }) {
   const [image, setImage] = useState(null);
@@ -37,6 +38,8 @@ function ProjdocuploadComponent({ wbs }) {
       method: "POST",
       body: data,
     });
+
+    toast('File is uploaded', { hideProgressBar: true, autoClose: 2000, type: 'success' })
   };
 
   return (
