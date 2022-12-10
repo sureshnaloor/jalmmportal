@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import moment from 'moment'
+import {motion} from 'framer-motion'
+
 
 function Vendor() {
   const [vendors, setVendors] = useState([]);
@@ -54,13 +56,30 @@ function Vendor() {
     
   };
 
+  const variant = {
+    hidden:{
+      scale:0.9,
+      opacity:0.8
+    },
+    visible:{
+      scale:1.0,
+      opacity:1,
+      transition:{
+        delay:0.4
+      }
+    }
+  }
+
   return (
     <div className="bg-white py-2 sm:py-3 lg:py-4">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="sm:text-center">
+          
           <h2 className="text-lg font-semibold leading-8 text-indigo-600 pb-9">
             Vendors in SAP
           </h2>
+          
+          
           <div className="flex overflow-x-scroll pb-10 hide-scroll-bar">
             <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
               {vendors.map((vendor, index) => (
@@ -286,11 +305,16 @@ function Vendor() {
                 </p>
               </div> */}
                 {/* <div className="fixed top-0 left-0 h-full w-full bg-slate-400 bg-opacity-10 backdrop-blur-0 flex justify-center items-center"> */}
+                
                   <div className="w-[900px] flex flex-col">
+                  
                     <div className="bg-white p-2 rounded text-[12px] text-black font-semibold">
-                      {" "}
+                    
+                      
                       PO Details for:{CurrentPurchaseorder}{" "}
+                      
                       {!isLoading ? (
+                        <motion.div initial="hidden" animate="visible" variants={variant}>
                         <div className="flex flex-col">
                           <div className="overflow-y-auto sm:-mx-6 lg:-mx-8">
                             <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
@@ -386,6 +410,7 @@ function Vendor() {
                             </div>
                           </div>
                         </div>
+                        </motion.div>
                       ) : (
                         <div className=" bg-white">
                           <div className="flex justify-center items-center h-full">
@@ -400,6 +425,7 @@ function Vendor() {
                     </div>
                   </div>
                 {/* </div> */}
+                
               </div>
 
               <div className="relative flex flex-col gap-6 sm:flex-row md:flex-col lg:flex-row">
@@ -422,9 +448,11 @@ function Vendor() {
                   </svg>
                 </div>
                 <div className="sm:min-w-0 sm:flex-1">
+                
                   <p className="text-lg font-semibold leading-8 text-gray-900">
                     Transfers are instant
                   </p>
+                  
                   <p className="mt-2 text-base leading-7 text-gray-600">
                     Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                     Maiores impedit perferendis suscipit eaque, iste dolor

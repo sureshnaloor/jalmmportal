@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { useState, useEffect } from "react";
 import Modal from './modal'
+import {motion} from 'framer-motion'
 
 import moment from "moment";
 
@@ -29,9 +30,21 @@ const Vendor = () => {
     
   };
 
+  const spring = {
+    type: 'spring',
+    stiffness: 700,
+    damping: 30,
+}
+
   return (
     <div>
-      <div className="flex flex-col container mx-auto">
+    <motion.div
+                className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-black/90"
+                layout
+                transition={spring}
+            ></motion.div>
+    
+      <div className="flex flex-col container mx-auto ">
         <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 inline-block min-w-full sm:px-3 lg:px-8">
             <div className="overflow-hidden">
@@ -134,7 +147,7 @@ const Vendor = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
