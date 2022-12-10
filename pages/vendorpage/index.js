@@ -59,13 +59,13 @@ function Vendor() {
   const variant = {
     hidden:{
       scale:0.9,
-      opacity:0.8
+      opacity:0.5
     },
     visible:{
       scale:1.0,
       opacity:1,
-      transition:{
-        delay:0.4
+            transition:{
+        delay:0.3
       }
     }
   }

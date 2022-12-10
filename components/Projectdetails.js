@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useState, useEffect } from "react";
 import { useSession, getSession } from "next-auth/react";
 import { Pie } from "react-chartjs-2";
@@ -223,7 +224,7 @@ function Projectdetails() {
                     }}
                   />
                 </div>
-                <p className="leading-relaxed text-base">
+                <div className="leading-relaxed text-base">
                   {specialstk.map((row, index) => (
                     <p key={index}>
                       {" "}
@@ -243,7 +244,7 @@ function Projectdetails() {
                       </span>
                     </p>
                   ))}
-                </p>
+                </div>
               </div>
             </div>
             <div className="xl:w-1/3 md:w-1/2 p-4">
@@ -266,7 +267,7 @@ function Projectdetails() {
                 <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
                   Purchase Orders for: {project["project-wbs"]}
                 </h2>
-                <p className="leading-relaxed text-base">
+                <div className="leading-relaxed text-base">
                   <div className="overflow-x-auto relative">
                     <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
                       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -333,7 +334,7 @@ function Projectdetails() {
                       </tbody>
                     </table>
                   </div>
-                </p>
+                </div>
               </div>
             </div>
             <div className="xl:w-1/3 md:w-1/2 p-4">
@@ -355,7 +356,7 @@ function Projectdetails() {
                 <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
                   Open PR : {project["project-wbs"]}
                 </h2>
-                <p className="leading-relaxed text-base">
+                <div className="leading-relaxed text-base">
                   <div className="overflow-x-auto relative">
                     <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
                       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -411,7 +412,7 @@ function Projectdetails() {
                       </tbody>
                     </table>
                   </div>
-                </p>
+                </div>
               </div>
             </div>
             
