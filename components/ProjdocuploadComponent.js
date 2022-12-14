@@ -40,6 +40,8 @@ function ProjdocuploadComponent({ wbs }) {
     });
 
     toast('File is uploaded', { hideProgressBar: true, autoClose: 2000, type: 'success' })
+
+    e.target.reset();
   };
 
   return (
