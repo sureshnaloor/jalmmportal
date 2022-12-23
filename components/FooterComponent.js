@@ -2,6 +2,8 @@ import React from 'react'
 
 function FooterComponent({id}) {
   return (
+    <>
+    <h2> start of footer</h2>
     <div className="flex justify-between bg-gray-50  dark:bg-gray-900 font-Lato" id={id}>
       <div className="basis-1/2 pb-3 pl-3">
         <h3 className="text-teal-600 pb-2 font-mono text-sm pt-2 font-extrabold">
@@ -47,6 +49,8 @@ function FooterComponent({id}) {
         </p>
       </div>
     </div>
+    <h1> this is end f footer</h1>
+    </>
   );
 }
 

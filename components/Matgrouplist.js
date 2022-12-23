@@ -1,8 +1,11 @@
 import React from "react";
 import Image from "next/image";
-function Matgrouplist({ matgroups, id }) {
+function Matgrouplist({ matgroups, _ }) {
   return (
+    <>
+    <h1> this is mterial group pqge</h1>
     <div >
+      
       <section className="pt-10 lg:pt-[120px] pb-10 lg:pb-20 bg-[#F3F4F6]">
         <div className="container">
           <div className="flex flex-wrap -mx-4">
@@ -431,6 +434,8 @@ function Matgrouplist({ matgroups, id }) {
         </div>
       </section>
     </div>
+    <h3> this is end of the matgroup page</h3>
+    </>
   );
 }
 

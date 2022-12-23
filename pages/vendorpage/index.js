@@ -59,7 +59,8 @@ function Vendor() {
   const variant = {
     hidden:{
       scale:0.9,
-      opacity:0.5
+      opacity:0.5,
+      color:""
     },
     visible:{
       scale:1.0,

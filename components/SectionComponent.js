@@ -2,6 +2,8 @@ import React from 'react'
 
 function SectionComponent({id}) {
   return (
+    <>    
+    <h1> start of section component</h1>
     <div className='bg-gray-300 dark:bg-gray-600' id={id} >
       SectionComponent. Lorem ipsum dolor sit amet consectetur adipisicing elit.
       Soluta repellat aut inventore doloremque. A velit possimus, similique in
@@ -221,6 +223,9 @@ function SectionComponent({id}) {
       cumque ad voluptates unde eos nisi provident sapiente maxime, tempora
       debitis, ipsum quisquam obcaecati rerum consequatur id.
     </div>
+    <h1>end of the section </h1>
+    </>
+
   );
 }
 

@@ -6,6 +6,7 @@ import { Pie } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import moment from "moment";
 import ProjdocUpload from '../components/ProjdocuploadComponent'
+import ProjDocsView from '../components/projdocsViewComponent'
 
 function Projectdetails() {
   const [project, setProject] = useState({});
@@ -128,6 +129,7 @@ function Projectdetails() {
                 <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
                   PROJECT DOCUMENTS
                 </h2>
+                <ProjDocsView  />
                   <ProjdocUpload wbs={project["project-wbs"]} />
               </div>
             </div>
