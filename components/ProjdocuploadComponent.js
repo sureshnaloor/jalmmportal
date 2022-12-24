@@ -1,13 +1,17 @@
 import React, { useState } from "react";
+import Router from 'next/router'
+
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import {toast} from 'react-toastify'
+
 
 function ProjdocuploadComponent({ wbs }) {
   const [image, setImage] = useState(null);
   const [imageInput, setImageInput] = useState(null);
 
   const { data: session } = useSession();
+  
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -42,6 +46,11 @@ function ProjdocuploadComponent({ wbs }) {
     toast('File is uploaded', { hideProgressBar: true, autoClose: 2000, type: 'success' })
 
     e.target.reset();
+    
+    Router.reload(window.location.pathname)
+    // Router.replace('/projects')
+    
+
   };
 
   return (
