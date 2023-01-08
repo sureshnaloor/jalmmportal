@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import moment from 'moment'
 import {motion} from 'framer-motion'
-
+import HeaderComponent from "../../components/HeaderComponent";
+import Radialprogress from "../../components/Radialprogress"
 
 function Vendor() {
   const [vendors, setVendors] = useState([]);
@@ -58,8 +59,8 @@ function Vendor() {
 
   const variant = {
     hidden:{
-      scale:0.9,
-      opacity:0.5,
+      scale:0.6,
+      opacity:0.3,
       color:""
     },
     visible:{
@@ -72,28 +73,33 @@ function Vendor() {
   }
 
   return (
-    <div className="bg-white py-2 sm:py-3 lg:py-4">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <>
+    <div>
+      <HeaderComponent />
+    </div>
+    <div className="bg-zinc-50 dark:bg-zinc-400 py-2 sm:py-3 lg:py-4">
+      <div className="mx-auto max-w-7xl px-5 lg:px-5">
         <div className="sm:text-center">
           
-          <h2 className="text-lg font-semibold leading-8 text-indigo-600 pb-9">
+          
+          <h2 className="text-lg font-semibold leading-8 text-emerald-900 pb-5">
             Vendors in SAP
           </h2>
           
           
           <div className="flex overflow-x-scroll pb-10 hide-scroll-bar">
-            <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
+            <div className="flex flex-nowrap lg:ml-20 md:ml-10 ml-5 ">
               {vendors.map((vendor, index) => (
                 <div
                   key={index}
                   className="inline-block px-3"                  
                 >
-                  <div className="w-64 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                  <div className="w-64 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-zinc-400 hover:shadow-xl transition-shadow duration-300 ease-in-out">
                     <div className="flex justify-center">
                       <div className="block rounded-lg shadow-lg bg-white max-w-sm text-center"
                       
                       >
-                        <div className="py-3 px-6 border-b bg-blue-50 border-gray-300">
+                        <div className="py-3 px-6 border-b bg-zinc-200 border-gray-300 dark:bg-stone-800 font-bold">
                           {vendor["vendor-code"]}
                         </div>
                         <div className="p-6 bg-slate-100">
@@ -114,7 +120,7 @@ function Vendor() {
                             PO Box: {vendor.address["pobox"]}
                           </span>
                         </div>
-                        <div className="py-3 px-6  bg-orange-100 border-t border-gray-300 text-gray-600 text-xs">
+                        <div className="py-3 px-6  bg-orange-200 border-t border-gray-300 text-gray-600 text-xs">
                           Created: {moment(vendor["created_date"]).fromNow()}
                         </div>
                       </div>
@@ -127,7 +133,7 @@ function Vendor() {
             </div>
           </div>
 
-          <div className="mt-20 max-w-lg sm:mx-auto md:max-w-none">
+          <div className="mt-3 max-w-lg sm:mx-auto md:max-w-none">
             <div className="grid grid-cols-1 gap-y-16 md:grid-cols-2 md:gap-x-12 md:gap-y-16">
               <div className="relative flex flex-col gap-6 sm:flex-row md:flex-col lg:flex-row">
                 {/* <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500 text-white sm:shrink-0"> */}
@@ -158,12 +164,12 @@ function Vendor() {
                   cupiditate blanditiis ratione.
                 </p>
               </div> */}
-                <div className="flex flex-col container mx-auto">
-                  <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="py-2 inline-block min-w-full sm:px-3 lg:px-8">
+                <div className="flex flex-col container mx-auto h-96">
+                  <div className="overflow-x-auto sm:-mx-6 lg:-mx-8 overflow-y-scroll hide-scroll-bar">
+                    <div className="py-2 inline-block min-w-full sm:px-3 lg:px-8 ">
                       <div className="overflow-hidden">
                         <table className="min-w-full">
-                          <thead className="bg-white border-b">
+                          <thead className=" bg-stone-400 border-b">
                             <tr>
                               <th
                                 scope="col"
@@ -177,12 +183,12 @@ function Vendor() {
                               >
                                 PO Number
                               </th>
-                              <th
+                              {/* <th
                                 scope="col"
-                                className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                                className="text-[12px] font-medium text-gray-900 px-3 py-4 text-center"
                               >
                                 Vendor
-                              </th>
+                              </th> */}
                               <th
                                 scope="col"
                                 className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
@@ -203,6 +209,14 @@ function Vendor() {
                               >
                                 PO Date
                               </th>
+
+                              <th
+                                scope="col"
+                                className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                              >
+                                Completion %
+                              </th>
+                              
                             </tr>
                           </thead>
                           <tbody>
@@ -217,7 +231,7 @@ function Vendor() {
                               .map((row, index) => (
                                 <tr
                                   key={index}
-                                  className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100"
+                                  className="bg-zinc-300 border-b transition duration-300 ease-in-out active:bg-neutral-700  visited:bg-violet-700 hover:bg-gray-100 "
                                   onClick={() => {
                                     setActivePo(row.ponum, index);
                                     console.log("I am clicked!")
@@ -229,16 +243,16 @@ function Vendor() {
                                   <td className="text-[10px] text-gray-900 font-semibold px-1 py-1 whitespace-nowrap">
                                     {row.ponum}
                                   </td>
-                                  <td className="text-[14px] text-gray-900 font-light px-2 py-1 whitespace-nowrap">
+                                  {/* <td className="text-[12px] text-gray-600 font-semibold px-2 py-1 whitespace-nowrap">
                                     {row.vendor}
-                                  </td>
-                                  <td className="text-[10px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap">
+                                  </td> */}
+                                  <td className="text-[10px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap text-right">
                                     {(
                                       Math.round(row.poval * 100) / 100
                                     ).toLocaleString()}
                                   </td>
 
-                                  <td className="text-[10px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap">
+                                  <td className="text-[10px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap text-right">
                                     {(
                                       Math.round(row.balgrval * 100) / 100
                                     ).toLocaleString()}
@@ -266,6 +280,12 @@ function Vendor() {
                           </button>
                         </p> */}
                                   {/* </td> */}
+                                  <td className="p-2">
+                                  
+                                    <Radialprogress percent={
+                                      Math.round((row.poval -row.balgrval)  / row.poval *100)
+                                    } />
+                                  </td>
                                 </tr>
                               ))}
                           </tbody>
@@ -307,12 +327,12 @@ function Vendor() {
               </div> */}
                 {/* <div className="fixed top-0 left-0 h-full w-full bg-slate-400 bg-opacity-10 backdrop-blur-0 flex justify-center items-center"> */}
                 
-                  <div className="w-[900px] flex flex-col">
+                  <div className="w-[900px] py-2 flex flex-col h-96  overflow-y-scroll  hide-scroll-bar">
                   
-                    <div className="bg-white p-2 rounded text-[12px] text-black font-semibold">
+                    <div className="bg-stone-300  rounded text-[12px] text-black font-semibold">
                     
                       
-                      PO Details for:{CurrentPurchaseorder}{" "}
+                      {/* PO Details for:{CurrentPurchaseorder}{" "} */}
                       
                       {!isLoading ? (
                         <motion.div initial="hidden" animate="visible" variants={variant}>
@@ -321,87 +341,93 @@ function Vendor() {
                             <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                               <div className="overflow-y-auto">
                                 <table className="min-w-full text-center">
-                                  <thead className="border-b bg-white">
+                                  <thead className="border-b bg-zinc-100 ">
                                     <tr>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-6"
+                                        className="text-[10px] py-2 font-medium text-gray-900 px-2"
                                       >
                                         PO Line Item
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-6"
+                                        className="text-[10px] font-medium text-gray-900 px-2"
                                       >
                                         Plant Code
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-6"
+                                        className="text-[10px] font-medium text-gray-900 px-2"
                                       >
                                         PO Quantity
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-6"
+                                        className="text-[10px] font-medium text-gray-900 px-2"
                                       >
                                         PO UOM
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-6"
+                                        className="text-[10px] font-medium text-gray-900 px-2"
                                       >
                                         PO Unit Price
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-6"
+                                        className="text-[10px] font-medium text-gray-900 px-2"
                                       >
                                         PO Item Value (SR)
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-6"
+                                        className="text-[10px] font-medium text-gray-900 px-2"
                                       >
                                         Pending Qty
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-6"
+                                        className="text-[10px] font-medium text-gray-900 px-2"
                                       >
                                         Pending Value (SR)
                                       </th>
                                     </tr>
                                   </thead>
                                   <tbody >
-                                    {selectedpolist.map((row, index) => (
+                                    {selectedpolist.sort((a,b)=>{
+                                      return a["po-line-item"].localeCompare(b["po-line-item"], undefined,
+                                      {
+                                        numeric:true,
+                                        sensitivity:"base"
+                                      })
+                                    }).map((row, index) => (
                                       <tr
                                         key={index}
-                                        className="bg-slate-400  border-b"
+                                        className="bg-stone-300  border-b"
                                       >
-                                        <td className="px-6 whitespace-nowrap text-[10px] font-medium text-white">
+                                        <td className="px-2 whitespace-nowrap text-[10px] font-medium text-black">
                                           {row["po-line-item"]}
                                         </td>
-                                        <td className="text-[10px] text-white font-light px-6 max-h-full whitespace-nowrap">
+                                        <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
                                           {row["plant-code"]}
                                         </td>
-                                        <td className="text-[10px] text-white font-medium px-6 max-h-full whitespace-nowrap">
+                                        <td className="text-[10px] text-black font-medium px-2 max-h-full whitespace-nowrap">
                                           {row["po-quantity"].$numberDecimal}
                                         </td>
-                                        <td className="text-[10px] text-white font-light px-6 max-h-full whitespace-nowrap">
+                                        <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
                                           {row["po-unit-of-measure"]}
                                         </td>
-                                        <td className="text-[10px] text-white font-medium px-6 max-h-full whitespace-nowrap">
-                                          {row["po-unit-price"]}
+                                        <td className="text-[10px] text-black font-medium px-2 max-h-full whitespace-nowrap">
+                                          {(Math.round(row["po-unit-price"]*100)/100).toLocaleString()}
                                         </td>
-                                        <td className="text-[10px] text-white font-light px-6 max-h-full whitespace-nowrap">
-                                          {row["po-value-sar"]}
+                                        <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
+                                          {(Math.round(row["po-value-sar"]*100)/100).toLocaleString()}
                                         </td>
-                                        <td className="text-[10px] text-white font-medium px-6 max-h-full whitespace-nowrap">
+                                        <td className="text-[10px] text-black font-medium px-2 max-h-full whitespace-nowrap">
                                           {row["pending-qty"].$numberDecimal}
                                         </td>
-                                        <td className="text-[10px] text-white font-light px-6 max-h-full whitespace-nowrap">
-                                          {row["pending-val-sar"]}
+                                        <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
+                                          {(Math.round(row["pending-val-sar"]*100)/100).toLocaleString()}
                                         </td>
                                       </tr>
                                     ))}
@@ -451,7 +477,7 @@ function Vendor() {
                 <div className="sm:min-w-0 sm:flex-1">
                 
                   <p className="text-lg font-semibold leading-8 text-gray-900">
-                    Transfers are instant
+                    Vendors documents (VAT,CR certificates & profile)
                   </p>
                   
                   <p className="mt-2 text-base leading-7 text-gray-600">
@@ -483,13 +509,9 @@ function Vendor() {
                 </div>
                 <div className="sm:min-w-0 sm:flex-1">
                   <p className="text-lg font-semibold leading-8 text-gray-900">
-                    Mobile notifications
+                    Vendor evaluation 
                   </p>
-                  <p className="mt-2 text-base leading-7 text-gray-600">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Maiores impedit perferendis suscipit eaque, iste dolor
-                    cupiditate blanditiis ratione.
-                  </p>
+                  
                 </div>
               </div>
             </div>
@@ -497,6 +519,7 @@ function Vendor() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

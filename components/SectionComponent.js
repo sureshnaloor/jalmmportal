@@ -1,10 +1,10 @@
 import React from 'react'
 
-function SectionComponent({id}) {
+function SectionComponent() {
   return (
     <>    
     <h1> start of section component</h1>
-    <div className='bg-gray-300 dark:bg-gray-600' id={id} >
+    <div className='bg-gray-300 dark:bg-gray-600'  >
       SectionComponent. Lorem ipsum dolor sit amet consectetur adipisicing elit.
       Soluta repellat aut inventore doloremque. A velit possimus, similique in
       enim suscipit cupiditate harum vitae quos vero, aliquid molestiae

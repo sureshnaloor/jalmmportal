@@ -2,8 +2,8 @@ import React from "react";
 import Image from "next/image";
 function Matgrouplist({ matgroups, _ }) {
   return (
-    <>
-    <h1> this is mterial group pqge</h1>
+    // <>
+    // <h1> this is mterial group pqge</h1>
     <div >
       
       <section className="pt-10 lg:pt-[120px] pb-10 lg:pb-20 bg-[#F3F4F6]">
@@ -55,7 +55,7 @@ function Matgrouplist({ matgroups, _ }) {
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
                         <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"]}
+                          {mg["matgroup-primary-desc"].toLowerCase()}
                         </option>
                       ))}
                     </select>
@@ -64,14 +64,14 @@ function Matgrouplist({ matgroups, _ }) {
                     href="#"
                     className="
                      inline-block
-                     py-2
-                     px-7
+                     py-1
+                     px-5
                      border border-[#E5E7EB]
                      rounded-full
-                     text-base text-body-color
-                     dark: text-orange-900
+                     text-[10px] text-body-color
+                     dark: text-stone-100  bg-amber-600
                      font-medium
-                     hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-red-500
+                     hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
                   >
@@ -126,7 +126,7 @@ function Matgrouplist({ matgroups, _ }) {
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
                         <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"]}
+                          {mg["matgroup-primary-desc"].toLowerCase()}
                         </option>
                       ))}
                     </select>
@@ -135,13 +135,14 @@ function Matgrouplist({ matgroups, _ }) {
                     href="#"
                     className="
                      inline-block
-                     py-2
-                     px-7
+                     py-1
+                     px-5
                      border border-[#E5E7EB]
                      rounded-full
-                     text-base text-body-color
+                     text-[10px] text-body-color
+                     dark: text-stone-100  bg-amber-600
                      font-medium
-                     hover:border-primary hover:bg-primary hover:text-white
+                     hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
                   >
@@ -196,7 +197,7 @@ function Matgrouplist({ matgroups, _ }) {
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
                         <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"]}
+                          {mg["matgroup-primary-desc"].toLowerCase()}
                         </option>
                       ))}
                     </select>
@@ -205,13 +206,14 @@ function Matgrouplist({ matgroups, _ }) {
                     href="#"
                     className="
                      inline-block
-                     py-2
-                     px-7
+                     py-1
+                     px-5
                      border border-[#E5E7EB]
                      rounded-full
-                     text-base text-body-color
+                     text-[10px] text-body-color
+                     dark: text-stone-100  bg-amber-600
                      font-medium
-                     hover:border-primary hover:bg-primary hover:text-white
+                     hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
                   >
@@ -266,7 +268,7 @@ function Matgrouplist({ matgroups, _ }) {
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
                         <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"]}
+                          {mg["matgroup-primary-desc"].toLowerCase()}
                         </option>
                       ))}
                     </select>
@@ -275,13 +277,14 @@ function Matgrouplist({ matgroups, _ }) {
                     href="#"
                     className="
                      inline-block
-                     py-2
-                     px-7
+                     py-1
+                     px-5
                      border border-[#E5E7EB]
                      rounded-full
-                     text-base text-body-color
+                     text-[10px] text-body-color
+                     dark: text-stone-100  bg-amber-600
                      font-medium
-                     hover:border-primary hover:bg-primary hover:text-white
+                     hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
                   >
@@ -336,7 +339,7 @@ function Matgrouplist({ matgroups, _ }) {
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
                         <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"]}
+                          {mg["matgroup-primary-desc"].toLowerCase()}
                         </option>
                       ))}
                     </select>
@@ -345,13 +348,14 @@ function Matgrouplist({ matgroups, _ }) {
                     href="#"
                     className="
                      inline-block
-                     py-2
-                     px-7
+                     py-1
+                     px-5
                      border border-[#E5E7EB]
                      rounded-full
-                     text-base text-body-color
+                     text-[10px] text-body-color
+                     dark: text-stone-100  bg-amber-600
                      font-medium
-                     hover:border-primary hover:bg-primary hover:text-white
+                     hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
                   >
@@ -406,7 +410,7 @@ function Matgrouplist({ matgroups, _ }) {
                       }).map((mg) => (
                         // eslint-disable-next-line react/jsx-key
                         <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"]}
+                          {mg["matgroup-primary-desc"].toLowerCase()}
                         </option>
                       ))}
                     </select>
@@ -415,13 +419,14 @@ function Matgrouplist({ matgroups, _ }) {
                     href="#"
                     className="
                      inline-block
-                     py-2
-                     px-7
+                     py-1
+                     px-5
                      border border-[#E5E7EB]
                      rounded-full
-                     text-base text-body-color
-                     font-medium
-                     hover:border-primary hover:bg-primary hover:text-white
+                     text-[10px] text-body-color
+                     dark: text-stone-100  bg-amber-600
+                     font-medium 
+                     hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
                   >
@@ -434,8 +439,8 @@ function Matgrouplist({ matgroups, _ }) {
         </div>
       </section>
     </div>
-    <h3> this is end of the matgroup page</h3>
-    </>
+    // <h3> this is end of the matgroup page</h3>
+    // </>
   );
 }
 

@@ -74,34 +74,34 @@ function Projectdetails() {
   return (
     <div>
       <section className="text-gray-600 body-font">
-        <div className="container px-5 py-24 mx-auto">
+        <div className="container px-0.5 py-0.5 mx-auto bg-zinc-50">
         
-          <div className="flex flex-wrap w-full  flex-col border-slate-600 shadow-outer my-4 bg-gradient-to-r from-cyan-100 to-amber-100">
+          <div className="flex flex-wrap w-full  flex-col border-slate-600 shadow-outer my-4 bg-gradient-to-r from-zinc-50 to-stone-200">
             <div className="h-1 bg-gray-200 rounded overflow-hidden">
               <div className="w-24 h-full bg-blue-500"></div>
             </div>
 
-            <h1 className="md:text-xl lg:text-2xl font-medium title-font mb-2 text-gray-900">
-              <span className="text-md text-blue-800 font-Freehand">
+            <h1 className="md:text-xl lg:text-xl font-medium title-font mb-2 text-amber-900">
+              <span className="text-md text-fuchsia-800 font-Freehand">
                 {" "}
                 Project name:{" "}
               </span>
               {project["project-name"]}
             </h1>
-            <p className="lg:w-1/2 w-full leading-relaxed text-xl text-gray-500 pb-3">
-              <span className="text-md text-blue-800"> Project Manager: </span>
+            <p className="lg:w-1/2 w-full leading-relaxed  lowercase text-xl font-semibold text-amber-900 pb-3">
+              <span className="text-md text-fuchsia-800"> Project Manager: </span>
               {project["project-incharge"]}
             </p>
-            <p className="ml-auto lg:w-1/2 w-full leading-relaxed text-lg text-yellow-500">
-              <span className="text-md text-orange-800"> Project start: </span>
-              {project["start-date"]}
+            <p className="ml-auto lg:w-1/2 w-full leading-relaxed text-lg text-fuchsia-800">
+              <span className="text-md font-semibold text-orange-800"> Project start: </span>
+              {moment(project["start-date"]).format('DD/MM/YYYY')}
             </p>
-            <p className="pb-4 ml-auto lg:w-1/2 w-full leading-relaxed text-lg text-yellow-500">
-              <span className="text-md text-orange-800">
+            <p className="pb-4 ml-auto lg:w-1/2 w-full leading-relaxed text-lg text-fuchsia-800">
+              <span className="text-md font-semibold text-orange-800">
                 {" "}
                 Project scheduled end:{" "}
               </span>
-              {project["finished-date"]}
+              {moment(project["finished-date"]).format("DD/MM/YYYY")}
             </p>
             {!network ? null : (
               <p className="ml-auto lg:w-1/2 w-full leading-relaxed text-lg text-gray-800">
@@ -111,8 +111,8 @@ function Projectdetails() {
             )}
           </div>
           <div className="flex flex-wrap -m-4">
-          <div className="xl:w-1/3 md:w-1/2 p-4">
-              <div className="border border-gray-200 p-6 rounded-lg">
+          <div className="xl:w-1/2 md:w-full p-4 h-96 max-h-96 overflow-y-scroll hide-scroll-bar">
+              <div className="border border-gray-200 p-6 bg-stone-200 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"
@@ -133,56 +133,9 @@ function Projectdetails() {
                   <ProjdocUpload wbs={project["project-wbs"]} />
               </div>
             </div>
-            <div className="xl:w-1/3 md:w-1/2 p-4">
-              <div className="border border-gray-200 p-6 rounded-lg">
-                <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-6 h-6"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
-                  </svg>
-                </div>
-                <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
-                  SCHEDULE DETAILS
-                </h2>
-                <p className="leading-relaxed text-base">
-                  Fingerstache flexitarian street art 8-bit waist co, subway
-                  tile poke farm.
-                </p>
-              </div>
-            </div>
-            <div className="xl:w-1/3 md:w-1/2 p-4">
-              <div className="border border-gray-200 p-6 rounded-lg">
-                <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-6 h-6"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                  </svg>
-                </div>
-                <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
-                  BUDGET DETAILS
-                </h2>
-                <p className="leading-relaxed text-base">
-                  Fingerstache flexitarian street art 8-bit waist co, subway
-                  tile poke farm.
-                </p>
-              </div>
-            </div>
-            <div className="xl:w-1/3 md:w-1/2 p-4">
-              <div className="border border-gray-200 p-6 rounded-lg">
+
+            <div className="xl:w-1/2 md:w-1/2 p-4  h-96 max-h-96 overflow-y-scroll  hide-scroll-bar">
+              <div className="border border-gray-200 bg-zinc-100 p-6 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"
@@ -200,7 +153,7 @@ function Projectdetails() {
                   Special stock: (Currently still in stock)
                 </h2>
 
-                <div className="p-4">
+                <div className="p-36 pt-3 pb-3">
                   <Pie
                     data={{
                       labels: specialstk.map((stock) => stock["material-code"]),
@@ -227,7 +180,9 @@ function Projectdetails() {
                   />
                 </div>
                 <div className="leading-relaxed text-base">
-                  {specialstk.map((row, index) => (
+                  {specialstk.sort((a,b)=>{
+                    return b["stock-val"] - a["stock-val"]
+                  }).map((row, index) => (
                     <p key={index}>
                       {" "}
                       <span className="text-blue-800 font-Lato">
@@ -241,7 +196,7 @@ function Projectdetails() {
                         {" "}
                         <span className="mr-1 text-sm">Value SAR </span>{" "}
                         <span className="text-sm  font-semibold">
-                          {row["stock-val"]}
+                          {(Math.round(row["stock-val"]*100)/100).toLocaleString()}
                         </span>
                       </span>
                     </p>
@@ -249,8 +204,58 @@ function Projectdetails() {
                 </div>
               </div>
             </div>
-            <div className="xl:w-1/3 md:w-1/2 p-4">
-              <div className="border border-gray-200 p-6 rounded-lg">
+
+            <div className="xl:w-1/2 md:w-1/2 p-4 max-h-96 overflow-y-scroll  hide-scroll-bar">
+              <div className="border border-gray-200 p-6 bg-zinc-100 rounded-lg">
+                <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    className="w-6 h-6"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                  </svg>
+                </div>
+                <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
+                  SCHEDULE DETAILS
+                </h2>
+                <p className="leading-relaxed text-base">
+                  Fingerstache flexitarian street art 8-bit waist co, subway
+                  tile poke farm.
+                </p>
+              </div>
+            </div>
+            <div className="xl:w-1/2 md:w-1/2 max-h-96 overflow-y-scroll  hide-scroll-bar p-4">
+              <div className="border border-gray-200 p-6 bg-neutral-200 rounded-lg">
+                <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    className="w-6 h-6"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                </div>
+                <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
+                  BUDGET DETAILS
+                </h2>
+                <p className="leading-relaxed text-base">
+                  Fingerstache flexitarian street art 8-bit waist co, subway
+                  tile poke farm.
+                </p>
+              </div>
+            </div>
+            
+            <div className="xl:w-2/3 md:w-2/3 p-4 h-96 max-h-96 overflow-y-scroll  hide-scroll-bar">
+              <div className="border border-gray-200 p-[2px] bg-zinc-300 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"
@@ -277,6 +282,15 @@ function Projectdetails() {
                           <th scope="col" className="py-3 px-1">
                             PO Number & Item
                           </th>
+                          <th scope="col" className="py-3 px-1">
+                            PO Date 
+                          </th>
+                          <th scope="col" className="py-3 px-1">
+                            Vendor
+                          </th>
+                          <th scope="col" className="py-3 px-1">
+                            Material/service
+                          </th>
 
                           <th scope="col" className="py-3 px-1 text-teal-800">
                             Unit Price
@@ -291,7 +305,7 @@ function Projectdetails() {
                           <tr
                             key={index}
                             className={`${
-                              index % 2 ? "bg-red-50" : null
+                              index % 2 ? "bg-zinc-50" : null
                             } border-b dark:bg-gray-900 dark:border-gray-700`}
                           >
                             <th
@@ -302,14 +316,20 @@ function Projectdetails() {
                                 {purchase["po-number"]} -{" "}
                                 {purchase["po-line-item"]}
                               </p>
+                              </th>
+                              <th>
                               <p className="text-[10px] text-purple-700">
                                 {moment(purchase["po-date"]).format(
                                   "MM-DD-YYYY"
                                 )}
                               </p>
+                              </th>
+                              <th>
                               <p className="text-[10px] text-teal-700">
                                 {purchase["vendorname"]}
                               </p>
+                              </th>
+                              <th>
                               <p className="text-[10px] text-teal-700">
                                 {purchase["material"]["matcode"]}{" "}
                                 <span className="text-teal-900">
@@ -339,8 +359,8 @@ function Projectdetails() {
                 </div>
               </div>
             </div>
-            <div className="xl:w-1/3 md:w-1/2 p-4">
-              <div className="border border-gray-200 p-6 rounded-lg">
+            <div className="xl:w-1/3 md:w-1/3 h-96 max-h-96 overflow-y-scroll  hide-scroll-bar p-4">
+              <div className="border border-gray-200 p-[2px] bg-stone-200 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"

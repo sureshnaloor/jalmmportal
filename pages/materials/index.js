@@ -5,6 +5,7 @@ import { useSession, getSession } from "next-auth/react";
 import moment from "moment";
 import { Bar, Pie } from "react-chartjs-2";
 import Chart from "chart.js/auto";
+import HeaderComponent from "../../components/HeaderComponent";
 
 function Materials() {
   const [materials, setmaterials] = useState({});
@@ -82,9 +83,13 @@ function Materials() {
   let labelsBar = [...new Set(matdocs.map(item => item["doc-date"].split("-")[0]))]
 
   return (
+    <>
+    <div>
+      <HeaderComponent /> 
+    </div>
     <section className="text-gray-600 body-font">
-      <div className="container px-5 py-24 mx-auto">
-        <div className="flex flex-col border-b  border-slate-600 shadow-outer  my-4 bg-gradient-to-r from-cyan-100 to-amber-100">
+      <div className="container px-0.5 py-0.5 mx-auto bg-stone-100">
+        <div className="flex flex-col border-b  border-slate-600 shadow-outer my-2 bg-slate-50">
           <div className="h-1 bg-gray-200 rounded overflow-hidden">
             <div className="w-24 h-full bg-blue-500"></div>
           </div>
@@ -96,7 +101,7 @@ function Materials() {
               {" "}
               {materials["unit-measure"]}{" "}
             </h2>
-            <h5 className="sm:w-1/6 text-green-900 text-lg tracking-widest bold font-Rampart">
+            <h5 className="sm:w-1/6 text-green-900 text-xl tracking-widest font-bold">
               {" "}
               {materials["material-type"] == "ZCVL"
                 ? "Civil Material"
@@ -110,254 +115,8 @@ function Materials() {
             </p>
           </div>
         </div>
-
-        <div className="flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4">
-          <div className="p-4 md:w-1/3 sm:mb-0 mb-6">
-            <div className="rounded-lg h-64 overflow-hidden">
-              <Image
-                width="100%"
-                height="100%"
-                objectFit="contain"
-                layout="responsive"
-                alt="content"
-                className="object-cover object-center h-full w-full"
-                src="/images/purchaseorder.jpg"
-              />
-            </div>
-            <h2 className="text-md font-medium border-2 border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
-              Purchase Orders for: {materials["material-code"]}
-            </h2>
-            <div className="p-3 w-full max-w-md bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
-              <div className="overflow-x-auto relative">
-                <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="py-3 px-1">
-                        PO Number & Item
-                      </th>
-
-                      <th scope="col" className="py-3 px-1 text-teal-800">
-                        Unit Price
-                      </th>
-                      <th scope="col" className="py-3 px-1">
-                        Quantity
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {purchases.map((purchase, index) => (
-                      <tr
-                        key={index}
-                        className={`${
-                          index % 2 ? "bg-red-50" : null
-                        } border-b dark:bg-gray-900 dark:border-gray-700`}
-                      >
-                        <th
-                          scope="row"
-                          className="flex flex-col py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
-                            {purchase["po-number"]} - {purchase["po-line-item"]}
-                          </p>
-                          <p className="text-[10px] text-purple-700">
-                            {moment(purchase["po-date"]).format("MM-DD-YYYY")}
-                          </p>
-                          <p className="text-[10px] text-teal-700">
-                            {purchase["vendorname"]}
-                          </p>
-                        </th>
-
-                        <td className="py-4 px-1 text-teal-900 font-bold text-[10px]">
-                          {purchase["po-unit-price"]} <br />
-                          <span className="text-[8px] text-red-800">
-                            {purchase["currency"]}{" "}
-                          </span>
-                        </td>
-                        <td className="justify-self-center  text-red-800">
-                          {" "}
-                          {Math.round(
-                            purchase["po-quantity"].$numberDecimal,
-                            0
-                          )}{" "}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <div className="p-4 md:w-1/3 sm:mb-0 mb-6">
-            <div className="rounded-sm h-64 overflow-hidden">
-              <Image
-                width="100%"
-                height="100%"
-                objectFit="contain"
-                layout="responsive"
-                alt="content"
-                className="object-cover object-center h-full w-full"
-                src="/images/projects.jpg"
-              />
-            </div>
-            <h2 className="text-md font-medium border-[2px] border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
-              Account assignments for: {materials["material-code"]}
-            </h2>
-            <div className="p-3 w-full max-w-md bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
-              <div>
-                {Object.entries(
-                  purchases.reduce(
-                    (next, purchase) => (
-                      purchase.account["order"]
-                        ? (next[purchase.account["order"]] =
-                            ++next[purchase.account["order"]] || 1)
-                        : purchase.account["wbs"]
-                        ? (next[purchase.account["wbs"]] =
-                            ++next[purchase.account["wbs"]] || 1)
-                        : purchase.account["costcenter"]
-                        ? (next[purchase.account["costcenter"]] =
-                            ++next[purchase.account["costcenter"]] || 1)
-                        : null,
-                      next
-                    ),
-                    {}
-                  )
-                ).map((row, index) => (
-                  <p key={index} className="pb-3 flex flex-col">
-                    {" "}
-                    <span className="text-red-400 text-lg font-Freehand">
-                      {" "}
-                      {row[1]} {row[1] == 1 ? "time\u00a0 for" : "times for"}
-                    </span>{" "}
-                    <span className="text-purple-900  text-sm"> {row[0]}</span>{" "}
-                  </p>
-                ))}
-              </div>
-              <p className="text-sm leading-relaxed mt-2 font-bold">
-                <span className="word-break pt-3 pb-3 text-amber-800 uppercase font-Lato text-xs">
-                  {" "}
-                  Total value of this material purchased:{" "}
-                </span>
-                {purchases
-                  .reduce(
-                    (acc, purchase) => acc + purchase["po-value-sar"],
-                    0.0
-                  )
-                  .toLocaleString("en-US")}
-                <span> {purchases[0]?.currency} </span>
-              </p>
-
-              <p className="text-sm leading-relaxed mt-2 font-bold">
-                <span className="word-break pt-3 pb-3 text-amber-800 uppercase text-xs">
-                  {" "}
-                  Total QUANTITY of this material purchased:{" "}
-                </span>
-                {purchases.reduce(
-                  (acc, purchase) =>
-                    acc + Number(purchase["po-quantity"].$numberDecimal),
-                  0
-                )}
-                <span> {materials["unit-measure"]}</span>
-              </p>
-            </div>
-          </div>
-          <div className="p-4 md:w-1/3 sm:mb-0 mb-6">
-            <div className="rounded-lg h-64 overflow-hidden">
-              <Image
-                width="100%"
-                height="100%"
-                objectFit="contain"
-                layout="responsive"
-                alt="content"
-                className="object-cover object-center h-full w-full"
-                src="/images/suppliers.jpg"
-              />
-            </div>
-            <h2 className="text-md font-medium border-[2px] border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
-              Vendors for: {materials["material-code"]}
-            </h2>
-            <div className="p-3 w-full max-w-md bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
-              {Object.entries(
-                purchases.reduce(
-                  (next, purchase) => (
-                    (next[purchase.vendorname] =
-                      ++next[purchase.vendorname] || 1),
-                    next
-                  ),
-                  {}
-                )
-              ).map((row, index) => (
-                <p key={index} className="flex flex-col">
-                  {" "}
-                  <span className="text-red-400 font-Freehand text-lg pb-3">
-                    {row[1]} {row[1] == 1 ? `time\u00a0 from` : "times from"}{" "}
-                  </span>{" "}
-                  <span className="text-sm font-semibold">{row[0]}</span>{" "}
-                </p>
-              ))}
-            </div>
-
-            <h2 className="text-md border-[2px] border-grey rounded-lg p-3 font-medium   text-gray-900 mt-5 flex align-middle justify-center mb-3">
-              Open requisitions for:{" "}
-              <span className=" px-3 text-amber-900">
-                {materials["material-code"]}{" "}
-              </span>
-            </h2>
-            <div className="p-3 w-full max-w-md bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
-              <div className="overflow-x-auto relative">
-                <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="py-3 px-1">
-                        PR Number & Item
-                      </th>
-                      <th scope="col" className="py-3 px-1">
-                        Quantity
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {requisitions.map((requisition, index) => (
-                      <tr
-                        key={index}
-                        className={`${
-                          index % 2 ? "bg-red-50" : null
-                        } border-b dark:bg-gray-900 dark:border-gray-700`}
-                      >
-                        <th
-                          scope="row"
-                          className="flex flex-col py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          <p className="text-[12px] text-blue-900 font-Montserrat tracking-widest font-semibold">
-                            {requisition["pur-requisition"]} -{" "}
-                            {requisition["pr-itemno"]}
-                          </p>
-                          <p className="text-[10px] text-purple-700">
-                            {moment(requisition["pr-date"]).format(
-                              "MM-DD-YYYY"
-                            )}
-                          </p>
-                        </th>
-
-                        <td className="justify-self-center  text-red-800">
-                          {" "}
-                          {Math.round(
-                            requisition["pr-quantity"].$numberDecimal,
-                            0
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* third section */}
-
         <section className="text-gray-600 body-font">
-          <div className="container px-5 py-24 mx-auto">
+          <div className="container px-5 py-1 mx-auto">
             <div className="flex flex-col text-center w-full mb-20">
               <h2 className="text-md text-blue-500 tracking-widest font-medium title-font mb-1">
                 Material Stock and Trend
@@ -614,8 +373,259 @@ function Materials() {
             </div>
           </div>
         </section>
+        <div className="flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4">
+          <div className="p-4 md:w-1/3 sm:mb-0 mb-6">
+            <div className="rounded-lg h-64 overflow-hidden">
+              <Image
+                width="70%"
+                height="70%"
+                objectFit="contain"
+                layout="responsive"
+                alt="content"
+                className="object-cover object-center h-full w-full"
+                src="/images/purchaseorder.jpg"
+              />
+            </div>
+            <h2 className="text-md font-medium border-2 border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
+              Purchase Orders for: {materials["material-code"]}
+            </h2>
+            <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar max-h-[812px] bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
+              <div className="overflow-x-auto relative">
+                <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                      <th scope="col" className="py-3 px-1">
+                        PO Number & Item
+                      </th>
+
+                      <th scope="col" className="py-3 px-1 text-teal-800">
+                        Unit Price
+                      </th>
+                      <th scope="col" className="py-3 px-1">
+                        Quantity
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {purchases.map((purchase, index) => (
+                      <tr
+                        key={index}
+                        className={`${
+                          index % 2 ? "bg-red-50" : null
+                        } border-b dark:bg-gray-900 dark:border-gray-700`}
+                      >
+                        <th
+                          scope="row"
+                          className="flex flex-col py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                          <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
+                            {purchase["po-number"]} - {purchase["po-line-item"]}
+                          </p>
+                          <p className="text-[10px] text-purple-700">
+                            {moment(purchase["po-date"]).format("MM-DD-YYYY")}
+                          </p>
+                          <p className="text-[10px] text-teal-700">
+                            {purchase["vendorname"]}
+                          </p>
+                        </th>
+
+                        <td className="py-4 px-1 text-teal-900 font-bold text-[10px]">
+                          {purchase["po-unit-price"]} <br />
+                          <span className="text-[8px] text-red-800">
+                            {purchase["currency"]}{" "}
+                          </span>
+                        </td>
+                        <td className="justify-self-center  text-red-800">
+                          {" "}
+                          {Math.round(
+                            purchase["po-quantity"].$numberDecimal,
+                            0
+                          )}{" "}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="p-4 md:w-1/3 sm:mb-0 mb-6">
+            <div className="rounded-sm h-64 overflow-hidden">
+              <Image
+                width="70%"
+                height="70%"
+                objectFit="contain"
+                layout="responsive"
+                alt="content"
+                className="object-cover object-center h-full w-full"
+                src="/images/projects.jpg"
+              />
+            </div>
+            <h2 className="text-md font-medium border-[2px] border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
+              Account assignments for: {materials["material-code"]}
+            </h2>
+            <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar max-h-[812px] bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
+            <p className="text-sm leading-relaxed mt-2 font-bold">
+                <span className="word-break pt-3 pb-3 text-amber-800 uppercase font-Lato text-xs">
+                  {" "}
+                  Total value of this material purchased:{" "}
+                </span>
+                {purchases
+                  .reduce(
+                    (acc, purchase) => acc + purchase["po-value-sar"],
+                    0.0
+                  )
+                  .toLocaleString("en-US")}
+                <span> {purchases[0]?.currency} </span>
+              </p>
+
+              <p className="text-sm leading-relaxed mt-2 font-bold pb-4">
+                <span className="word-break pt-3 pb-3 border-b-4  text-amber-800 uppercase text-xs">
+                  {" "}
+                  Total QUANTITY of this material purchased:{" "}
+                </span>
+                {purchases.reduce(
+                  (acc, purchase) =>
+                    acc + Number(purchase["po-quantity"].$numberDecimal),
+                  0
+                )}
+                <span> {materials["unit-measure"]}</span>
+              </p>
+              
+              <div>
+                {Object.entries(
+                  purchases.reduce(
+                    (next, purchase) => (
+                      purchase.account["order"]
+                        ? (next[purchase.account["order"]] =
+                            ++next[purchase.account["order"]] || 1)
+                        : purchase.account["wbs"]
+                        ? (next[purchase.account["wbs"]] =
+                            ++next[purchase.account["wbs"]] || 1)
+                        : purchase.account["costcenter"]
+                        ? (next[purchase.account["costcenter"]] =
+                            ++next[purchase.account["costcenter"]] || 1)
+                        : null,
+                      next
+                    ),
+                    {}
+                  )
+                ).map((row, index) => (
+                  <p key={index} className="pb-3 flex flex-col">
+                    {" "}
+                    <span className="text-red-400 text-lg font-Freehand">
+                      {" "}
+                      {row[1]} {row[1] == 1 ? "time\u00a0 for" : "times for"}
+                    </span>{" "}
+                    <span className="text-purple-900  text-sm"> {row[0]}</span>{" "}
+                  </p>
+                ))}
+              </div>
+              
+            </div>
+          </div>
+          <div className="p-4 md:w-1/3 sm:mb-0 mb-6">
+            <div className="rounded-lg h-64 overflow-hidden">
+              <Image
+                width="70%"
+                height="70%"
+                objectFit="contain"
+                layout="responsive"
+                alt="content"
+                className="object-cover object-center h-full w-full"
+                src="/images/suppliers.jpg"
+              />
+            </div>
+            <div className="max-h-[812px]">
+            <h2 className="text-md font-medium border-[2px] border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
+              Vendors for: {materials["material-code"]}
+            </h2>
+            <div className="p-3 w-full max-w-md  overflow-y-scroll hide-scroll-bar bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
+              {Object.entries(
+                purchases.reduce(
+                  (next, purchase) => (
+                    (next[purchase.vendorname] =
+                      ++next[purchase.vendorname] || 1),
+                    next
+                  ),
+                  {}
+                )
+              ).map((row, index) => (
+                <p key={index} className="flex flex-col">
+                  {" "}
+                  <span className="text-red-400 font-Freehand text-lg pb-3">
+                    {row[1]} {row[1] == 1 ? `time\u00a0 from` : "times from"}{" "}
+                  </span>{" "}
+                  <span className="text-sm font-semibold">{row[0]}</span>{" "}
+                </p>
+              ))}
+            </div>
+
+            <h2 className="text-md border-[2px] border-grey rounded-lg p-3 font-medium   text-gray-900 mt-5 flex align-middle justify-center mb-3">
+              Open requisitions for:{" "}
+              <span className=" px-3 text-amber-900">
+                {materials["material-code"]}{" "}
+              </span>
+            </h2>
+            <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar  bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
+              <div className="overflow-x-auto relative ">
+                <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                      <th scope="col" className="py-3 px-1">
+                        PR Number & Item
+                      </th>
+                      <th scope="col" className="py-3 px-1">
+                        Quantity
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {requisitions.map((requisition, index) => (
+                      <tr
+                        key={index}
+                        className={`${
+                          index % 2 ? "bg-red-50" : null
+                        } border-b dark:bg-gray-900 dark:border-gray-700`}
+                      >
+                        <th
+                          scope="row"
+                          className="flex flex-col py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                          <p className="text-[12px] text-blue-900 font-Montserrat tracking-widest font-semibold">
+                            {requisition["pur-requisition"]} -{" "}
+                            {requisition["pr-itemno"]}
+                          </p>
+                          <p className="text-[10px] text-purple-700">
+                            {moment(requisition["pr-date"]).format(
+                              "MM-DD-YYYY"
+                            )}
+                          </p>
+                        </th>
+
+                        <td className="justify-self-center  text-red-800">
+                          {" "}
+                          {Math.round(
+                            requisition["pr-quantity"].$numberDecimal,
+                            0
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* third section */}
+
+        
       </div>
     </section>
+    </>
   );
 }
 
