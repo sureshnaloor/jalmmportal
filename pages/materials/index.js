@@ -6,6 +6,7 @@ import moment from "moment";
 import { Bar, Pie } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import HeaderComponent from "../../components/HeaderComponent";
+import Footercomponent from "../../components/FooterComponent"
 
 function Materials() {
   const [materials, setmaterials] = useState({});
@@ -389,7 +390,7 @@ function Materials() {
             <h2 className="text-md font-medium border-2 border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
               Purchase Orders for: {materials["material-code"]}
             </h2>
-            <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar max-h-[812px] bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
+            <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar max-h-[812px] bg-white rounded-lg border-y-2 border-b-4 border-zinc-600 shadow-md hover:shadow-2xl sm:p-2 dark:bg-gray-800 dark:border-gray-700">
               <div className="overflow-x-auto relative">
                 <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -464,7 +465,7 @@ function Materials() {
             <h2 className="text-md font-medium border-[2px] border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
               Account assignments for: {materials["material-code"]}
             </h2>
-            <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar max-h-[812px] bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
+            <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar max-h-[812px] bg-white rounded-lg border-y-2 border-b-4 border-zinc-600 shadow-md hover:shadow-2xl sm:p-2 dark:bg-gray-800 dark:border-gray-700">
             <p className="text-sm leading-relaxed mt-2 font-bold">
                 <span className="word-break pt-3 pb-3 text-amber-800 uppercase font-Lato text-xs">
                   {" "}
@@ -540,7 +541,7 @@ function Materials() {
             <h2 className="text-md font-medium border-[2px] border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
               Vendors for: {materials["material-code"]}
             </h2>
-            <div className="p-3 w-full max-w-md  overflow-y-scroll hide-scroll-bar bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
+            <div className="p-3 w-full max-w-md  overflow-y-scroll hide-scroll-bar bg-white rounded-lg border-y-2 border-b-4 border-zinc-600 shadow-md hover:shadow-2xl  sm:p-2 dark:bg-gray-800 dark:border-gray-700">
               {Object.entries(
                 purchases.reduce(
                   (next, purchase) => (
@@ -567,7 +568,7 @@ function Materials() {
                 {materials["material-code"]}{" "}
               </span>
             </h2>
-            <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar  bg-white rounded-lg border shadow-md sm:p-2 dark:bg-gray-800 dark:border-gray-700">
+            <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar  bg-white rounded-lg border-y-2 border-b-4 border-zinc-600 shadow-md hover:shadow-2xl sm:p-2 dark:bg-gray-800 dark:border-gray-700">
               <div className="overflow-x-auto relative ">
                 <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -623,6 +624,9 @@ function Materials() {
         {/* third section */}
 
         
+      </div>
+      <div className="pt-5">
+      <Footercomponent />
       </div>
     </section>
     </>

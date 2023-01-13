@@ -30,7 +30,7 @@ function HeaderComponent() {
 
   if (!mounted) return null;
   return (
-    <nav className="flex bg-zinc-200 dark:bg-gray-600 flex-wrap items-center justify-between px-1">
+    <nav className="flex bg-zinc-200 dark:bg-gray-600 flex-wrap items-center justify-between border-b-2 border-zinc-400  shadow-md px-1">
       <div className="lg:order-2 w-auto lg:w-1/6 lg:text-center">
         <a
           className="text-lg text-gray-800 font-Montserrat font-black font-heading"
@@ -63,11 +63,14 @@ function HeaderComponent() {
       </div>
       <div className="hidden lg:order-1  pl-6 py-8 lg:block w-full lg:w-3/6">
         <div className="block lg:inline-block mt-4 lg:mt-0 mr-10 cursor-pointer text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
+         <Link href="/">
+         <a>
           Home
           <FontAwesomeIcon
             icon={faHomeUser}
             className="text-blue-900 dark:text-yellow-300 fa-thin ml-2 text-xs"
           />
+          </a></Link>
         </div>
 
         <div className="text-sm block lg:inline-block mt-4 lg:mt-0 mr-5 cursor-pointer text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">

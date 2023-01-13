@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 // import FileViewer from "react-file-viewer"
 const FileViewer = React.lazy(() => import("react-file-viewer"));
 
-function ProjdocsViewComponent() {
-  const [projectdocs, setProjectdocs] = useState([]);
+function VendordocsViewComponent() {
+  const [vendordocs, setVendordocs] = useState([]);
 
   const [view, setView] = useState(false);
 
@@ -13,29 +13,29 @@ function ProjdocsViewComponent() {
     setView(!view);
   };
 
-  let wbs = "IS%2FGP.22.001";
+  let vendorid = "10004";
 
   useEffect(() => {
-    const fetchProjectDocs = async () => {
-      const response = await fetch(`/api/projects/viewFiles/${wbs}`);
+    const fetchVendorDocs = async () => {
+      const response = await fetch(`/api/vendors/viewFiles/${vendorid}`);
       const json = await response.json();
-      setProjectdocs(json);
+      setVendordocs(json);
     };
-    fetchProjectDocs();
-  }, [wbs, view]);
+    fetchVendorDocs();
+  }, [vendorid, view]);
 
-  console.log(projectdocs);
+  console.log(vendordocs);
 
   return (
     <>
       {/* <div className="pb-3 text-sm">
-        project Docs for {wbs}{" "}
+        Vendor Docs for {vendorid}{" "}
       </div> */}
-      {projectdocs.map((row, index) => (
+      {vendordocs.map((row, index) => (
         <>
-          <p key={index} className="font-bold">
+          <p key={index} className=" flex flex-initial">
             {" "}
-            {row["email"]}
+            {row["crdocument"]}
           </p>
           <p className="pb-4 text-xs">
             {row["filename"].map((file, index) => (
@@ -84,4 +84,4 @@ function ProjdocsViewComponent() {
   );
 }
 
-export default ProjdocsViewComponent;
+export default VendordocsViewComponent;

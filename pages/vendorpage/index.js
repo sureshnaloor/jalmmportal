@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import moment from 'moment'
 import {motion} from 'framer-motion'
 import HeaderComponent from "../../components/HeaderComponent";
-import Radialprogress from "../../components/Radialprogress"
+import Radialprogress from "../../components/Radialprogress";
+import Footercomponent from "../../components/FooterComponent";
+import Vendordocviews from '../../components/Vendor/VendordocsView';
+import Vendordocupload from '../../components/Vendor/Vendordocupload';
 
 function Vendor() {
   const [vendors, setVendors] = useState([]);
@@ -40,6 +43,7 @@ function Vendor() {
   console.log(vendors);
 
   let projectid = "IS%2FGP.22.001";
+  let vendorid = "100004";
 
   useEffect(() => {
     const fetchPolist = async () => {
@@ -165,9 +169,9 @@ function Vendor() {
                 </p>
               </div> */}
                 <div className="flex flex-col container mx-auto h-96">
-                  <div className="overflow-x-auto sm:-mx-6 lg:-mx-8 overflow-y-scroll hide-scroll-bar">
-                    <div className="py-2 inline-block min-w-full sm:px-3 lg:px-8 ">
-                      <div className="overflow-hidden">
+                  <div className="overflow-x-auto sm:-mx-6 lg:-mx-8  overflow-y-scroll hide-scroll-bar">
+                    <div className="py-2 inline-block min-w-full  sm:px-3 lg:px-8 ">
+                      <div className="overflow-hidden border-2 border-zinc-600 shadow-md hover:shadow-2xl rounded-2xl">
                         <table className="min-w-full">
                           <thead className=" bg-stone-400 border-b">
                             <tr>
@@ -327,7 +331,7 @@ function Vendor() {
               </div> */}
                 {/* <div className="fixed top-0 left-0 h-full w-full bg-slate-400 bg-opacity-10 backdrop-blur-0 flex justify-center items-center"> */}
                 
-                  <div className="w-[900px] py-2 flex flex-col h-96  overflow-y-scroll  hide-scroll-bar">
+                  <div className="w-[900px] py-2 border-2 border-zinc-600 shadow-md hover:shadow-2xl rounded-2xl flex flex-col h-96  overflow-y-scroll  hide-scroll-bar">
                   
                     <div className="bg-stone-300  rounded text-[12px] text-black font-semibold">
                     
@@ -455,8 +459,8 @@ function Vendor() {
                 
               </div>
 
-              <div className="relative flex flex-col gap-6 sm:flex-row md:flex-col lg:flex-row">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500 text-white sm:shrink-0">
+              <div className="relative flex flex-col border-2 border-zinc-600 shadow-md hover:shadow-2xl p-3  gap-6 sm:flex-row md:flex-col lg:flex-row  bg-stone-200">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl  bg-indigo-500 text-white sm:shrink-0">
                   {/* <!-- Heroicon name: outline/bolt --> */}
                   <svg
                     className="h-8 w-8"
@@ -479,16 +483,13 @@ function Vendor() {
                   <p className="text-lg font-semibold leading-8 text-gray-900">
                     Vendors documents (VAT,CR certificates & profile)
                   </p>
+                  <Vendordocviews />
+                  <Vendordocupload vendorid={"10004"}/>
                   
-                  <p className="mt-2 text-base leading-7 text-gray-600">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Maiores impedit perferendis suscipit eaque, iste dolor
-                    cupiditate blanditiis ratione.
-                  </p>
                 </div>
               </div>
 
-              <div className="relative flex flex-col gap-6 sm:flex-row md:flex-col lg:flex-row">
+              <div className="relative flex flex-col gap-6 p-3 border-2 border-zinc-600 shadow-md hover:shadow-2xl sm:flex-row md:flex-col lg:flex-row bg-stone-200 ">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500 text-white sm:shrink-0">
                   {/* <!-- Heroicon name: outline/device-phone-mobile --> */}
                   <svg
@@ -507,7 +508,7 @@ function Vendor() {
                     />
                   </svg>
                 </div>
-                <div className="sm:min-w-0 sm:flex-1">
+                <div className="sm:min-w-0 sm:flex-1 ">
                   <p className="text-lg font-semibold leading-8 text-gray-900">
                     Vendor evaluation 
                   </p>
@@ -519,6 +520,7 @@ function Vendor() {
         </div>
       </div>
     </div>
+    <Footercomponent />
     </>
   );
 }

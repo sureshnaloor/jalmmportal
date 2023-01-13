@@ -7,6 +7,7 @@ import Chart from "chart.js/auto";
 import moment from "moment";
 import ProjdocUpload from '../components/ProjdocuploadComponent'
 import ProjDocsView from '../components/projdocsViewComponent'
+import FooterComponent from "./FooterComponent";
 
 function Projectdetails() {
   const [project, setProject] = useState({});
@@ -72,23 +73,24 @@ function Projectdetails() {
   // console.log(openrequisitions);
 
   return (
+    <>
     <div>
       <section className="text-gray-600 body-font">
         <div className="container px-0.5 py-0.5 mx-auto bg-zinc-50">
         
-          <div className="flex flex-wrap w-full  flex-col border-slate-600 shadow-outer my-4 bg-gradient-to-r from-zinc-50 to-stone-200">
+          <div className="flex flex-wrap w-full border-b-2 flex-col border-slate-600 shadow-outer my-4 bg-gradient-to-r from-zinc-50 to-stone-200">
             <div className="h-1 bg-gray-200 rounded overflow-hidden">
               <div className="w-24 h-full bg-blue-500"></div>
             </div>
 
-            <h1 className="md:text-xl lg:text-xl font-medium title-font mb-2 text-amber-900">
+            <h1 className="md:text-xl lg:text-xl font-medium title-font mb-2 border-b-[1px] border-zinc-600 shadow-md hover:shadow-2xl  text-amber-900">
               <span className="text-md text-fuchsia-800 font-Freehand">
                 {" "}
                 Project name:{" "}
               </span>
               {project["project-name"]}
             </h1>
-            <p className="lg:w-1/2 w-full leading-relaxed  lowercase text-xl font-semibold text-amber-900 pb-3">
+            <p className="lg:w-1/2 w-full leading-relaxed border-b-[1px] border-stone-600  lowercase text-xl font-semibold text-amber-900 pb-3">
               <span className="text-md text-fuchsia-800"> Project Manager: </span>
               {project["project-incharge"]}
             </p>
@@ -111,8 +113,8 @@ function Projectdetails() {
             )}
           </div>
           <div className="flex flex-wrap -m-4">
-          <div className="xl:w-1/2 md:w-full p-4 h-96 max-h-96 overflow-y-scroll hide-scroll-bar">
-              <div className="border border-gray-200 p-6 bg-stone-200 rounded-lg">
+          <div className="xl:w-1/2 md:w-full  p-4 h-96 max-h-96 overflow-y-scroll hide-scroll-bar">
+              <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl p-6  bg-stone-200 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"
@@ -135,7 +137,7 @@ function Projectdetails() {
             </div>
 
             <div className="xl:w-1/2 md:w-1/2 p-4  h-96 max-h-96 overflow-y-scroll  hide-scroll-bar">
-              <div className="border border-gray-200 bg-zinc-100 p-6 rounded-lg">
+              <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl bg-zinc-100 p-6 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"
@@ -206,7 +208,7 @@ function Projectdetails() {
             </div>
 
             <div className="xl:w-1/2 md:w-1/2 p-4 max-h-96 overflow-y-scroll  hide-scroll-bar">
-              <div className="border border-gray-200 p-6 bg-zinc-100 rounded-lg">
+              <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl p-6 bg-zinc-100 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"
@@ -230,7 +232,7 @@ function Projectdetails() {
               </div>
             </div>
             <div className="xl:w-1/2 md:w-1/2 max-h-96 overflow-y-scroll  hide-scroll-bar p-4">
-              <div className="border border-gray-200 p-6 bg-neutral-200 rounded-lg">
+              <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl p-6 bg-neutral-200 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"
@@ -254,8 +256,8 @@ function Projectdetails() {
               </div>
             </div>
             
-            <div className="xl:w-2/3 md:w-2/3 p-4 h-96 max-h-96 overflow-y-scroll  hide-scroll-bar">
-              <div className="border border-gray-200 p-[2px] bg-zinc-300 rounded-lg">
+            <div className="xl:w-2/3 md:w-2/3 p-3 h-96 max-h-96 overflow-y-scroll rounded-lg hide-scroll-bar">
+              <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl p-[2px] bg-zinc-300 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"
@@ -276,7 +278,7 @@ function Projectdetails() {
                 </h2>
                 <div className="leading-relaxed text-base">
                   <div className="overflow-x-auto relative">
-                    <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
+                    <table className="text-sm text-right text-gray-500 dark:text-gray-400">
                       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                           <th scope="col" className="py-3 px-1">
@@ -359,8 +361,8 @@ function Projectdetails() {
                 </div>
               </div>
             </div>
-            <div className="xl:w-1/3 md:w-1/3 h-96 max-h-96 overflow-y-scroll  hide-scroll-bar p-4">
-              <div className="border border-gray-200 p-[2px] bg-stone-200 rounded-lg">
+            <div className="xl:w-1/3 md:w-1/3 h-96 max-h-96 overflow-y-scroll  rounded-lg  hide-scroll-bar p-3">
+              <div className="p-[2px] border-2 border-zinc-600 shadow-md hover:shadow-2xl bg-stone-200 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"
@@ -444,7 +446,13 @@ function Projectdetails() {
           </button> */}
         </div>
       </section>
+
+      
     </div>
+    <div className="pt-3 mt-6">
+    <FooterComponent />
+  </div>
+  </>
   );
 }
 

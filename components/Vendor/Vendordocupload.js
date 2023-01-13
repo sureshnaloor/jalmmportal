@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 
-function ProjdocuploadComponent({ wbs }) {
+function VendordocuploadComponent({ vendorid }) {
   const [image, setImage] = useState(null);
   const [imageInput, setImageInput] = useState(null);
 
@@ -17,7 +17,7 @@ function ProjdocuploadComponent({ wbs }) {
 
     const data = new FormData(e.target);
 
-    data.append("projectid", wbs);
+    data.append("vendorid", vendorid);
     const inputObject = Object.fromEntries(data); // convert the FormData object to a JSON object
     const file = inputObject.upldFiles;
 
@@ -37,7 +37,7 @@ function ProjdocuploadComponent({ wbs }) {
     };
     fileReader.readAsDataURL(file);
 
-    await fetch(`/api/projects/uploadFiles`, {
+    await fetch(`/api/vendors/uploadFiles`, {
       method: "POST",
       body: data,
     });
@@ -58,9 +58,9 @@ function ProjdocuploadComponent({ wbs }) {
     <div>
       <form onSubmit={submitHandler}>
         <div className="inline-block">
-          <input name="email" placeholder="email" />
+          <input name="crdocument" placeholder="Vendor CR document" />
         </div>
-        <div className="mb-1 mt-1 xl:w-72">
+        {/* <div className="mb-1 mt-1 xl:w-72">
           <select
           defaultValue={"DEFAULT"}
             className="form-select appearance-none
@@ -85,7 +85,7 @@ function ProjdocuploadComponent({ wbs }) {
             <option value="2">Two</option>
             <option value="3">Three</option>
           </select>
-        </div>
+        </div> */}
 
         <label
           className="inline-block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -135,4 +135,4 @@ function ProjdocuploadComponent({ wbs }) {
   );
 }
 
-export default ProjdocuploadComponent;
+export default VendordocuploadComponent;

@@ -45,7 +45,7 @@ const Vendor = () => {
             ></motion.div>
     
       <div className="flex flex-col container mx-auto ">
-        <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="overflow-x-auto sm:-mx-6 lg:-mx-8 ">
           <div className="py-2 inline-block min-w-full sm:px-3 lg:px-8">
             <div className="overflow-hidden">
               <table className="min-w-full">
