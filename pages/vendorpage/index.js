@@ -12,6 +12,8 @@ import { useRouter } from "next/router";
 function Vendor() {
   const [vendors, setVendors] = useState([]);
 
+  const [searchterm, setSearchterm] = useState('')
+
   const [polist, setPolist] = useState([]);
 
   const [CurrentPurchaseorder, setCurrentPurchaseorder] = useState(null);
@@ -20,7 +22,7 @@ function Vendor() {
 
   const [isLoading, setLoading] = useState(true);
 
-  // const [searchParam, setSearchparam] = useState()
+  const [searchParam, setSearchparam] = useState()
 
   // const router = useRouter()
   // console.log(router.query.searchtext)
@@ -42,12 +44,12 @@ function Vendor() {
     const fetchVendors = async () => {
       // setSearchparam(router.query.searchtext)
 
-      const response = await fetch(`/api/vendors`);
+      const response = await fetch(`/api/vendors?str=${searchterm}`);
       const json = await response.json();
       setVendors(json);
     };
     fetchVendors();
-  }, []);
+  }, [searchterm]);
 
   console.log(vendors);
 
@@ -84,9 +86,9 @@ function Vendor() {
     },
   };
 
-  const handleSubmit = (searchtext) => {
-    setSearchparam(searchtext);
-  };
+  // const handleSubmit = (searchterm) => {
+  //   setSearchparam(searchterm);
+  // };
 
   return (
     <>
@@ -98,7 +100,7 @@ function Vendor() {
           <div className="sm:text-center">
             {/* search form component */}
 
-            <form className="py-5 ">
+            <form className="py-5">
               <label
                 htmlFor="search"
                 className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -129,6 +131,7 @@ function Vendor() {
                   className="w-1/2 flex ml-auto p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Please search - input vendor name/s to search separated by *"
                   required
+                  onChange={e=> {setSearchterm(e.target.value); console.log(searchterm)}}
                 />
                 <button
                   type="submit"
