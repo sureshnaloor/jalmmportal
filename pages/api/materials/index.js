@@ -8,15 +8,32 @@ const handler =  async (req, res) => {
           const { db } = await connectToDatabase();
           // const query = req.query
           // const {searchstr} = query
-          const searchlist = ["pipe","pvc","sch"]
+          // const searchlist = ["pipe","pvc","sch"]
+          const str = req.query.str
+          if(str){
+            let searchstring = str.split(',')
+            console.log(searchstring)
+            let regexstr = ``;
+            searchstring.forEach(element => {
+              return regexstr = `${regexstr}(?=.*\\b${element}\\b)`
+            })
+
+            var regexsearchstring = new RegExp(`^${regexstr}.*$`)
+            console.log(regexsearchstring)
+          }
+
+          let condition = str ? {'material-description':{'$regex':regexsearchstring, '$options' : 'i'}} : {$expr: { $lt: [0.8, { $rand: {} }] }}
+
           // // const searchstr = new RegExp(searchlist.join('|'), 'gi')
-          const searchstr = new RegExp(`^(?=.*\\b${searchlist[0].toUpperCase()}\\b)(?=.*\\b${searchlist[1].toUpperCase()}\\b)(?=.*\\b${searchlist[2].toUpperCase()}\\b).*$`)
-          console.log(searchstr)
-          const matlist = await db.collection("materials").find({"material-description":{$regex:searchstr}}).limit(100).toArray();
-          console.log(matlist)
-          return res.json(matlist);
           
-          
+          const matlist = await db
+            .collection("materials")
+            .find(condition)
+            .sort({ created_date: -1 })
+            .limit(300)
+            .toArray();
+          // console.log(matlist)
+          return res.json(matlist);          
         } 
 
         case "POST": {
