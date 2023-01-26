@@ -6,40 +6,46 @@ import Radialprogress from "../../components/Radialprogress";
 import Footercomponent from "../../components/FooterComponent";
 import Vendordocviews from "../../components/Vendor/VendordocsView";
 import Vendordocupload from "../../components/Vendor/Vendordocupload";
+import Vendorevaluation from "../../components/Vendor/Vendorevaluation";
+
 // import Search from '../../components/searchComponent'
 import { useRouter } from "next/router";
 
 function Vendor() {
   const [vendors, setVendors] = useState([]);
 
-  const [searchterm, setSearchterm] = useState('')
+  const [searchterm, setSearchterm] = useState("");
 
   const [polist, setPolist] = useState([]);
 
-  const [CurrentPurchaseorder, setCurrentPurchaseorder] = useState(null);
+  const [currentPurchaseorder, setCurrentPurchaseorder] = useState(null);
 
   const [selectedpolist, setSelectedpolist] = useState([]);
 
   const [isLoading, setLoading] = useState(true);
 
-  const [searchParam, setSearchparam] = useState()
+  const [searchParam, setSearchparam] = useState();
+
+  const [selectedVendor, setSelectedVendor] = useState(null);
 
   // const router = useRouter()
   // console.log(router.query.searchtext)
 
+  // render detailed PO 
   useEffect(() => {
     const fetchselectedPolist = async () => {
       setLoading(true);
       const response = await fetch(
-        `/api/purchaseorders/porder/${CurrentPurchaseorder}`
+        `/api/purchaseorders/porder/${currentPurchaseorder}`
       );
       const json = await response.json();
       setSelectedpolist(json);
       setLoading(false);
     };
     fetchselectedPolist();
-  }, [CurrentPurchaseorder]);
+  }, [currentPurchaseorder]);
 
+  // render the vendor list
   useEffect(() => {
     const fetchVendors = async () => {
       // setSearchparam(router.query.searchtext)
@@ -53,23 +59,43 @@ function Vendor() {
 
   console.log(vendors);
 
-  let projectid = "IS%2FGP.22.001";
-  let vendorid = "100004";
+  // let projectid = "IS%2FGP.22.001";
+  // let vendorid = 20021;
 
-  useEffect(() => {
+  // po list of project- this is just space filler- need to change this to PO list of vendor
+  // useEffect(() => {
+  //   const fetchPolist = async () => {
+  //     const response = await fetch(
+  //       `/api/purchaseorders/project/consolidated/${projectid}`
+  //     );
+  //     const json = await response.json();
+  //     setPolist(json);
+  //   };
+  //   fetchPolist();
+  // }, [projectid]);
+
+  // po list of selected vendor
+  useEffect(()=>{
     const fetchPolist = async () => {
       const response = await fetch(
-        `/api/purchaseorders/project/consolidated/${projectid}`
-      );
+        `/api/purchaseorders/vendor/${selectedVendor}`
+      )
       const json = await response.json();
-      setPolist(json);
-    };
+      setPolist(json)
+      
+    }
     fetchPolist();
-  }, [projectid]);
+  }, [selectedVendor])
+
+  console.log(polist)
 
   const setActivePo = (ponum, index) => {
     setCurrentPurchaseorder(ponum);
   };
+
+  const setActivevendor = (vencode, index) => {
+    setSelectedVendor(vencode)
+  }
 
   const variant = {
     hidden: {
@@ -129,9 +155,12 @@ function Vendor() {
                   type="search"
                   id="search"
                   className="w-1/2 flex ml-auto p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Please search - input vendor name/s to search separated by *"
+                  placeholder="Please search - input vendor name/s to search separated by , "
                   required
-                  onChange={e=> {setSearchterm(e.target.value); console.log(searchterm)}}
+                  onChange={(e) => {
+                    setSearchterm(e.target.value);
+                    console.log(searchterm);
+                  }}
                 />
                 {/* <button
                   type="submit"
@@ -146,7 +175,13 @@ function Vendor() {
             <div className="flex overflow-x-scroll pb-10 hide-scroll-bar">
               <div className="flex flex-nowrap lg:ml-20 md:ml-10 ml-5 ">
                 {vendors?.map((vendor, index) => (
-                  <div key={index} className="inline-block px-3">
+                  <div key={index} className="inline-block px-3" 
+                  onClick={() => {
+                    setActivevendor(vendor["vendor-code"], index);
+                    console.log("I am clicked!");
+                  }}
+                  
+                  >
                     <div className="w-64 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-zinc-400 hover:shadow-xl transition-shadow duration-300 ease-in-out">
                       <div className="flex justify-center">
                         <div className="block rounded-lg shadow-lg bg-white max-w-sm text-center">
@@ -382,7 +417,7 @@ function Vendor() {
 
                   <div className="w-[900px] py-2 border-2 border-zinc-600 shadow-md hover:shadow-2xl rounded-2xl flex flex-col h-96  overflow-y-scroll  hide-scroll-bar">
                     <div className="bg-stone-300  rounded text-[12px] text-black font-semibold">
-                      {/* PO Details for:{CurrentPurchaseorder}{" "} */}
+                      {/* PO Details for:{currentPurchaseorder}{" "} */}
 
                       {!isLoading ? (
                         <motion.div
@@ -556,34 +591,17 @@ function Vendor() {
                     <p className="text-lg font-semibold leading-8 text-gray-900">
                       Vendors documents (VAT,CR certificates & profile)
                     </p>
-                    <Vendordocviews />
-                    <Vendordocupload vendorid={"10004"} />
+                    <Vendordocviews vendorid={selectedVendor}/>
+                    <Vendordocupload vendorid={selectedVendor} />
                   </div>
                 </div>
 
-                <div className="relative flex flex-col gap-6 p-3 border-2 border-zinc-600 shadow-md hover:shadow-2xl sm:flex-row md:flex-col lg:flex-row bg-stone-200 ">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500 text-white sm:shrink-0">
-                    {/* <!-- Heroicon name: outline/device-phone-mobile --> */}
-                    <svg
-                      className="h-8 w-8"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"
-                      />
-                    </svg>
-                  </div>
+                <div className="relative flex flex-col gap-3 p-2 border-2 border-zinc-600 shadow-md hover:shadow-2xl sm:flex-row md:flex-col lg:flex-row bg-stone-200 ">
                   <div className="sm:min-w-0 sm:flex-1 ">
-                    <p className="text-lg font-semibold leading-8 text-gray-900">
-                      Vendor evaluation
-                    </p>
+                    <div className="font-semibold leading-8 text-gray-900">
+                      {/* Vendor evaluation */}
+                      <Vendorevaluation />
+                    </div>
                   </div>
                 </div>
               </div>

@@ -9,70 +9,86 @@ import HeaderComponent from "../../components/HeaderComponent";
 import Footercomponent from "../../components/FooterComponent"
 
 function Materials() {
-  const [materials, setmaterials] = useState({});
+  const [material, setmaterial] = useState({});
   const [purchases, setPurchases] = useState([]);
   const [completestock, setCompletestock] = useState({});
   const [specialStock, setSpecialstock] = useState([]);
   const [requisitions, setRequisitions] = useState([]);
   const [matdocs, setMatdocs] = useState([])
+  const [searchterm, setSearchterm] = useState('')
+  const [searchParam, setSearchparam] = useState()
+  const [materials, setMaterials] = useState([])
+  const [selectedMatcode, setSelectedMatcode] = useState("10303176")
 
-  let materialcode = "10303176";
+  // let materialcode = "10303176";
 
   const { data: session } = useSession();
 
   useEffect(() => {
-    const fetchMaterials = async () => {
-      const response = await fetch(`/api/materials/${materialcode}`);
+    const fetchMaterial = async () => {
+      const response = await fetch(`/api/materials/${selectedMatcode}`);
       const json = await response.json();
-      setmaterials(json);
+      setmaterial(json);
+    };
+    fetchMaterial();
+  }, [selectedMatcode]);
+
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      // setSearchparam(router.query.searchtext)
+
+      const response = await fetch(`/api/materials?str=${searchterm}`);
+      const json = await response.json();
+      // console.log(materials)
+      setMaterials(json);
     };
     fetchMaterials();
-  }, [materialcode]);
+  }, [searchterm]);
 
   useEffect(() => {
     const fetchPurchases = async () => {
-      const response = await fetch(`/api/purchaseorders/${materialcode}`);
+      const response = await fetch(`/api/purchaseorders/${selectedMatcode}`);
       const json = await response.json();
       setPurchases(json);
     };
     fetchPurchases();
-  }, [materialcode]);
+  }, [selectedMatcode]);
 
   useEffect(() => {
     const fetchSpecialStock = async () => {
-      const response = await fetch(`/api/specialstock/${materialcode}`);
+      const response = await fetch(`/api/specialstock/${selectedMatcode}`);
       const json = await response.json();
       setSpecialstock(json);
     };
     fetchSpecialStock();
-  }, [materialcode]);
+  }, [selectedMatcode]);
 
   useEffect(() => {
     const fetchCompleteStock = async () => {
-      const response = await fetch(`/api/completestock/${materialcode}`);
+      const response = await fetch(`/api/completestock/${selectedMatcode}`);
       const json = await response.json();
       setCompletestock(json);
     };
     fetchCompleteStock();
-  }, [materialcode]);
+  }, [selectedMatcode]);
 
   useEffect(() => {
     const fetchRequisitions = async () => {
-      const response = await fetch(`/api/openrequisitions/${materialcode}`);
+      const response = await fetch(`/api/openrequisitions/${selectedMatcode}`);
       const json = await response.json();
       setRequisitions(json);
     };
     fetchRequisitions();
-  }, [materialcode]);
+  }, [selectedMatcode]);
 
   useEffect(() => {
     const fetchMatdocs = async () => {
-      const response = await fetch(`/api/materialdocuments/${materialcode}`);
+      const response = await fetch(`/api/materialdocuments/${selectedMatcode}`);
       const json = await response.json();
       setMatdocs(json);
     };
     fetchMatdocs();
-  }, [materialcode]);
+  }, [selectedMatcode]);
 
   // console.log(materials);
   // console.log(purchases);
@@ -83,11 +99,103 @@ function Materials() {
 
   let labelsBar = [...new Set(matdocs.map(item => item["doc-date"].split("-")[0]))]
 
+  const setActiveMatcode = (matcode, index) => {
+    setSelectedMatcode(matcode)
+  }
   return (
+
+    
     <>
     <div>
       <HeaderComponent /> 
     </div>
+    {/* search form component */}
+
+    <form className="py-5">
+              <label
+                htmlFor="search"
+                className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+              >
+                Search
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <svg
+                    aria-hidden="true"
+                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  type="search"
+                  id="search"
+                  className="w-1/2 flex ml-auto p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Please search - input MATERIAL name/s to search separated by , "
+                  required
+                  onChange={e=> {setSearchterm(e.target.value); console.log(searchterm)}}
+                />
+                {/* <button
+                  type="submit"
+                  className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Search
+                </button> */}
+              </div>
+            </form>
+
+            {/* search form component end */}
+
+            <div className="flex overflow-x-scroll pb-10 hide-scroll-bar">
+              <div className="flex flex-nowrap lg:ml-20 md:ml-10 ml-5 ">
+                {materials?.map((matrl, index) => (
+                  <div key={index} className="inline-block px-3"
+                  onClick={() => {
+                    setActiveMatcode(matrl["material-code"], index);
+                    console.log("I am clicked!");
+                  }}
+                  >
+                    <div className="w-64 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-zinc-400 hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                      <div className="flex justify-center">
+                        <div className="block rounded-lg shadow-lg bg-white max-w-sm text-center">
+                          <div className="py-3 px-6 border-b bg-zinc-200 border-gray-300 dark:bg-stone-800 font-bold">
+                            {matrl["material-code"]}
+                          </div>
+                          <div className="p-6 bg-slate-100">
+                            <h5 className="text-gray-900 text-sm italic font-medium mb-[2px]">
+                            {matrl["material-description"]}
+                                
+                            </h5>
+                            <p className="text-emerald-900 font-bold text-[12px] mb-[1px]">
+                              {matrl["unit-measure"]}
+                            </p>
+                            
+                            
+                            <span className="text-gray-900 font-black text-[10px]">
+                            {matrl["material-group"]}
+                            </span>
+                          </div>
+                          <div className="py-3 px-6  bg-orange-200 border-t border-gray-300 text-gray-600 text-xs">
+                            Created: {moment(matrl["created_date"]).fromNow()}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* <div classNameName="w-32 h-32 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out"></div> */}
+                  </div>
+                ))}
+              </div>
+            </div>
     <section className="text-gray-600 body-font">
       <div className="container px-0.5 py-0.5 mx-auto bg-stone-100">
         <div className="flex flex-col border-b  border-slate-600 shadow-outer my-2 bg-slate-50">
@@ -96,15 +204,15 @@ function Materials() {
           </div>
           <div className="flex flex-nowrap sm:flex-row flex-col py-2 mb-1">
             <h1 className="sm:w-2/6 text-gray-900 font-medium title-font text-xl mb-2 sm:mb-0">
-              {materials["material-description"]}
+              {material["material-description"]}
             </h1>
             <h2 className="sm:w-1/6 text-amber-900 text-lg font-bold mb-2 sm:mb-0 pr-3">
               {" "}
-              {materials["unit-measure"]}{" "}
+              {material["unit-measure"]}{" "}
             </h2>
             <h5 className="sm:w-1/6 text-green-900 text-xl tracking-widest font-bold">
               {" "}
-              {materials["material-type"] == "ZCVL"
+              {material["material-type"] == "ZCVL"
                 ? "Civil Material"
                 : "Piping Material"}
             </h5>
@@ -123,7 +231,7 @@ function Materials() {
                 Material Stock and Trend
               </h2>
               <h1 className="sm:text-2xl text-xl font-medium title-font text-gray-900">
-                {materials["material-description"]}
+                {material["material-description"]}
               </h1>
             </div>
             <div className="flex flex-wrap -m-4">
@@ -153,7 +261,7 @@ function Materials() {
                         labels: ["Stock", "Total Receipts", "Total Issues"],
                         datasets: [
                           {
-                            label: `${materials["material-code"]}`,
+                            label: `${material["material-code"]}`,
                             backgroundColor: "rgb(122, 123, 255)",
                             borderColor: "rgb(255, 99, 132)",
                             data: [
@@ -388,7 +496,7 @@ function Materials() {
               />
             </div>
             <h2 className="text-md font-medium border-2 border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
-              Purchase Orders for: {materials["material-code"]}
+              Purchase Orders for: {material["material-code"]}
             </h2>
             <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar max-h-[812px] bg-white rounded-lg border-y-2 border-b-4 border-zinc-600 shadow-md hover:shadow-2xl sm:p-2 dark:bg-gray-800 dark:border-gray-700">
               <div className="overflow-x-auto relative">
@@ -463,7 +571,7 @@ function Materials() {
               />
             </div>
             <h2 className="text-md font-medium border-[2px] border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
-              Account assignments for: {materials["material-code"]}
+              Account assignments for: {material["material-code"]}
             </h2>
             <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar max-h-[812px] bg-white rounded-lg border-y-2 border-b-4 border-zinc-600 shadow-md hover:shadow-2xl sm:p-2 dark:bg-gray-800 dark:border-gray-700">
             <p className="text-sm leading-relaxed mt-2 font-bold">
@@ -490,7 +598,7 @@ function Materials() {
                     acc + Number(purchase["po-quantity"].$numberDecimal),
                   0
                 )}
-                <span> {materials["unit-measure"]}</span>
+                <span> {material["unit-measure"]}</span>
               </p>
               
               <div>
@@ -539,7 +647,7 @@ function Materials() {
             </div>
             <div className="max-h-[812px]">
             <h2 className="text-md font-medium border-[2px] border-grey rounded-lg p-3 text-gray-900 mt-5 flex align-middle justify-center mb-3">
-              Vendors for: {materials["material-code"]}
+              Vendors for: {material["material-code"]}
             </h2>
             <div className="p-3 w-full max-w-md  overflow-y-scroll hide-scroll-bar bg-white rounded-lg border-y-2 border-b-4 border-zinc-600 shadow-md hover:shadow-2xl  sm:p-2 dark:bg-gray-800 dark:border-gray-700">
               {Object.entries(
@@ -565,7 +673,7 @@ function Materials() {
             <h2 className="text-md border-[2px] border-grey rounded-lg p-3 font-medium   text-gray-900 mt-5 flex align-middle justify-center mb-3">
               Open requisitions for:{" "}
               <span className=" px-3 text-amber-900">
-                {materials["material-code"]}{" "}
+                {material["material-code"]}{" "}
               </span>
             </h2>
             <div className="p-3 w-full max-w-md overflow-y-scroll hide-scroll-bar  bg-white rounded-lg border-y-2 border-b-4 border-zinc-600 shadow-md hover:shadow-2xl sm:p-2 dark:bg-gray-800 dark:border-gray-700">

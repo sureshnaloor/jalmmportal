@@ -9,71 +9,114 @@ import ProjdocUpload from '../components/ProjdocuploadComponent'
 import ProjDocsView from '../components/projdocsViewComponent'
 import FooterComponent from "./FooterComponent";
 
-function Projectdetails() {
+function Projectdetails({projects}) {
   const [project, setProject] = useState({});
   const [network, setNetwork] = useState({});
   const [specialstk, setSpecialstk] = useState([]);
   const [purchaseorders, setPurchaseorders] = useState([]);
   const [openrequisitions, setOpenrequisitions] = useState([]);
+  const [selectedProject, setSelectedProject] = useState("IS%2FGP.22.001");
 
-  let projectid = "IS%2FGP.22.001";
+  // let projectid = "IS%2FGP.22.001";
 
   const { data: session } = useSession();
 
   useEffect(() => {
     const fetchProject = async () => {
-      const response = await fetch(`/api/projects/${projectid}`);
+      const response = await fetch(`/api/projects/${selectedProject}`);
       const json = await response.json();
       setProject(json);
     };
     fetchProject();
-  }, [projectid]);
+  }, [selectedProject]);
 
   useEffect(() => {
     const fetchNetwork = async () => {
-      const response = await fetch(`/api/networks/${projectid}`);
+      const response = await fetch(`/api/networks/${selectedProject}`);
       const json = await response.json();
       setNetwork(json);
     };
     fetchNetwork();
-  }, [projectid]);
+  }, [selectedProject]);
 
   useEffect(() => {
     const fetchSpecialstk = async () => {
-      const response = await fetch(`/api/specialstock/project/${projectid}`);
+      const response = await fetch(`/api/specialstock/project/${selectedProject}`);
       const json = await response.json();
       setSpecialstk(json);
     };
     fetchSpecialstk();
-  }, [projectid]);
+  }, [selectedProject]);
 
   useEffect(() => {
     const fetchPurchaseorders = async () => {
-      const response = await fetch(`/api/purchaseorders/project/${projectid}`);
+      const response = await fetch(`/api/purchaseorders/project/${selectedProject}`);
       const json = await response.json();
       setPurchaseorders(json);
     };
     fetchPurchaseorders();
-  }, [projectid]);
+  }, [selectedProject]);
 
   useEffect(() => {
     const fetchOpenrequisitions = async () => {
       const response = await fetch(
-        `/api/openrequisitions/project/${projectid}`
+        `/api/openrequisitions/project/${selectedProject}`
       );
       const json = await response.json();
       setOpenrequisitions(json);
     };
     fetchOpenrequisitions();
-  }, [projectid]);
+  }, [selectedProject]);
 
   // console.log(project)
   // console.log(specialstk);
   // console.log(purchaseorders)
   // console.log(openrequisitions);
 
+  const setActiveProject = (projectid, index) => {
+    console.log(projectid)
+    setSelectedProject(projectid.replace("/","%2F"));
+  }
+
   return (
     <>
+
+<div className="flex overflow-x-scroll pb-10 hide-scroll-bar">
+              <div className="flex flex-nowrap lg:ml-20 md:ml-10 ml-5 ">
+                {projects?.map((project, index) => (
+                  <div key={index} className="inline-block px-3"
+                  onClick={() => {
+                    setActiveProject(project["project-wbs"], index);
+                    console.log("I am clicked!");
+                  }}
+                  >
+                    <div className="w-64 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-zinc-400 hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                      <div className="flex justify-center">
+                        <div className="block rounded-lg shadow-lg bg-white max-w-sm text-center">
+                          <div className="py-3 px-6 border-b bg-zinc-200 border-gray-300 dark:bg-stone-800 font-bold">
+                            {project["project-wbs"]}
+                          </div>
+                          <div className="p-6 bg-slate-100">
+                            <h5 className="text-gray-900 text-sm font-medium mb-[2px]">
+                              {project["project-name"]}
+                            </h5>
+                            <p className="text-emerald-900 text-[8px] mb-[1px]">
+                              {project["project-incharge"]}
+                            </p>
+                           
+                          </div>
+                          <div className="py-3 px-6  bg-orange-200 border-t border-gray-300 text-gray-600 text-xs">
+                            Created: {moment(project["created-date"]).fromNow()}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* <div classNameName="w-32 h-32 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out"></div> */}
+                  </div>
+                ))}
+              </div>
+            </div>
     <div>
       <section className="text-gray-600 body-font">
         <div className="container px-0.5 py-0.5 mx-auto bg-zinc-50">

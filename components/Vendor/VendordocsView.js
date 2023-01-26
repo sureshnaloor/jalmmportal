@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 // import FileViewer from "react-file-viewer"
 const FileViewer = React.lazy(() => import("react-file-viewer"));
 
-function VendordocsViewComponent() {
+function VendordocsViewComponent({vendorid}) {
   const [vendordocs, setVendordocs] = useState([]);
 
   const [view, setView] = useState(false);
@@ -13,7 +13,7 @@ function VendordocsViewComponent() {
     setView(!view);
   };
 
-  let vendorid = "10004";
+  // let vendorid = "10004";
 
   useEffect(() => {
     const fetchVendorDocs = async () => {
