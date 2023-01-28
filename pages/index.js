@@ -37,12 +37,15 @@ function Home() {
       <div>
         <HeaderComponent />
       </div>
+      <div className="flex">
       <div>
         <CarousalComponent />
       </div>
       <div>
         <FeaturesComponent/>
       </div>
+      </div>
+      
       <div>
         <Matgrouplist matgroups={matgroups} />
       </div>

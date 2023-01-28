@@ -3,17 +3,17 @@ import Image from "next/image";
 
 function FeaturesComponent() {
   return (
-    <div className="relative bg-white dark:bg-gray-800 p-4">
-      <div className="lg:grid lg:grid-flow-row-dense lg:grid-cols-2 lg:gap-12 lg:items-center">
-        <div className="lg:col-start-2 md:pl-20">
-          <h4 className="text-2xl leading-8 font-extrabold text-gray-900 dark:text-white tracking-tight sm:leading-9">
+    <div className="relative bg-white dark:bg-gray-500 pb-5">
+      <div className="lg:grid lg:grid-flow-row-dense lg:grid-cols-2 lg:gap-1 lg:items-center">
+        <div className="lg:col-start-2 md:pl-2">
+          <h4 className="text-[14px] leading-8 font-extrabold text-gray-900 dark:text-white tracking-tight sm:leading-9">
             Manage everything outside SAP direct in browser
           </h4>
-          <ul className="mt-10">
+          <ul className="mt-2">
             <li>
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                  <div className="flex items-center justify-center h-8 w-12 rounded-md bg-indigo-500 text-white">
                     <svg
                       width="20"
                       height="20"
@@ -27,19 +27,19 @@ function FeaturesComponent() {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <h5 className="text-lg leading-6 text-gray-900 dark:text-white font-bold">
+                  <h5 className="text-md leading-6 text-gray-900 dark:text-white font-bold">
                     Search Materials
                   </h5>
-                  <p className="mt-2 text-base leading-6 text-gray-500 dark:text-gray-300">
+                  <p className="mt-1 text-[12px] leading-5 text-gray-500 dark:text-gray-300">
                     Know everything about your materials from your dashboard-price, stock, incoming orders, requisitions.
                   </p>
                 </div>
               </div>
             </li>
-            <li className="mt-10">
+            <li className="mt-2">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                  <div className="flex items-center justify-center h-8 w-12 rounded-md bg-indigo-500 text-white">
                     <svg
                       width="20"
                       height="20"
@@ -53,20 +53,20 @@ function FeaturesComponent() {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <h5 className="text-lg leading-6 text-gray-900 dark:text-white font-bold">
+                  <h5 className="text-md leading-6 text-gray-900 dark:text-white font-bold">
                     Monitor your Purchase Orders
                   </h5>
-                  <p className="mt-2 text-base leading-6 text-gray-500 dark:text-gray-300">
+                  <p className="mt-2 text-[12px] leading-5 text-gray-500 dark:text-gray-300">
                     All your orders in one place so you can manage your
                     delivery, expediting & monitoring.
                   </p>
                 </div>
               </div>
             </li>
-            <li className="mt-10">
+            <li className="mt-2">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                  <div className="flex items-center justify-center h-8 w-12 rounded-md bg-indigo-500 text-white">
                     <svg
                       width="20"
                       height="20"
@@ -80,10 +80,10 @@ function FeaturesComponent() {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <h5 className="text-lg leading-6 text-gray-900 dark:text-white font-bold">
+                  <h5 className="text-md leading-6 text-gray-900 dark:text-white font-bold">
                     Control Projects
                   </h5>
-                  <p className="mt-2 text-base leading-6 text-gray-500 dark:text-gray-300">
+                  <p className="mt-2 text-[12px] leading-5 text-gray-500 dark:text-gray-300">
                     Projects visibility of incoming materials, stock & requisitions already made.
                   </p>
                 </div>
@@ -91,14 +91,14 @@ function FeaturesComponent() {
             </li>
           </ul>
         </div>
-        <div className="pl-20 mt-10 -mx-4 md:-mx-12 relative lg:mt-0 lg:col-start-1">
+        {/* <div className="pl-2 mt-1 -mx-4 md:-mx-12 relative lg:mt-0 lg:col-start-1">
           <Image
             src="/MMPortalpic1.jpg"
             alt="illustration"
             className="relative mx-auto shadow-lg rounded w-auto"
-            width={500} height={400}
+            width= {500} height= {400}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

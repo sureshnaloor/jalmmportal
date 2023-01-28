@@ -6,11 +6,11 @@ function Matgrouplist({ matgroups, _ }) {
     // <h1> this is mterial group pqge</h1>
     <div >
       
-      <section className="pt-10 lg:pt-[120px] pb-10 lg:pb-20 bg-[#F3F4F6]">
+      <section className="pt-5 lg:pt-[20px] pb-2 lg:pb-[20px] bg-[#F3F4F6] dark:bg-gray-500">
         <div className="container">
           <div className="flex flex-wrap -mx-4">
             <div className="w-full sm:w-1/2 md:w-1/3 xl:w-1/6 px-3">
-              <div className="bg-white rounded-lg overflow-hidden mb-10 flex flex-col justify-center p-3">
+              <div className="bg-white dark:bg-zinc-300 rounded-lg overflow-hidden mb-3 flex flex-col justify-center p-3">
                 <Image
                   width={"100%"}
                   height={"100%"}
@@ -81,7 +81,7 @@ function Matgrouplist({ matgroups, _ }) {
               </div>
             </div>
             <div className="w-full sm:w-1/2 md:w-1/3 xl:w-1/6 px-3">
-              <div className="bg-white rounded-lg overflow-hidden mb-10 flex flex-col justify-center p-3">
+              <div className="bg-stone-300 rounded-lg overflow-hidden mb-3 flex flex-col justify-center p-3">
                 <Image
                   width={"100%"}
                   height={"100%"}
@@ -152,7 +152,7 @@ function Matgrouplist({ matgroups, _ }) {
               </div>
             </div>
             <div className="w-full sm:w-1/2 md:w-1/3 xl:w-1/6 px-3">
-              <div className="bg-white rounded-lg overflow-hidden mb-10 flex flex-col justify-items-center p-3">
+              <div className="bg-white dark:bg-zinc-300 rounded-lg overflow-hidden mb-3 flex flex-col justify-items-center p-3">
                 <Image
                   width={"100"}
                   height={"100"}
@@ -223,7 +223,7 @@ function Matgrouplist({ matgroups, _ }) {
               </div>
             </div>
             <div className="w-full sm:w-1/2 md:w-1/3 xl:w-1/6 px-3">
-              <div className="bg-white rounded-lg overflow-hidden mb-10 flex flex-col justify-items-center p-3">
+              <div className="bg-stone-300 rounded-lg overflow-hidden mb-3 flex flex-col justify-items-center p-3">
                 <Image
                   width={"100"}
                   height={"100"}
@@ -248,7 +248,7 @@ function Matgrouplist({ matgroups, _ }) {
                         hover:text-gray-600
                         "
                     >
-                      Instrumentation Materials
+                      Instrument Materials
                     </a>
                   </h3>
                   <p className="text-base text-body-color leading-relaxed mb-7">
@@ -294,7 +294,7 @@ function Matgrouplist({ matgroups, _ }) {
               </div>
             </div>
             <div className="w-full sm:w-1/2 md:w-1/3 xl:w-1/6 px-3">
-              <div className="bg-white rounded-lg overflow-hidden mb-10 flex flex-col justify-items-center p-3">
+              <div className="bg-white dark:bg-zinc-300 rounded-lg overflow-hidden mb-3 flex flex-col justify-items-center p-3">
                 <Image
                   width={"100"}
                   height={"100"}
@@ -365,7 +365,7 @@ function Matgrouplist({ matgroups, _ }) {
               </div>
             </div>
             <div className="w-full sm:w-1/2 md:w-1/3 xl:w-1/6 px-3">
-              <div className="bg-white rounded-lg overflow-hidden mb-10 flex flex-col justify-items-center p-3">
+              <div className="bg-stone-300  rounded-lg overflow-hidden mb-3 flex flex-col justify-items-center p-3">
                 <Image
                   width={"100"}
                   height={"100"}
