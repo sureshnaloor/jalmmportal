@@ -1,9 +1,12 @@
 import React from "react";
+import Image from 'next/image'
 
 import { useState, useEffect } from "react";
 import { useSession, getSession } from "next-auth/react";
 import { Pie } from "react-chartjs-2";
+import { motion } from "framer-motion";
 import Chart from "chart.js/auto";
+import Radialprogress from "../components/Radialprogress";
 import moment from "moment";
 import ProjdocUpload from '../components/ProjdocuploadComponent'
 import ProjDocsView from '../components/projdocsViewComponent'
@@ -16,6 +19,10 @@ function Projectdetails({projects}) {
   const [purchaseorders, setPurchaseorders] = useState([]);
   const [openrequisitions, setOpenrequisitions] = useState([]);
   const [selectedProject, setSelectedProject] = useState("IS%2FGP.22.001");
+  const [isLoading, setLoading] = useState(true);
+  const [polist, setPolist] = useState([]);
+  const [currentPurchaseorder, setCurrentPurchaseorder] = useState(null);
+  const [selectedpolist, setSelectedpolist] = useState([]);
 
   // let projectid = "IS%2FGP.22.001";
 
@@ -50,12 +57,27 @@ function Projectdetails({projects}) {
 
   useEffect(() => {
     const fetchPurchaseorders = async () => {
-      const response = await fetch(`/api/purchaseorders/project/${selectedProject}`);
+      const response = await fetch(`/api/purchaseorders/project/consolidated/${selectedProject}`);
       const json = await response.json();
       setPurchaseorders(json);
     };
     fetchPurchaseorders();
   }, [selectedProject]);
+
+  // render detailed PO 
+  useEffect(() => {
+    const fetchselectedPolist = async () => {
+      setLoading(true);
+      const response = await fetch(
+        `/api/purchaseorders/porder/${currentPurchaseorder}`
+      );
+      const json = await response.json();
+      setSelectedpolist(json);
+      setLoading(false);
+    };
+    fetchselectedPolist();
+  }, [currentPurchaseorder]);
+
 
   useEffect(() => {
     const fetchOpenrequisitions = async () => {
@@ -70,13 +92,32 @@ function Projectdetails({projects}) {
 
   // console.log(project)
   // console.log(specialstk);
-  // console.log(purchaseorders)
+  console.log(purchaseorders)
   // console.log(openrequisitions);
 
   const setActiveProject = (projectid, index) => {
     console.log(projectid)
     setSelectedProject(projectid.replace("/","%2F"));
   }
+
+  const setActivePo = (ponum, index) => {
+    setCurrentPurchaseorder(ponum);
+  };
+
+  const variant = {
+    hidden: {
+      scale: 0.6,
+      opacity: 0.3,
+      color: "",
+    },
+    visible: {
+      scale: 1.0,
+      opacity: 1,
+      transition: {
+        delay: 0.3,
+      },
+    },
+  };
 
   return (
     <>
@@ -299,8 +340,8 @@ function Projectdetails({projects}) {
               </div>
             </div>
             
-            <div className="xl:w-2/3 md:w-2/3 p-3 h-96 max-h-96 overflow-y-scroll rounded-lg hide-scroll-bar">
-              <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl p-[2px] bg-zinc-300 rounded-lg">
+            <div className="xl:w-1/2 md:w-1/2 p-4 max-h-96 overflow-y-scroll  hide-scroll-bar">
+              <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl p-6 bg-zinc-100 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"
@@ -325,7 +366,7 @@ function Projectdetails({projects}) {
                       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                           <th scope="col" className="py-3 px-1">
-                            PO Number & Item
+                            PO Number 
                           </th>
                           <th scope="col" className="py-3 px-1">
                             PO Date 
@@ -334,15 +375,15 @@ function Projectdetails({projects}) {
                             Vendor
                           </th>
                           <th scope="col" className="py-3 px-1">
-                            Material/service
+                            Total PO Value
                           </th>
 
                           <th scope="col" className="py-3 px-1 text-teal-800">
-                            Unit Price
+                            Bal value
                           </th>
                           <th scope="col" className="py-3 px-1">
-                            Quantity
-                          </th>
+                            PO Progress
+                          </th> 
                         </tr>
                       </thead>
                       <tbody>
@@ -352,50 +393,56 @@ function Projectdetails({projects}) {
                             className={`${
                               index % 2 ? "bg-zinc-50" : null
                             } border-b dark:bg-gray-900 dark:border-gray-700`}
+                            onClick={() => {
+                              setActivePo(purchase.ponum, index);
+                              console.log("I am clicked!");
+                            }}
                           >
                             <th
                               scope="row"
                               className="flex flex-col py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                             >
-                              <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
-                                {purchase["po-number"]} -{" "}
-                                {purchase["po-line-item"]}
+                              <p className="text-[10px] text-blue-900 font-Montserrat font-semibold">
+                                {purchase["ponum"]} 
+                                {/* {purchase["po-line-item"]} */}
                               </p>
                               </th>
                               <th>
                               <p className="text-[10px] text-purple-700">
-                                {moment(purchase["po-date"]).format(
+                                {moment(purchase["podate"]).format(
                                   "MM-DD-YYYY"
                                 )}
                               </p>
                               </th>
                               <th>
                               <p className="text-[10px] text-teal-700">
-                                {purchase["vendorname"]}
+                                {purchase["vendor"]}
                               </p>
                               </th>
                               <th>
                               <p className="text-[10px] text-teal-700">
-                                {purchase["material"]["matcode"]}{" "}
-                                <span className="text-teal-900">
-                                  {purchase["material"]["matdescription"]}
-                                </span>
+                                {(
+                                        Math.round(purchase.poval * 100) / 100
+                                      ).toLocaleString()}
+                                
                               </p>
                             </th>
 
                             <td className="py-4 px-1 text-teal-900 font-bold text-[10px]">
-                              {purchase["po-unit-price"]} <br />
-                              <span className="text-[8px] text-red-800">
-                                {purchase["currency"]}{" "}
-                              </span>
+                              {(
+                                        Math.round(purchase.balgrval * 100) / 100
+                                      ).toLocaleString()} <br />
+                              
                             </td>
-                            <td className="justify-self-center  text-red-800">
-                              {" "}
-                              {Math.round(
-                                purchase["po-quantity"].$numberDecimal,
-                                0
-                              )}{" "}
-                            </td>
+                            <td className="p-2">
+                                      <Radialprogress
+                                        percent={Math.round(
+                                          ((purchase.poval - purchase.balgrval) /
+                                            purchase.poval) *
+                                            100
+                                        )}
+                                      />
+                                    </td>
                           </tr>
                         ))}
                       </tbody>
@@ -404,8 +451,217 @@ function Projectdetails({projects}) {
                 </div>
               </div>
             </div>
-            <div className="xl:w-1/3 md:w-1/3 h-96 max-h-96 overflow-y-scroll  rounded-lg  hide-scroll-bar p-3">
-              <div className="p-[2px] border-2 border-zinc-600 shadow-md hover:shadow-2xl bg-stone-200 rounded-lg">
+
+            {/* po details component1 */}
+            <div className="xl:w-1/2 md:w-1/2 p-4 max-h-96 overflow-y-scroll  hide-scroll-bar">
+              <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl p-6 bg-zinc-100 rounded-lg">
+                <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    className="w-6 h-6"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+                <div className="bg-stone-300  rounded text-[12px] text-black font-semibold">
+                      {/* PO Details for:{currentPurchaseorder}{" "} */}
+                      {selectedProject ? <div className="text-sm"> Selected PO against Project {selectedProject.replace("%2F","/")} </div> : null }
+                      {/* <div className="rounded-lg h-64 overflow-hidden"> */}
+                {/* <Image
+                  width="100%"
+                  height="50%"
+                  objectFit="cover"
+                  layout="responsive"
+                  alt="content"
+                  className="object-cover object-center h-1/2 w-1/2 opacity-70"
+                  src="/images/vendorpage2.jpg"
+                /> */}
+              {/* </div> */}
+                      
+                      {!isLoading ? (
+                        <motion.div
+                          initial="hidden"
+                          animate="visible"
+                          variants={variant}
+                        >
+                          <div className="flex flex-col">
+                          
+                            <div className="overflow-y-auto sm:-mx-6 lg:-mx-8">
+                              <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                                <div className="overflow-y-auto">
+                                  <table className="min-w-full text-center">
+                                    <thead className="border-b bg-zinc-100 ">
+                                      <tr>
+                                        <th
+                                          scope="col"
+                                          className="text-[10px] py-2 font-medium text-gray-900 px-2"
+                                        >
+                                          PO Item
+                                        </th>
+                                        <th
+                                          scope="col"
+                                          className="text-[10px] font-medium text-gray-900 px-2"
+                                        >
+                                          Material
+                                        </th>
+                                        {/* <th
+                                          scope="col"
+                                          className="text-[10px] font-medium text-gray-900 px-2"
+                                        >
+                                          Mat Group
+                                        </th>
+                                        <th
+                                          scope="col"
+                                          className="text-[10px] font-medium text-gray-900 px-2"
+                                        >
+                                          Plant Code
+                                        </th> */}
+                                        <th
+                                          scope="col"
+                                          className="text-[10px] font-medium text-gray-900 px-2"
+                                        >
+                                          PO Quantity
+                                        </th>
+                                        <th
+                                          scope="col"
+                                          className="text-[10px] font-medium text-gray-900 px-2"
+                                        >
+                                          PO UOM
+                                        </th>
+                                        <th
+                                          scope="col"
+                                          className="text-[10px] font-medium text-gray-900 px-2"
+                                        >
+                                          PO Unit Price
+                                        </th>
+                                        <th
+                                          scope="col"
+                                          className="text-[10px] font-medium text-gray-900 px-2"
+                                        >
+                                          PO Item Value (SR)
+                                        </th>
+                                        <th
+                                          scope="col"
+                                          className="text-[10px] font-medium text-gray-900 px-2"
+                                        >
+                                          Pending Qty
+                                        </th>
+                                        <th
+                                          scope="col"
+                                          className="text-[10px] font-medium text-gray-900 px-2"
+                                        >
+                                          Pending Value (SR)
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {selectedpolist
+                                        .sort((a, b) => {
+                                          return a[
+                                            "po-line-item"
+                                          ].localeCompare(
+                                            b["po-line-item"],
+                                            undefined,
+                                            {
+                                              numeric: true,
+                                              sensitivity: "base",
+                                            }
+                                          );
+                                        })
+                                        .map((row, index) => (
+                                          <tr
+                                            key={index}
+                                            className="bg-stone-300  border-b"
+                                          >
+                                            <td className="px-2 whitespace-nowrap text-[8px] font-thin text-black">
+                                              {row["po-line-item"]}
+                                            </td>
+                                            
+                                            <td className="px-2 whitespace-nowrap text-[8px] font-bold text-black">
+                                              {row["material"]["matdescription"]}
+                                            </td>
+                                            {/* <td className="px-2 whitespace-nowrap text-[8px] font-medium text-black">
+                                              {row["material"]["matgroup"]}
+                                            </td>
+                                            <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
+                                              {row["plant-code"]}
+                                            </td> */}
+                                            <td className="text-[10px] text-black font-medium px-2 max-h-full whitespace-nowrap">
+                                              {
+                                                row["po-quantity"]
+                                                  .$numberDecimal
+                                              }
+                                            </td>
+                                            <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
+                                              {row["po-unit-of-measure"]}
+                                            </td>
+                                            <td className="text-[10px] text-black font-medium px-2 max-h-full whitespace-nowrap">
+                                              {(
+                                                Math.round(
+                                                  row["po-unit-price"] * 100
+                                                ) / 100
+                                              ).toLocaleString()}
+                                            </td>
+                                            <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
+                                              {(
+                                                Math.round(
+                                                  row["po-value-sar"] * 100
+                                                ) / 100
+                                              ).toLocaleString()}
+                                            </td>
+                                            <td className="text-[10px] text-black font-medium px-2 max-h-full whitespace-nowrap">
+                                              {
+                                                row["pending-qty"]
+                                                  .$numberDecimal
+                                              }
+                                            </td>
+                                            <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
+                                              {(
+                                                Math.round(
+                                                  row["pending-val-sar"] * 100
+                                                ) / 100
+                                              ).toLocaleString()}
+                                            </td>
+                                          </tr>
+                                        ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ) : (
+                        <div className=" bg-white">
+                          <div className="flex justify-center items-center h-full">
+                            <img
+                              className="h-16 w-16"
+                              src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                              alt=""
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                </div>
+                </div>
+            {/* the PO details component */}
+            {/* <div className="relative flex flex-col gap-6 sm:flex-row md:flex-col lg:flex-row"> */}
+            {/* <div className="w-[600px] py-2 border-2 border-zinc-600 shadow-md hover:shadow-2xl rounded-2xl flex flex-col h-[600px]  overflow-y-scroll  hide-scroll-bar"> */}
+                    
+                  {/* </div> */}
+                  {/* </div> */}
+                {/* </div> */}
+                
+
+                <div className="xl:w-1/2 md:w-1/2 p-4 max-h-96 overflow-y-scroll  hide-scroll-bar">
+              <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl p-6 bg-zinc-100 rounded-lg">
                 <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                   <svg
                     fill="none"

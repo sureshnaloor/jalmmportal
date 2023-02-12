@@ -6,15 +6,24 @@ const handler = async (req, res) => {
 
   try {
     switch (req.method) {
-      case "GET": {       
-        
-        const material = await db
-          .collection("completestock")
-          .findOne({ "material-code": materialid });
+      case "GET": {
+        try {
+          const material = await db
+            .collection("completestock")
+            .findOne({ "material-code": materialid });
+            if(material){
+              return res.json(material)
+              }
+            return res.json({})
+            
+        } catch (error) {
+          console.error(err);
           
-        return res.json(material) || {}
-      }  
-      
+        }
+
+        
+      }
+
       default:
         return res.json({ error: "Method not supported" });
     }

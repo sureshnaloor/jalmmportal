@@ -6,7 +6,7 @@ import moment from "moment";
 import { Bar, Pie } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import HeaderComponent from "../../components/HeaderComponent";
-import Footercomponent from "../../components/FooterComponent"
+import Footercomponent from "../../components/FooterComponent";
 
 function Materials() {
   const [material, setmaterial] = useState({});
@@ -14,11 +14,12 @@ function Materials() {
   const [completestock, setCompletestock] = useState({});
   const [specialStock, setSpecialstock] = useState([]);
   const [requisitions, setRequisitions] = useState([]);
-  const [matdocs, setMatdocs] = useState([])
-  const [searchterm, setSearchterm] = useState('')
-  const [searchParam, setSearchparam] = useState()
-  const [materials, setMaterials] = useState([])
-  const [selectedMatcode, setSelectedMatcode] = useState("10303176")
+  const [matdocs, setMatdocs] = useState([]);
+  const [searchterm, setSearchterm] = useState("");
+  const [searchParam, setSearchparam] = useState();
+  const [materials, setMaterials] = useState([]);
+  const [selectedMatcode, setSelectedMatcode] = useState("10303176");
+  // const [selectedMatcode, setSelectedMatcode] = useState(null)
 
   // let materialcode = "10303176";
 
@@ -34,16 +35,43 @@ function Materials() {
   }, [selectedMatcode]);
 
   useEffect(() => {
+    const fetchCompleteStock = async () => {
+      const response = await fetch(`/api/completestock/${selectedMatcode}`);
+      const json = await response.json();
+      setCompletestock(json);
+    };
+    fetchCompleteStock();
+  }, [selectedMatcode]);
+
+  useEffect(() => {
     const fetchMaterials = async () => {
       // setSearchparam(router.query.searchtext)
 
       const response = await fetch(`/api/materials?str=${searchterm}`);
       const json = await response.json();
       // console.log(materials)
+      json.map(async (mat) => {
+        const response = await fetch(
+          `/api/purchaseorders/${mat["material-code"]}`
+        );
+        const purchased = await response.json();
+        mat["purchased"] = await purchased.length;
+      });
       setMaterials(json);
     };
     fetchMaterials();
   }, [searchterm]);
+
+  // useEffect(()=> {
+  //   materials.map(async (mat) => {
+  //     const response = await fetch(`/api/purchaseorders/${mat["material-code"]}`)
+  //     const purchased = await response.json()
+  //     mat["purchased"] = purchased.length
+      
+  //     console.log(mat)
+  //   })
+  //   setMaterials(materials)
+  // }, [materials])
 
   useEffect(() => {
     const fetchPurchases = async () => {
@@ -90,18 +118,20 @@ function Materials() {
     fetchMatdocs();
   }, [selectedMatcode]);
 
-  // console.log(materials);
+  console.log(materials);
   // console.log(purchases);
-  // console.log(completestock);
+  console.log(completestock);
   // console.log(specialStock);
   // console.log(session)
   // console.log(matdocs)
 
-  let labelsBar = [...new Set(matdocs.map(item => item["doc-date"].split("-")[0]))]
+  let labelsBar = [
+    ...new Set(matdocs.map((item) => item["doc-date"].split("-")[0])),
+  ];
 
   const setActiveMatcode = (matcode, index) => {
-    setSelectedMatcode(matcode)
-  }
+    setSelectedMatcode(matcode);
+  };
   return (
     <>
       <div>
@@ -169,9 +199,13 @@ function Materials() {
             >
               <div className="w-64 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-zinc-400 hover:shadow-xl transition-shadow duration-300 ease-in-out">
                 <div className="flex justify-center">
-                  <div className="block rounded-lg shadow-lg bg-white max-w-sm text-center">
+                  <div className="block w-60 h-56 rounded-lg shadow-lg bg-white max-w-sm text-center">
                     <div className="py-3 px-6 border-b bg-zinc-200 border-gray-300 dark:bg-stone-800 font-bold">
                       {matrl["material-code"]}
+                      <span className="inline-flex items-center justify-center w-12 h-4 ml-2 p-2 text-[10px] font-bold text-blue-800 bg-blue-200 rounded-full">
+                        {typeof matrl["purchased"] === 'undefined' ? null : matrl["purchased"] == 0 ? "no PO" : `${matrl["purchased"]} PO`}
+                        
+                      </span>
                     </div>
                     <div className="p-6 bg-slate-100">
                       <h5 className="text-gray-900 text-sm italic font-medium mb-[2px]">
@@ -181,9 +215,9 @@ function Materials() {
                         {matrl["unit-measure"]}
                       </p>
 
-                      <span className="text-gray-900 font-black text-[10px]">
+                      <p className="w-14 h-9 ml-2 mt-4 p-2 text-[12px] font-bold text-teal-800 bg-teal-200 rounded-full">
                         {matrl["material-group"]}
-                      </span>
+                      </p>
                     </div>
                     <div className="py-3 px-6  bg-orange-200 border-t border-gray-300 text-gray-600 text-xs">
                       Created: {moment(matrl["created_date"]).fromNow()}
@@ -215,22 +249,23 @@ function Materials() {
                 {" "}
                 {material["material-type"] == "ZCVL"
                   ? "Civil Material"
-                  : material["material-type"] == "ZOFC" ?
-                  "Office Material" 
-                  : material["material-type"] == "UNBW" ?
-                  "Fixed Asset" 
-                  : material["material-type"] == "ZELC" ?
-                  "Electrical Material" 
-                  : material["material-type"] == "ZINS" ?
-                   "Instrument Material" 
-                  : material["material-type"] == "ZMEC" ?
-                   "Mechanical Material" 
-                  : material["material-type"] == "ZCHN" ?
-                   "Channel Partner Material" 
-                  : material["material-type"] == "VERP" ?
-                   "Packing Material" 
-                  : material["material-type"] == "ERSA"  ?
-                   "Equipment Spares" : "Other"}
+                  : material["material-type"] == "ZOFC"
+                  ? "Office Material"
+                  : material["material-type"] == "UNBW"
+                  ? "Fixed Asset"
+                  : material["material-type"] == "ZELC"
+                  ? "Electrical Material"
+                  : material["material-type"] == "ZINS"
+                  ? "Instrument Material"
+                  : material["material-type"] == "ZMEC"
+                  ? "Mechanical Material"
+                  : material["material-type"] == "ZCHN"
+                  ? "Channel Partner Material"
+                  : material["material-type"] == "VERP"
+                  ? "Packing Material"
+                  : material["material-type"] == "ERSA"
+                  ? "Equipment Spares"
+                  : "Other"}
               </h5>
               <p className="sm:w-2/6 leading-relaxed text-lg font-Freehand text-gray-600  sm:pl-10 pl-0">
                 this is long text describing the material in more detail.
@@ -806,20 +841,20 @@ function Materials() {
 }
 
 export async function getServerSideProps(context) {
-  const session = await getSession(context)
+  const session = await getSession(context);
 
   if (!session) {
     return {
       redirect: {
-        destination: '/',
+        destination: "/",
         permanent: false,
       },
-    }
+    };
   }
 
   return {
-    props: { session }
-  }
+    props: { session },
+  };
 }
 
 export default Materials;

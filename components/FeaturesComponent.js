@@ -5,8 +5,8 @@ function FeaturesComponent() {
   return (
     <div className="relative bg-white dark:bg-gray-500 pb-5">
       <div className="lg:grid lg:grid-flow-row-dense lg:grid-cols-2 lg:gap-1 lg:items-center">
-        <div className="lg:col-start-2 md:pl-2">
-          <h4 className="text-[14px] leading-8 font-extrabold text-gray-900 dark:text-white tracking-tight sm:leading-9">
+        <div className="lg:pl-2">
+          <h4 className="text-[18px] leading-8 font-extrabold text-gray-900 dark:text-white tracking-tight sm:leading-9">
             Manage everything outside SAP direct in browser
           </h4>
           <ul className="mt-2">

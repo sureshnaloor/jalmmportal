@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Image from 'next/image'
 import moment from "moment";
 import { motion } from "framer-motion";
 import HeaderComponent from "../../components/HeaderComponent";
@@ -52,6 +53,14 @@ function Vendor() {
 
       const response = await fetch(`/api/vendors?str=${searchterm}`);
       const json = await response.json();
+
+      json.map(async (ven) => {
+        const response = await fetch(
+          `/api/purchaseorders/vendor/${ven["vendor-code"]}`
+        );
+        const purchased = await response.json();
+        ven["purchased"] = await purchased.length;
+      });
       setVendors(json);
     };
     fetchVendors();
@@ -187,6 +196,11 @@ function Vendor() {
                         <div className="block rounded-lg shadow-lg bg-white max-w-sm text-center">
                           <div className="py-3 px-6 border-b bg-zinc-200 border-gray-300 dark:bg-stone-800 font-bold">
                             {vendor["vendor-code"]}
+
+                            <span className="inline-flex items-center justify-center w-12 h-4 ml-2 p-2 text-[10px] font-bold text-blue-800 bg-blue-200 rounded-full">
+                        {typeof vendor["purchased"] === 'undefined' ? null : vendor["purchased"] == 0 ? "no PO" : `${vendor["purchased"]} PO`}
+                        
+                      </span>
                           </div>
                           <div className="p-6 bg-slate-100">
                             <h5 className="text-gray-900 text-sm font-medium mb-[2px]">
@@ -250,10 +264,26 @@ function Vendor() {
                   cupiditate blanditiis ratione.
                 </p>
               </div> */}
-                  <div className="flex flex-col container mx-auto h-96">
+              
+                  <div className="flex flex-col container mx-auto h-[600px]">
+                  
                     <div className="overflow-x-auto sm:-mx-6 lg:-mx-8  overflow-y-scroll hide-scroll-bar">
                       <div className="py-2 inline-block min-w-full  sm:px-3 lg:px-8 ">
+                      
                         <div className="overflow-hidden border-2 border-zinc-600 shadow-md hover:shadow-2xl rounded-2xl">
+                        {selectedVendor ? <div className="text-sm"> POs against vendor {selectedVendor}</div> : null }
+
+                        <div className="rounded-lg h-64 overflow-hidden">
+                <Image
+                  width="100%"
+                  height="50%"
+                  objectFit="cover"
+                  layout="responsive"
+                  alt="content"
+                  className="object-cover object-center h-1/2 w-1/2 opacity-70"
+                  src="/images/vendorpage1.jpg"
+                />
+              </div>
                           <table className="min-w-full">
                             <thead className=" bg-stone-400 border-b">
                               <tr>
@@ -382,9 +412,12 @@ function Vendor() {
                       </div>
                     </div>
                   </div>
+                  
                 </div>
-
+                
                 <div className="relative flex flex-col gap-6 sm:flex-row md:flex-col lg:flex-row">
+                
+                
                   {/* <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500 text-white sm:shrink-0"> */}
                   {/* <!-- Heroicon name: outline/scale --> */}
                   {/* <svg
@@ -415,10 +448,22 @@ function Vendor() {
               </div> */}
                   {/* <div className="fixed top-0 left-0 h-full w-full bg-slate-400 bg-opacity-10 backdrop-blur-0 flex justify-center items-center"> */}
 
-                  <div className="w-[900px] py-2 border-2 border-zinc-600 shadow-md hover:shadow-2xl rounded-2xl flex flex-col h-96  overflow-y-scroll  hide-scroll-bar">
+                  <div className="w-[900px] py-0 border-2 border-zinc-600 shadow-md hover:shadow-2xl rounded-2xl flex flex-col h-[600px]  overflow-y-scroll  hide-scroll-bar">
                     <div className="bg-stone-300  rounded text-[12px] text-black font-semibold">
                       {/* PO Details for:{currentPurchaseorder}{" "} */}
-
+                      {selectedVendor ? <div className="text-sm"> Selected PO against vendor {selectedVendor} </div> : null }
+                      <div className="rounded-lg h-64 overflow-hidden">
+                <Image
+                  width="100%"
+                  height="50%"
+                  objectFit="cover"
+                  layout="responsive"
+                  alt="content"
+                  className="object-cover object-center h-1/2 w-1/2 opacity-70"
+                  src="/images/vendorpage2.jpg"
+                />
+              </div>
+                      
                       {!isLoading ? (
                         <motion.div
                           initial="hidden"
@@ -426,6 +471,7 @@ function Vendor() {
                           variants={variant}
                         >
                           <div className="flex flex-col">
+                          
                             <div className="overflow-y-auto sm:-mx-6 lg:-mx-8">
                               <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                                 <div className="overflow-y-auto">
@@ -436,8 +482,20 @@ function Vendor() {
                                           scope="col"
                                           className="text-[10px] py-2 font-medium text-gray-900 px-2"
                                         >
-                                          PO Line Item
+                                          PO Item
                                         </th>
+                                        <th
+                                          scope="col"
+                                          className="text-[10px] font-medium text-gray-900 px-2"
+                                        >
+                                          Material
+                                        </th>
+                                        {/* <th
+                                          scope="col"
+                                          className="text-[10px] font-medium text-gray-900 px-2"
+                                        >
+                                          Mat Group
+                                        </th> */}
                                         <th
                                           scope="col"
                                           className="text-[10px] font-medium text-gray-900 px-2"
@@ -501,9 +559,16 @@ function Vendor() {
                                             key={index}
                                             className="bg-stone-300  border-b"
                                           >
-                                            <td className="px-2 whitespace-nowrap text-[10px] font-medium text-black">
+                                            <td className="px-2 py-2 whitespace-nowrap text-[8px] font-medium text-black">
                                               {row["po-line-item"]}
                                             </td>
+                                            
+                                            <td className="px-2 whitespace-nowrap text-[9px] font-bold text-black">
+                                              {row["material"]["matdescription"]}
+                                            </td>
+                                            {/* <td className="px-2 whitespace-nowrap text-[8px] font-medium text-black">
+                                              {row["material"]["matgroup"]}
+                                            </td> */}
                                             <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
                                               {row["plant-code"]}
                                             </td>

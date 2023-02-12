@@ -2,7 +2,7 @@ import React from "react";
 
 function CarousalComponent() {
   return (
-    <div className="bg-hero-section bg-no-repeat  bg-center bg-cover">
+    <div className="bg-hero-section bg-no-repeat bg-center bg-cover">
       <video
         autoPlay
         loop

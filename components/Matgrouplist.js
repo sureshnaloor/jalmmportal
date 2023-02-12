@@ -1,11 +1,16 @@
-import React from "react";
+import React, {useState} from "react";
 import Image from "next/image";
+import {useRouter} from 'next/router'
+
 function Matgrouplist({ matgroups, _ }) {
+  const [matgroup,setMatgroup] = useState()
+  const router = useRouter()
+
   return (
     // <>
     // <h1> this is mterial group pqge</h1>
-    <div >
-      
+
+    <div>
       <section className="pt-5 lg:pt-[20px] pb-2 lg:pb-[20px] bg-[#F3F4F6] dark:bg-gray-500">
         <div className="container">
           <div className="flex flex-wrap -mx-4">
@@ -47,21 +52,27 @@ function Matgrouplist({ matgroups, _ }) {
                     </label>
 
                     <select
+                    defaultValue=""
+                      onChange={(e) => setMatgroup(e.target.value)}
                       id="countries"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
-                      {matgroups.filter(mg => {
-                        return mg["material-group"][0]=="C" 
-                      }).map((mg) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"].toLowerCase()}
-                        </option>
-                      ))}
+                      <option hidden value="">Choose group</option>
+                      {matgroups
+                        .filter((mg) => {
+                          return mg["material-group"][0] == "C";
+                        })
+                        .map((mg) => (
+                          // eslint-disable-next-line react/jsx-key
+                          
+                          <option key={mg["_id"]} value={mg["material-group"]}>
+                            {mg["matgroup-primary-desc"].toLowerCase()}
+                          </option>
+                        ))}
                     </select>
                   </p>
+
                   <a
-                    href="#"
                     className="
                      inline-block
                      py-1
@@ -74,8 +85,9 @@ function Matgrouplist({ matgroups, _ }) {
                      hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
+                     onClick={() => router.push(`/matgroupwiselist/${matgroup}`)}
                   >
-                    View Details
+                    View Details 
                   </a>
                 </div>
               </div>
@@ -110,7 +122,7 @@ function Matgrouplist({ matgroups, _ }) {
                     </a>
                   </h3>
                   <p className="text-base text-body-color leading-relaxed mb-7">
-                  <label
+                    <label
                       htmlFor="countries"
                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
                     >
@@ -118,17 +130,22 @@ function Matgrouplist({ matgroups, _ }) {
                     </label>
 
                     <select
+                    defaultValue=""
+                      onChange={(e) => setMatgroup(e.target.value)}
                       id="countries"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
-                      {matgroups.filter(mg => {
-                        return mg["material-group"][0]=="E" 
-                      }).map((mg) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"].toLowerCase()}
-                        </option>
-                      ))}
+                      <option hidden value="">Choose group</option>
+                      {matgroups
+                        .filter((mg) => {
+                          return mg["material-group"][0] == "E";
+                        })
+                        .map((mg) => (
+                          // eslint-disable-next-line react/jsx-key
+                          <option key={mg["_id"]} value={mg["material-group"]}>
+                            {mg["matgroup-primary-desc"].toLowerCase()}
+                          </option>
+                        ))}
                     </select>
                   </p>
                   <a
@@ -145,8 +162,9 @@ function Matgrouplist({ matgroups, _ }) {
                      hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
+                     onClick={() => router.push(`/matgroupwiselist/${matgroup}`)}
                   >
-                    View Details
+                    View Details 
                   </a>
                 </div>
               </div>
@@ -181,7 +199,7 @@ function Matgrouplist({ matgroups, _ }) {
                     </a>
                   </h3>
                   <p className="text-base text-body-color leading-relaxed mb-7">
-                  <label
+                    <label
                       htmlFor="countries"
                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
                     >
@@ -189,17 +207,22 @@ function Matgrouplist({ matgroups, _ }) {
                     </label>
 
                     <select
+                    defaultValue=""
+                      onChange={(e) => setMatgroup(e.target.value)}
                       id="countries"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
-                      {matgroups.filter(mg => {
-                        return mg["material-group"][0]=="M" 
-                      }).map((mg) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"].toLowerCase()}
-                        </option>
-                      ))}
+                      <option hidden value="">Choose group</option>
+                      {matgroups
+                        .filter((mg) => {
+                          return mg["material-group"][0] == "M";
+                        })
+                        .map((mg) => (
+                          // eslint-disable-next-line react/jsx-key
+                          <option key={mg["_id"]} value={mg["material-group"]}>
+                            {mg["matgroup-primary-desc"].toLowerCase()}
+                          </option>
+                        ))}
                     </select>
                   </p>
                   <a
@@ -216,6 +239,7 @@ function Matgrouplist({ matgroups, _ }) {
                      hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
+                     onClick={() => router.push(`/matgroupwiselist/${matgroup}`)}
                   >
                     View Details
                   </a>
@@ -252,7 +276,7 @@ function Matgrouplist({ matgroups, _ }) {
                     </a>
                   </h3>
                   <p className="text-base text-body-color leading-relaxed mb-7">
-                  <label
+                    <label
                       htmlFor="countries"
                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
                     >
@@ -260,17 +284,25 @@ function Matgrouplist({ matgroups, _ }) {
                     </label>
 
                     <select
+                    defaultValue=""
+                      onChange={(e) => setMatgroup(e.target.value)}
                       id="countries"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
-                      {matgroups.filter(mg => {
-                        return mg["material-group"][0]=="I" && mg["material-group"][1] == "M"
-                      }).map((mg) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"].toLowerCase()}
-                        </option>
-                      ))}
+                      <option hidden value="">Choose group</option>
+                      {matgroups
+                        .filter((mg) => {
+                          return (
+                            mg["material-group"][0] == "I" &&
+                            mg["material-group"][1] == "M"
+                          );
+                        })
+                        .map((mg) => (
+                          // eslint-disable-next-line react/jsx-key
+                          <option key={mg["_id"]} value={mg["material-group"]}>
+                            {mg["matgroup-primary-desc"].toLowerCase()}
+                          </option>
+                        ))}
                     </select>
                   </p>
                   <a
@@ -287,6 +319,7 @@ function Matgrouplist({ matgroups, _ }) {
                      hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
+                     onClick={() => router.push(`/matgroupwiselist/${matgroup}`)}
                   >
                     View Details
                   </a>
@@ -323,7 +356,7 @@ function Matgrouplist({ matgroups, _ }) {
                     </a>
                   </h3>
                   <p className="text-base text-body-color leading-relaxed mb-7">
-                  <label
+                    <label
                       htmlFor="countries"
                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
                     >
@@ -331,17 +364,25 @@ function Matgrouplist({ matgroups, _ }) {
                     </label>
 
                     <select
+                    defaultValue=""
+                      onChange={(e) => setMatgroup(e.target.value)}
                       id="countries"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
-                      {matgroups.filter(mg => {
-                        return mg["material-group"][0]=="I" && mg["material-group"][1] == "T"
-                      }).map((mg) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"].toLowerCase()}
-                        </option>
-                      ))}
+                      <option hidden value="">Choose group</option>
+                      {matgroups
+                        .filter((mg) => {
+                          return (
+                            mg["material-group"][0] == "I" &&
+                            mg["material-group"][1] == "T"
+                          );
+                        })
+                        .map((mg) => (
+                          // eslint-disable-next-line react/jsx-key
+                          <option key={mg["_id"]} value={mg["material-group"]}>
+                            {mg["matgroup-primary-desc"].toLowerCase()}
+                          </option>
+                        ))}
                     </select>
                   </p>
                   <a
@@ -358,6 +399,7 @@ function Matgrouplist({ matgroups, _ }) {
                      hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
+                     onClick={() => router.push(`/matgroupwiselist/${matgroup}`)}
                   >
                     View Details
                   </a>
@@ -394,7 +436,7 @@ function Matgrouplist({ matgroups, _ }) {
                     </a>
                   </h3>
                   <p className="text-base text-body-color leading-relaxed mb-7">
-                  <label
+                    <label
                       htmlFor="countries"
                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
                     >
@@ -402,17 +444,22 @@ function Matgrouplist({ matgroups, _ }) {
                     </label>
 
                     <select
+                    defaultValue=""
+                      onChange={(e) => setMatgroup(e.target.value)}
                       id="countries"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
-                      {matgroups.filter(mg => {
-                        return mg["material-group"][0] == "A"
-                      }).map((mg) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <option key={mg["_id"]} value={mg["material-group"]}>
-                          {mg["matgroup-primary-desc"].toLowerCase()}
-                        </option>
-                      ))}
+                      <option hidden value="">Choose group</option>
+                      {matgroups
+                        .filter((mg) => {
+                          return mg["material-group"][0] == "A";
+                        })
+                        .map((mg) => (
+                          // eslint-disable-next-line react/jsx-key
+                          <option key={mg["_id"]} value={mg["material-group"]}>
+                            {mg["matgroup-primary-desc"].toLowerCase()}
+                          </option>
+                        ))}
                     </select>
                   </p>
                   <a
@@ -429,8 +476,10 @@ function Matgrouplist({ matgroups, _ }) {
                      hover:border-primary hover:bg-primary hover:text-blue-900 dark:hover:text-zinc-200
                      transition
                      "
+                     onClick={() => router.push(`/matgroupwiselist/${matgroup}`)}
+                     
                   >
-                    View Details
+                    <span>View Details</span>
                   </a>
                 </div>
               </div>
