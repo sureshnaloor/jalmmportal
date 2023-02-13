@@ -118,12 +118,12 @@ function Materials() {
     fetchMatdocs();
   }, [selectedMatcode]);
 
-  console.log(materials);
+  // console.log(materials);
   // console.log(purchases);
-  console.log(completestock);
+  // console.log(completestock);
   // console.log(specialStock);
   // console.log(session)
-  // console.log(matdocs)
+  console.log(matdocs)
 
   let labelsBar = [
     ...new Set(matdocs.map((item) => item["doc-date"].split("-")[0])),
@@ -172,7 +172,7 @@ function Materials() {
             required
             onChange={(e) => {
               setSearchterm(e.target.value);
-              console.log(searchterm);
+              // console.log(searchterm);
             }}
           />
           {/* <button
@@ -194,7 +194,7 @@ function Materials() {
               className="inline-block px-3"
               onClick={() => {
                 setActiveMatcode(matrl["material-code"], index);
-                console.log("I am clicked!");
+                // console.log("I am clicked!");
               }}
             >
               <div className="w-64 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-zinc-400 hover:shadow-xl transition-shadow duration-300 ease-in-out">
@@ -504,7 +504,7 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" &&
+                                        row["mvt-type"] == "105" || row["mvt-type"] == "101" &&
                                         row["doc-date"].split("-")[0] == "2017"
                                     )
                                     .reduce(
@@ -515,7 +515,7 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" &&
+                                        row["mvt-type"] == "105" || row["mvt-type"] == "101" &&
                                         row["doc-date"].split("-")[0] == "2018"
                                     )
                                     .reduce(
@@ -526,7 +526,7 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" &&
+                                        row["mvt-type"] == "105" || row["mvt-type"] == "101" &&
                                         row["doc-date"].split("-")[0] == "2019"
                                     )
                                     .reduce(
@@ -537,7 +537,7 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" &&
+                                        row["mvt-type"] == "105" || row["mvt-type"] == "101" &&
                                         row["doc-date"].split("-")[0] == "2020"
                                     )
                                     .reduce(
@@ -548,7 +548,7 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" &&
+                                        row["mvt-type"] == "105" || row["mvt-type"] == "101" &&
                                         row["doc-date"].split("-")[0] == "2021"
                                     )
                                     .reduce(
@@ -559,7 +559,8 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" &&
+                                        row["mvt-type"] == "105" || row["mvt-type"] == "101"
+                                         &&
                                         row["doc-date"].split("-")[0] == "2022"
                                     )
                                     .reduce(
