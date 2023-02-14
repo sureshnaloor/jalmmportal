@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { useState, useEffect, useMemo } from "react";
+import moment from 'moment'
 import HeaderComponent from "../../components/HeaderComponent";
 import FooterComponent from "../../components/FooterComponent";
 import Tablecomponent from "../../components/Tablecomponent";
@@ -14,7 +15,7 @@ function Matgroup() {
     () => [
       {
         // first group - TV Show
-        Header: "Material Details",
+        Header: `List of materials in group ${matgroupid}`,
         // First group columns
         columns: [
           {
@@ -45,7 +46,7 @@ function Matgroup() {
           },
           {
             Header: "Created By",
-            accessor: "created-by",
+            accessor: "created-by", 
           },
           {
             Header: "Created Date",
@@ -54,7 +55,7 @@ function Matgroup() {
         ],
       },
     ],
-    []
+    [matgroupid]
   );
 
   const [matlist, setMatlist] = useState([]);
@@ -71,8 +72,12 @@ function Matgroup() {
   return (
     <>
       <HeaderComponent />
-
+      <div className="min-h-screen bg-gray-50 text-gray-900" >
+      
+      <div className="">
       <Tablecomponent columns={columns} data={matlist} />
+      </div>
+      </div>
       <FooterComponent />
     </>
   );
