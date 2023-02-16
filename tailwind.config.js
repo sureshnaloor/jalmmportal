@@ -26,7 +26,7 @@ module.exports = {
         
     },
   },
-  plugins: [require('tw-elements/dist/plugin'), require("daisyui"), ],
+  plugins: [require('tw-elements/dist/plugin'), require("daisyui"),require("@tailwindcss/forms") ],
   future: {
     purgeLayersByDefault: true,
   },
