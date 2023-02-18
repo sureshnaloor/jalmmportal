@@ -239,7 +239,8 @@ function Materials() {
             </div>
             <div className="flex flex-nowrap sm:flex-row flex-col py-2 mb-1">
               <h1 className="sm:w-2/6 text-gray-900 font-medium title-font text-xl mb-2 sm:mb-0">
-                {material["material-description"]}
+                {material["material-description"]} <br/> 
+                <span className="bg-teal-100 text-indigo-800 text-lg px-3 "> {material["material-code"]}</span>
               </h1>
               <h2 className="sm:w-1/6 text-amber-900 text-lg font-bold mb-2 sm:mb-0 pr-3">
                 {" "}

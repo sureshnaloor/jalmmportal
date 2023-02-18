@@ -1,15 +1,20 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { useState, useEffect, useMemo } from "react";
-import moment from 'moment'
+// import moment from 'moment'
 import HeaderComponent from "../../components/HeaderComponent";
 import FooterComponent from "../../components/FooterComponent";
 import Tablecomponent, {SelectColumnFilter, Mattype, Cellstyle, Datestyle, Boldstyle1, Boldstyle2} from "../../components/Tablecomponent";
-
+import Matedit from '../../components/Mateditcomponent'
 function Matgroup() {
   const router = useRouter();
   let matgroupid = router.query.matgroupid;
   // console.log(router.query.matgroupid)
+
+  function handleEdit(row){
+    const matcode = row.row.values["material-code"];
+    console.log(matcode)
+  }
 
   const columns = useMemo(
     () => [
@@ -58,11 +63,20 @@ function Matgroup() {
           {
             Header: "Date",
             accessor: "created_date",
-            Filter: SelectColumnFilter,  // new
-            
-            Cell: Datestyle,
-            
+            // Filter: SelectColumnFilter,  // new
+            // filter: 'includes',  // new
+            Cell: Datestyle,            
           },
+          {
+            Header:'Action',
+            accesor:'action',
+            Cell: row => (
+              <div className="text-red-900 font-bold">
+                <button onClick={e=> handleEdit(row)}> Edit </button>
+              </div>
+            )
+          }
+          
           
         ],
       
@@ -84,7 +98,7 @@ function Matgroup() {
   return (
     <>
       <HeaderComponent />
-      <div className="min-h-screen bg-gray-50 text-gray-900" >
+      <div className="min-h-screen bg-gray-50 text-gray-900 w-11/12 ml-9" >
       
       <div className="mt-6">
         <p className="font-bold text-md mb-3">
