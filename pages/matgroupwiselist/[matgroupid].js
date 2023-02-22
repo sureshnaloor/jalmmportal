@@ -6,14 +6,18 @@ import HeaderComponent from "../../components/HeaderComponent";
 import FooterComponent from "../../components/FooterComponent";
 import Tablecomponent, {SelectColumnFilter, Mattype, Cellstyle, Datestyle, Boldstyle1, Boldstyle2} from "../../components/Tablecomponent";
 import Matedit from '../../components/Mateditcomponent'
+
 function Matgroup() {
   const router = useRouter();
   let matgroupid = router.query.matgroupid;
   // console.log(router.query.matgroupid)
 
+  const [selectedMaterial, setSelectedMaterial] = useState({})
   function handleEdit(row){
-    const matcode = row.row.values["material-code"];
-    console.log(matcode)
+    const material = row.row.values;
+    console.log(material)
+    setSelectedMaterial({...material, matgroupid})
+    setShowModal(true)
   }
 
   const columns = useMemo(
@@ -71,7 +75,7 @@ function Matgroup() {
             Header:'Action',
             accesor:'action',
             Cell: row => (
-              <div className="text-red-900 font-bold">
+              <div className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded">
                 <button onClick={e=> handleEdit(row)}> Edit </button>
               </div>
             )
@@ -85,6 +89,7 @@ function Matgroup() {
   );
 
   const [matlist, setMatlist] = useState([]);
+  const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -105,6 +110,7 @@ function Matgroup() {
         List of materials in group {matgroupid}
         </p>
       <Tablecomponent columns={columns} data={matlist} />
+      {showModal ? <Matedit material={selectedMaterial} setShowModal={setShowModal}/> : null}
       </div>
       </div>
       <FooterComponent />

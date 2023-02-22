@@ -505,7 +505,7 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" || row["mvt-type"] == "101" &&
+                                        (row["mvt-type"] == "105" || row["mvt-type"] == "101") &&
                                         row["doc-date"].split("-")[0] == "2017"
                                     )
                                     .reduce(
@@ -516,7 +516,7 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" || row["mvt-type"] == "101" &&
+                                        (row["mvt-type"] == "105" || row["mvt-type"] == "101") &&
                                         row["doc-date"].split("-")[0] == "2018"
                                     )
                                     .reduce(
@@ -527,7 +527,7 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" || row["mvt-type"] == "101" &&
+                                        (row["mvt-type"] == "105" || row["mvt-type"] == "101") &&
                                         row["doc-date"].split("-")[0] == "2019"
                                     )
                                     .reduce(
@@ -538,7 +538,7 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" || row["mvt-type"] == "101" &&
+                                        (row["mvt-type"] == "105" || row["mvt-type"] == "101") &&
                                         row["doc-date"].split("-")[0] == "2020"
                                     )
                                     .reduce(
@@ -549,7 +549,7 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" || row["mvt-type"] == "101" &&
+                                        (row["mvt-type"] == "105" || row["mvt-type"] == "101") &&
                                         row["doc-date"].split("-")[0] == "2021"
                                     )
                                     .reduce(
@@ -560,7 +560,7 @@ function Materials() {
                                   `${matdocs
                                     .filter(
                                       (row) =>
-                                        row["mvt-type"] == "105" || row["mvt-type"] == "101"
+                                        (row["mvt-type"] == "105" || row["mvt-type"] == "101")
                                          &&
                                         row["doc-date"].split("-")[0] == "2022"
                                     )
