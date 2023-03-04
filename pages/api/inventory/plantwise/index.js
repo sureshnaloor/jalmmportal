@@ -1,19 +1,20 @@
-import { connectToDatabase } from  "../../../lib/mongoconnect";
+import { connectToDatabase } from  "../../../../lib/mongoconnect";
 
 const handler =  async (req, res) => {
   // handle different methods
-
-  let limit = 50
-  let skip = 12
   try {
     switch (req.method) {
         case "GET": {
           const { db } = await connectToDatabase();
-          const polist = await db.collection("purchaseorders").find({}).sort({"po-date":-1}).limit(limit).skip(skip).toArray();
-          return res.json(polist);
+          const inventory = await db.collection("completestock").aggregate([
+            {
+                $group:{_id:"$plant-code", count:{$sum:"$current-stkval"}}
+            }
+          ]).toArray()
+          return res.json(inventory);
           
-        } 
-      
+        }         
+
         default:
           return res.json({ error: "Method not supported" });
       }

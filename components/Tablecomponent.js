@@ -335,9 +335,9 @@ function Tablecomponent({ columns, data }) {
       </table>
       <div>
         {/* new */}
-        <pre>
+        {/* <pre>
           <code>{JSON.stringify(state, null, 2)}</code>
-        </pre>
+        </pre> */}
       </div>
     </>
   );
