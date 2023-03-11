@@ -18,6 +18,11 @@ function SectionComponent() {
   const [topmaterials, setTopmaterials] = useState([]);
   const [topPobalance, setToppobalance] = useState([]);
 
+  const [yearwiseTrans, setYearwiseTrans] = useState([]);
+  const [yearwiseIssue, setYearwiseIssue] = useState([]);
+  const [yearwiseReceipt, setYearwiseReceipt] = useState([]);
+  const [mgwisestock, setMgwisestock] = useState([]);
+
   // plantwise inventory
   useEffect(() => {
     const fetchInvPlantwise = async () => {
@@ -142,11 +147,51 @@ function SectionComponent() {
     fetchtopmaterials();
   }, []);
 
+  useEffect(() => {
+    const fetchyearwisetrans = async () => {
+      const response = await fetch(`/api/materialdocuments/yearwisetrans`);
+      const json = await response.json();
+
+      setYearwiseTrans(json);
+    };
+    fetchyearwisetrans();
+  }, []);
+
+  useEffect(() => {
+    const fetchyearwiseIssue = async () => {
+      const response = await fetch(`/api/materialdocuments/yearwiseissues`);
+      const json = await response.json();
+
+      setYearwiseIssue(json);
+    };
+    fetchyearwiseIssue();
+  }, []);
+
+  useEffect(() => {
+    const fetchyearwiseReceipt = async () => {
+      const response = await fetch(`/api/materialdocuments/yearwisereceipts`);
+      const json = await response.json();
+
+      setYearwiseReceipt(json);
+    };
+    fetchyearwiseReceipt();
+  }, []);
+
+  useEffect(() => {
+    const fetchmgwisestock = async () => {
+      const response = await fetch(`/api/completestock/topstock`);
+      const json = await response.json();
+
+      setMgwisestock(json);
+    };
+    fetchmgwisestock();
+  }, []);
+
   return (
     <>
       {/* first row */}
       <div className="grid grid-cols-4 gap-1 pb-6">
-        {/* within 1st row, 1st col */}
+        {/* within 1st row, 1st col- PO line items and PO value since 2016 till now */}
         <div className="col-span-2 bg-gray-50">
           <div className="w-[450px] h-[425px] pl-6 ml-12">
             <h6 className="mt-6 ml-6 text-[12px] font-lato text-zinc-900">
@@ -209,37 +254,39 @@ function SectionComponent() {
 
           {/* <div className="bg-amber-100 grid grid-cols-4 gap-4 pb-6"> */}
           {/* <div className="bg-gray-50"> */}
-          <div className="p-3  w-80 h-80 mt-9 ml-16">
-            <h5 className="mb-2 text-[16px] mt-[64px] font-bold tracking-tight text-gray-900 dark:text-white">
-              2023- current Inventory Value (SAR)
-            </h5>
-            <Pie
-              data={{
-                labels: invPlantwise.map((stock) =>
-                  stock["_id"] == "1100" ? "Dammam" : "Jubail"
-                ),
-                datasets: [
-                  {
-                    backgroundColor: [
-                      "rgb(173, 216, 230)",
-                      "rgb(144, 238, 144)",
-                    ],
-                    borderColor: "rgb(255, 99, 132)",
-                    data: invPlantwise.map((stock) => stock["count"]),
+          <div className="p-3 w-[200px] h-[200px] mt-9 ml-16">
+            <div>
+              <h5 className="mb-2 text-[12px] mt-[64px] font-bold tracking-tight text-gray-900 dark:text-white">
+                2023- current Inventory Value (SAR)
+              </h5>
+              <Pie
+                data={{
+                  labels: invPlantwise.map((stock) =>
+                    stock["_id"] == "1100" ? "Dammam" : "Jubail"
+                  ),
+                  datasets: [
+                    {
+                      backgroundColor: [
+                        "rgb(173, 216, 230)",
+                        "rgb(144, 238, 144)",
+                      ],
+                      borderColor: "rgb(255, 99, 132)",
+                      data: invPlantwise.map((stock) => stock["count"]),
+                    },
+                  ],
+                }}
+                options={{
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
                   },
-                ],
-              }}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                },
-              }}
-            />
+                }}
+              />
+            </div>
+          
+          
           </div>
-          {/* </div> */}
-          {/* </div> */}
         </div>
 
         <div className="bg-gray-200 col-span-1">
@@ -306,7 +353,36 @@ function SectionComponent() {
           </div>
         </div>
       </div>
+        {/* now for materialgroupwise inventory bar chart */}
+        <div>
+        <div>
+            <h5 className="text-[12px]  font-bold tracking-tight text-gray-900 dark:text-white">
+              Current Materialgroupwise Inventory Value (SAR)
+            </h5>
+            <Bar
+              className="p-1 m-1"
+              data={{
+                labels: mgwisestock.sort((a,b) =>  b.count-a.count).map((row) => row._id),
+                datasets: [
+                  {
+                    backgroundColor: "rgb(122, 123, 255)",
+                    borderColor: "rgb(255, 99, 132)",
+                    data: mgwisestock.map((row) => row.count),
+                  },
+                ],
+              }}
+              options={{
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  maintainAspectRatio: false,
+                },
+              }}
+            />
+          </div>
 
+        </div>
       <div className="grid bg-sky-100 grid-cols-6 gap-6 pb-6">
         <div className="col-span-2">
           <div className="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
@@ -384,17 +460,80 @@ function SectionComponent() {
             </div>
           </div>
         </div>
-        <div className="col-span-2">
-          {" "}
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias quas
-          incidunt laboriosam laborum dicta consectetur nobis modi numquam eum
-          vitae?
-          <br />
-          <h3>
-            {" "}
-            This section will have total number of receipts and issues so far
-            year wise
-          </h3>
+        <div className="col-span-2 flex">
+          <div>
+            <h3>Year-wise Receipts (in SAR)</h3>
+            <Bar
+              className="p-1 m-1"
+              data={{
+                labels: yearwiseReceipt.map((row) => row._id),
+                datasets: [
+                  {
+                    backgroundColor: "rgb(122, 123, 255)",
+                    borderColor: "rgb(255, 99, 132)",
+                    data: yearwiseReceipt.map((row) => row.count),
+                  },
+                ],
+              }}
+              options={{
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  maintainAspectRatio: false,
+                },
+              }}
+            />
+
+            <h3>Year-wise Issues (in SAR)</h3>
+            <Bar
+              className="p-1 m-1"
+              data={{
+                labels: yearwiseIssue.map((row) => row._id),
+                datasets: [
+                  {
+                    backgroundColor: "rgb(255, 204, 203)",
+                    borderColor: "rgb(255, 99, 132)",
+                    data: yearwiseIssue.map((row) => row.count),
+                  },
+                ],
+              }}
+              options={{
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  maintainAspectRatio: false,
+                },
+              }}
+            />
+          </div>
+          <div className="pl-12 pt-14">
+            <h3>
+              Year-wise Overall transactions (Receipts LESS issues) (in SAR)
+            </h3>
+            <Bar
+              className="p-1 m-1"
+              data={{
+                labels: yearwiseTrans.map((row) => row._id),
+                datasets: [
+                  {
+                    backgroundColor: "rgb(255, 14, 20)",
+                    borderColor: "rgb(255, 99, 132)",
+                    data: yearwiseTrans.map((row) => row.count),
+                  },
+                ],
+              }}
+              options={{
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  maintainAspectRatio: false,
+                },
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -402,9 +541,9 @@ function SectionComponent() {
         <div className="bg-gray-200 col-span-3">
           {/* table component for top20 stock goes here  */}
           <h3 className="bg-blue-200 text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
-              {" "}
-              Top Valued Inventory (in SAR){" "}
-            </h3>
+            {" "}
+            Top Valued Inventory (in SAR){" "}
+          </h3>
 
           <div className="relative overflow-x-auto">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -474,57 +613,57 @@ function SectionComponent() {
               Top Valued open Purchase orders{" "}
             </h3>
             {/* <div className="relative overflow-x-auto"> */}
-              <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                {/* <div className="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"> */}
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      PO Number
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Vendor code
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Vendor Name
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Balance Value
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {topPobalance
-                    .sort(function (a, b) {
-                      return b.count - a.count;
-                    })
-                    .slice(0, 20)
-                    .map((row) => (
-                      <tr
-                        key={row._id.ponum}
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              {/* <div className="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"> */}
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    PO Number
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Vendor code
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Vendor Name
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Balance Value
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {topPobalance
+                  .sort(function (a, b) {
+                    return b.count - a.count;
+                  })
+                  .slice(0, 20)
+                  .map((row) => (
+                    <tr
+                      key={row._id.ponum}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                    >
+                      <th
+                        scope="row"
+                        className="px-2 py-4 font-medium pl-6 text-gray-900 whitespace-nowrap dark:text-white"
                       >
-                        <th
-                          scope="row"
-                          className="px-2 py-4 font-medium pl-6 text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          {row._id.ponum}
-                        </th>
-                        <td className="px-2 py-4 text-xs pl-6  font-semibold">
-                          {row._id.vendor}
-                        </td>
-                        <td className="px-2 py-4 text-xs text-red-800">
-                          {row._id.venname}
-                        </td>
-                        <td className="px-2 py-4 tracking-wider text-green-900">
-                          {(Math.round(row.count * 100) / 100).toLocaleString(
-                            "en-US",
-                            { style: "currency", currency: "SAR" }
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+                        {row._id.ponum}
+                      </th>
+                      <td className="px-2 py-4 text-xs pl-6  font-semibold">
+                        {row._id.vendor}
+                      </td>
+                      <td className="px-2 py-4 text-xs text-red-800">
+                        {row._id.venname}
+                      </td>
+                      <td className="px-2 py-4 tracking-wider text-green-900">
+                        {(Math.round(row.count * 100) / 100).toLocaleString(
+                          "en-US",
+                          { style: "currency", currency: "SAR" }
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
             {/* </div> */}
           </div>
         </div>

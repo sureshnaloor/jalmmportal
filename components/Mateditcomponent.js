@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 
-function Mateditcomponent({ material, setShowModal }) {
-  const [matrl, setMatrl] = useState({});
-  const [placeholder, setPlaceholder] = useState({});
-  const [matgroups, setMatgroups] = useState([]);
-  console.log(material);
+function Mateditcomponent({ material, setShowModal, editMode }) {
+  const [matrl, setMatrl] = useState({}); // this is for already edited data if any
+  const [placeholder, setPlaceholder] = useState({}); // this is for placeholder support to prompt
+  const [matgroups, setMatgroups] = useState([]); // for select matgroups to change the matgroup if wrong
+  // console.log(material);
+
+  const [newdescription, setNewdescription] = useState("");
+  const [length, setLength] = useState(0);
+  const [maxLimit, setMaxlimit] = useState(40);
 
   useEffect(() => {
     (async () => {
@@ -36,7 +41,54 @@ function Mateditcomponent({ material, setShowModal }) {
 
   // console.log(matrl);
   // console.log(placeholder);
-  console.log(matgroups);
+  // console.log(matgroups);
+  // console.log(newdescription);
+  // console.log(length);
+  // console.log(maxLimit);
+
+  const responsebody = {};
+  const body = {};
+
+  const handlesubmit = async (e) => {
+    // console.log("clicked");
+    e.preventDefault();
+    const data = new FormData(e.target);
+    data.forEach((value, property) => {
+      responsebody[property] = value;
+    });
+
+    body = {
+      materialcode: material["material-code"],
+      matdescriptionold: material["material-description"],
+      matgroupold: material["matgroupid"],
+      mattypeold: material["material-type"],
+      matdescriptionnew:
+        responsebody["primary"] +
+        "" +
+        responsebody["secondary"] +
+        "" +
+        responsebody["tertiary"] +
+        "" +
+        responsebody["other"],
+      mattypenew: responsebody["mattypenew"],
+      matgroupnew: responsebody["matgroupnew"],
+      longtext: responsebody["longtext"],
+    };
+
+    // console.log(JSON.stringify(responsebody));
+    console.log(body)
+    // console.log(JSON.stringify(body))
+    const result = await fetch(
+      `/api/materialcleanse/${material["material-code"]}`,
+      { method: "PUT", body: JSON.stringify(body), headers: new Headers({
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }) }
+    );
+    const json = await result.json();
+    console.log(json)
+
+  };
 
   return (
     // <div className="absolute inset-0 w-[100vw] h-full flex  opacity-90 bg-gray-50 justify-center  z-50 align-middle">
@@ -60,10 +112,12 @@ function Mateditcomponent({ material, setShowModal }) {
               {material["material-code"]}
             </p>
 
-            <h4 className="text-sky-900 text-sm font-bold">
-              {" "}
-              Material Group: {material["matgroupid"]}
-            </h4>
+            <button type="button" onClick={() => setShowModal(false)}>
+              <Image alt="" src="/images/backicon.png" width={20} height={20} />{" "}
+              <p className="text-[8px]">
+                Back to Material group {material["matgroupid"]}{" "}
+              </p>
+            </button>
           </div>
           <div className="w-full md:w-1/2 px-3 my-3">
             <h4 className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
@@ -75,10 +129,11 @@ function Mateditcomponent({ material, setShowModal }) {
           </div>
         </div>
 
-        <form className=" w-full bg-zinc-300 p-6">
+        <form className=" w-full bg-zinc-300 p-6" onSubmit={handlesubmit}>
           <div className="shadow overflow-hidden sm:rounded-md">
-            <div className="px-4 py-5 bg-white sm:p-6">
-              <div className="grid grid-cols-8 gap-2">
+            <div className="px-4 py-5 bg-white sm:p-6 text-[10px]">
+              length of new description: <span>{length}</span>
+              <div className="grid grid-cols-8 gap-2 mt-4">
                 <div className="col-span-2">
                   <div className="relative z-0 w-full mb-6 group">
                     <input
@@ -88,6 +143,16 @@ function Mateditcomponent({ material, setShowModal }) {
                       className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                       placeholder=" "
                       required
+                      onBlur={(e) => {
+                        setNewdescription(
+                          (prev, current) =>
+                            (current = prev + " " + e.target.value)
+                        );
+                        setLength(
+                          (prev, current) =>
+                            (current = prev + e.target.value.length + 1)
+                        );
+                      }}
                     />
                     <label
                       htmlFor="floating_company"
@@ -107,6 +172,16 @@ function Mateditcomponent({ material, setShowModal }) {
                       className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                       placeholder=" "
                       required
+                      onBlur={(e) => {
+                        setNewdescription(
+                          (prev, current) =>
+                            (current = prev + " " + e.target.value)
+                        );
+                        setLength(
+                          (prev, current) =>
+                            (current = prev + e.target.value.length + 1)
+                        );
+                      }}
                     />
                     <label
                       htmlFor="floating_company"
@@ -126,6 +201,16 @@ function Mateditcomponent({ material, setShowModal }) {
                       className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                       placeholder=" "
                       required
+                      onBlur={(e) => {
+                        setNewdescription(
+                          (prev, current) =>
+                            (current = prev + " " + e.target.value)
+                        );
+                        setLength(
+                          (prev, current) =>
+                            (current = prev + e.target.value.length + 1)
+                        );
+                      }}
                     />
                     <label
                       htmlFor="floating_company"
@@ -145,6 +230,17 @@ function Mateditcomponent({ material, setShowModal }) {
                       className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                       placeholder=" "
                       required
+                      onFocus={() => setMaxlimit(40 - length)}
+                      onBlur={(e) => {
+                        setNewdescription(
+                          (prev, current) =>
+                            (current = prev + " " + e.target.value)
+                        );
+                      }}
+                      onChange={(e) => {
+                        setLength((prev, current) => (current = prev + 1));
+                      }}
+                      maxLength={maxLimit}
                     />
                     <label
                       htmlFor="floating_company"
@@ -155,19 +251,18 @@ function Mateditcomponent({ material, setShowModal }) {
                   </div>
                 </div>
               </div>
-
               <div className="grid grid-cols-10 gap-2 mt-3">
                 <div className="col-span-3">
                   <label
-                    htmlFor="mattype"
+                    htmlFor="mattypenew"
                     className="block text-[10px] font-extrabold uppercase text-amber-900"
                   >
                     Material Type - New
                   </label>
                   <select
-                    id="mattype"
-                    name="mattype"
-                    autoComplete="mattype"
+                    id="mattypenew"
+                    name="mattypenew"
+                    autoComplete="mattypenew"
                     className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 font-Montserrat font-bold text-zinc-900 text-sm"
                   >
                     <option
@@ -229,15 +324,15 @@ function Mateditcomponent({ material, setShowModal }) {
 
                 <div className="col-span-4">
                   <label
-                    htmlFor="matgroup"
+                    htmlFor="matgroupnew"
                     className="block text-[10px] font-extrabold uppercase text-amber-900"
                   >
                     Material Group-New
                   </label>
                   <select
-                    id="matgroup"
-                    name="matgroup"
-                    autoComplete="matgroup"
+                    id="matgroupnew"
+                    name="matgroupnew"
+                    autoComplete="matgroupnew"
                     className="mt-1 block w-full py-2 px-3 border font-Montserrat font-bold text-stone-900 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   >
                     {matgroups
@@ -260,21 +355,27 @@ function Mateditcomponent({ material, setShowModal }) {
               </div>
               <div className="mb-6 mt-3">
                 <label
-                  htmlFor="largetext"
+                  htmlFor="longtext"
                   className="block text-[10px] font-extrabold uppercase text-amber-900 dark:text-white"
                 >
                   Large Text Description:{" "}
                 </label>
                 <input
-                  name="largetext"
+                  name="longtext"
                   type="textarea"
-                  id="largetext"
+                  id="longtext"
                   className="block mt-3 w-full pb-6 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
-              <button className="bg-blue-500 hover:bg-blue-400 text-white text-xs font-bold py-1 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-                Cleanse
-              </button>
+              {editMode ? (
+                <button className="bg-blue-500 hover:bg-blue-400 text-white text-xs font-bold py-1 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                  Cleanse
+                </button>
+              ) : (
+                <button className="bg-blue-500 hover:bg-blue-400 text-white text-xs font-bold py-1 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                  Comment
+                </button>
+              )}
             </div>
           </div>
         </form>

@@ -18,7 +18,7 @@ const handler =  async (req, res) => {
             {
               $group: {_id:{$year:"$doc-date"}, count:{$sum:"$doc-amount"}}
             }
-          ]).toArray()
+          ]).sort({"_id": 1}).toArray()
           return res.json(issues);
           
         }         
