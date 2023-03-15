@@ -190,11 +190,11 @@ function SectionComponent() {
   return (
     <>
       {/* first row */}
-      <div className="grid grid-cols-4 gap-1 pb-6">
+      <div className="grid grid-cols-7 gap-1 pb-6">
         {/* within 1st row, 1st col- PO line items and PO value since 2016 till now */}
-        <div className="col-span-2 bg-gray-50">
-          <div className="w-[450px] h-[425px] pl-6 ml-12">
-            <h6 className="mt-6 ml-6 text-[12px] font-lato text-zinc-900">
+        <div className="col-span-3 bg-gray-50">
+          <div className="w-[450px] h-[425px] ">
+            <h6 className="mt-6  text-[12px] font-lato text-zinc-900">
               <span className="text-[14px] font-extrabold ">
                 PO Line items so far{" "}
               </span>{" "}
@@ -209,7 +209,9 @@ function SectionComponent() {
                   {
                     backgroundColor: "rgb(122, 123, 255)",
                     borderColor: "rgb(255, 99, 132)",
-                    data: countPoType.map((row) => row.count),
+                    data: countPoType
+                      .sort((a, b) => a._id - b._id)
+                      .map((row) => row.count),
                   },
                 ],
               }}
@@ -222,7 +224,7 @@ function SectionComponent() {
                 },
               }}
             />
-            <h6 className="mt-6 ml-6 text-[12px] font-lato text-zinc-900">
+            <h6 className="mt-6  text-[12px] font-lato text-zinc-900">
               <span className="text-[14px] font-extrabold ">
                 PO Value so far{" "}
               </span>{" "}
@@ -237,7 +239,9 @@ function SectionComponent() {
                   {
                     backgroundColor: "rgb(122, 123, 255)",
                     borderColor: "rgb(255, 99, 132)",
-                    data: valuePoType.map((row) => row.count),
+                    data: valuePoType
+                      .sort((a, b) => a._id - b._id)
+                      .map((row) => row.count),
                   },
                 ],
               }}
@@ -254,9 +258,9 @@ function SectionComponent() {
 
           {/* <div className="bg-amber-100 grid grid-cols-4 gap-4 pb-6"> */}
           {/* <div className="bg-gray-50"> */}
-          <div className="p-3 w-[200px] h-[200px] mt-9 ml-16">
+          <div className="p-3 w-[200px] h-[200px] mt-12 ml-16">
             <div>
-              <h5 className="mb-2 text-[12px] mt-[64px] font-bold tracking-tight text-gray-900 dark:text-white">
+              <h5 className="mb-2 text-[12px] mt-[72px] font-bold tracking-tight text-gray-900 dark:text-white">
                 2023- current Inventory Value (SAR)
               </h5>
               <Pie
@@ -284,12 +288,10 @@ function SectionComponent() {
                 }}
               />
             </div>
-          
-          
           </div>
         </div>
 
-        <div className="bg-gray-200 col-span-1">
+        <div className="bg-gray-200 col-span-2">
           <div className="bg-white">
             <h3 className="bg-green-200 text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
               {" "}
@@ -298,7 +300,7 @@ function SectionComponent() {
                 (Value of total PO issued)
               </span>{" "}
             </h3>
-            <div className="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <div className="text-xs uppercase font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
               {topvendorsVal
                 .sort(function (a, b) {
                   return b.count - a.count;
@@ -323,7 +325,7 @@ function SectionComponent() {
           </div>
         </div>
 
-        <div className="bg-white col-span-1">
+        <div className="bg-white col-span-2">
           <h3 className="bg-blue-200 text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
             {" "}
             Top 20 vendors{" "}
@@ -331,7 +333,7 @@ function SectionComponent() {
               (Number of PO Line items)
             </span>{" "}
           </h3>
-          <div className="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <div className="text-xs uppercase font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             {topvendorsCount
               .sort(function (a, b) {
                 return b.count - a.count;
@@ -353,36 +355,37 @@ function SectionComponent() {
           </div>
         </div>
       </div>
-        {/* now for materialgroupwise inventory bar chart */}
+      {/* now for materialgroupwise inventory bar chart */}
+      <div>
         <div>
-        <div>
-            <h5 className="text-[12px]  font-bold tracking-tight text-gray-900 dark:text-white">
-              Current Materialgroupwise Inventory Value (SAR)
-            </h5>
-            <Bar
-              className="p-1 m-1"
-              data={{
-                labels: mgwisestock.sort((a,b) =>  b.count-a.count).map((row) => row._id),
-                datasets: [
-                  {
-                    backgroundColor: "rgb(122, 123, 255)",
-                    borderColor: "rgb(255, 99, 132)",
-                    data: mgwisestock.map((row) => row.count),
-                  },
-                ],
-              }}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                  maintainAspectRatio: false,
+          <h5 className="text-[12px]  font-bold tracking-tight text-gray-900 dark:text-white">
+            Current Materialgroupwise Inventory Value (SAR)
+          </h5>
+          <Bar
+            className="p-1 m-1"
+            data={{
+              labels: mgwisestock
+                .sort((a, b) => b.count - a.count)
+                .map((row) => row._id),
+              datasets: [
+                {
+                  backgroundColor: "rgb(122, 123, 255)",
+                  borderColor: "rgb(255, 99, 132)",
+                  data: mgwisestock.map((row) => row.count),
                 },
-              }}
-            />
-          </div>
-
+              ],
+            }}
+            options={{
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                maintainAspectRatio: false,
+              },
+            }}
+          />
         </div>
+      </div>
       <div className="grid bg-sky-100 grid-cols-6 gap-6 pb-6">
         <div className="col-span-2">
           <div className="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
