@@ -701,14 +701,15 @@ function Materials() {
                   <span> {material["unit-measure"]}</span>
                 </p>
 
-                <div>
+                {/* <div>
                   {Object.entries(
                     purchases.reduce(
                       (next, purchase) => (
-                        purchase.account["order"]
+                        purchase.account["order"] 
                           ? (next[purchase.account["order"]] =
                               ++next[purchase.account["order"]] || 1)
-                          : purchase.account["wbs"]
+                          : 
+                          purchase.account["wbs"]
                           ? (next[purchase.account["wbs"]] =
                               ++next[purchase.account["wbs"]] || 1)
                           : purchase.account["costcenter"]
@@ -732,7 +733,7 @@ function Materials() {
                       </span>{" "}
                     </p>
                   ))}
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="p-4 md:w-1/3 sm:mb-0 mb-6">

@@ -12,7 +12,7 @@ function Mateditcomponent({ material, setShowModal, editmode }) {
   const [length, setLength] = useState(0);
   const [maxLimit, setMaxlimit] = useState(40);
 
-  const [materialedited, setMaterialedited] = useState({});
+  const [materialedited, setMaterialedited] = useState({}); // for already edited data
 
   const { data: session } = useSession();
 
@@ -183,7 +183,7 @@ function Mateditcomponent({ material, setShowModal, editmode }) {
         </button>
 
         <div className="grid grid-cols-8 gap-2">
-          <div className="col-span-3 p-3">
+          <div className="col-span-3 p-6">
             <h2 className="bg-sky-800 text-yellow-200 text-sm uppercase tracking-wider ">
               {" "}
               {editmode
@@ -225,11 +225,11 @@ function Mateditcomponent({ material, setShowModal, editmode }) {
               </div>
             </div>
           </div>
-          <div className="col-span-4">
-            {material.length > 0 ? (
+          <div className="col-span-4 pt-4">
+            {matrl.length > 0 ? (
             <table className="mt-3 mb-3 pb-3">
               <thead>
-                <tr className="font-semibold text-xs bg-sky-800 text-white">
+                <tr className="font-semibold text-xs bg-sky-800 text-yellow-200">
                   <th>Material code</th>
                   <th>Suggested Material description</th>
                   <th>Suggested Material Type</th>
