@@ -17,21 +17,22 @@ import Tablecomponent, {
 import Purchaseorderschedule  from "../../components/Purchaseorderschedule";
 // import { useSession } from "next-auth/react";
 
-function Openpurchaseorders() {
+function Vendorswithpo() {
   const router = useRouter();
 
-  const [selectedopenpo, setSelectedopenpo] = useState({});
+  const [selectedVendor, setSelectedVendor] = useState({});
   // const [editmode, setEditmode] = useState(false);
 
 
   function handleEdit(row) {
-    const ponumber = row.row.values;
+    const vendor = row.row.values;
     // setEditmode(true)
-    console.log(ponumber);
+    console.log(vendor);
     // console.log(editmode)
     // setSelectedopenpo({ ...ponumber, "_id.po-number" });
     // setShowModal(true);
-    router.push(`/openpurchaseorders/podetailedsch?ponumber=${ponumber["_id.po-number"]}`)
+    // router.push(`/openpurchaseorders/podetailedsch?ponumber=${ponumber["_id.po-number"]}`)
+    router.push(`/vendorswithpo/vendorevaluation?vendornumber=${vendor["vendor-code"]}`)
   }
 
   
@@ -43,35 +44,15 @@ function Openpurchaseorders() {
       // First group columns
       // columns: [
       {
-        Header: "PO Number",
-        accessor: "_id.po-number",
+        Header: "Vendor Number",
+        accessor: "vendor-code",
         Cell: Boldstyle3,
         Filter: SelectColumnFilter,
       },
       {
-        Header: "Plant code",
-        accessor: "_id.plant",
+        Header: "Vendor Name",
+        accessor: "vendor-name",
         Cell: Boldstyle4,
-      },
-      {
-        Header: "Vendor code",
-        accessor: "_id.vendorcode",
-        
-        Cell: Boldstyle3,
-      },
-
-      {
-        Header: "Vendor name",
-        accessor: "_id.vendorname",
-        Filter: SelectColumnFilter,
-        Cell: Boldstyle4,
-      },
-      
-
-      {
-        Header: "Open PO value",
-        accessor: "openvalue",
-        Cell: Numberstyle,
       },
      
       
@@ -81,7 +62,7 @@ function Openpurchaseorders() {
         Cell: (row) => (
           <div className="bg-blue-500 hover:bg-blue-700 text-white text-[14px] font-bold py-2 px-4 rounded">
             
-              <button onClick={(e) => handleEdit(row)}> PO schedule </button>
+              <button onClick={(e) => handleEdit(row)}> Vendor Eval.score </button>
             
           </div>
         ),
@@ -92,27 +73,27 @@ function Openpurchaseorders() {
     []
   );
 
-  const [openpolist, setOpenpolist] = useState([]);
+  const [vendorlist, setVendorlist] = useState([]);
   
 
   useEffect(() => {
     (async () => {
-      const result = await fetch(`/api/purchaseorders/openpo`);
+      const result = await fetch(`/api/vendors/vendorswithpo`);
       const json = await result.json();
-      setOpenpolist(json);
+      setVendorlist(json);
     })();
   }, []);
 
-  console.log(openpolist);
+  console.log(vendorlist);
   return (
     <>
       <HeaderComponent />
       <div className="min-h-screen bg-gray-50 text-gray-900 w-11/12 ml-9">
         <div className="mt-6">
           <p className="font-bold text-lg mb-3">
-            List of all open purchase orders (open line items only)
+            Vendors' List who have PO's issued to them so far and hence evaluated.
           </p>
-          <Tablecomponent columns={columns} data={openpolist} />
+          <Tablecomponent columns={columns} data={vendorlist} />
           
           
         </div>
@@ -122,4 +103,4 @@ function Openpurchaseorders() {
   );
 }
 
-export default Openpurchaseorders;
+export default Vendorswithpo;

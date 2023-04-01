@@ -186,6 +186,7 @@ function SectionComponent() {
     };
     fetchmgwisestock();
   }, []);
+  console.log(mgwisestock)
 
   return (
     <>

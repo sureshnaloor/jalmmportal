@@ -137,11 +137,20 @@ export function Datestyle({ value }) {
   );
 }
 
+export function Numberstyle({ value }) {
+  return (
+    <span className={classNames("px-3 text-yellow-900 text-[14px] font-bold py-1 text-copper-900  tracking-wider")}>
+    
+     {( Math.round(value * 100) / 100).toLocaleString("en-US", {style:"currency", currency:"SAR"})}
+    </span>
+  );
+}
+
 // function to apply bold and color
 
 export function Boldstyle1({ value }) {
   return (
-    <span className={classNames("px-3 py-1 text-zinc-900 font-bold text-md")}>
+    <span className={classNames("px-3 py-1 text-zinc-900 font-bold text-[14px]")}>
       {value}
     </span>
   );
@@ -152,6 +161,30 @@ export function Boldstyle2({ value }) {
     <span
       className={classNames(
         "px-3 py-1 text-sky-800 bg-sky-50 font-bold text-md"
+      )}
+    >
+      {value}
+    </span>
+  );
+}
+
+export function Boldstyle3({ value }) {
+  return (
+    <span
+      className={classNames(
+        "px-2 py-1 text-sky-800 bg-sky-50 font-bold text-[12px] tracking-wider"
+      )}
+    >
+      {value}
+    </span>
+  );
+}
+
+export function Boldstyle4({ value }) {
+  return (
+    <span
+      className={classNames(
+        "px-3 py-1 text-green-800 bg-sky-50 font-bold text-[14px] tracking-widest"
       )}
     >
       {value}

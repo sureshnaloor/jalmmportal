@@ -30,8 +30,8 @@ function HeaderComponent() {
 
   if (!mounted) return null;
   return (
-    <nav className="flex bg-zinc-200 dark:bg-gray-600 flex-wrap items-center justify-between border-b-2 border-zinc-400  shadow-md px-1">
-      <div className="lg:order-2 w-auto lg:w-1/6 lg:text-center">
+    <nav className="flex bg-zinc-200 dark:bg-gray-600 items-center justify-between border-b-2 border-zinc-400  shadow-md px-1">
+      <div className="order-1 w-auto lg:w-1/8 lg:text-center">
         <a
           className="text-lg text-gray-800 font-Montserrat font-black font-heading"
           href="#"
@@ -40,7 +40,6 @@ function HeaderComponent() {
           src="/JAHR.jpg"
           width={300}
           height={100}
-          
           quality={100}
           priority
           placeholder="blur"
@@ -61,60 +60,114 @@ function HeaderComponent() {
           </svg>
         </button>
       </div>
-      <div className="hidden lg:order-1  pl-6 py-8 lg:block w-full lg:w-3/6">
-        <div className="block lg:inline-block mt-4 lg:mt-0 mr-10 cursor-pointer text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
-         <Link href="/">
-         <a>
-          Home
-          <FontAwesomeIcon
-            icon={faHomeUser}
-            className="text-blue-900 dark:text-yellow-300 fa-thin ml-2 text-xs"
-          />
-          </a></Link>
-        </div>
-
-        <div className="text-sm block lg:inline-block mt-4 lg:mt-0 mr-5 cursor-pointer text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
-          <Link href="/materials">
+      <div className="order-2  pl-3 py-3 flex w-full lg:w-6/8">
+        <div className="bg-sky-100 p-3 cursor-pointer my-3 mr-3  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
+          <Link href="/">
             <a>
-              Materials
+              Home
               <FontAwesomeIcon
-                icon={faPeopleGroup}
-                className="text-blue-900 dark:text-yellow-300 fa-thin ml-2 text-xs"
+                icon={faHomeUser}
+                className="text-blue-900 dark:text-yellow-300 fa-thin ml-2 text-xl"
               />
             </a>
           </Link>
         </div>
+
+        <div className="bg-sky-100 p-3 cursor-pointer my-3 mr-3  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
+          <Link href="/materials">
+            <a >
+              Materials
+              <FontAwesomeIcon
+                icon={faPeopleGroup}
+                className="text-blue-900 dark:text-yellow-300 fa-thin ml-2 text-lg"
+              />
+            </a>
+          </Link>
+        </div>
+        <div className="bg-sky-100 p-3 cursor-pointer my-3 mr-3 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
         <Link href="/projects">
-          <a className="text-sm block lg:inline-block mt-4 lg:mt-0 mr-10 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold rounded-md">
+          <a >
             Projects
             <FontAwesomeIcon
               icon={faCircleQuestion}
-              className="text-blue-800 dark:text-yellow-300 fa-thin ml-2 text-xs"
+              className="text-blue-800 dark:text-yellow-300 fa-thin ml-2 text-lg"
             />
           </a>
         </Link>
+        </div>
+
+        <div className= "bg-sky-100 p-3 my-3 cursor-pointer mr-3 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
 
         <Link href="/vendorpage">
-          <a className="text-sm block lg:inline-block mt-4 lg:mt-0 mr-10 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+          <a >
             Vendors
             <FontAwesomeIcon
               icon={faAddressCard}
-              className="text-blue-800 dark:text-yellow-300 fa-thin ml-2 text-xs"
+              className="text-blue-800 dark:text-yellow-300 fa-thin ml-2 text-lg"
             />
           </a>
         </Link>
-
-        
-      </div>
-      <div className="block lg:inline-block mt-4 lg:mt-0  text-gray-400  hover:text-gray-600 dark:hover:text-white font-semibold">
-          <SwitchComponent setTheme={setTheme} theme={theme} />
-          <p className="text-[8px] font-bold"> toggle dark/light</p>
         </div>
+        
+        <div className="flex flex-row py-3 px-3 my-3 tracking-wide">
+        <Link href="/openpurchaseorders">
+          <a className="text-[12px] mr-2 bg-amber-100 p-1 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+            Open PO's
+          </a>
+        </Link>
+
+        <Link href="/vendorswithpo">
+          <a className="text-[12px] mr-2 bg-amber-100 p-1 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+            Vendor Details
+          </a>
+        </Link>
+
+        <Link href="/projectdetails">
+          <a className="text-[12px] mr-2 bg-amber-100 p-1 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+            Project Details
+          </a>
+        </Link>
+
+        <Link href="/materialdocuments">
+          <a className="text-[12px] mr-2 bg-amber-100 p-1 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+            Material Docs
+          </a>
+        </Link>
+      </div>
+
+      <div >
+      <Link href="/materialdocuments">
+          <a className="text-[12px] mr-2 block border-b-2 border-blue-600 bg-sky-100 p-1 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+            Equipment
+          </a>
+        </Link>
+        <Link href="/materialdocuments">
+          <a className="text-[12px] mr-2 block border-b-2 border-blue-600  bg-sky-100 p-1 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+            PPE
+          </a>
+        </Link>
+        <Link href="/materialdocuments">
+          <a className="text-[12px] mr-2 border-b-2 border-blue-600 bg-sky-100 p-1 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+            SIM 
+          </a>
+        </Link>
+      </div>
+      <div>
+          <h5 className=" p-5 my-auto px-3 font-bold tracking-tighter mx-6 rounded-md bg-slate-300 text-zinc-900 text-[12px]"> Request new material/service</h5>
+        </div>
+      
+      </div>
+
+      <div className="block mt-4  order-3 lg:mt-0  text-gray-400  hover:text-gray-600 dark:hover:text-white font-semibold">
+        
+        <SwitchComponent setTheme={setTheme} theme={theme} />
+        <p className="text-[8px] font-bold"> toggle dark/light</p>
+      </div>
       {session?.user ? (
-        <div className="flex flex-col ">
+        <div className="flex flex-col order-4 ">
           <p className="pt-5 text-[16px]   dark:text-white  text-pink-900">
             Welcome <span className="font-bold">{session.user.name}</span>
-          </p> 
+          </p>
           <button
             className=" bg-stone-200 hover:bg-stone-300 text-[10px] px-2 py-1 my-1 mx-2 rounded-md outline-none focus:outline-none text-emerald-900"
             onClick={() => signOut()}

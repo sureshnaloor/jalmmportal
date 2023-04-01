@@ -1,7 +1,7 @@
 import React from "react";
 // import { useRouter } from "next/router";
 import { useState, useEffect, useMemo } from "react";
-import {useRouter} from 'next/router'
+import { useRouter } from "next/router";
 
 // import moment from 'moment'
 import HeaderComponent from "../../components/HeaderComponent";
@@ -12,29 +12,27 @@ import Tablecomponent, {
   Boldstyle2,
   Boldstyle3,
   Boldstyle4,
-  Numberstyle
+  Numberstyle,
+  Datestyle,
 } from "../../components/Tablecomponent";
-import Purchaseorderschedule  from "../../components/Purchaseorderschedule";
+import Purchaseorderschedule from "../../components/Purchaseorderschedule";
 // import { useSession } from "next-auth/react";
 
-function Openpurchaseorders() {
+function Projectdetails() {
   const router = useRouter();
 
-  const [selectedopenpo, setSelectedopenpo] = useState({});
+  const [selectedProject, setSelectedProject] = useState({});
   // const [editmode, setEditmode] = useState(false);
 
-
   function handleEdit(row) {
-    const ponumber = row.row.values;
+    const projnumber = row.row.values;
     // setEditmode(true)
-    console.log(ponumber);
+    console.log(projnumber);
     // console.log(editmode)
     // setSelectedopenpo({ ...ponumber, "_id.po-number" });
     // setShowModal(true);
-    router.push(`/openpurchaseorders/podetailedsch?ponumber=${ponumber["_id.po-number"]}`)
+    router.push(`/projectdetails/projectsch?projnumber=${projnumber["project-wbs"]}`)
   }
-
-  
 
   const columns = useMemo(
     () => [
@@ -43,46 +41,45 @@ function Openpurchaseorders() {
       // First group columns
       // columns: [
       {
-        Header: "PO Number",
-        accessor: "_id.po-number",
+        Header: "Project Number",
+        accessor: "project-wbs",
         Cell: Boldstyle3,
         Filter: SelectColumnFilter,
       },
       {
-        Header: "Plant code",
-        accessor: "_id.plant",
+        Header: "Project Name",
+        accessor: "project-name",
         Cell: Boldstyle4,
+        Filter: SelectColumnFilter,
       },
       {
-        Header: "Vendor code",
-        accessor: "_id.vendorcode",
-        
+        Header: "Project Manager",
+        accessor: "project-incharge",
+        Filter: SelectColumnFilter,
+
         Cell: Boldstyle3,
       },
 
       {
-        Header: "Vendor name",
-        accessor: "_id.vendorname",
-        Filter: SelectColumnFilter,
-        Cell: Boldstyle4,
+        Header: "Project start date",
+        accessor: "start-date",
+
+        Cell: Datestyle,
       },
-      
 
       {
-        Header: "Open PO value",
-        accessor: "openvalue",
-        Cell: Numberstyle,
+        Header: "Project Finish date",
+        accessor: "finished-date",
+
+        Cell: Datestyle,
       },
-     
-      
+
       {
         Header: "Action",
         accesor: "action",
         Cell: (row) => (
           <div className="bg-blue-500 hover:bg-blue-700 text-white text-[14px] font-bold py-2 px-4 rounded">
-            
-              <button onClick={(e) => handleEdit(row)}> PO schedule </button>
-            
+            <button onClick={(e) => handleEdit(row)}> Project Schedule </button>
           </div>
         ),
       },
@@ -92,29 +89,26 @@ function Openpurchaseorders() {
     []
   );
 
-  const [openpolist, setOpenpolist] = useState([]);
-  
+  const [projectlist, setProjectlist] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const result = await fetch(`/api/purchaseorders/openpo`);
+      const result = await fetch(`/api/projects/projectdetails`);
       const json = await result.json();
-      setOpenpolist(json);
+      setProjectlist(json);
     })();
   }, []);
 
-  console.log(openpolist);
+  console.log(projectlist);
   return (
     <>
       <HeaderComponent />
       <div className="min-h-screen bg-gray-50 text-gray-900 w-11/12 ml-9">
         <div className="mt-6">
           <p className="font-bold text-lg mb-3">
-            List of all open purchase orders (open line items only)
+            List of all open projects 
           </p>
-          <Tablecomponent columns={columns} data={openpolist} />
-          
-          
+          <Tablecomponent columns={columns} data={projectlist} />
         </div>
       </div>
       <FooterComponent />
@@ -122,4 +116,4 @@ function Openpurchaseorders() {
   );
 }
 
-export default Openpurchaseorders;
+export default Projectdetails;

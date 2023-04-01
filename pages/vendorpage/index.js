@@ -130,8 +130,8 @@ function Vendor() {
       <div>
         <HeaderComponent />
       </div>
-      <div className="bg-zinc-50 dark:bg-zinc-400 py-2 sm:py-3 lg:py-4">
-        <div className="mx-auto max-w-7xl px-5 lg:px-5">
+      <div className="bg-zinc-50 w-full  dark:bg-zinc-400 py-2 sm:py-3 lg:py-4">
+        <div className="mx-auto px-5 lg:px-5">
           <div className="sm:text-center">
             {/* search form component */}
 
