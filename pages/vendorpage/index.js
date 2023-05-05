@@ -361,19 +361,19 @@ function Vendor() {
                                     {/* <td className="text-[12px] text-gray-600 font-semibold px-2 py-1 whitespace-nowrap">
                                     {row.vendor}
                                   </td> */}
-                                    <td className="text-[10px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap text-right">
+                                    <td className="text-[10px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap ">
                                       {(
                                         Math.round(row.poval * 100) / 100
                                       ).toLocaleString()}
                                     </td>
 
-                                    <td className="text-[10px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap text-right">
+                                    <td className="text-[10px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap ">
                                       {(
                                         Math.round(row.balgrval * 100) / 100
                                       ).toLocaleString()}
                                     </td>
 
-                                    <td className="text-[10px] text-gray-800 font-semibold px-2 py-1 whitespace-nowrap">
+                                    <td className="text-[10px] text-gray-800 font-semibold px-2 py-1 whitespace-nowrap ">
                                       {moment(row.podate).format("MM-DD-YYYY")}
                                     </td>
                                     {/* <td> */}

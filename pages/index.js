@@ -8,8 +8,9 @@ import Matgrouplist from "../components/Matgrouplist";
 
 import FeaturesComponent from "../components/FeaturesComponent";
 import CarousalComponent from "../components/CarousalComponent";
-import SectionComponent from "../components/SectionComponent";
+import SectionComponent from "../components/SectionComponentnew";
 import FooterComponent from "../components/FooterComponent";
+// import NavigationbetterComponent from "../components/NavigationbetterComponent";
 
 function Home() {
   const [matgroups, setmatgroups] = useState([]);
@@ -36,16 +37,17 @@ function Home() {
 
       <div>
         <HeaderComponent />
+        {/* <NavigationbetterComponent />  */}
       </div>
-      <div className="flex">
-      <div>
-        <CarousalComponent />
+      <div className="flex w-full justify-between">
+        <div className="w-1/2 px-3">
+          <CarousalComponent />
+        </div>
+        <div className="w-1/2 px-3">
+          <FeaturesComponent />
+        </div>
       </div>
-      <div>
-        <FeaturesComponent/>
-      </div>
-      </div>
-      
+
       <div>
         <Matgrouplist matgroups={matgroups} />
       </div>
@@ -53,14 +55,9 @@ function Home() {
         <SectionComponent />
       </div>
 
-      
-
-    
-      
-
       <footer>
         <FooterComponent />
-      </footer> 
+      </footer>
     </div>
   );  
 }

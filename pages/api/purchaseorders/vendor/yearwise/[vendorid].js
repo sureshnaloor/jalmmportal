@@ -1,10 +1,10 @@
-import { connectToDatabase } from "../../../../lib/mongoconnect";
+import { connectToDatabase } from "../../../../../lib/mongoconnect";
 
 const handler = async (req, res) => {
   const { vendorid } = req.query;
   const { db } = await connectToDatabase();
 
-  
+    
   try {
     switch (req.method) {
       
@@ -13,7 +13,10 @@ const handler = async (req, res) => {
         const purchaseorders = await db
           .collection("purchaseorders")
           .find(
-            {"vendorcode": vendorid
+            {"vendorcode": vendorid,
+            $expr: {
+                "$eq": [{"$year": "$po-date"}, 2021]
+          }
             } 
           ).toArray()
           

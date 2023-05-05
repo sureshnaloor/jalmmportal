@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function Mateditcomponent({ material, setShowModal, editmode }) {
   const [matrl, setMatrl] = useState([]); // this is for already commented data if any
   const [placeholder, setPlaceholder] = useState({}); // this is for placeholder support to prompt
@@ -36,7 +39,7 @@ function Mateditcomponent({ material, setShowModal, editmode }) {
     })();
   }, [material]);
 
-  console.log(materialedited);
+  // console.log(materialedited);
 
   useEffect(() => {
     (async () => {
@@ -56,7 +59,7 @@ function Mateditcomponent({ material, setShowModal, editmode }) {
     })();
   }, [material]);
 
-  console.log(matrl);
+  // console.log(matrl);
   // console.log(placeholder);
   // console.log(matgroups);
   // console.log(newdescription);
@@ -106,6 +109,9 @@ function Mateditcomponent({ material, setShowModal, editmode }) {
       }
     );
     const json = await result.json();
+    toast.success('Commented succesfully!', {
+      position: toast.POSITION.TOP_RIGHT
+  });
     // console.log(json)
   };
 
@@ -153,6 +159,13 @@ function Mateditcomponent({ material, setShowModal, editmode }) {
       }
     );
     const json = await result.json();
+
+    
+    toast.success(`The material comment is successful! thanks ${session?.user?.name}`, {
+      position: "bottom-center"
+    });
+
+  setTimeout( () => setShowModal(false),3000)
     // console.log(json)
   };
 
@@ -181,6 +194,8 @@ function Mateditcomponent({ material, setShowModal, editmode }) {
             height={30}
           />{" "}
         </button>
+
+        
 
         <div className="grid grid-cols-8 gap-2">
           <div className="col-span-3 p-6">

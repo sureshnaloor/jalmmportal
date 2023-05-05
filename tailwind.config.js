@@ -5,6 +5,7 @@ module.exports = {
     defaultLocale: "en-US",
   },
   content: [
+    
     "./pages/**/*.{html,js,ts,jsx,tsx}",
     "./components/**/*.{html,js,ts,jsx,tsx}",
     './node_modules/tw-elements/dist/js/**/*.js',
@@ -18,15 +19,18 @@ module.exports = {
         'dark-secondary':'#111827'
       },
       fontFamily:{
-        Rampart:["Rampart One", "Helvetica", "Arial", "sans-serif"],
+        Rampart:['"Rampart One"', "Helvetica", "Arial", "sans-serif"],
         Montserrat:["Montserrat", "Helvetica", "Arial", "sans-serif"],
         Lato:["Lato", "Helvetica", "Arial", "sans-serif"],
         Ubuntu:["Ubuntu","Arial","sans-serif"],
         Freehand:["Freehand","Arial"],
+        Poppins: ["Poppins", "sans-serif"],
+        Roboto:["Roboto", "Arial"],
+        OpenSans: ['"Open sans"', "sans-serif"],
         
     },
   },
-  plugins: [require('tw-elements/dist/plugin'), require("daisyui"),require("@tailwindcss/forms") ],
+  plugins: [require('tw-elements/dist/plugin'), require("daisyui"),require("@tailwindcss/forms"),],
   future: {
     purgeLayersByDefault: true,
   },

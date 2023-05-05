@@ -14,7 +14,7 @@ import Tablecomponent, {
   Boldstyle4,
   Numberstyle
 } from "../../components/Tablecomponent";
-import Purchaseorderschedule  from "../../components/Purchaseorderschedule";
+// import Purchaseorderschedule  from "../../components/Purchaseorderschedule";
 // import { useSession } from "next-auth/react";
 
 function Openpurchaseorders() {

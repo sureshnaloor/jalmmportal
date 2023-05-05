@@ -3,7 +3,7 @@ import Image from "next/image";
 
 function FeaturesComponent() {
   return (
-    <div className="relative bg-white dark:bg-gray-500 pb-5">
+    <div className="relative bg-white opacity-50 dark:bg-gray-500 pb-5">
       <div className="lg:grid lg:grid-flow-row-dense lg:grid-cols-2 lg:gap-1 lg:items-center">
         <div className="lg:pl-2">
           <h4 className="text-[18px] leading-8 font-extrabold mb-20 text-gray-900 dark:text-white tracking-tight sm:leading-9">
@@ -83,23 +83,18 @@ function FeaturesComponent() {
                   <h5 className="text-md leading-6 text-gray-900 dark:text-white font-bold">
                     Control Projects
                   </h5>
-                  <p className="mt-2 text-[12px] leading-5 text-gray-500 dark:text-gray-300">
+                  <p className="mt-2 text-[12px] leading-5 text-gray-500 dark:text-gray-300 pb-3">
                     Projects visibility of incoming materials, stock & requisitions already made.
                   </p>
+                  
                 </div>
               </div>
             </li>
           </ul>
         </div>
-        {/* <div className="pl-2 mt-1 -mx-4 md:-mx-12 relative lg:mt-0 lg:col-start-1">
-          <Image
-            src="/MMPortalpic1.jpg"
-            alt="illustration"
-            className="relative mx-auto shadow-lg rounded w-auto"
-            width= {500} height= {400}
-          />
-        </div> */}
+        
       </div>
+      
     </div>
   );
 }

@@ -186,14 +186,22 @@ function SectionComponent() {
     };
     fetchmgwisestock();
   }, []);
-  console.log(mgwisestock)
+  console.log(mgwisestock);
 
   return (
     <>
       {/* first row */}
-      <div className="grid grid-cols-7 gap-1 pb-6">
+
+      <div className="relative flex py-5 items-center">
+        <div className="flex-grow border-t border-gray-400 border-4"></div>
+        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand">
+          PO's Value and Numbers so far
+        </span>
+        <div className="flex-grow border-t border-gray-400 border-4"></div>
+      </div>
+      <div className="grid grid-cols-2 gap-3 pb-6">
         {/* within 1st row, 1st col- PO line items and PO value since 2016 till now */}
-        <div className="col-span-3 bg-gray-50">
+        <div className="col-span-1 bg-gray-50 px-12">
           <div className="w-[450px] h-[425px] ">
             <h6 className="mt-6  text-[12px] font-lato text-zinc-900">
               <span className="text-[14px] font-extrabold ">
@@ -225,6 +233,11 @@ function SectionComponent() {
                 },
               }}
             />
+          </div>
+        </div>
+
+        <div className="col-span-1 bg-gray-50 px-12">
+          <div className="w-[450px] h-[425px] ">
             <h6 className="mt-6  text-[12px] font-lato text-zinc-900">
               <span className="text-[14px] font-extrabold ">
                 PO Value so far{" "}
@@ -256,44 +269,264 @@ function SectionComponent() {
               }}
             />
           </div>
+        </div>
+      </div>
 
-          {/* <div className="bg-amber-100 grid grid-cols-4 gap-4 pb-6"> */}
-          {/* <div className="bg-gray-50"> */}
-          <div className="p-3 w-[200px] h-[200px] mt-12 ml-16">
-            <div>
-              <h5 className="mb-2 text-[12px] mt-[72px] font-bold tracking-tight text-gray-900 dark:text-white">
+      <div className="relative flex py-5 items-center">
+        <div className="flex-grow border-t border-gray-400 border-4"></div>
+        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand">
+          Inventory Values
+        </span>
+        <div className="flex-grow border-t border-gray-400 border-4"></div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-3 pb-6">
+        <div className="col-span-1 bg-gray-50 px-12">
+          <div className="w-[450px] h-[450px] flex my-auto justify-center">
+            <div className="p-3 w-[300px] h-[300px]">
+              <h5 className=" mt-3 text-[14px]  font-bold tracking-tight text-gray-900 dark:text-white">
                 2023- current Inventory Value (SAR)
               </h5>
-              <Pie
-                data={{
-                  labels: invPlantwise.map((stock) =>
-                    stock["_id"] == "1100" ? "Dammam" : "Jubail"
-                  ),
-                  datasets: [
-                    {
-                      backgroundColor: [
-                        "rgb(173, 216, 230)",
-                        "rgb(144, 238, 144)",
-                      ],
-                      borderColor: "rgb(255, 99, 132)",
-                      data: invPlantwise.map((stock) => stock["count"]),
+              <div className="mt-3 px-1">
+                <Pie
+                  data={{
+                    labels: invPlantwise.map((stock) =>
+                      stock["_id"] == "1100" ? "Dammam" : "Jubail"
+                    ),
+                    datasets: [
+                      {
+                        backgroundColor: [
+                          "rgb(173, 216, 230)",
+                          "rgb(144, 238, 144)",
+                        ],
+                        borderColor: "rgb(255, 99, 132)",
+                        data: invPlantwise.map((stock) => stock["count"]),
+                      },
+                    ],
+                  }}
+                  options={{
+                    plugins: {
+                      legend: {
+                        display: false,
+                      },
                     },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-                }}
-              />
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-gray-200 col-span-2">
-          <div className="bg-white">
+        <div className="col-span-2 bg-gray-50 px-12 w-full h-[500px]">
+          <h5 className="text-[12px]  font-bold tracking-tight text-gray-900 dark:text-white">
+            Current Materialgroupwise Inventory Value (SAR)
+          </h5>
+          <Bar
+            className="bg-zinc-100"
+            data={{
+              labels: mgwisestock
+                .sort((a, b) => b.count - a.count)
+                .map((row) => row._id),
+              datasets: [
+                {
+                  backgroundColor: "rgb(122, 123, 255)",
+                  borderColor: "rgb(255, 99, 132)",
+                  data: mgwisestock.map((row) => row.count),
+                },
+              ],
+            }}
+            options={{
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                maintainAspectRatio: false,
+              },
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="relative flex py-5 items-center">
+        <div className="flex-grow border-t border-gray-400 border-4"></div>
+        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand">
+          Year-wise Online Transactions
+        </span>
+        <div className="flex-grow border-t border-gray-400 border-4"></div>
+      </div>
+
+
+      <div className="grid grid-cols-3 gap-3 pb-6">
+        
+
+        <div className="col-span-1  bg-gray-50 ">
+          <h3>Year-wise Receipts (in SAR)</h3>
+          <Bar
+            className="p-1 m-1"
+            data={{
+              labels: yearwiseReceipt.map((row) => row._id),
+              datasets: [
+                {
+                  backgroundColor: "rgb(122, 123, 255)",
+                  borderColor: "rgb(255, 99, 132)",
+                  data: yearwiseReceipt.map((row) => row.count),
+                },
+              ],
+            }}
+            options={{
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                maintainAspectRatio: false,
+              },
+            }}
+          />
+        </div>
+        <div className="col-span-1  bg-gray-50 ">
+          <h3>Year-wise Issues (in SAR)</h3>
+          <Bar
+            className="p-1 m-1"
+            data={{
+              labels: yearwiseIssue.map((row) => row._id),
+              datasets: [
+                {
+                  backgroundColor: "rgb(255, 204, 203)",
+                  borderColor: "rgb(255, 99, 132)",
+                  data: yearwiseIssue.map((row) => row.count),
+                },
+              ],
+            }}
+            options={{
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                maintainAspectRatio: false,
+              },
+            }}
+          />
+        </div>
+        <div className="col-span-1  bg-gray-50 ">
+          <h3>
+            Year-wise Overall transactions (Receipts LESS issues) (in SAR)
+          </h3>
+          <Bar
+            className="p-1 m-1"
+            data={{
+              labels: yearwiseTrans.map((row) => row._id),
+              datasets: [
+                {
+                  backgroundColor: "rgb(255, 14, 20)",
+                  borderColor: "rgb(255, 99, 132)",
+                  data: yearwiseTrans.map((row) => row.count),
+                },
+              ],
+            }}
+            options={{
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                maintainAspectRatio: false,
+              },
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="relative flex py-5 items-center">
+        <div className="flex-grow border-t border-gray-400 border-4"></div>
+        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand">
+          Material cleansing exercise updates & other misc SAP data
+        </span>
+        <div className="flex-grow border-t border-gray-400 border-4"></div>
+      </div>
+
+      <div>
+          <h5 className="text-md font-bold leading-none text-zinc-900 dark:text-white">
+            Total materials coded in Material master:
+          </h5>
+          <div className="flow-root">
+            <ul
+              role="list"
+              className="divide-y divide-gray-200 dark:divide-gray-700"
+            >
+              <li className="py-3 sm:py-4">
+                <div className="flex items-center space-x-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-gray-700 dark:text-gray-300">
+                      Total Active in Master:
+                    </p>
+                  </div>
+                  <div className="bg-gray-100 tracking-widest text-gray-800 text-sm font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-gray-700 dark:text-gray-300">
+                    {totalmaterials}
+                  </div>
+                </div>
+              </li>
+              <li className="py-3 sm:py-4">
+                <div className="flex items-center space-x-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="bg-red-100  text-red-800 text-xs font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                      Materials Purchased so far:
+                    </p>
+                  </div>
+                  <div className="bg-red-100 tracking-widest text-red-800 text-sm font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                    {purchasedmaterials}
+                  </div>
+                </div>
+              </li>
+              <li className="py-3 sm:py-4">
+                <div className="flex items-center space-x-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                      Stock Materials:
+                    </p>
+                  </div>
+                  <div className="bg-blue-100 tracking-widest text-blue-800 text-sm font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                    {stockmaterials}
+                  </div>
+                </div>
+              </li>
+              <li className="py-3 sm:py-4">
+                <div className="flex items-center space-x-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                      Cleansed Materials:
+                    </p>
+                  </div>
+                  <div className="bg-yellow-100 tracking-widest text-yellow-800 text-sm font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                    {cleansedmaterials}
+                  </div>
+                </div>
+              </li>
+              <li className="pt-3 pb-0 sm:pt-4">
+                <div className="flex items-center space-x-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                      Users contributed corrected so far:
+                    </p>
+                  </div>
+                  <div className="bg-green-100 tracking-widest text-green-800 text-sm font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                    {commentedmaterials}
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="relative flex py-5 items-center">
+        <div className="flex-grow border-t border-gray-400 border-4"></div>
+        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand">
+          TOP-20 DATA 
+        </span>
+        <div className="flex-grow border-t border-gray-400 border-4"></div>
+      </div>
+
+      <div className="grid grid-cols-4 gap-2 pb-6">
+      <div className="bg-gray-200 col-span-1">
+          
             <h3 className="bg-green-200 text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
               {" "}
               Top 20 vendors{" "}
@@ -323,10 +556,10 @@ function SectionComponent() {
                   </p>
                 ))}
             </div>
-          </div>
+          
         </div>
 
-        <div className="bg-white col-span-2">
+        <div className="bg-white col-span-1">
           <h3 className="bg-blue-200 text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
             {" "}
             Top 20 vendors{" "}
@@ -355,196 +588,8 @@ function SectionComponent() {
               ))}
           </div>
         </div>
-      </div>
-      {/* now for materialgroupwise inventory bar chart */}
-      <div>
-        <div className="w-1/2 h-1/2">
-          <h5 className="text-[12px]  font-bold tracking-tight text-gray-900 dark:text-white">
-            Current Materialgroupwise Inventory Value (SAR)
-          </h5>
-          <Bar
-            className="p-1 m-1"
-            data={{
-              labels: mgwisestock
-                .sort((a, b) => b.count - a.count)
-                .map((row) => row._id),
-              datasets: [
-                {
-                  backgroundColor: "rgb(122, 123, 255)",
-                  borderColor: "rgb(255, 99, 132)",
-                  data: mgwisestock.map((row) => row.count),
-                },
-              ],
-            }}
-            options={{
-              plugins: {
-                legend: {
-                  display: false,
-                },
-                maintainAspectRatio: false,
-              },
-            }}
-          />
-        </div>
-      </div>
-      <div className="grid bg-sky-100 grid-cols-6 gap-6 pb-6">
-        <div className="col-span-2">
-          <div className="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-            <div className="flex items-center justify-between mb-4">
-              <h5 className="text-md font-bold leading-none text-zinc-900 dark:text-white">
-                Total materials coded in Material master:
-              </h5>
-            </div>
-            <div className="flow-root">
-              <ul
-                role="list"
-                className="divide-y divide-gray-200 dark:divide-gray-700"
-              >
-                <li className="py-3 sm:py-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-1 min-w-0">
-                      <p className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                        Total Active in Master:
-                      </p>
-                    </div>
-                    <div className="bg-gray-100 tracking-widest text-gray-800 text-sm font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                      {totalmaterials}
-                    </div>
-                  </div>
-                </li>
-                <li className="py-3 sm:py-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-1 min-w-0">
-                      <p className="bg-red-100  text-red-800 text-xs font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-red-900 dark:text-red-300">
-                        Materials Purchased so far:
-                      </p>
-                    </div>
-                    <div className="bg-red-100 tracking-widest text-red-800 text-sm font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-red-900 dark:text-red-300">
-                      {purchasedmaterials}
-                    </div>
-                  </div>
-                </li>
-                <li className="py-3 sm:py-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-1 min-w-0">
-                      <p className="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                        Stock Materials:
-                      </p>
-                    </div>
-                    <div className="bg-blue-100 tracking-widest text-blue-800 text-sm font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                      {stockmaterials}
-                    </div>
-                  </div>
-                </li>
-                <li className="py-3 sm:py-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-1 min-w-0">
-                      <p className="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
-                        Cleansed Materials:
-                      </p>
-                    </div>
-                    <div className="bg-yellow-100 tracking-widest text-yellow-800 text-sm font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
-                      {cleansedmaterials}
-                    </div>
-                  </div>
-                </li>
-                <li className="pt-3 pb-0 sm:pt-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-1 min-w-0">
-                      <p className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-green-900 dark:text-green-300">
-                        Users contributed corrected so far:
-                      </p>
-                    </div>
-                    <div className="bg-green-100 tracking-widest text-green-800 text-sm font-medium mr-2 px-2.5 py-1.5 rounded-full dark:bg-green-900 dark:text-green-300">
-                      {commentedmaterials}
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="col-span-2 flex">
-          <div>
-            <h3>Year-wise Receipts (in SAR)</h3>
-            <Bar
-              className="p-1 m-1"
-              data={{
-                labels: yearwiseReceipt.map((row) => row._id),
-                datasets: [
-                  {
-                    backgroundColor: "rgb(122, 123, 255)",
-                    borderColor: "rgb(255, 99, 132)",
-                    data: yearwiseReceipt.map((row) => row.count),
-                  },
-                ],
-              }}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                  maintainAspectRatio: false,
-                },
-              }}
-            />
-
-            <h3>Year-wise Issues (in SAR)</h3>
-            <Bar
-              className="p-1 m-1"
-              data={{
-                labels: yearwiseIssue.map((row) => row._id),
-                datasets: [
-                  {
-                    backgroundColor: "rgb(255, 204, 203)",
-                    borderColor: "rgb(255, 99, 132)",
-                    data: yearwiseIssue.map((row) => row.count),
-                  },
-                ],
-              }}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                  maintainAspectRatio: false,
-                },
-              }}
-            />
-          </div>
-          <div className="pl-12 pt-14">
-            <h3>
-              Year-wise Overall transactions (Receipts LESS issues) (in SAR)
-            </h3>
-            <Bar
-              className="p-1 m-1"
-              data={{
-                labels: yearwiseTrans.map((row) => row._id),
-                datasets: [
-                  {
-                    backgroundColor: "rgb(255, 14, 20)",
-                    borderColor: "rgb(255, 99, 132)",
-                    data: yearwiseTrans.map((row) => row.count),
-                  },
-                ],
-              }}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                  maintainAspectRatio: false,
-                },
-              }}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="grid bg-sky-100 grid-cols-6 gap-6 pb-6">
-        <div className="bg-gray-200 col-span-3">
-          {/* table component for top20 stock goes here  */}
-          <h3 className="bg-blue-200 text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
+        <div className="col-span-1">
+        <h3 className="bg-blue-200 text-[12px] uppercase  border-emerald-900  font-bold  text-red-900 py-3">
             {" "}
             Top Valued Inventory (in SAR){" "}
           </h3>
@@ -608,9 +653,9 @@ function SectionComponent() {
               </tbody>
             </table>
           </div>
-        </div>
-        <div className="bg-white col-span-3">
-          {" "}
+
+          </div>
+
           <div className="bg-white col-span-1">
             <h3 className="bg-blue-200 text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
               {" "}
@@ -670,8 +715,10 @@ function SectionComponent() {
             </table>
             {/* </div> */}
           </div>
+
         </div>
-      </div>
+
+
     </>
   );
 }
