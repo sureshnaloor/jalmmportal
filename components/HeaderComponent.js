@@ -35,7 +35,7 @@ function HeaderComponent() {
   if (!mounted) return null;
   return (
     <>
-    <nav className="sticky top-0 flex  justify-between w-full bg-gradient-to-br from-sky-500 to-blue-900 via-sky-200 dark:from-zinc-200 dark:to-zinc-900  dark:bg-slate-800 border-b-2 border-zinc-400  shadow-md px-1 z-50 ">
+    <nav className="flex  justify-between w-full bg-gradient-to-br from-sky-500 to-blue-900 via-sky-200 dark:from-zinc-200 dark:to-zinc-900  dark:bg-slate-800 border-b-2 border-zinc-400  shadow-md px-1 z-50 ">
       
         <div className=" flex align-middle w-auto bg-blue-200 lg:text-center ">
           <a

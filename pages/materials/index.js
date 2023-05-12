@@ -208,7 +208,7 @@ function Materials() {
                       </span>
                     </div>
                     <div className="p-6 bg-slate-100">
-                      <h5 className="text-gray-900 text-sm italic font-medium mb-[2px]">
+                      <h5 className="text-gray-900 text-sm italic font-Poppins font-medium mb-[2px]">
                         {matrl["material-description"]}
                       </h5>
                       <p className="text-emerald-900 font-bold text-[12px] mb-[1px]">

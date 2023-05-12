@@ -112,17 +112,28 @@ function Matgroup() {
   );
 
   const [matlist, setMatlist] = useState([]);
+  const [matgroupdet, setMatgroupdet] = useState({})
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     (async () => {
       const result = await fetch(`/api/matgroup/materials/${matgroupid}`);
-      const json = await result.json();
-      setMatlist(json);
+      const json = await result.json()
+      let filjson = Array.from(json.filter(mat=> mat["material-description"] !== "UNDER CONSTRUCTION -DO NOT USE"))
+      setMatlist(filjson);
     })();
   }, [matgroupid]);
 
-  // console.log(matlist);
+  useEffect(() => {
+    (async () => {
+      const result = await fetch(`/api/matgroup/${matgroupid}`);
+      let json = await result.json()   
+         
+      setMatgroupdet(json);
+    })();
+  }, [matgroupid]);
+
+  console.log(matlist);
   return (
     <>
       <HeaderComponent />
@@ -133,7 +144,7 @@ function Matgroup() {
           </p>
           <Tablecomponent columns={columns} data={matlist} />
           {showModal ? (
-            <Matedit material={selectedMaterial} setShowModal={setShowModal}  editmode={editmode} />
+            <Matedit material={selectedMaterial} matgroupdet = {matgroupdet} setShowModal={setShowModal}  editmode={editmode} />
           ) : null}
         </div>
       </div>

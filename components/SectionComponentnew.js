@@ -194,7 +194,7 @@ function SectionComponent() {
 
       <div className="relative flex py-5 items-center">
         <div className="flex-grow border-t border-gray-400 border-4"></div>
-        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand">
+        <span className="flex-shrink mx-4 text-sky-800 font-semibold text-2xl tracking-wider font-Freehand">
           PO's Value and Numbers so far
         </span>
         <div className="flex-grow border-t border-gray-400 border-4"></div>
@@ -274,7 +274,7 @@ function SectionComponent() {
 
       <div className="relative flex py-5 items-center">
         <div className="flex-grow border-t border-gray-400 border-4"></div>
-        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand">
+        <span className="flex-shrink mx-4 text-sky-800 font-semibold text-2xl font-Freehand">
           Inventory Values
         </span>
         <div className="flex-grow border-t border-gray-400 border-4"></div>
@@ -349,7 +349,7 @@ function SectionComponent() {
 
       <div className="relative flex py-5 items-center">
         <div className="flex-grow border-t border-gray-400 border-4"></div>
-        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand">
+        <span className="flex-shrink mx-4 text-sky-800 font-semibold text-2xl font-Freehand">
           Year-wise Online Transactions
         </span>
         <div className="flex-grow border-t border-gray-400 border-4"></div>
@@ -437,7 +437,7 @@ function SectionComponent() {
 
       <div className="relative flex py-5 items-center">
         <div className="flex-grow border-t border-gray-400 border-4"></div>
-        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand">
+        <span className="flex-shrink mx-4 text-sky-800 font-semibold text-2xl font-Freehand">
           Material cleansing exercise updates & other misc SAP data
         </span>
         <div className="flex-grow border-t border-gray-400 border-4"></div>
@@ -524,13 +524,13 @@ function SectionComponent() {
         <div className="flex-grow border-t border-gray-400 border-4"></div>
       </div>
 
-      <div className="grid grid-cols-4 gap-2 pb-6">
-      <div className="bg-gray-200 col-span-1">
+      <div className="grid grid-cols-6 gap-3 pb-6">
+      <div className="bg-white col-span-1 flex flex-col">
           
-            <h3 className="bg-green-200 text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
+            <h3 className="mx-auto text-[12px] uppercase border-emerald-900  font-semibold  text-red-900 py-3">
               {" "}
               Top 20 vendors{" "}
-              <span className="text-[12px] font-extrabold">
+              <span className="text-[10px] font-bold">
                 (Value of total PO issued)
               </span>{" "}
             </h3>
@@ -544,10 +544,10 @@ function SectionComponent() {
                   <p
                     key={row._id}
                     aria-current="true"
-                    className="block w-full px-4 py-1 text-zinc-800 bg-blue-200 border-b border-gray-200 rounded-t-lg cursor-pointer dark:bg-gray-800 dark:border-gray-600"
+                    className="block w-full px-4 py-3 text-zinc-800 text-sm bg-blue-50 border-b border-gray-200 rounded-t-lg  dark:bg-gray-800 dark:border-gray-600"
                   >
                     {row._id}{" "}
-                    <h3 className="pl-3 bg-green-100 text-green-800 text-sm tracking-wider font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 ">
+                    <h3 className="pl-3 bg-green-50 text-green-800 text-xs tracking-wider font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 ">
                       {(Math.round(row.count * 100) / 100).toLocaleString(
                         "en-US",
                         { style: "currency", currency: "SAR" }
@@ -559,11 +559,11 @@ function SectionComponent() {
           
         </div>
 
-        <div className="bg-white col-span-1">
-          <h3 className="bg-blue-200 text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
+        <div className="bg-white col-span-1 flex flex-col">
+          <h3 className="mx-auto text-[12px] uppercase border-emerald-900  font-semibold  text-red-900 py-3">
             {" "}
             Top 20 vendors{" "}
-            <span className="text-[12px] font-extrabold">
+            <span className="text-[10px] font-bold">
               (Number of PO Line items)
             </span>{" "}
           </h3>
@@ -577,10 +577,10 @@ function SectionComponent() {
                 <p
                   key={row._id}
                   aria-current="true"
-                  className="block w-full px-4 py-1 text-zinc-800 bg-green-200 border-b border-gray-200 rounded-t-lg cursor-pointer dark:bg-gray-800 dark:border-gray-600"
+                  className="block w-full px-4 py-3 text-zinc-800 text-sm bg-blue-50 border-b border-gray-200 rounded-t-lg  dark:bg-gray-800 dark:border-gray-600"
                 >
                   {row._id}{" "}
-                  <h3 className="pl-3 bg-sky-100 text-sky-800 text-sm tracking-wider font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-sky-400 border border-sky-400 ">
+                  <h3 className="pl-3 bg-green-50 text-green-800 text-xs tracking-wider font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 ">
                     {" "}
                     {row.count}{" "}
                   </h3>
@@ -588,8 +588,8 @@ function SectionComponent() {
               ))}
           </div>
         </div>
-        <div className="col-span-1">
-        <h3 className="bg-blue-200 text-[12px] uppercase  border-emerald-900  font-bold  text-red-900 py-3">
+        <div className="bg-white col-span-2 flex flex-col">
+        <h3 className="mx-auto text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
             {" "}
             Top Valued Inventory (in SAR){" "}
           </h3>
@@ -605,11 +605,9 @@ function SectionComponent() {
                     Inventory(in SAR)
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Receipts
+                    Receipts & issues
                   </th>
-                  <th scope="col" className="px-6 py-3">
-                    Issues
-                  </th>
+                  
                 </tr>
               </thead>
               <tbody>
@@ -639,14 +637,15 @@ function SectionComponent() {
                         style: "currency",
                         currency: "SAR",
                       })}
-                    </td>
-                    <td className="px-6 py-4 tracking-wider text-green-900">
-                      {(
-                        Math.round(row["issue-val"] * 100) / 100
+                    
+                    <span className="px-6 py-4 tracking-wider text-green-900">
+                      { (Math.round(row["issue-val"])) == 0 ? null :
+                        (Math.round(row["issue-val"] * 100) / 100
                       ).toLocaleString("en-US", {
                         style: "currency",
                         currency: "SAR",
                       })}
+                    </span>
                     </td>
                   </tr>
                 ))}
@@ -656,8 +655,8 @@ function SectionComponent() {
 
           </div>
 
-          <div className="bg-white col-span-1">
-            <h3 className="bg-blue-200 text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
+          <div className="bg-white col-span-2 flex flex-col">
+            <h3 className="mx-auto justify-center text-[12px] uppercase border-emerald-900  font-bold  text-red-900 py-3">
               {" "}
               Top Valued open Purchase orders{" "}
             </h3>

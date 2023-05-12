@@ -10,7 +10,7 @@ const handler = async (req, res) => {
         
         const matgroup = await db
           .collection("matgroup")
-          .findOne({ "material-group": matgroupid });
+          .findOne({ "material-group": matgroupid }) || {}
           
         return res.json(matgroup);
       }     
