@@ -9,6 +9,10 @@ import { useRouter } from "next/router";
 import SwitchComponent from "./Switch";
 import Link from "next/link";
 
+import Lottie from 'react-lottie'
+import animationData from "/public/images/lottie3"
+import animationData2 from "/public/images/lottie4"
+
 // import { Link, animateScroll as scroll } from "react-scroll";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,9 +32,26 @@ function HeaderComponent() {
 
   // When mounted on client, now we can show the UI
   useEffect(() => setMounted(true), []);
+  const defaultOptions1 = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice"
+    }}
+
+    const defaultOptions2 = {
+      loop: true,
+      autoplay: true,
+      animationData: animationData2,
+      rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice"
+      }}
 
   const path = useRouter().asPath;
   // console.log(path)
+
+  
 
   if (!mounted) return null;
   return (
@@ -107,6 +128,10 @@ function HeaderComponent() {
           </div>
         </div>
 
+        <div className="px-3">
+          <Lottie options={defaultOptions1} height={96} width={96} />
+        </div>
+
         <div className="flex flex-row align-middle tracking-wide ">
             <Link href="/openpurchaseorders">
               <a className="text-[12px] mr-2 my-auto py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
@@ -118,6 +143,11 @@ function HeaderComponent() {
               <a className="text-[12px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
                 Vendor Details
               </a>
+            </Link>
+
+            <Link href="/notyetqualifiedvendors">
+              <a className="text-[12px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+                Non SAP Vendors              </a>
             </Link>
 
             <Link href="/projectdetails">
@@ -135,6 +165,10 @@ function HeaderComponent() {
 
           <div className=" w-[64px] my-auto py-1 px-3 bg-slate-400 text-white">
             <div className="font-bold text-xl"> + </div><p className="text-xs font-Poppins"> Request new Matcode</p>
+          </div>
+
+          <div className="px-3">
+            <Lottie options={defaultOptions2}  width={96} height={96}/>
           </div>
 
         <div className="w-1/8 tracking-widest bg-gray-100 dark:bg-gray-400 text-white dark:text-white">

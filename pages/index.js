@@ -27,6 +27,7 @@ function Home() {
   console.log(matgroups)
 
   
+
   return (
     <div className="bg-light-primary dark:bg-dark-primary ">
       <Head>
@@ -40,12 +41,13 @@ function Home() {
         {/* <NavigationbetterComponent />  */}
       </div>
       <div className="flex w-full justify-between">
-        <div className="w-1/2 px-3">
+        <div className="w-2/7 px-3">
           <CarousalComponent />
         </div>
-        <div className="w-1/2 px-3">
+        <div className="w-2/7 px-3">
           <FeaturesComponent />
         </div>
+        
       </div>
 
       <div>

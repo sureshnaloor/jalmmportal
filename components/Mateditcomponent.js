@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
   const [matrl, setMatrl] = useState([]); // this is for already commented data if any
-  const [placeholder, setPlaceholder] = useState({}); // this is for placeholder support to prompt
+  
   const [matgroups, setMatgroups] = useState([]); // for select matgroups to change the matgroup if wrong
   console.log(material);
 
@@ -21,6 +21,8 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
 
   const [mattypeselected, setMattypeselected] = useState("ZOFC")
 
+  const [longtextAI, setLongtextAI] = useState("")
+
   const mattypeChange = event => {
     console.log(event.target.value);
     setMattypeselected(event.target.value);
@@ -28,11 +30,15 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
   };
 
   const [matgroupselected,setMatgroupselected] = useState("OFFICE CONSUMABLES")
+  const [secondarymatgroupselected, setSecondarymatgroupselected] = useState("GIFT ITEMS")
 
   const matgroupChange = event => {
     setMatgroupselected(event.target.value)
   }
 
+  const secondaryMatgrpchange = event => {
+    setSecondarymatgroupselected(event.target.value)
+  }
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -42,6 +48,16 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
       );
       const json = await result.json();
       setMatrl(json);
+    })();
+  }, [material]);
+
+  useEffect(() => {
+    (async () => {
+      const result = await fetch(
+        `/api/materialcleanse/comments/${material["material-code"]}`
+      );
+      const json = await result.json();
+      setLongtextAI(json);
     })();
   }, [material]);
 
@@ -73,7 +89,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
         `/api/materialcleanse/placeholder/${material["matgroupid"]}`
       );
       const json = await result.json();
-      setPlaceholder(json);
+      // setPlaceholder(json);
     })();
   }, [material]);
 
@@ -420,32 +436,31 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                     <select
                       id="matgroupsec"
                       name="matgroupsec"
+                      value={secondarymatgroupselected}
+                      onChange={secondaryMatgrpchange}
                       autoComplete="matgroupsec"
                       className="mt-1 block w-3/4 py-2 px-3 border font-Montserrat font-bold text-stone-900 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-[10px]"
                     >
+                       {mattypes.filter(mt => mt.matgroupprimarydesc == matgroupselected)
+                      .map((mg,idx) => (
+                        <option
+                          key={idx}
+                          value={mg["datgroupsecondarydesc"]}
+                          className="text-[12px] text-sky-900 font-bold"
+                        >
+                          {mg["datgroupsecondarydesc"]}
+                        </option>
+                      ))}
                       
-                      {matgroups
-                         .sort((a, b) =>
-                           a["matgroup-primary-desc"] >
-                           b["matgroup-primary-desc"]
-                             ? 1
-                             : -1
-                         )
-                         .map((mg) => (
-                           <option
-                             key={mg["_id"]}
-                             value={mg["material-group"]}
-                             className="text-[10px] text-sky-900 font-bold uppercase"
-                           >
-                             {mg["matgroup-primary-desc"].toLowerCase()}
-                           </option>
-                         ))}
+                      
                     </select>
                   </div>
                 </div>
                 <div className="bg-zinc-100 pt-3">
                   <div className="grid grid-cols-10 gap-2 mt-1">
                     <div className="col-span-2">
+
+                     
                       <div className="relative z-0 w-full mb-2 group">
                         <input
                           type="text"
@@ -467,9 +482,9 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                         />
                         <label
                           htmlFor="floating_company"
-                          className="peer-focus:font-medium opacity-50  absolute text-sm text-gray-900 font-bold dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                          className="peer-focus:font-medium opacity-50  absolute text-[12px] text-gray-900 font-bold dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {placeholder.primary}
+                          {mattypes.filter(obj => obj["datgroupsecondarydesc"] === secondarymatgroupselected).map(ele => ele["primarydescplaceholder"])}
                         </label>
                       </div>
                     </div>
@@ -496,9 +511,9 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                         />
                         <label
                           htmlFor="floating_company"
-                          className="peer-focus:font-medium opacity-30 absolute text-sm text-gray-900 font-bold dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                          className="peer-focus:font-medium opacity-30 absolute text-[12px] text-gray-900 font-bold dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {placeholder.secondary}
+                          {mattypes.filter(obj => obj["datgroupsecondarydesc"] === secondarymatgroupselected).map(ele => ele["secondarydescplaceholder"])}
                         </label>
                       </div>
                     </div>
@@ -525,9 +540,9 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                         />
                         <label
                           htmlFor="floating_company"
-                          className="peer-focus:font-medium opacity-30  absolute text-sm  text-gray-900 font-bold dark:text-gray-300 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sky-800 peer-focus:dark:text-sky-800 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                          className="peer-focus:font-medium opacity-30   absolute text-[12px]  text-gray-900 font-bold dark:text-gray-300 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sky-800 peer-focus:dark:text-sky-800 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {placeholder.tertiary}
+                          {mattypes.filter(obj => obj["datgroupsecondarydesc"] === secondarymatgroupselected).map(ele => ele["tertiarydescplaceholder"])}
                         </label>
                       </div>
                     </div>
@@ -583,6 +598,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                   <input
                     name="longtext"
                     type="textarea"
+                    value={longtextAI}
                     id="longtext"
                     className="block mt-1 text-[14px] w-full pb-6 text-gray-900 border border-gray-300 rounded-md bg-gray-50  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />
