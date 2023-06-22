@@ -27,7 +27,7 @@ function Vendor() {
 
   const [searchParam, setSearchparam] = useState();
 
-  const [selectedVendor, setSelectedVendor] = useState(null);
+  const [selectedVendor, setSelectedVendor] = useState('300003');
 
   // const router = useRouter()
   // console.log(router.query.searchtext)

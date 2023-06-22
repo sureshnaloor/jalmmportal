@@ -8,6 +8,7 @@ const handler = async (req, res) => {
         const { db } = await connectToDatabase();
        
         const vendorpolist = await db.collection("vendorsandtheirpo").aggregate(
+          
           [{
             "$match":{"vendorpo": {$not:{$size:0}}}
           },
@@ -16,6 +17,13 @@ const handler = async (req, res) => {
           }
           ]
         ).toArray()
+
+        // const vendorpolist = await db.collection("vendorsandtheirpo").aggregate(
+        //   [
+        //   { $limit : 10000 }
+        //   ]
+          
+        // ).toArray()
 
         return res.json(vendorpolist)
       }

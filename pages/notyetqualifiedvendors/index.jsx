@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import Navigationcomp from '../../components/Navigationcomponent';
 
 function index() {
   const {
@@ -14,6 +15,8 @@ function index() {
 
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
+    <>
+    <Navigationcomp />  
 
     <form onSubmit={handleSubmit(onSubmit, onErrors)}>
       <div className="w-full h-screen bg-slate-200 mx-3">
@@ -117,6 +120,8 @@ function index() {
 
       {/* include validation with required or other standard HTML validation rules */}
     </form>
+
+    </>
   );
 }
 
