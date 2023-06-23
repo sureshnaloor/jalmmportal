@@ -22,13 +22,13 @@ const handler = async (req, res) => {
         
 
         
-        let condition = str ? {'vendor-name':{'$regex':regexsearchstring, '$options' : 'i'}} : {$expr: { $lt: [0.8, { $rand: {} }] }}
+        let condition = str ? {'vendor-name':{'$regex':regexsearchstring, '$options' : 'i'}} : {}
         
           const vendorlist = await db
             .collection("vendors")
             // .find({$expr: { $lt: [0.8, { $rand: {} }] }})
             .find(condition)
-            .sort({ created_date: -1 })            
+            .sort({ 'created_date': -1 })            
             .limit(50)
             .toArray();
           return res.json(vendorlist);

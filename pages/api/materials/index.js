@@ -22,14 +22,14 @@ const handler =  async (req, res) => {
             console.log(regexsearchstring)
           }
 
-          let condition = str ? {'material-description':{'$regex':regexsearchstring, '$options' : 'i'}} : {$expr: { $lt: [0.8, { $rand: {} }] }}
+          let condition = str ? {'material-description':{'$regex':regexsearchstring, '$options' : 'i'}} : {}
 
           // // const searchstr = new RegExp(searchlist.join('|'), 'gi')
           
           const matlist = await db
             .collection("materials")
             .find(condition)
-            .sort({ created_date: -1 })
+            .sort({ "updated-date": -1 })
             .limit(300)
             .toArray();
           // console.log(matlist)

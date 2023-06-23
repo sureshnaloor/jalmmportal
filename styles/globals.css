@@ -10,6 +10,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "react-datepicker/dist/react-datepicker.css";
 
 @layer components {
     /*  */
@@ -21,11 +22,15 @@
       display: none;
     }
 
+   
+
     @keyframes show {
         100% {
           opacity: 0.8;
           transform: scale(0.99);
         }
       }
+
+    
 
 }

@@ -19,13 +19,13 @@ const handler =  async (req, res) => {
           console.log(regexsearchstring)
         }
 
-         let condition = str ? {'project-name':{'$regex':regexsearchstring, '$options' : 'i'}} : {$expr: { $lt: [0.8, { $rand: {} }] }}
+         let condition = str ? {'project-name':{'$regex':regexsearchstring, '$options' : 'i'}} : {}
         
           const projectlist = await db
             .collection("projects")
             // .find({$expr: { $lt: [0.8, { $rand: {} }] }})
             .find(condition)
-            .sort({ created_date: -1 })            
+            .sort({ "created-date": -1 })            
             .limit(50)
             .toArray();
           return res.json(projectlist);
