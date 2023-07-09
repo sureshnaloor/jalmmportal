@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import moment from "moment";
 import DatePicker from "react-datepicker";
+import { CalendarContainer } from "react-datepicker";
 
 
 import "react-datepicker/dist/react-datepicker.css";
+
 
 function Purchaseorderschedule({ ponumber }) {
   const [poheader, setPoheader] = useState([]);
@@ -62,6 +64,7 @@ function Purchaseorderschedule({ ponumber }) {
     fetchPurchaserorderlines();
   }, [ponumber]);
 
+  
   return (
     <>
       {/* header details */}
@@ -100,7 +103,8 @@ function Purchaseorderschedule({ ponumber }) {
           <DatePicker
             className="bg-red-100 h-6  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             selected={poackdate}
-            onChange={(date) => setPOackdate(date)}
+            onChange={(date) => setPOackdate(date)}   
+            disabled = {poackdate}        
             
           />
           
@@ -125,8 +129,10 @@ function Purchaseorderschedule({ ponumber }) {
           >
             Delivery date  as per PO term.
           </label>
+          
           <DatePicker
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            
             selected={podelydate}
             onChange={(date) => setAbgestdate(date)}
           />

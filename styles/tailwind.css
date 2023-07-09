@@ -1,0 +1,13 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import 'react-datepicker/dist/react-datepicker.css';
+
+.react-datepicker__current-month {
+    color:"fff111";
+}
+
+.react-datepicker {
+    width: "100px";
+    height:"100px";
+}

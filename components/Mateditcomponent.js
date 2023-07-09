@@ -5,9 +5,13 @@ import { useSession } from "next-auth/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.bubble.css';
+
 function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
   const [matrl, setMatrl] = useState([]); // this is for already commented data if any
-  
+
   const [matgroups, setMatgroups] = useState([]); // for select matgroups to change the matgroup if wrong
   console.log(material);
 
@@ -15,30 +19,31 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
   const [length, setLength] = useState(0);
   const [maxLimit, setMaxlimit] = useState(40);
 
-  const [mattypes, setMattypes] = useState([])
+  const [mattypes, setMattypes] = useState([]);
 
   const [materialedited, setMaterialedited] = useState({}); // for already edited data
 
-  const [mattypeselected, setMattypeselected] = useState("ZOFC")
+  const [mattypeselected, setMattypeselected] = useState("ZOFC");
 
-  const [longtextAI, setLongtextAI] = useState("")
+  const [longDesc, setLongDesc] = useState('');
 
-  const mattypeChange = event => {
+  const mattypeChange = (event) => {
     console.log(event.target.value);
     setMattypeselected(event.target.value);
-    
   };
 
-  const [matgroupselected,setMatgroupselected] = useState("OFFICE CONSUMABLES")
-  const [secondarymatgroupselected, setSecondarymatgroupselected] = useState("GIFT ITEMS")
+  const [matgroupselected, setMatgroupselected] =
+    useState("OFFICE CONSUMABLES");
+  const [secondarymatgroupselected, setSecondarymatgroupselected] =
+    useState("GIFT ITEMS");
 
-  const matgroupChange = event => {
-    setMatgroupselected(event.target.value)
-  }
+  const matgroupChange = (event) => {
+    setMatgroupselected(event.target.value);
+  };
 
-  const secondaryMatgrpchange = event => {
-    setSecondarymatgroupselected(event.target.value)
-  }
+  const secondaryMatgrpchange = (event) => {
+    setSecondarymatgroupselected(event.target.value);
+  };
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -51,15 +56,15 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
     })();
   }, [material]);
 
-  useEffect(() => {
-    (async () => {
-      const result = await fetch(
-        `/api/materialcleanse/comments/${material["material-code"]}`
-      );
-      const json = await result.json();
-      setLongtextAI(json);
-    })();
-  }, [material]);
+  // useEffect(() => {
+  //   (async () => {
+  //     const result = await fetch(
+  //       `/api/materialcleanse/comments/${material["material-code"]}`
+  //     );
+  //     const json = await result.json();
+      
+  //   })();
+  // }, [material]);
 
   useEffect(() => {
     (async () => {
@@ -73,9 +78,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
 
   useEffect(() => {
     (async () => {
-      const result = await fetch(
-        `/api/mattypes`
-      );
+      const result = await fetch(`/api/mattypes`);
       const json = await result.json();
       setMattypes(json);
     })();
@@ -100,7 +103,6 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
       setMatgroups(json);
     })();
   }, [material]);
- 
 
   const handleEdit = async (e) => {
     const responsebody = {};
@@ -127,7 +129,8 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
         responsebody["other"],
       mattypenew: responsebody["mattypenew"],
       matgroupnew: responsebody["matgroupnew"],
-      longtext: responsebody["longtext"],
+      matgroupsecnew: responsebody["matgroupsecnew"],
+      longtext: longDesc,
     };
 
     // console.log(JSON.stringify(responsebody));
@@ -176,7 +179,8 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
         responsebody["other"],
       mattypenew: responsebody["mattypenew"],
       matgroupnew: responsebody["matgroupnew"],
-      longtext: responsebody["longtext"],
+      matgroupsecnew: responsebody["matgroupsecnew"],
+      longtext: longDesc,
       username: session?.user?.name || "anonymous",
     };
 
@@ -195,6 +199,8 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
       }
     );
     const json = await result.json();
+
+    const datahtml = materialedited.longtext
 
     toast.success(
       `The material comment is successful! thanks ${session?.user?.name}`,
@@ -219,19 +225,17 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
           X
         </button>
 
-        
-
         <div className="grid grid-cols-8 gap-2">
           <div className="col-span-3 border-r-4 border-sky-800 px-6 py-3 flex flex-col">
-            <h2 className="bg-sky-600 mx-auto px-9 py-1 text-white text-xs uppercase tracking-wider mb-3">
+            <h2 className="bg-sky-600 mx-auto px-9 py-1 text-white text-[10px]  tracking-wider mb-3">
               {" "}
               {editmode
                 ? "Material to edit:"
                 : "Suggest suitable description for:"}
             </h2>
 
-            <div className="w-full bg-sky-100 flex-col px-3 mb-9">
-              <div className="flex flex-row justify-between mb-6">
+            <div className="w-full bg-sky-100 flex-col px-3 mb-3">
+              <div className="flex flex-row justify-between mb-3">
                 <p className="text-gray-700 text-xs pb-3"> Material Code: </p>
                 <h5 className="text-sky-900 text-sm font-semibold ">
                   {material["material-code"]}
@@ -274,6 +278,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                     <th>Suggested Material description</th>
                     <th>Suggested Material Type</th>
                     <th>Suggested Material Group</th>
+                    <th> Suggested Matgroup-sec</th>
                     <th>Contributed User</th>
                   </tr>
                 </thead>
@@ -281,12 +286,13 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                   {matrl.map((row, index) => (
                     <tr
                       key={index}
-                      className="font-semibold text-xs bg-sky-800 text-white"
+                      className="font-semibold text-[10px] bg-sky-800 text-white"
                     >
                       <td>{row.materialcode}</td>
                       <td>{row.matdescriptionnew}</td>
                       <td>{row.mattypenew}</td>
                       <td>{row.matgroupnew}</td>
+                      <td> {row.matgroupsecnew}</td>
                       <td>{row.username}</td>
                     </tr>
                   ))}
@@ -308,15 +314,17 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
             className=" w-full bg-sky-300 p-1"
             onSubmit={editmode ? handleEdit : handlecomment}
           >
+            
             <div className="shadow overflow-hidden  sm:rounded-md">
+              
               <div className="px-2 py-2 flex flex-col bg-white sm:p-3 text-[10px]">
-                <h3 className="w-1/4 bg-sky-600 mx-auto text-white uppercase px-2 py-2">
+                <h3 className="w-1/4 bg-sky-600 mx-auto text-white tracking-wider font-bold px-2 py-2">
                   {" "}
                   Corrected Material description:{" "}
                 </h3>
 
-                <div className="grid grid-cols-9 bg-sky-800 border-b-2 gap-2 py-3 mt-4 mb-6 pb-6">
-                  <div className="col-span-2 mx-auto">
+                <div className="grid grid-cols-12 bg-sky-800 border-b-2 gap-2 py-3 mt-4 mb-6 pb-6">
+                  <div className="col-span-3 mx-auto">
                     <label
                       htmlFor="mattypenew"
                       className="block text-[10px] font-bold uppercase text-white"
@@ -403,213 +411,242 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                       onChange={matgroupChange}
                       className="mt-1 block w-full py-2 px-3 border font-Montserrat font-bold text-stone-900 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-[10px]"
                     >
-                      {mattypes.filter(mt => mt.materialtype == mattypeselected)
+                      {mattypes
+                        .filter((mt) => mt.materialtype == mattypeselected)
                         .sort((a, b) =>
-                          a["matgroupprimary"] >
-                          b["matgroupprimary"]
-                            ? 1
-                            : -1
-                        ).map((item,i) => item["matgroupprimarydesc"]).filter(
-                          (value, index, current_val) => current_val.indexOf(value) === index
+                          a["matgroupprimary"] > b["matgroupprimary"] ? 1 : -1
                         )
-                        .map((mg,idx) => (
+                        .map((item, i) => item["matgroupprimarydesc"])
+                        .filter(
+                          (value, index, current_val) =>
+                            current_val.indexOf(value) === index
+                        )
+                        .map((mg, idx) => (
                           <option
                             key={idx}
                             value={mg}
-                            className="text-[12px] text-sky-900 font-bold"
+                            className="text-[10px] text-sky-900 font-bold"
                           >
                             {mg}
                           </option>
-                        )
-                        
-                        )}
+                        ))}
                     </select>
                   </div>
 
-                  <div className="col-span-4">
+                  <div className="col-span-3">
                     <label
-                      htmlFor="matgroupnew"
+                      htmlFor="matgroupsecnew"
                       className="block text-[10px] tracking-wider font-bold uppercase text-white px-12"
                     >
                       Material Group-Secondary
                     </label>
                     <select
-                      id="matgroupsec"
-                      name="matgroupsec"
+                      id="matgroupsecnew"
+                      name="matgroupsecnew"
                       value={secondarymatgroupselected}
                       onChange={secondaryMatgrpchange}
                       autoComplete="matgroupsec"
                       className="mt-1 block w-3/4 py-2 px-3 border font-Montserrat font-bold text-stone-900 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-[10px]"
                     >
-                       {mattypes.filter(mt => mt.matgroupprimarydesc == matgroupselected)
-                      .map((mg,idx) => (
-                        <option
-                          key={idx}
-                          value={mg["datgroupsecondarydesc"]}
-                          className="text-[12px] text-sky-900 font-bold"
-                        >
-                          {mg["datgroupsecondarydesc"]}
-                        </option>
-                      ))}
-                      
-                      
+                      {mattypes
+                        .filter(
+                          (mt) => mt.matgroupprimarydesc == matgroupselected
+                        )
+                        .map((mg, idx) => (
+                          <option
+                            key={idx}
+                            value={mg["matgroupsecondarydesc"]}
+                            className="text-[10px] text-sky-900 font-bold"
+                          >
+                            {mg["matgroupsecondarydesc"]}
+                          </option>
+                        ))}
                     </select>
                   </div>
-                </div>
-                <div className="bg-zinc-100 pt-3">
-                  <div className="grid grid-cols-10 gap-2 mt-1">
-                    <div className="col-span-2">
-
-                     
-                      <div className="relative z-0 w-full mb-2 group">
-                        <input
-                          type="text"
-                          name="primary"
-                          id="primary"
-                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                          placeholder=" "
-                          required
-                          onBlur={(e) => {
-                            setNewdescription(
-                              (prev, current) =>
-                                (current = prev + " " + e.target.value)
-                            );
-                            setLength(
-                              (prev, current) =>
-                                (current = prev + e.target.value.length + 1)
-                            );
-                          }}
-                        />
-                        <label
-                          htmlFor="floating_company"
-                          className="peer-focus:font-medium opacity-50  absolute text-[12px] text-gray-900 font-bold dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                        >
-                          {mattypes.filter(obj => obj["datgroupsecondarydesc"] === secondarymatgroupselected).map(ele => ele["primarydescplaceholder"])}
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className="col-span-2">
-                      <div className="relative z-0 w-full mb-2 group">
-                        <input
-                          type="text"
-                          name="secondary"
-                          id="secondary"
-                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                          placeholder=" "
-                          required
-                          onBlur={(e) => {
-                            setNewdescription(
-                              (prev, current) =>
-                                (current = prev + " " + e.target.value)
-                            );
-                            setLength(
-                              (prev, current) =>
-                                (current = prev + e.target.value.length + 1)
-                            );
-                          }}
-                        />
-                        <label
-                          htmlFor="floating_company"
-                          className="peer-focus:font-medium opacity-30 absolute text-[12px] text-gray-900 font-bold dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                        >
-                          {mattypes.filter(obj => obj["datgroupsecondarydesc"] === secondarymatgroupselected).map(ele => ele["secondarydescplaceholder"])}
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className="col-span-2">
-                      <div className="relative z-0 w-full mb-2 group">
-                        <input
-                          type="text"
-                          name="tertiary"
-                          id="tertiary"
-                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                          placeholder=" "
-                          required
-                          onBlur={(e) => {
-                            setNewdescription(
-                              (prev, current) =>
-                                (current = prev + " " + e.target.value)
-                            );
-                            setLength(
-                              (prev, current) =>
-                                (current = prev + e.target.value.length + 1)
-                            );
-                          }}
-                        />
-                        <label
-                          htmlFor="floating_company"
-                          className="peer-focus:font-medium opacity-30   absolute text-[12px]  text-gray-900 font-bold dark:text-gray-300 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sky-800 peer-focus:dark:text-sky-800 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                        >
-                          {mattypes.filter(obj => obj["datgroupsecondarydesc"] === secondarymatgroupselected).map(ele => ele["tertiarydescplaceholder"])}
-                        </label>
-                      </div>
-                    </div>
-                    <p className="col-span-3 mt-4 ml-12  bg-sky-500  text-white font-semibold uppercase text-[12px] px-2 py-2 mb-3">
+                  <p className="col-span-3 mt-4 ml-12  bg-sky-500 mr-3 text-white font-semibold uppercase text-[12px] px-2 py-2">
                     length of new description:{" "}
-                    <span className="font-bold text-red-900 pl-3 text-[14px]">
+                    <span className="font-bold text-red-900 pl-3 text-[12px]">
                       {length}
                     </span>
                   </p>
-                  </div>
-                  
-
-                  <div className="w-full grid grid-cols-4">
-                    <div className=" pt-2 col-span-2">
-                      <div className="relative z-0 w-full mb-2 group">
-                        <input
-                          type="text"
-                          name="other"
-                          id="other"
-                          className="block py-2.5 px-0 w-3/5 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                          placeholder=" "
-                          required
-                          onFocus={() => setMaxlimit(40 - length)}
-                          onBlur={(e) => {
-                            setNewdescription(
-                              (prev, current) =>
-                                (current = prev + " " + e.target.value)
-                            );
-                          }}
-                          onChange={(e) => {
-                            setLength((prev, current) => (current = prev + 1));
-                          }}
-                          maxLength={maxLimit}
-                        />
-                        <label
-                          htmlFor="floating_company"
-                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                        >
-                          Other details (Ex. packing size)
-                        </label>
-                      </div>
+                </div>
+              </div>
+              <div className="bg-zinc-100 pt-3">
+                <div className="grid grid-cols-8 gap-2 mt-1">
+                  <div className="col-span-2">
+                    <div className="relative z-0 w-full mb-2 group">
+                      <input
+                        type="text"
+                        name="primary"
+                        id="primary"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" "
+                        required
+                        onBlur={(e) => {
+                          setNewdescription(
+                            (prev, current) =>
+                              (current = prev + " " + e.target.value)
+                          );
+                          setLength(
+                            (prev, current) =>
+                              (current = prev + e.target.value.length + 1)
+                          );
+                        }}
+                      />
+                      <label
+                        htmlFor="floating_company"
+                        className="peer-focus:font-medium opacity-50  absolute text-[12px] text-gray-900 font-bold dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                      >
+                        {mattypes
+                          .filter(
+                            (obj) =>
+                              obj["matgroupsecondarydesc"] ===
+                              secondarymatgroupselected
+                          )
+                          .map((ele) => ele["primarydescplaceholder"])}
+                      </label>
                     </div>
                   </div>
+
+                  <div className="col-span-2">
+                    <div className="relative z-0 w-full mb-2 group">
+                      <input
+                        type="text"
+                        name="secondary"
+                        id="secondary"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" "
+                        required
+                        onBlur={(e) => {
+                          setNewdescription(
+                            (prev, current) =>
+                              (current = prev + " " + e.target.value)
+                          );
+                          setLength(
+                            (prev, current) =>
+                              (current = prev + e.target.value.length + 1)
+                          );
+                        }}
+                      />
+                      <label
+                        htmlFor="floating_company"
+                        className="peer-focus:font-medium opacity-30 absolute text-[12px] text-gray-900 font-bold dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                      >
+                        {mattypes
+                          .filter(
+                            (obj) =>
+                              obj["matgroupsecondarydesc"] ===
+                              secondarymatgroupselected
+                          )
+                          .map((ele) => ele["secondarydescplaceholder"])}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="col-span-2">
+                    <div className="relative z-0 w-full mb-2 group">
+                      <input
+                        type="text"
+                        name="tertiary"
+                        id="tertiary"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" "
+                        required
+                        onBlur={(e) => {
+                          setNewdescription(
+                            (prev, current) =>
+                              (current = prev + " " + e.target.value)
+                          );
+                          setLength(
+                            (prev, current) =>
+                              (current = prev + e.target.value.length + 1)
+                          );
+                        }}
+                      />
+                      <label
+                        htmlFor="tertiary"
+                        className="peer-focus:font-medium opacity-30   absolute text-[12px]  text-gray-900 font-bold dark:text-gray-300 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sky-800 peer-focus:dark:text-sky-800 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                      >
+                        {mattypes
+                          .filter(
+                            (obj) =>
+                              obj["matgroupsecondarydesc"] ===
+                              secondarymatgroupselected
+                          )
+                          .map((ele) => ele["tertiarydescplaceholder"])}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="col-span-2">
+                    <div className="relative z-0 w-full mb-2 group">
+                      <input
+                        type="text"
+                        name="other"
+                        id="other"
+                        className="block py-2.5 px-0 w-3/5 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" "
+                        required
+                        onFocus={() => setMaxlimit(40 - length)}
+                        onBlur={(e) => {
+                          setNewdescription(
+                            (prev, current) =>
+                              (current = prev + " " + e.target.value)
+                          );
+                        }}
+                        onChange={(e) => {
+                          setLength((prev, current) => (current = prev + 1));
+                        }}
+                        maxLength={maxLimit}
+                      />
+                      <label
+                        htmlFor="other"
+                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                      >
+                        Other details (Ex. packing size)
+                      </label>
+                    </div>
+                  </div>
+
+                  
                 </div>
 
-                <div className="col-span-5 mb-3">
+                <div className="w-11/12 px-6 mb-1 flex flex-col align-middle justify-center  ">
                   <label
                     htmlFor="longtext"
-                    className="block text-[10px] font-extrabold uppercase text-amber-900 dark:text-white"
+                    className="block text-[10px] font-extrabold uppercase text-amber-900 dark:text-white mb-3"
                   >
                     Large Text Description:{" "}
                   </label>
-                  <input
-                    name="longtext"
-                    type="textarea"
-                    value={longtextAI}
-                    id="longtext"
-                    className="block mt-1 text-[14px] w-full pb-6 text-gray-900 border border-gray-300 rounded-md bg-gray-50  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  
+                  <ReactQuill value={longDesc} onChange={(longDesc) => setLongDesc(longDesc)}
+                   modules={{
+                    toolbar: [
+                      [{ font: [] }],
+                      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                      ["bold", "italic", "underline", "strike"],
+                      [{ color: [] }, { background: [] }],
+                      [{ script:  "sub" }, { script:  "super" }],
+                      ["blockquote", "code-block"],
+                      [{ list:  "ordered" }, { list:  "bullet" }],
+                      [{ indent:  "-1" }, { indent:  "+1" }, { align: [] }],
+                      ["link", "image", "video"],
+                      ["clean"],
+                  ],
+                  }}
+                  theme="snow"
+                  className="bg-slate-100 border-2 border-slate-800 min-h-[150px]"
                   />
+                  
+                  
                 </div>
 
                 {editmode ? (
-                  <button className=" mx-auto  bg-blue-500 hover:bg-blue-400 text-white text-xs font-bold py-1 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                  <button className=" mx-auto  bg-blue-500 hover:bg-blue-400 text-white text-xs font-bold py-2 my-2 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
                     Cleanse
                   </button>
                 ) : (
-                  <button className=" mx-auto bg-blue-500 hover:bg-blue-400 text-white text-xs font-bold py-1 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                  <button className=" mx-auto bg-blue-500 hover:bg-blue-400 text-white text-xs font-bold py-2 my-2 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded">
                     Comment
                   </button>
                 )}
@@ -617,12 +654,24 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
             </div>
           </form>
         ) : (
-          <div className="bg-sky-100 w-full h-56 flex justify-center align-middle mt-15">
+          <div className="bg-sky-100 w-full h-96 grid grid-cols-4 gap-4  mt-15">
             {" "}
-            <h3 className="text-2xl text-amber-900 uppercase font-extrabold ">
+            <h3 className="text-2xl  bg-red-300 p-6 text-white col-span-1 m-auto border-r-4  uppercase font-extrabold ">
               {" "}
-              already edited{" "}
+              already edited{" "}              
             </h3>
+            <div className="col-span-3 flex ">
+                <div className="pb-6 px-3  border-b-2 border-teal-600 shadow-lg shadow-slate-400 w-1/2"> 
+                <p className="text-xl font-bold  my-3 text-right"> {materialedited.materialcode} </p>
+                <p className=" text-lg font-semibold shadow-lg shadow-slate-400 my-3 px-3"> {materialedited.matdescriptionnew}</p>
+                <p className="text-right italic text-emerald-800 font-bold"> {materialedited.mattypenew} </p>
+                <p className="text-right  text-slate-700"> {materialedited.matgroupnew}</p>
+                <p className="text-right text-sky-900 font-semibold"> {materialedited.matgroupsecnew}</p>
+                </div>
+                
+                <p className="text-amber-900 border-l-2 border-b-2 border-teal-700 p-6 shadow-stone-400 shadow-md pr-24 pt-24" dangerouslySetInnerHTML= {{__html: materialedited.longtext}} />
+
+              </div>
           </div>
         )}
       </div>

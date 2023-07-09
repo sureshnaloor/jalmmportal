@@ -4,6 +4,7 @@ import Vendorevaluationyearwise from "../../../components/Vendordetailed/Vendore
 import Vendorcompletecontacts from "../../../components/Vendordetailed/Vendorcontacts";
 import Vendormatgroups from "../../../components/Vendordetailed/Vendormatgroups";
 import Navigationcomp from "../../../components/Navigationcomponent";
+import Vendorevaluationpastyears from "../../../components/Vendordetailed/vendorevaluationpastyears";
 
 import Router, { useRouter } from "next/router";
 
@@ -21,11 +22,14 @@ function Vendorevaluationcomp() {
           alt="hardhat"
         />
     </div>
+      
       <Vendorevaluationfixed vendornumber={vendornumber} />
 
       {/* <Vendormatgroups vendornumber = {vendornumber} />  */}
 
       <Vendorevaluationyearwise vendornumber={vendornumber} />
+      <Vendorevaluationpastyears vendornumber = {vendornumber} />
+
       <Vendorcompletecontacts vendornumber={vendornumber} />
     </div>
   );

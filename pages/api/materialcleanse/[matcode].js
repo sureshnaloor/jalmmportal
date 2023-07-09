@@ -27,11 +27,12 @@ const handler = async (req, res) => {
           {
             $set: {
               matgroupold: req.body.matgroupold,
-              matgroupnew: req.body.matgroupnew,
+              matgroupnew: req.body.matgroupnew,              
               mattypeold: req.body.mattypeold,
               mattypenew: req.body.mattypenew,
               matdescriptionold: req.body.matdescriptionold,
               matdescriptionnew: req.body.matdescriptionnew,
+              matgroupsecnew: req.body.matgroupsecnew,
               longtext: req.body.longtext,
             },
           },

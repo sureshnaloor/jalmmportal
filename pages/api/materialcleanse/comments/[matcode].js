@@ -26,6 +26,7 @@ const handler = async (req, res) => {
               mattypenew: req.body.mattypenew,
               matdescriptionold: req.body.matdescriptionold,
               matdescriptionnew: req.body.matdescriptionnew,
+              matgroupsecondarynew: req.body.matgroupsecnew,
               longtext: req.body.longtext,
               username: req.body.username,
             },
