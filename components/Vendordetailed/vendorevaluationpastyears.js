@@ -19,6 +19,8 @@ function vendorevaluationpastyears({ vendornumber }) {
 
   const [vendorpastscores, setVendorpastscores] = useState([]);
 
+  
+
   useEffect(() => {
     (async () => {
       const result = await fetch(
@@ -26,7 +28,10 @@ function vendorevaluationpastyears({ vendornumber }) {
       );
       const json = await result.json();
       setVendorpastscores(json);
+      
     })();   
+
+    
   }, [vendornumber]);
 
   return (
@@ -65,11 +70,12 @@ function vendorevaluationpastyears({ vendornumber }) {
 
           {/* now for the input or output display of the scores */}
 
-          {vendorpastscores?.["past"]?.[0] ? (
-            <p>
+          {vendorpastscores?.["past"]?.[0] ? ( 
+          
+            <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
               {" "}
-              Already updated the score:{" "}
-              {vendorpastscores?.["past"]?.[0].pastyearscore}
+              Score is updated: 
+              <span className="bg-amber-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores?.["past"]?.[0].pastyearscore}</span>
             </p>
           ) : (
             <div className="mt-3 grid grid-cols-2">
@@ -116,10 +122,10 @@ function vendorevaluationpastyears({ vendornumber }) {
           )}
 
           {vendorpastscores?.["past"]?.[1] ? (
-            <p>
+            <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
               {" "}
-              Already updated for 2019:
-              {vendorpastscores?.["past"]?.[1].pastyearscore}{" "}
+              score is updated:
+              <span className="bg-sky-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores?.["past"]?.[1].pastyearscore}{" "}</span>
             </p>
           ) : (
             <div className="mt-3 grid grid-cols-2">
@@ -147,8 +153,16 @@ function vendorevaluationpastyears({ vendornumber }) {
                         "Content-Type": "application/json",
                         Accept: "application/json",
                       }),
+                      
                     }
                   );
+                  toast.success(
+                    `The PAST EVALUATION SCORE FOR YEAR 2020 for the vendor ${vendornumber} is updated, thanks!`,
+                    {
+                      position: toast.POSITION.TOP_RIGHT,
+                    }
+                  );
+                  router.reload();
                 }}
                 className="h-[24px] w-1/2 col-span-1 mr-20 font-bold text-[12px] bg-blue-500  hover:bg-blue-500 text-white  rounded-full"
               >
@@ -158,10 +172,10 @@ function vendorevaluationpastyears({ vendornumber }) {
           )}
 
           {vendorpastscores?.["past"]?.[2] ? (
-            <p>
+            <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
               {" "}
-              The score is already updated:{" "}
-              {vendorpastscores?.["past"]?.[2].pastyearscore}
+              score is updated:{" "}
+              <span className="bg-emerald-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores?.["past"]?.[2].pastyearscore}</span>
             </p>
           ) : (
             <div className="mt-3 grid grid-cols-2">
@@ -191,6 +205,14 @@ function vendorevaluationpastyears({ vendornumber }) {
                       }),
                     }
                   );
+
+                  toast.success(
+                    `The PAST EVALUATION SCORE FOR YEAR 2021 for the vendor ${vendornumber} is updated, thanks!`,
+                    {
+                      position: toast.POSITION.TOP_RIGHT,
+                    }
+                  );
+                  router.reload();
                 }}
                 className="h-[24px] w-1/2 col-span-1 mr-20 font-bold text-[12px] bg-blue-500 hover:bg-blue-700 text-white  rounded-full"
               >
@@ -200,10 +222,10 @@ function vendorevaluationpastyears({ vendornumber }) {
           )}
 
           {vendorpastscores?.["past"]?.[3] ? (
-            <p>
+            <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
               {" "}
-              The score is already updated:{" "}
-              {vendorpastscores?.["past"]?.[3].pastyearscore}
+              score is updated:{" "}
+              <span className="bg-amber-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores?.["past"]?.[3].pastyearscore}</span>
             </p>
           ) : (
             <div className="mt-3 grid grid-cols-2">
@@ -233,6 +255,13 @@ function vendorevaluationpastyears({ vendornumber }) {
                       }),
                     }
                   );
+                  toast.success(
+                    `The PAST EVALUATION SCORE FOR YEAR 2022 for the vendor ${vendornumber} is updated, thanks!`,
+                    {
+                      position: toast.POSITION.TOP_RIGHT,
+                    }
+                  );
+                  router.reload();
                 }}
                 className="h-[24px] w-1/2 col-span-1 mr-20 font-bold text-[12px] bg-blue-500 hover:bg-blue-700 text-white  rounded-full"
               >
