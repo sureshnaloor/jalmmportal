@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 function vendorevaluationpastyears({ vendornumber }) {
   const [score2022, setScore2022] = useState(0);
   const [score2019, setScore2019] = useState(0);
@@ -18,7 +19,6 @@ function vendorevaluationpastyears({ vendornumber }) {
   const router = useRouter();
 
   const [vendorpastscores, setVendorpastscores] = useState([]);
-
   
 
   useEffect(() => {
@@ -270,6 +270,7 @@ function vendorevaluationpastyears({ vendornumber }) {
             </div>
           )}
         </div>
+                          
       </div>
     </div>
   );
