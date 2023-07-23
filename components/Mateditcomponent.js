@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import ReactQuill from 'react-quill';
+// import ReactQuill from 'react-quill';
+const ReactQuill = dynamic(import('react-quill'), { ssr: false})
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
 
