@@ -70,12 +70,12 @@ function vendorevaluationpastyears({ vendornumber }) {
 
           {/* now for the input or output display of the scores */}
 
-          {vendorpastscores?.["past"]?.[0] ? ( 
+          {vendorpastscores["past"]?.find(past=>past.pastyear=="2019")?.pastyearscore >= 0 ? ( 
           
             <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
               {" "}
               Score is updated: 
-              <span className="bg-amber-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores?.["past"]?.[0].pastyearscore}</span>
+              <span className="bg-amber-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores["past"].find(past=>past.pastyear=="2019")?.pastyearscore.toString()}</span>
             </p>
           ) : (
             <div className="mt-3 grid grid-cols-2">
@@ -121,11 +121,11 @@ function vendorevaluationpastyears({ vendornumber }) {
             </div>
           )}
 
-          {vendorpastscores?.["past"]?.[1] ? (
+          {vendorpastscores["past"]?.find(past=>past.pastyear=="2020")?.pastyearscore >= 0 ? (
             <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
               {" "}
               score is updated:
-              <span className="bg-sky-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores?.["past"]?.[1].pastyearscore}{" "}</span>
+              <span className="bg-sky-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores["past"].find(past=>past.pastyear=="2020")?.pastyearscore.toString()}</span>
             </p>
           ) : (
             <div className="mt-3 grid grid-cols-2">
@@ -171,11 +171,11 @@ function vendorevaluationpastyears({ vendornumber }) {
             </div>
           )}
 
-          {vendorpastscores?.["past"]?.[2] ? (
+          {vendorpastscores["past"]?.find(past=>past.pastyear=="2021")?.pastyearscore >= 0 ? (
             <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
               {" "}
               score is updated:{" "}
-              <span className="bg-emerald-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores?.["past"]?.[2].pastyearscore}</span>
+              <span className="bg-emerald-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores["past"].find(past=>past.pastyear=="2021")?.pastyearscore.toString()}</span>
             </p>
           ) : (
             <div className="mt-3 grid grid-cols-2">
@@ -221,11 +221,11 @@ function vendorevaluationpastyears({ vendornumber }) {
             </div>
           )}
 
-          {vendorpastscores?.["past"]?.[3] ? (
+          {vendorpastscores["past"]?.find(past=>past.pastyear=="2022")?.pastyearscore >= 0 ? (
             <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
               {" "}
               score is updated:{" "}
-              <span className="bg-amber-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores?.["past"]?.[3].pastyearscore}</span>
+              <span className="bg-amber-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores["past"].find(past=>past.pastyear=="2022")?.pastyearscore.toString()}</span>
             </p>
           ) : (
             <div className="mt-3 grid grid-cols-2">
