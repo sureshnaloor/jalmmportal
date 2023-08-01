@@ -3,10 +3,11 @@ import { Editor } from '@tinymce/tinymce-react';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import parse from 'html-react-parser';
+import { useRouter } from "next/router";
 
 function VendorevalRemarks({vendornumber}) {
     const editorRef = useRef(null);
-    
+    const router = useRouter();
 
     const [formData, setFormData] = useState("")
     const [textContent, setTextContent] = useState('')
@@ -58,7 +59,8 @@ function VendorevalRemarks({vendornumber}) {
                   Accept: "application/json",
                 }),
               }
-            );
+            );           
+            
   
             toast.success(
               `The vendor evaluation remarks for the vendor ${vendornumber} is updated, thanks!`,
@@ -66,6 +68,8 @@ function VendorevalRemarks({vendornumber}) {
                 position: toast.POSITION.TOP_RIGHT,
               }
             );
+
+            router.reload();
       
       }
   }>

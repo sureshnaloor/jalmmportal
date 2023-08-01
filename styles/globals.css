@@ -21,8 +21,7 @@
     .hide-scroll-bar::-webkit-scrollbar {
       display: none;
     }
-
-   
+  
 
     @keyframes show {
         100% {
