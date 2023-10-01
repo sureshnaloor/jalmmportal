@@ -10,8 +10,15 @@ const handler = async (req, res) => {
         const vendorpolist = await db.collection("vendorsandtheirpo").aggregate(
           
           [{
-            "$match":{"vendorpo": {$not:{$size:0}}}
+            "$match":{
+            "$and":[
+            {"vendorpo": {$not:{$size:0}}},
+            
+            ]
+          }
           },
+         
+
           {
             "$project":{"vendor-code": 1, "vendor-name": 1}
           }

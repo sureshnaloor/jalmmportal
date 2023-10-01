@@ -89,7 +89,7 @@ function vendorevaluationpastyears({ vendornumber }) {
               <button
                 onClick={async () => {
                   // console.log("I am clicked", score2018)
-                  await fetch(
+                  const response = await fetch(
                     `/api/vendors/vendorevalpastyears/${vendornumber}`,
                     {
                       method: "PUT",
@@ -113,6 +113,7 @@ function vendorevaluationpastyears({ vendornumber }) {
                     }
                   );
                   router.reload();
+                  
                 }}
                 className="h-[24px] w-1/2 col-span-1 mr-20 font-bold text-[12px] bg-blue-500 hover:bg-blue-700 text-white  rounded-full"
               >

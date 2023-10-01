@@ -21,6 +21,7 @@
     "chart.js": "^3.9.1",
     "daisyui": "^2.22.0",
     "framer-motion": "^7.6.19",
+    "html-react-parser": "^4.2.0",
     "moment": "^2.29.4",
     "mongodb": "^4.4.1",
     "multer": "^1.4.5-lts.1",

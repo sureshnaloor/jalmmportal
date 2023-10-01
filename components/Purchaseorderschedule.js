@@ -7,37 +7,58 @@ import "react-datepicker/dist/react-datepicker.css";
 function Purchaseorderschedule({ ponumber }) {
   const [poheader, setPoheader] = useState([]);
 
+  // gen. PO progress data
+
   const [poackdate, setPOackdate] = useState(null);
   const [podelydate, setPodelydate] = useState(null);
   const [estdelydate, setEstdelydate] = useState(null);
+  const [delysch, setDelysch] = useState("");
 
   const [basedesignrecdate, setBasedesignrecdate] = useState(null);
   const [basedesignapprdate, setBasedesignapprdate] = useState(null);
+  const [basedesigncomments, setBasedesigncomments] = useState("");
   
   const [detdesignrecdate, setDetdesignrecdate] = useState(null);
   const [detdesignaprdate, setDetdesignaprdate] = useState(null);
   const [mfgclearancedate, setMfgclearancedate] = useState(null);
-  const [itpapprdate, setItpapprdate] = useState(null);
-
-  const [lcestopendate, setLcEstopendate] = useState(new Date());
-  const [lcdatadate, setLcDatadate] = useState(new Date());
-  const [lclastshipdate, setLcLastshipdate] = useState(new Date());
-  const [lcexpirydate, setLcExpirydate] = useState(new Date());
-
-  
+  const [itpapprdate, setItpapprdate] = useState(null);  
  
-  const [basedesigncomments, setBasedesigncomments] = useState("");
-
+  // payment schedule data
 
   const [advpaiddate, setAdvpaiddate] = useState(new Date());
   const [advamountpaid, setAdvamountpaid] = useState(0);
-  const [milestoneamountpaiddate, setMilestoneamountpaiddate] = useState(
-    new Date()
-  );
+  const [milestoneamountpaiddate, setMilestoneamountpaiddate] = useState(new Date());
+  const [milestoneamountpaid, setMilestoneamountpaid] = useState(0);
 
   const [finalpaiddate, setFinalpaiddate] = useState(new Date());
   const [finalcomments, setFinalpaidcomments] = useState("");
   const [finalpaidamt, setFinalpaidamt] = useState(0);
+
+  //Bank guarantee data
+
+  const [abgestdate, setAbgestdate] = useState(new Date());
+  const [abgactualdate, setAbgactualdate] = useState(new Date());
+  const [abgexpirydate, setAbgexpirydate] = useState(new Date());
+  const [abgamount, setAbgamount] = useState(0);
+  const [pbgestdate, setPbgestdate] = useState(new Date());
+  const [pbgactualdate, setPbgactualdate] = useState(new Date());
+  const [pbgreturneddate, setPbgreturneddate] = useState(new Date());
+  const [abgreturneddate, setAbgreturneddate] = useState(new Date());
+  const [bgremarks, setBgremarks] = useState("");
+
+// L C data
+
+  const [lcestopendate, setLcEstopendate] = useState(new Date());
+  const [lcopeneddate, setLcOpeneddate] = useState(new Date());
+  const [lcdatadate, setLcDatadate] = useState(new Date());
+  const [lclastshipdate, setLcLastshipdate] = useState(new Date());
+  const [lcexpirydate, setLcExpirydate] = useState(new Date());
+  const [lcincoterm, setLcincoterm] = useState("");
+  const [lcdocuments, setLcdocuments] = useState("");
+  const [lcamount, setLcamount] = useState(0);
+
+
+ // Progress Milestone data
 
   const [mfgstart, setMfgstart] = useState(new Date());
   const [Bldate, setBldate] = useState(new Date());
@@ -46,18 +67,16 @@ function Purchaseorderschedule({ ponumber }) {
   const [vesselreacheddate, setVesselreacheddate] = useState(new Date());
   const [customscleareddate, setCustomscleareddate] = useState(new Date());
 
+// shipment data
+
   const [shipmentbookeddate, setShipmentbookeddate] = useState(new Date());
-  const [ffnominateddate, setFfnominateddate] = useState(new Date());
+  const [grossweight, setGrossweight] = useState("")
   const [saberapplieddate, setSaberapplieddate] = useState(new Date());
   const [saberreceiveddate, setSaberreceiveddate] = useState(new Date());
   const [ffnoMinateddate, setFfnoMinateddate] = useState(new Date());
+  const [finalremarks, setFinalremarks] = useState("")
 
-  const [abgestdate, setAbgestdate] = useState(new Date());
-  const [abgamount, setAbgamount] = useState(0);
-  const [pbgreturneddate, setPbgreturneddate] = useState(new Date());
-  const [abgreturneddate, setAbgreturneddate] = useState(new Date());
-
-  const router = useRouter();
+    const router = useRouter();
 
   useEffect(() => {
     const fetchPurchaserorderlines = async () => {
@@ -67,6 +86,24 @@ function Purchaseorderschedule({ ponumber }) {
     };
     fetchPurchaserorderlines();
   }, [ponumber]);
+
+  const handleSubmitGendata = (event) => {
+    event.preventDefault()
+    const formData = {
+      poackdate,
+      podelydate,
+      estdelydate,
+      delysch,
+      basedesignapprdate,
+      basedesigncomments,
+      basedesignrecdate,
+      mfgclearancedate,
+      itpapprdate,
+      
+    }
+    console.log(formData)
+    console.log("clicked")
+  }
 
   return (
     <>
@@ -87,7 +124,7 @@ function Purchaseorderschedule({ ponumber }) {
       </div>
 
       {/* Delivery sch details */}
-
+          <form onSubmit={handleSubmitGendata}>
       <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
         <div className="text-[14px] font-italic py-3 px-6  bg-cyan-600 text-white">
           <h3 className="justify-center align-middle">
@@ -95,9 +132,10 @@ function Purchaseorderschedule({ ponumber }) {
             General <br /> PO Progress <br /> Data
           </h3>
         </div>
+        
         <div className="flex-1 shadow-xl px-3 bg-cyan-100/70">
           <label
-            for="poackdate"
+            htmlFor="poackdate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             PO Acknowledgment date:
@@ -128,7 +166,7 @@ function Purchaseorderschedule({ ponumber }) {
           />
 
           <label
-            for="podelysch"
+            htmlFor="podelysch"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Delivery schedule as per PO
@@ -138,11 +176,13 @@ function Purchaseorderschedule({ ponumber }) {
             name="podelysch"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pb-3 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id="podelysch"
+            value={delysch}
             placeholder="PO Delivery sch(10 working weeks from drg approval/PO/advance...)"
+            onChange={e=> setDelysch(e.target.value)}
           />
 
           <label
-            for="podelydate"
+            htmlFor="podelysch"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Delivery date as per PO term.
@@ -171,7 +211,7 @@ function Purchaseorderschedule({ ponumber }) {
           />
 
           <label
-            for="estdelydate"
+            htmlFor="estdelydate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Estimated delivery date as per current status.
@@ -202,7 +242,7 @@ function Purchaseorderschedule({ ponumber }) {
         <div className="flex-1 shadow-xl px-3 bg-cyan-100/70">
           <div className="mb-3 mx-2">
             <label
-              for="basedesignrecdate"
+              htmlFor="basedesignrecdate"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Base design received date (from supplier)
@@ -231,7 +271,7 @@ function Purchaseorderschedule({ ponumber }) {
           </div>
           <div className="mb-3">
             <label
-              for="basedesignapprdate"
+              htmlFor="basedesignapprdate"
               className="block mb-2 mx-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Base design approval date (from client/proj)
@@ -259,7 +299,7 @@ function Purchaseorderschedule({ ponumber }) {
             />
 
             <label
-              for="basedesigncomments"
+              htmlFor="basedesigncomments"
               className="block mb-2  mx-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Base design comments, if any
@@ -267,8 +307,10 @@ function Purchaseorderschedule({ ponumber }) {
             <input
               type="text"
               name="basedesigncomments"
+              value={basedesigncomments}
               className="bg-gray-50  px-3  w-4/5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  pb-24 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               id="basedesigncomments"
+              onChange={e=> setBasedesigncomments(e.target.value)}
               placeholder=" "
             />
           </div>
@@ -277,7 +319,7 @@ function Purchaseorderschedule({ ponumber }) {
         <div className="flex-1 shadow-xl px-3">
           <div className="bg-cyan-100/70 ml-3 pl-3">
             <label
-              for="detdesignrecdate"
+              htmlFor="detdesignrecdate"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Detailed design received date:
@@ -305,7 +347,7 @@ function Purchaseorderschedule({ ponumber }) {
             />
 
             <label
-              for="detdesignapprodate"
+              htmlFor="detdesignapprodate"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Detailed Design approval date:
@@ -333,7 +375,7 @@ function Purchaseorderschedule({ ponumber }) {
             />
 
             <label
-              for="mfgclearancedate"
+              htmlFor="mfgclearancedate"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Manufacturing clearance issued date:
@@ -361,7 +403,7 @@ function Purchaseorderschedule({ ponumber }) {
             />
 
             <label
-              for="itpapprdate"
+              htmlFor="itpapprdate"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               ITP Approval date
@@ -389,8 +431,11 @@ function Purchaseorderschedule({ ponumber }) {
             />
           </div>
         </div>
-        <button className="absolute p-3 rounded-lg bg-sky-800/10 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"> Update </button>
+        
+        <button type="submit"  className="absolute p-3 rounded-lg bg-sky-800/10 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"> Update </button>
+        
       </div>
+      </form>
 
       {/* payment sch details */}
 
@@ -404,7 +449,7 @@ function Purchaseorderschedule({ ponumber }) {
 
         <div className="flex-1 shadow-xl px-3 bg-green-100/70">
           <label
-            for="advpaiddate"
+            htmlFor="advpaiddate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Advance Paid date
@@ -431,7 +476,7 @@ function Purchaseorderschedule({ ponumber }) {
             ]}
           />
           <label
-            for="advamountpaid"
+            htmlFor="advamountpaid"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Advance Amount paid
@@ -450,7 +495,7 @@ function Purchaseorderschedule({ ponumber }) {
 
         <div className="flex-1 shadow-xl px-3 bg-green-100/70">
           <label
-            for="milestoneamountpaiddate"
+            htmlFor="milestoneamountpaiddate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Milestone amount paid Date:
@@ -477,7 +522,7 @@ function Purchaseorderschedule({ ponumber }) {
             ]}
           />
           <label
-            for="milestoneamt"
+            htmlFor="milestoneamt"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Milestone amount paid
@@ -496,7 +541,7 @@ function Purchaseorderschedule({ ponumber }) {
 
         <div className="flex-1 shadow-xl px-3 bg-green-100/70">
           <label
-            for="finalpaiddate"
+            htmlFor="finalpaiddate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Final payment done on:
@@ -523,7 +568,7 @@ function Purchaseorderschedule({ ponumber }) {
             ]}
           />
           <label
-            for="finalpaidamt"
+            htmlFor="finalpaidamt"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Final payment amount
@@ -540,7 +585,7 @@ function Purchaseorderschedule({ ponumber }) {
           />
 
           <label
-            for="finalcomments"
+            htmlFor="finalcomments"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Remarks if any (deduction etc.)
@@ -569,7 +614,7 @@ function Purchaseorderschedule({ ponumber }) {
         <div className="flex-1 shadow-xl px-3 bg-sky-100/70">
           <div className="px-3">
             <label
-              for="lcincoterm"
+              htmlFor="lcincoterm"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Advance BG Date estimated as per PO term.
@@ -597,7 +642,7 @@ function Purchaseorderschedule({ ponumber }) {
             />
 
             <label
-              for="abgamount"
+              htmlFor="abgamount"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Enter Advance BG amount
@@ -616,7 +661,7 @@ function Purchaseorderschedule({ ponumber }) {
           </div>
           <div className="bg-sky-100/70 px-3">
             <label
-              for="lcincoterm"
+              htmlFor="lcincoterm"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Advance BG Date of fresh/extended start:
@@ -644,7 +689,7 @@ function Purchaseorderschedule({ ponumber }) {
             />
 
             <label
-              for="lcincoterm"
+              htmlFor="lcincoterm"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Advance BG Date of expiry
@@ -707,7 +752,7 @@ function Purchaseorderschedule({ ponumber }) {
             />
 
             <label
-              for="abgamount"
+              htmlFor="abgamount"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Enter Performance BG amount
@@ -727,7 +772,7 @@ function Purchaseorderschedule({ ponumber }) {
 
           <div className="bg-sky-100/70 px-3">
             <label
-              for="lcincoterm"
+              htmlFor="lcincoterm"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Performance BG Date fresh/extended start:
@@ -755,7 +800,7 @@ function Purchaseorderschedule({ ponumber }) {
             />
 
             <label
-              for="lcincoterm"
+              htmlFor="lcincoterm"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Performance BG Expiry date:
@@ -786,7 +831,7 @@ function Purchaseorderschedule({ ponumber }) {
         </div>
         <div className="flex-1 shadow-xl px-3 bg-sky-100/70">
           <label
-            for="lcincoterm"
+            htmlFor="lcincoterm"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             ABG returned/extinguished date:
@@ -814,7 +859,7 @@ function Purchaseorderschedule({ ponumber }) {
           />
 
           <label
-            for="lcincoterm"
+            htmlFor="lcincoterm"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             PBG returned/extinguished date:
@@ -842,7 +887,7 @@ function Purchaseorderschedule({ ponumber }) {
           />
 
           <label
-            for="lcincoterm"
+            htmlFor="lcincoterm"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Remarks on BG's:
@@ -872,7 +917,7 @@ function Purchaseorderschedule({ ponumber }) {
 
         <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
           <label
-            for="lcincoterm"
+            htmlFor="lcincoterm"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             LC Open date estimated:{" "}
@@ -900,7 +945,7 @@ function Purchaseorderschedule({ ponumber }) {
           />
 
           <label
-            for="lcincoterm"
+            htmlFor="lcincoterm"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             L C Incoterm:{" "}
@@ -914,7 +959,7 @@ function Purchaseorderschedule({ ponumber }) {
           />
 
           <label
-            for="currency-field"
+            htmlFor="currency-field"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Enter L/C Amount
@@ -932,7 +977,7 @@ function Purchaseorderschedule({ ponumber }) {
         </div>
         <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
           <label
-            for="lcdocs"
+            htmlFor="lcdocs"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             LC Documents:{" "}
@@ -944,39 +989,10 @@ function Purchaseorderschedule({ ponumber }) {
             placeholder="Original Invoice/Bill of Lading/..."
             required
           />
+         
 
           <label
-            for="lcincoterm"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            LC Open date estimated per PO terms:
-          </label>
-          <DatePicker
-            className="bg-gray-50 border  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            selected={lcestopendate}
-            popperPlacement="top-start"
-            DayPickerInput-Overlay
-            onChange={(date) => setLcEstopendate(date)}
-            popperModifiers={[
-              {
-                name: "offset",
-                options: {
-                  offset: [5, 10],
-                },
-              },
-              {
-                name: "preventOverflow",
-                options: {
-                  rootBoundary: "viewport",
-                  tether: false,
-                  altAxis: true,
-                },
-              },
-            ]}
-          />
-
-          <label
-            for="lcincoterm"
+            htmlFor="lcincoterm"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             LC data requested & received from supplier:
@@ -1002,11 +1018,41 @@ function Purchaseorderschedule({ ponumber }) {
               },
             ]}
           />
+
+<label
+            htmlFor="lcincoterm"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            LC opened date: (swift advice from bank)
+          </label>
+          <DatePicker
+            className="bg-gray-50 border  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            selected={lcopeneddate}
+            popperPlacement="top-start"
+            DayPickerInput-Overlay
+            onChange={(date) => setLcOpeneddate(date)}
+            popperModifiers={[
+              {
+                name: "offset",
+                options: {
+                  offset: [5, 10],
+                },
+              },
+              {
+                name: "preventOverflow",
+                options: {
+                  rootBoundary: "viewport",
+                  tether: false,
+                  altAxis: true,
+                },
+              },
+            ]}
+          />
         </div>
 
         <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
           <label
-            for="lcswift"
+            htmlFor="lcswift"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             LC Swift Number & Bank:
@@ -1020,7 +1066,7 @@ function Purchaseorderschedule({ ponumber }) {
           />
 
           <label
-            for="lcincoterm"
+            htmlFor="lcincoterm"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             LC Last shipment date:
@@ -1049,7 +1095,7 @@ function Purchaseorderschedule({ ponumber }) {
           />
 
           <label
-            for="lcincoterm"
+            htmlFor="lcincoterm"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             LC Expiry Date:
@@ -1080,7 +1126,7 @@ function Purchaseorderschedule({ ponumber }) {
 
         <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
           <label
-            for="lcincoterm"
+            htmlFor="lcincoterm"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             LC Remarks
@@ -1110,7 +1156,7 @@ function Purchaseorderschedule({ ponumber }) {
 
         <div className="flex-1 shadow-xl px-3 bg-fuchsia-100/70">
           <label
-            for="mfgstart"
+            htmlFor="mfgstart"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Actual Manufacturing start Date:
@@ -1137,7 +1183,7 @@ function Purchaseorderschedule({ ponumber }) {
             ]}
           />
           <label
-            for="Fatdate"
+            htmlFor="Fatdate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             FAT/Final inspection date:
@@ -1167,7 +1213,7 @@ function Purchaseorderschedule({ ponumber }) {
 
         <div className="flex-1 shadow-xl px-3 bg-fuchsia-100/70">
           <label
-            for="Fatreportdate"
+            htmlFor="Fatreportdate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             TPI /Final inspection report received date:
@@ -1194,7 +1240,7 @@ function Purchaseorderschedule({ ponumber }) {
             ]}
           />
           <label
-            for="Bldate"
+            htmlFor="Bldate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             B/L/ AWB booked date
@@ -1224,7 +1270,7 @@ function Purchaseorderschedule({ ponumber }) {
 
         <div className="flex-1 shadow-xl px-3 bg-fuchsia-100/70">
           <label
-            for="vesselreacheddate"
+            htmlFor="vesselreacheddate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Flight/vessel reached date
@@ -1251,7 +1297,7 @@ function Purchaseorderschedule({ ponumber }) {
             ]}
           />
           <label
-            for="customscleareddate"
+            htmlFor="customscleareddate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Customs cleared/ Bayyan paid date
@@ -1294,7 +1340,7 @@ function Purchaseorderschedule({ ponumber }) {
 
         <div className="flex-1 shadow-xl px-3 bg-amber-100/70">
           <label
-            for="dimensions"
+            htmlFor="dimensions"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Gross weight/dimensions (appx) in KG/Metric dimensions
@@ -1308,7 +1354,7 @@ function Purchaseorderschedule({ ponumber }) {
           />
 
           <label
-            for="shipmentbookedddate"
+            htmlFor="shipmentbookedddate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Shipment is booked on:
@@ -1338,7 +1384,7 @@ function Purchaseorderschedule({ ponumber }) {
 
         <div className="flex-1 shadow-xl px-3 bg-amber-100/70">
           <label
-            for="saberapplieddate"
+            htmlFor="saberapplieddate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             SABER applied on:
@@ -1365,7 +1411,7 @@ function Purchaseorderschedule({ ponumber }) {
             ]}
           />
           <label
-            for="saberreceiveddate"
+            htmlFor="saberreceiveddate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             SABER received on:
@@ -1395,7 +1441,7 @@ function Purchaseorderschedule({ ponumber }) {
 
         <div className="flex-1 shadow-xl px-3 bg-amber-100/70">
           <label
-            for="ffnominateddate"
+            htmlFor="ffnominateddate"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Freight forwarder nominated on
@@ -1422,7 +1468,7 @@ function Purchaseorderschedule({ ponumber }) {
             ]}
           />
           <label
-            for="finalremarks"
+            htmlFor="finalremarks"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             FINAL REMARKS ON PO:

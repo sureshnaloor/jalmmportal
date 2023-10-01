@@ -13,7 +13,7 @@ function Podetailedsch() {
       <img
           class="object-cover w-full h-60"
           src="/images/openpo.jpg"
-          alt="hardhat"
+          alt="openpoimg"
         />
     </div>
         <Purchaseorderschedule ponumber={ponumber} /> 
