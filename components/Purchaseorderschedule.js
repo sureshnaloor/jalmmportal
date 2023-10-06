@@ -3,80 +3,83 @@ import { useRouter } from "next/router";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Purchaseorderschedule({ ponumber }) {
   const [poheader, setPoheader] = useState([]);
 
+  const [editGeneraldata, setEditGeneraldata] = useState(false);
+  const [gendata, setGendata] = useState({});
+
   // gen. PO progress data
 
   const [poackdate, setPOackdate] = useState(null);
+  const [delysch, setDelysch] = useState("");
   const [podelydate, setPodelydate] = useState(null);
   const [estdelydate, setEstdelydate] = useState(null);
-  const [delysch, setDelysch] = useState("");
-
   const [basedesignrecdate, setBasedesignrecdate] = useState(null);
   const [basedesignapprdate, setBasedesignapprdate] = useState(null);
   const [basedesigncomments, setBasedesigncomments] = useState("");
-  
   const [detdesignrecdate, setDetdesignrecdate] = useState(null);
   const [detdesignaprdate, setDetdesignaprdate] = useState(null);
   const [mfgclearancedate, setMfgclearancedate] = useState(null);
-  const [itpapprdate, setItpapprdate] = useState(null);  
- 
+  const [itpapprdate, setItpapprdate] = useState(null);
+
   // payment schedule data
 
-  const [advpaiddate, setAdvpaiddate] = useState(new Date());
-  const [advamountpaid, setAdvamountpaid] = useState(0);
-  const [milestoneamountpaiddate, setMilestoneamountpaiddate] = useState(new Date());
-  const [milestoneamountpaid, setMilestoneamountpaid] = useState(0);
-
-  const [finalpaiddate, setFinalpaiddate] = useState(new Date());
+  const [advpaiddate, setAdvpaiddate] = useState(null);
+  const [advamountpaid, setAdvamountpaid] = useState("");
+  const [milestoneamountpaiddate, setMilestoneamountpaiddate] = useState(null);
+  const [milestoneamountpaid, setMilestoneamountpaid] = useState("");
+  const [finalpaiddate, setFinalpaiddate] = useState(null);
   const [finalcomments, setFinalpaidcomments] = useState("");
-  const [finalpaidamt, setFinalpaidamt] = useState(0);
+  const [finalpaidamt, setFinalpaidamt] = useState("");
 
   //Bank guarantee data
 
-  const [abgestdate, setAbgestdate] = useState(new Date());
-  const [abgactualdate, setAbgactualdate] = useState(new Date());
-  const [abgexpirydate, setAbgexpirydate] = useState(new Date());
+  const [abgestdate, setAbgestdate] = useState(null);
+  const [abgactualdate, setAbgactualdate] = useState(null);
+  const [abgexpirydate, setAbgexpirydate] = useState(null);
   const [abgamount, setAbgamount] = useState(0);
-  const [pbgestdate, setPbgestdate] = useState(new Date());
-  const [pbgactualdate, setPbgactualdate] = useState(new Date());
-  const [pbgreturneddate, setPbgreturneddate] = useState(new Date());
-  const [abgreturneddate, setAbgreturneddate] = useState(new Date());
+  const [pbgestdate, setPbgestdate] = useState(null);
+  const [pbgactualdate, setPbgactualdate] = useState(null);
+  const [pbgreturneddate, setPbgreturneddate] = useState(null);
+  const [abgreturneddate, setAbgreturneddate] = useState(null);
   const [bgremarks, setBgremarks] = useState("");
 
-// L C data
+  // L C data
 
-  const [lcestopendate, setLcEstopendate] = useState(new Date());
-  const [lcopeneddate, setLcOpeneddate] = useState(new Date());
-  const [lcdatadate, setLcDatadate] = useState(new Date());
-  const [lclastshipdate, setLcLastshipdate] = useState(new Date());
-  const [lcexpirydate, setLcExpirydate] = useState(new Date());
+  const [lcestopendate, setLcEstopendate] = useState(null);
+  const [lcopeneddate, setLcOpeneddate] = useState(null);
+  const [lcdatadate, setLcDatadate] = useState(null);
+  const [lclastshipdate, setLcLastshipdate] = useState(null);
+  const [lcexpirydate, setLcExpirydate] = useState(null);
   const [lcincoterm, setLcincoterm] = useState("");
   const [lcdocuments, setLcdocuments] = useState("");
   const [lcamount, setLcamount] = useState(0);
 
+  // Progress Milestone data
 
- // Progress Milestone data
+  const [mfgstart, setMfgstart] = useState(null);
+  const [Bldate, setBldate] = useState(null);
+  const [Fatdate, setFatdate] = useState(null);
+  const [Fatreportdate, setFatreportdate] = useState(null);
+  const [vesselreacheddate, setVesselreacheddate] = useState(null);
+  const [customscleareddate, setCustomscleareddate] = useState(null);
 
-  const [mfgstart, setMfgstart] = useState(new Date());
-  const [Bldate, setBldate] = useState(new Date());
-  const [Fatdate, setFatdate] = useState(new Date());
-  const { Fatreportdate, setFatreportdate } = useState(new Date());
-  const [vesselreacheddate, setVesselreacheddate] = useState(new Date());
-  const [customscleareddate, setCustomscleareddate] = useState(new Date());
+  // shipment data
 
-// shipment data
+  const [shipmentbookeddate, setShipmentbookeddate] = useState(null);
+  const [grossweight, setGrossweight] = useState("");
+  const [saberapplieddate, setSaberapplieddate] = useState(null);
+  const [saberreceiveddate, setSaberreceiveddate] = useState(null);
+  const [ffnoMinateddate, setFfnoMinateddate] = useState(null);
+  const [finalremarks, setFinalremarks] = useState("");
 
-  const [shipmentbookeddate, setShipmentbookeddate] = useState(new Date());
-  const [grossweight, setGrossweight] = useState("")
-  const [saberapplieddate, setSaberapplieddate] = useState(new Date());
-  const [saberreceiveddate, setSaberreceiveddate] = useState(new Date());
-  const [ffnoMinateddate, setFfnoMinateddate] = useState(new Date());
-  const [finalremarks, setFinalremarks] = useState("")
+  const router = useRouter();
 
-    const router = useRouter();
+  // fetch PO header data
 
   useEffect(() => {
     const fetchPurchaserorderlines = async () => {
@@ -87,23 +90,262 @@ function Purchaseorderschedule({ ponumber }) {
     fetchPurchaserorderlines();
   }, [ponumber]);
 
-  const handleSubmitGendata = (event) => {
-    event.preventDefault()
-    const formData = {
+  // fetch all schedule data
+
+  useEffect(() => {
+    const fetchGeneraldata = async () => {
+      const response = await fetch(
+        `/api/purchaseorders/schedule/generaldata/${ponumber}`
+      );
+      const json = await response.json();
+      setGendata(json);
+      setDelysch(json.generaldata?.delysch || '');
+      setPOackdate(json.generaldata?.poackdate || null);
+      setPodelydate(json.generaldata?.podelydate || null);
+      setEstdelydate(json.generaldata?.estdelydate || null);
+      setBasedesignrecdate(json.generaldata?.basedesignrecdate || null);
+      setBasedesignapprdate(json.generaldata?.basedesignapprdate || null);
+      setBasedesigncomments(json.generaldata?.basedesigncomments || '');
+      setDetdesignrecdate(json.generaldata?.detdesignrecdate || null);
+      setDetdesignaprdate(json.generaldata?.detdesignaprdate || null);
+      setMfgclearancedate(json.generaldata?.mfgclearancedate || null);
+      setItpapprdate(json.generaldata?.itpapprdate || null);
+
+      
+
+      // if PO already entered in sch data, it sets 'edit' mode flag 
+
+      const isObjectEmpty = (objectName) => {
+        return JSON.stringify(objectName) === "{}";
+      };
+      if (!isObjectEmpty(json)) {
+        setEditGeneraldata(true);
+      }
+    };
+    fetchGeneraldata();
+  }, [ponumber]);
+
+  // console.log(gendata);
+
+  const handleSubmitGendata = async (event) => {
+    event.preventDefault();
+    const data = {
+      ponumber,
       poackdate,
       podelydate,
       estdelydate,
       delysch,
+      basedesignrecdate,
       basedesignapprdate,
       basedesigncomments,
-      basedesignrecdate,
+      detdesignrecdate,
+      detdesignaprdate,
       mfgclearancedate,
       itpapprdate,
-      
-    }
-    console.log(formData)
-    console.log("clicked")
-  }
+    };
+
+    const result = await fetch(
+      `/api/purchaseorders/schedule/generaldata/${ponumber}`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }),
+      }
+    );
+
+    toast.success("submitted succesfully!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+
+    router.push({pathname:`http://localhost:3000/openpurchaseorders`})
+  };
+
+  // submit general data
+
+  const handleEditGendata = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      poackdate,
+      podelydate,
+      estdelydate,
+      delysch,
+      basedesignrecdate,
+      basedesignapprdate,
+      basedesigncomments,
+      detdesignrecdate,
+      detdesignaprdate,
+      mfgclearancedate,
+      itpapprdate,
+    };
+
+    const result = await fetch(
+      `/api/purchaseorders/schedule/generaldata/${ponumber}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }),
+      }
+    );
+
+    toast.success("Submitted succesfully!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+
+    router.push({pathname:`http://localhost:3000/openpurchaseorders`})
+  };
+
+  // submit payment data
+
+  
+
+  // submit BG data
+
+  const handleEditBgdata = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      abgestdate,
+      abgactualdate,
+      abgexpirydate,
+      abgamount,
+      pbgestdate,
+      pbgactualdate,
+      pbgreturneddate,
+      abgreturneddate,
+      bgremarks,
+    };
+
+    const result = await fetch(
+      `/api/purchaseorders/schedule/bgdata/${ponumber}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }),
+      }
+    );
+
+    toast.success("Submitted succesfully!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+
+    router.push({pathname:`http://localhost:3000/openpurchaseorders`})
+  };
+
+
+  // submit LC data
+
+  const handleEditLcdata = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      lcestopendate,
+      lcopeneddate,
+      lcdatadate,
+      lclastshipdate,
+      lcexpirydate,
+      lcincoterm,
+      lcdocuments,
+      lcamount,
+    };
+
+    const result = await fetch(
+      `/api/purchaseorders/schedule/lcdata/${ponumber}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }),
+      }
+    );
+
+    toast.success("Submitted succesfully!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+
+    router.push({pathname:`http://localhost:3000/openpurchaseorders`})
+  };
+
+  // submit progress data
+
+  const handleEditProgressdata = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      mfgstart,
+      Bldate,
+      Fatdate,
+      Fatreportdate,
+      vesselreacheddate,
+      customscleareddate,
+    };
+
+    const result = await fetch(
+      `/api/purchaseorders/schedule/progressdata/${ponumber}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }),
+      }
+    );
+
+    toast.success("Submitted succesfully!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+
+    router.push({pathname:`http://localhost:3000/openpurchaseorders`})
+  };
+
+
+  // submit shipping data
+
+  const handleEditShipdata = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      shipmentbookeddate,
+      grossweight,
+      saberapplieddate,
+      saberreceiveddate,
+      ffnoMinateddate,
+      finalremarks,
+    };
+
+    const result = await fetch(
+      `/api/purchaseorders/schedule/shipdata/${ponumber}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }),
+      }
+    );
+
+    toast.success("Submitted succesfully!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+
+    router.push({pathname:`http://localhost:3000/openpurchaseorders`})
+  };
+
+
+
 
   return (
     <>
@@ -124,320 +366,380 @@ function Purchaseorderschedule({ ponumber }) {
       </div>
 
       {/* Delivery sch details */}
-          <form onSubmit={handleSubmitGendata}>
-      <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
-        <div className="text-[14px] font-italic py-3 px-6  bg-cyan-600 text-white">
-          <h3 className="justify-center align-middle">
+      <form
+        onSubmit={!editGeneraldata ? handleSubmitGendata : handleEditGendata}
+      >
+        <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
+          <div className="text-[14px] font-italic py-3 px-6  bg-cyan-600 text-white">
+            <h3 className="justify-center align-middle">
+              {" "}
+              General <br /> PO Progress <br /> Data
+            </h3>
+          </div>
+
+          <div className="flex-1 shadow-xl px-3 bg-cyan-100/70">
+            <label
+              htmlFor="poackdate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              PO Acknowledgment date:
+            </label>
+            {gendata?.generaldata?.poackdate ? (
+              <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
+                {" "}
+                {moment(poackdate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={poackdate}
+                onChange={(date) => setPOackdate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+
+            <label
+              htmlFor="podelysch"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Delivery schedule as per PO
+            </label>
+            {gendata?.generaldata?.delysch ? (
+              <div className="py-2 px-3 w-full text-sm bg-cyan-200 text-stone-800 font-bold"> {delysch} </div>
+            ) : (
+              <input
+                type="text"
+                name="podelysch"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pb-3 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="podelysch"
+                value={delysch}
+                placeholder="e-g ....PO Delivery sch(10 working weeks from drg approval/PO/advance...)"
+                onChange={(e) => setDelysch(e.target.value)}
+              />
+            )}
+
+            <label
+              htmlFor="podelysch"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Delivery date as per PO term.
+            </label>
+
+            {gendata?.generaldata?.podelydate ? (
+              <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold"> {moment(podelydate).format("DD-MM-YYYY")} </div>
+            ) : (
+              <DatePicker
+                className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={podelydate}
+                onChange={(date) => setPodelydate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+
+            <label
+              htmlFor="estdelydate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Estimated delivery date as per current status.
+            </label>
+            {gendata?.generaldata?.estdelydate ? (
+              <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold"> {moment(estdelydate).format("DD-MM-YYYY")} </div>
+            ) : (
+              <DatePicker
+                className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={estdelydate}
+                onChange={(date) => setEstdelydate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+          </div>
+
+          <div className="flex-1 shadow-xl px-3 bg-cyan-100/70">
+            <div className="mb-3 mx-2">
+              <label
+                htmlFor="basedesignrecdate"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Base design received date (from supplier)
+              </label>
+
+              {gendata?.generaldata?.basedesignrecdate ? (
+                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold"> {moment(basedesignrecdate).format("DD-MM-YYYY")} </div>
+              ) : (
+                <DatePicker
+                  className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  selected={basedesignrecdate}
+                  onChange={(date) => setBasedesignrecdate(date)}
+                  popperModifiers={[
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [5, 10],
+                      },
+                    },
+                    {
+                      name: "preventOverflow",
+                      options: {
+                        rootBoundary: "viewport",
+                        tether: false,
+                        altAxis: true,
+                      },
+                    },
+                  ]}
+                />
+              )}
+            </div>
+            <div className="mb-3 mx-2">
+              <label
+                htmlFor="basedesignapprdate"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Base design approval date (from client/proj)
+              </label>
+
+              {gendata?.generaldata?.basedesignapprdate ? (
+                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold"> {moment(basedesignapprdate).format("DD-MM-YYYY")} </div>
+              ) : (
+                <DatePicker
+                  className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  selected={basedesignapprdate}
+                  onChange={(date) => setBasedesignapprdate(date)}
+                  popperModifiers={[
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [5, 10],
+                      },
+                    },
+                    {
+                      name: "preventOverflow",
+                      options: {
+                        rootBoundary: "viewport",
+                        tether: false,
+                        altAxis: true,
+                      },
+                    },
+                  ]}
+                />
+              )}
+
+              <label
+                htmlFor="basedesigncomments"
+                className="block mb-2  mx-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Base design comments, if any
+              </label>
+
+              {gendata?.generaldata?.basedesigncomments ? (
+                <div className="py-2 px-3 w-full h-[150px] text-[12px] bg-cyan-200 text-stone-800 font-bold"> {basedesigncomments} </div>
+              ) : (
+                <input
+                  type="text"
+                  name="basedesigncomments"
+                  value={basedesigncomments}
+                  className="bg-gray-50  px-3  w-4/5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  pb-24 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  id="basedesigncomments"
+                  onChange={(e) => setBasedesigncomments(e.target.value)}
+                  placeholder=" "
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="flex-1 shadow-xl px-3">
+            <div className="bg-cyan-100/70 ml-3 pl-3">
+              <label
+                htmlFor="detdesignrecdate"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Detailed design received date:
+              </label>
+
+              {gendata?.generaldata?.detdesignrecdate ? (
+                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold"> {moment(detdesignrecdate).format("DD-MM-YYYY")} </div>
+              ) : (
+                <DatePicker
+                  className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  selected={detdesignrecdate}
+                  onChange={(date) => setDetdesignrecdate(date)}
+                  popperModifiers={[
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [5, 10],
+                      },
+                    },
+                    {
+                      name: "preventOverflow",
+                      options: {
+                        rootBoundary: "viewport",
+                        tether: false,
+                        altAxis: true,
+                      },
+                    },
+                  ]}
+                />
+              )}
+
+              <label
+                htmlFor="detdesignapprodate"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Detailed Design approval date:
+              </label>
+
+              {gendata?.generaldata?.detdesignaprdate ? (
+                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold"> {moment(detdesignaprdate).format("DD-MM-YYYY")} </div>
+              ) : (
+                <DatePicker
+                  className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  selected={detdesignaprdate}
+                  onChange={(date) => setDetdesignaprdate(date)}
+                  popperModifiers={[
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [5, 10],
+                      },
+                    },
+                    {
+                      name: "preventOverflow",
+                      options: {
+                        rootBoundary: "viewport",
+                        tether: false,
+                        altAxis: true,
+                      },
+                    },
+                  ]}
+                />
+              )}
+
+              <label
+                htmlFor="mfgclearancedate"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Manufacturing clearance issued date:
+              </label>
+              {gendata?.generaldata?.mfgclearancedate ? (
+                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold"> {moment(mfgclearancedate).format("DD-MM-YYYY")} </div>
+              ) : (
+                <DatePicker
+                  className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  selected={mfgclearancedate}
+                  onChange={(date) => setMfgclearancedate(date)}
+                  popperModifiers={[
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [5, 10],
+                      },
+                    },
+                    {
+                      name: "preventOverflow",
+                      options: {
+                        rootBoundary: "viewport",
+                        tether: false,
+                        altAxis: true,
+                      },
+                    },
+                  ]}
+                />
+              )}
+
+              <label
+                htmlFor="itpapprdate"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                ITP Approval date
+              </label>
+              {gendata?.generaldata?.itpapprdate ? (
+                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold"> {moment(itpapprdate).format("DD-MM-YYYY")} </div>
+              ) : (
+                <DatePicker
+                  className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  selected={itpapprdate}
+                  onChange={(date) => setItpapprdate(date)}
+                  popperModifiers={[
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [5, 10],
+                      },
+                    },
+                    {
+                      name: "preventOverflow",
+                      options: {
+                        rootBoundary: "viewport",
+                        tether: false,
+                        altAxis: true,
+                      },
+                    },
+                  ]}
+                />
+              )}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="absolute p-3 rounded-lg bg-sky-800/10 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"
+          >
             {" "}
-            General <br /> PO Progress <br /> Data
-          </h3>
+            {!editGeneraldata ? "Save" : "Edit"}{" "}
+          </button>
         </div>
-        
-        <div className="flex-1 shadow-xl px-3 bg-cyan-100/70">
-          <label
-            htmlFor="poackdate"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            PO Acknowledgment date:
-          </label>
-
-          <DatePicker
-            className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            selected={poackdate}
-            onChange={(date) => setPOackdate(date)}
-            popperModifiers={[
-              {
-                name: "offset",
-                options: {
-                  offset: [5, 10],
-                },
-              },
-              {
-                name: "preventOverflow",
-                options: {
-                  rootBoundary: "viewport",
-                  tether: false,
-                  altAxis: true,
-                },
-              },
-            ]}
-
-            // disabled = {poackdate}
-          />
-
-          <label
-            htmlFor="podelysch"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Delivery schedule as per PO
-          </label>
-          <input
-            type="text"
-            name="podelysch"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pb-3 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            id="podelysch"
-            value={delysch}
-            placeholder="PO Delivery sch(10 working weeks from drg approval/PO/advance...)"
-            onChange={e=> setDelysch(e.target.value)}
-          />
-
-          <label
-            htmlFor="podelysch"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Delivery date as per PO term.
-          </label>
-
-          <DatePicker
-            className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            selected={podelydate}
-            onChange={(date) => setPodelydate(date)}
-            popperModifiers={[
-              {
-                name: "offset",
-                options: {
-                  offset: [5, 10],
-                },
-              },
-              {
-                name: "preventOverflow",
-                options: {
-                  rootBoundary: "viewport",
-                  tether: false,
-                  altAxis: true,
-                },
-              },
-            ]}
-          />
-
-          <label
-            htmlFor="estdelydate"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Estimated delivery date as per current status.
-          </label>
-          <DatePicker
-           className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            selected={estdelydate}
-            onChange={(date) => setEstdelydate(date)}
-            popperModifiers={[
-              {
-                name: "offset",
-                options: {
-                  offset: [5, 10],
-                },
-              },
-              {
-                name: "preventOverflow",
-                options: {
-                  rootBoundary: "viewport",
-                  tether: false,
-                  altAxis: true,
-                },
-              },
-            ]}
-          />
-        </div>
-
-        <div className="flex-1 shadow-xl px-3 bg-cyan-100/70">
-          <div className="mb-3 mx-2">
-            <label
-              htmlFor="basedesignrecdate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Base design received date (from supplier)
-            </label>
-            <DatePicker
-              className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              selected={basedesignrecdate}
-              onChange={(date) => setBasedesignrecdate(date)}
-              popperModifiers={[
-                {
-                  name: "offset",
-                  options: {
-                    offset: [5, 10],
-                  },
-                },
-                {
-                  name: "preventOverflow",
-                  options: {
-                    rootBoundary: "viewport",
-                    tether: false,
-                    altAxis: true,
-                  },
-                },
-              ]}
-            />
-          </div>
-          <div className="mb-3">
-            <label
-              htmlFor="basedesignapprdate"
-              className="block mb-2 mx-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Base design approval date (from client/proj)
-            </label>
-            <DatePicker
-              className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              selected={basedesignapprdate}
-              onChange={(date) => setBasedesignapprdate(date)}
-              popperModifiers={[
-                {
-                  name: "offset",
-                  options: {
-                    offset: [5, 10],
-                  },
-                },
-                {
-                  name: "preventOverflow",
-                  options: {
-                    rootBoundary: "viewport",
-                    tether: false,
-                    altAxis: true,
-                  },
-                },
-              ]}
-            />
-
-            <label
-              htmlFor="basedesigncomments"
-              className="block mb-2  mx-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Base design comments, if any
-            </label>
-            <input
-              type="text"
-              name="basedesigncomments"
-              value={basedesigncomments}
-              className="bg-gray-50  px-3  w-4/5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  pb-24 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id="basedesigncomments"
-              onChange={e=> setBasedesigncomments(e.target.value)}
-              placeholder=" "
-            />
-          </div>
-        </div>
-
-        <div className="flex-1 shadow-xl px-3">
-          <div className="bg-cyan-100/70 ml-3 pl-3">
-            <label
-              htmlFor="detdesignrecdate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Detailed design received date:
-            </label>
-            <DatePicker
-              className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              selected={detdesignrecdate}
-              onChange={(date) => setDetdesignrecdate(date)}
-              popperModifiers={[
-                {
-                  name: "offset",
-                  options: {
-                    offset: [5, 10],
-                  },
-                },
-                {
-                  name: "preventOverflow",
-                  options: {
-                    rootBoundary: "viewport",
-                    tether: false,
-                    altAxis: true,
-                  },
-                },
-              ]}
-            />
-
-            <label
-              htmlFor="detdesignapprodate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Detailed Design approval date:
-            </label>
-            <DatePicker
-              className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              selected={detdesignaprdate}
-              onChange={(date) => setDetdesignaprdate(date)}
-              popperModifiers={[
-                {
-                  name: "offset",
-                  options: {
-                    offset: [5, 10],
-                  },
-                },
-                {
-                  name: "preventOverflow",
-                  options: {
-                    rootBoundary: "viewport",
-                    tether: false,
-                    altAxis: true,
-                  },
-                },
-              ]}
-            />
-
-            <label
-              htmlFor="mfgclearancedate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Manufacturing clearance issued date:
-            </label>
-            <DatePicker
-              className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              selected={mfgclearancedate}
-              onChange={(date) => setMfgclearancedate(date)}
-              popperModifiers={[
-                {
-                  name: "offset",
-                  options: {
-                    offset: [5, 10],
-                  },
-                },
-                {
-                  name: "preventOverflow",
-                  options: {
-                    rootBoundary: "viewport",
-                    tether: false,
-                    altAxis: true,
-                  },
-                },
-              ]}
-            />
-
-            <label
-              htmlFor="itpapprdate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              ITP Approval date
-            </label>
-            <DatePicker
-              className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              selected={itpapprdate}
-              onChange={(date) => setItpapprdate(date)}
-              popperModifiers={[
-                {
-                  name: "offset",
-                  options: {
-                    offset: [5, 10],
-                  },
-                },
-                {
-                  name: "preventOverflow",
-                  options: {
-                    rootBoundary: "viewport",
-                    tether: false,
-                    altAxis: true,
-                  },
-                },
-              ]}
-            />
-          </div>
-        </div>
-        
-        <button type="submit"  className="absolute p-3 rounded-lg bg-sky-800/10 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"> Update </button>
-        
-      </div>
       </form>
 
       {/* payment sch details */}
+
+      {/* <form
+        onSubmit={!editGeneraldata ? null : null}
+      >
 
       <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
         <div className="text-[14px] font-italic py-3 px-6  bg-green-600 text-white">
@@ -456,8 +758,8 @@ function Purchaseorderschedule({ ponumber }) {
           </label>
           <DatePicker
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            selected={advpaiddate}
-            onChange={(date) => setAbgestdate(date)}
+            // selected={advpaiddate}
+            onChange={(date) => setAdvpaiddate(date)}
             popperModifiers={[
               {
                 name: "offset",
@@ -485,11 +787,12 @@ function Purchaseorderschedule({ ponumber }) {
             type="text"
             name="advamountpaid"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            id="abgamount"
-            pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
-            value=""
-            data-type="currency"
-            placeholder="SAR10,000.00"
+            id="advamountpaid"
+            // pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+            value={advamountpaid}
+            // data-type="currency"
+            onChange={(e) => setAdvamountpaid(e.target.value)}
+            placeholder="e-g ..SAR10,000.00"
           />
         </div>
 
@@ -502,8 +805,8 @@ function Purchaseorderschedule({ ponumber }) {
           </label>
           <DatePicker
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            selected={milestoneamountpaiddate}
-            onChange={(date) => setAbgestdate(date)}
+            // selected={milestoneamountpaiddate}
+            onChange={(date) => setMilestoneamountpaiddate(date)}
             popperModifiers={[
               {
                 name: "offset",
@@ -522,20 +825,21 @@ function Purchaseorderschedule({ ponumber }) {
             ]}
           />
           <label
-            htmlFor="milestoneamt"
+            htmlFor="milestoneamtpaid"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Milestone amount paid
           </label>
           <input
             type="text"
-            name="milestoneamt"
+            name="milestoneamtpaid"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            id="abgamount"
-            pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
-            value=""
-            data-type="currency"
-            placeholder="SAR100,000.00"
+            id="milestoneamountpaid"
+            // pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+            value={milestoneamountpaid}
+            onChange={(e) => setMilestoneamountpaid(e.target.value)}
+            // data-type="currency"
+            placeholder="e.g ...SAR100,000.00"
           />
         </div>
 
@@ -548,8 +852,8 @@ function Purchaseorderschedule({ ponumber }) {
           </label>
           <DatePicker
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            selected={finalpaiddate}
-            onChange={(date) => setAbgestdate(date)}
+            // selected={finalpaiddate}
+            onChange={(date) => setFinalpaiddate(date)}
             popperModifiers={[
               {
                 name: "offset",
@@ -578,10 +882,11 @@ function Purchaseorderschedule({ ponumber }) {
             name="finalpaidamt"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id="abgamount"
-            pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
-            value=""
-            data-type="currency"
-            placeholder="SAR200,000.00"
+            // pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+            value={finalpaidamt}
+            onChange={(e) => setFinalpaidamt(e.target.value)}
+            // data-type="currency"
+            placeholder="e.g ...SAR200,000.00"
           />
 
           <label
@@ -595,14 +900,26 @@ function Purchaseorderschedule({ ponumber }) {
             type="text"
             name="finalcomments"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pb-24 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            id="basedesigncomments"
-            placeholder="PO Delivery sch(10 working weeks from drg approval/PO/advance...)"
+            id="finalcomments"
+            value={finalcomments}
+            onChange={(e) => setFinalpaidcomments(e.target.value)}
+            placeholder="e.g...2560SAR deducted for damaged fitting.."
           />
         </div>
-        <button className="absolute p-3 rounded-lg bg-green-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3"> Update </button>
+        <button 
+        type="submit"
+        className="absolute p-3 rounded-lg bg-green-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3">
+          {" "}
+          {!editGeneraldata ? "Save" : "Edit"}{" "}
+        </button>
       </div>
+      </form> */}
 
       {/* BG details */}
+
+      <form
+        onSubmit={!editGeneraldata ? null : handleEditBgdata}
+      >
       <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
         <div className="text-[14px] font-italic py-3 px-6  bg-sky-600 text-white">
           <h3 className="justify-center align-middle">
@@ -655,9 +972,8 @@ function Purchaseorderschedule({ ponumber }) {
               pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
               value=""
               data-type="currency"
-              placeholder="SAR500,000.00"
+              placeholder="e.g ..SAR500,000.00"
             />
-            
           </div>
           <div className="bg-sky-100/70 px-3">
             <label
@@ -666,7 +982,7 @@ function Purchaseorderschedule({ ponumber }) {
             >
               Advance BG Date of fresh/extended start:
             </label>
-            <DatePicker 
+            <DatePicker
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               selected={abgestdate}
               onChange={(date) => setAbgestdate(date)}
@@ -715,7 +1031,6 @@ function Purchaseorderschedule({ ponumber }) {
                 },
               ]}
             />
-           
           </div>
         </div>
 
@@ -765,9 +1080,8 @@ function Purchaseorderschedule({ ponumber }) {
               pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
               value=""
               data-type="currency"
-              placeholder="SAR500,000.00"
+              placeholder="e.g ...SAR500,000.00"
             />
-            
           </div>
 
           <div className="bg-sky-100/70 px-3">
@@ -826,7 +1140,6 @@ function Purchaseorderschedule({ ponumber }) {
                 },
               ]}
             />
-           
           </div>
         </div>
         <div className="flex-1 shadow-xl px-3 bg-sky-100/70">
@@ -897,15 +1210,23 @@ function Purchaseorderschedule({ ponumber }) {
             name="remarksbgfield"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pb-20 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id="remarksbg"
-            placeholder="Any remark by Fiannce or MMD or project- as free tex"
+            placeholder="e.g....bank name which issued BG/ any free text comment by MM/finance"
           />
         </div>
-        <button className="absolute p-3 rounded-lg bg-blue-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3"> Update </button>
+        <button className="absolute p-3 rounded-lg bg-blue-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3">
+          {" "}
+          Update{" "}
+        </button>
 
         {/* Bonds / guarantees released back to supplier */}
       </div>
+      </form>
 
       {/* L/C details */}
+
+      <form
+        onSubmit={!editGeneraldata ? null : handleEditLcdata}
+      >
       <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-44 pb-28 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
         <div className="text-[14px] font-italic py-3 px-6  bg-purple-600 text-white">
           <h3 className="justify-center align-middle">
@@ -989,7 +1310,6 @@ function Purchaseorderschedule({ ponumber }) {
             placeholder="Original Invoice/Bill of Lading/..."
             required
           />
-         
 
           <label
             htmlFor="lcincoterm"
@@ -1019,7 +1339,7 @@ function Purchaseorderschedule({ ponumber }) {
             ]}
           />
 
-<label
+          <label
             htmlFor="lcincoterm"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
@@ -1140,10 +1460,19 @@ function Purchaseorderschedule({ ponumber }) {
             required
           />
         </div>
-        <button className="absolute p-3 rounded-lg bg-purple-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-2/3"> Update </button>
+        <button className="absolute p-3 rounded-lg bg-purple-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-2/3">
+          {" "}
+          Update{" "}
+        </button>
       </div>
 
+      </form>
+
       {/* progress milestones */}
+
+      <form
+        onSubmit={!editGeneraldata ? null : handleEditProgressdata}
+      >
 
       <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
         <div className="text-[14px] font-italic py-3 px-6  bg-fuchsia-600 text-white">
@@ -1324,10 +1653,21 @@ function Purchaseorderschedule({ ponumber }) {
             ]}
           />
         </div>
-        <button className="absolute p-3 rounded-lg bg-fuchsia-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"> Update </button>
+        <button className="absolute p-3 rounded-lg bg-fuchsia-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2">
+          {" "}
+          Update{" "}
+        </button>
       </div>
+      </form>
+
+     
 
       {/* Packing & Shipment details */}
+
+      <form
+        onSubmit={!editGeneraldata ? null : handleEditShipdata}
+      >
+
 
       <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
         <div className="text-[14px] font-italic py-3 px-6  bg-amber-600 text-white">
@@ -1481,9 +1821,13 @@ function Purchaseorderschedule({ ponumber }) {
             required
           />
         </div>
-        <button className="absolute p-3 rounded-lg bg-amber-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"> Update </button>
-        
+        <button className="absolute p-3 rounded-lg bg-amber-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2">
+          {" "}
+          Update{" "}
+        </button>
       </div>
+
+      </form>
 
       <section class="container px-4 w-full mx-auto">
         <div class="flex flex-col">
@@ -1495,13 +1839,13 @@ function Purchaseorderschedule({ ponumber }) {
                     <tr className="font-bold text-[12px] ">
                       <th
                         scope="col"
-                        class="px-4 py-3.5 text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                        class="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
                       >
                         Material code/group
                       </th>
                       <th
                         scope="col"
-                        class="px-4 py-3.5 text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                        class="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
                       >
                         Material description
                       </th>
@@ -1525,7 +1869,7 @@ function Purchaseorderschedule({ ponumber }) {
                       </th>
                       <th
                         scope="col"
-                        class="px-4 py-3.5 text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                        class="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
                       >
                         Item value
                       </th>

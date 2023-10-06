@@ -13,9 +13,7 @@ const handler = async (req, res) => {
           .find({ "materialcode": matcode }).toArray() || [{}]
 
         return res.json(material);
-      }
-
-      
+      }      
 
       case "POST": {
         const material = await db.collection("materialcleansecomments").insert({
