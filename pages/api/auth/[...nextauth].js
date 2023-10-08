@@ -8,8 +8,9 @@ export default NextAuth({
   //configure auth providers
   providers: [
     CredentialsProvider({
-      name: "exBeyond credential",
-      credentials: {
+      name: "JALMMWebAPP",
+      // credentials:{},
+      credentials: { 
         email: {
           label: "Email",
           type: "email",
@@ -30,8 +31,14 @@ export default NextAuth({
         },
       },
       async authorize(credentials, req, session) {
+
+        let user = null
+        
         // Add logic here to look up the user from the credentials supplied
-        const user = { id: 1, email: credentials.email, name: credentials.name};
+        if (credentials.email == "suresh.n@jalint.com.sa" && credentials.name == "suresh"){
+          user = { id: 1, email: credentials.email, name: credentials.name};
+        }
+        
         console.log(user, "user");
 
         if (user) {
@@ -69,13 +76,13 @@ export default NextAuth({
         },
       },
     }),
-    GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    }),
+    // GithubProvider({
+    //   clientId: process.env.GITHUB_CLIENT_ID,
+    //   clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    // }),
   ],
   // pages:{
-  //   signIn: "/auth/signin",
+  //   signIn: "/auth/login",
   // },
   
   
