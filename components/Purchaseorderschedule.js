@@ -249,7 +249,7 @@ function Purchaseorderschedule({ ponumber }) {
       position: toast.POSITION.TOP_RIGHT,
     });
 
-    router.push({ pathname: `http://10.100.20.11:3000/openpurchaseorders` });
+    router.push({ pathname: `/openpurchaseorders` });
   };
 
   // submit general data
@@ -327,7 +327,7 @@ function Purchaseorderschedule({ ponumber }) {
       position: toast.POSITION.TOP_RIGHT,
     });
 
-    router.push({ pathname: `http://10.100.20.11/openpurchaseorders` });
+    router.push({ pathname: `/openpurchaseorders` });
   };
 
   return (
