@@ -25,6 +25,11 @@ function Purchaseorderschedule({ ponumber }) {
   const [detdesignaprdate, setDetdesignaprdate] = useState(null);
   const [mfgclearancedate, setMfgclearancedate] = useState(null);
   const [itpapprdate, setItpapprdate] = useState(null);
+  // const [workmilestonecompleted, setWorkmilestonecompleted] = useState(["test"])
+  // const [workmilestonecompleteddate, setWorkmilestonecompleteddate] = useState([])
+  const [finalworkcompleteddate, setFinalworkcompleteddate] = useState(null)
+  const [grdate, setGrdate] = useState(null)
+
 
   // payment schedule data
 
@@ -114,11 +119,14 @@ function Purchaseorderschedule({ ponumber }) {
       setDetdesignaprdate(json.generaldata?.detdesignaprdate || null);
       setMfgclearancedate(json.generaldata?.mfgclearancedate || null);
       setItpapprdate(json.generaldata?.itpapprdate || null);
+      // setWorkmilestonecompleted(json.generaldata?.workmilestonecompleted || null)
+      // setWorkmilestonecompleteddate(json.generaldata?.workmilestonecompleteddate || null)
+      setFinalworkcompleteddate(json.generaldata?.finalworkcompleteddate || null);
+      setGrdate(json.generaldata?.grdate || null);
 
       setAdvpaiddate(json.paymentdata?.advpaiddate || null);
       setAdvamountpaid(json.paymentdata?.advamountpaid || "");
-      setMilestoneamountpaiddate(
-        json.paymentdata?.milestoneamountpaiddate || null
+      setMilestoneamountpaiddate(json.paymentdata?.milestoneamountpaiddate || null
       );
       setMilestoneamountpaid(json.paymentdata?.milestoneamountpaid || 0);
       setFinalpaiddate(json.paymentdata?.finalpaiddate || null);
@@ -190,7 +198,9 @@ function Purchaseorderschedule({ ponumber }) {
       detdesignrecdate,
       detdesignaprdate,
       mfgclearancedate,
-      itpapprdate,
+      itpapprdate,      
+      finalworkcompleteddate,
+      grdate,
       advpaiddate,
       advamountpaid,
       milestoneamountpaid,
@@ -268,7 +278,9 @@ function Purchaseorderschedule({ ponumber }) {
       detdesignrecdate,
       detdesignaprdate,
       mfgclearancedate,
-      itpapprdate,
+      itpapprdate,      
+      finalworkcompleteddate,
+      grdate,
       advamountpaid,
       advpaiddate,
       milestoneamountpaid,
@@ -735,6 +747,81 @@ function Purchaseorderschedule({ ponumber }) {
                   ]}
                 />
               )}
+
+
+
+    <label
+                htmlFor="finalworkcompleteddate"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Final work completed date
+              </label>
+              {gendata?.generaldata?.finalworkcompleteddate ? (
+                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
+                  {" "}
+                  {moment(finalworkcompleteddate).format("DD-MM-YYYY")}{" "}
+                </div>
+              ) : (
+                <DatePicker
+                  className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  selected={finalworkcompleteddate}
+                  onChange={(date) => setFinalworkcompleteddate(date)}
+                  popperModifiers={[
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [5, 10],
+                      },
+                    },
+                    {
+                      name: "preventOverflow",
+                      options: {
+                        rootBoundary: "viewport",
+                        tether: false,
+                        altAxis: true,
+                      },
+                    },
+                  ]}
+                />
+              )} 
+
+              
+
+<label
+                htmlFor="Grdate"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                GR/SES posted date
+              </label>
+              {gendata?.generaldata?.grdate ? (
+                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold mb-2">
+                  {" "}
+                  {moment(grdate).format("DD-MM-YYYY")}{" "}
+                </div>
+              ) : (
+                <DatePicker
+                  className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  selected={grdate}
+                  onChange={(date) => setGrdate(date)}
+                  popperModifiers={[
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [5, 10],
+                      },
+                    },
+                    {
+                      name: "preventOverflow",
+                      options: {
+                        rootBoundary: "viewport",
+                        tether: false,
+                        altAxis: true,
+                      },
+                    },
+                  ]}
+                />
+               )} 
+
             </div>
           </div>
 

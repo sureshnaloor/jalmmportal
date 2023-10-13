@@ -1,0 +1,45 @@
+import { connectToDatabase } from "../../../../../../lib/mongoconnect";
+
+const handler = async (req, res) => {
+  const { network } = req.query;
+  console.log(network)
+  const { db } = await connectToDatabase();
+
+  try {
+    switch (req.method) {
+      case "GET": {       
+        
+        const purchaseorders = await db
+          .collection("purchaseorders")
+          .find({"account.network" : "4004676", "account.wbs" : null}).toArray()
+          
+          // const povalue = purchaseorders.reduce((total,current) => current["po-value-sar"] + total, 0)
+          // const balgrvalue = purchaseorders.reduce((total, current) => current["pending-val-sar"] + total, 0)
+          // return res.json({ponum:purchaseorders[0]["po-number"],povalue, balgrvalue})
+
+          let result = []
+
+          purchaseorders.reduce((res,value) => {
+            if (!res[value["po-number"]]){
+              res[value["po-number"]] = {ponum: value["po-number"], podate: value["po-date"], vendor: value["vendorname"], poval:0, balgrval:0}
+              
+              result.push(res[value["po-number"]])
+              
+            }
+            res[value["po-number"]].poval += value["po-value-sar"];
+            res[value["po-number"]].balgrval += value["pending-val-sar"]
+            return res
+          }, {})
+
+          return res.json(result)
+      }  
+      
+      default:
+        return res.json({ error: "Method not supported" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default handler;

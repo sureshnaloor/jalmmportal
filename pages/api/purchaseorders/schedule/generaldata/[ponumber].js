@@ -29,6 +29,8 @@ const handler = async (req, res) => {
             itpapprdate: req.body.itpapprdate,
             detdesignrecdate: req.body.detdesignrecdate,
             detdesignaprdate: req.body.detdesignaprdate,
+            grdate:req.body.grdate,
+            finalworkcompleteddate: req.body.finalworkcompleteddate,
           },
           paymentdata: {
             advpaiddate: req.body.advpaiddate,
@@ -82,6 +84,7 @@ const handler = async (req, res) => {
           },
         });
 
+
         return res.json(poschgeneral);
       }
 
@@ -100,6 +103,8 @@ const handler = async (req, res) => {
               "generaldata.basedesigncomments": req.body.basedesigncomments,
               "generaldata.mfgclearancedate": req.body.mfgclearancedate,
               "generaldata.itpapprdate": req.body.itpapprdate,
+              "generaldata.grdate": req.body.grdate,
+              "generaldata.finalworkcompleteddate": req.body.finalworkcompleteddate,
               "generaldata.detdesignrecdate": req.body.detdesignrecdate,
               "generaldata.detdesignaprdate": req.body.detdesignaprdate,
               "paymentdata.advpaiddate": req.body.advpaiddate,

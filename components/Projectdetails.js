@@ -17,6 +17,7 @@ function Projectdetails({ projects }) {
   const [network, setNetwork] = useState({});
   const [specialstk, setSpecialstk] = useState([]);
   const [purchaseorders, setPurchaseorders] = useState([]);
+  const [purchaseordersnetwork, setPurchaseordersnetwork] = useState([])
   const [openrequisitions, setOpenrequisitions] = useState([]);
   const [selectedProject, setSelectedProject] = useState("IS%2FGP.22.001");
   const [isLoading, setLoading] = useState(true);
@@ -68,6 +69,17 @@ function Projectdetails({ projects }) {
     fetchPurchaseorders();
   }, [selectedProject]);
 
+  useEffect(() => {
+    const fetchPurchaseordersnetwork = async () => {
+      const response = await fetch(
+        `/api/purchaseorders/project/consolidated/network/${network}`
+      );
+      const json = await response.json();
+      setPurchaseordersnetwork(json);
+    };
+    fetchPurchaseordersnetwork();
+  }, [selectedProject]);
+
   // render detailed PO
   useEffect(() => {
     const fetchselectedPolist = async () => {
@@ -96,6 +108,7 @@ function Projectdetails({ projects }) {
   // console.log(project)
   // console.log(specialstk);
   console.log(purchaseorders);
+  console.log(purchaseordersnetwork);
   // console.log(openrequisitions);
 
   const setActiveProject = (projectid, index) => {
@@ -438,6 +451,66 @@ function Projectdetails({ projects }) {
                         </thead>
                         <tbody>
                           {purchaseorders.map((purchase, index) => (
+                            <tr
+                              key={index}
+                              className={`${
+                                index % 2 ? "bg-zinc-50" : null
+                              } border-b dark:bg-gray-900 dark:border-gray-700`}
+                              onClick={() => {
+                                setActivePo(purchase.ponum, index);
+                                console.log("I am clicked!");
+                              }}
+                            >
+                              <th
+                                scope="row"
+                                className="flex flex-col py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                              >
+                                <p className="text-[10px] text-blue-900 font-Montserrat font-semibold">
+                                  {purchase["ponum"]}
+                                  {/* {purchase["po-line-item"]} */}
+                                </p>
+                              </th>
+                              <th>
+                                <p className="text-[10px] text-purple-700">
+                                  {moment(purchase["podate"]).format(
+                                    "MM-DD-YYYY"
+                                  )}
+                                </p>
+                              </th>
+                              <th>
+                                <p className="text-[10px] text-teal-700">
+                                  {purchase["vendor"]}
+                                </p>
+                              </th>
+                              <th>
+                                <p className="text-[10px] text-teal-700">
+                                  {(
+                                    Math.round(purchase.poval * 100) / 100
+                                  ).toLocaleString()}
+                                </p>
+                              </th>
+
+                              <td className="py-4 px-1 text-teal-900 font-bold text-[10px]">
+                                {(
+                                  Math.round(purchase.balgrval * 100) / 100
+                                ).toLocaleString()}{" "}
+                                <br />
+                              </td>
+                              <td className="p-2">
+                                <Radialprogress
+                                  percent={Math.round(
+                                    ((purchase.poval - purchase.balgrval) /
+                                      purchase.poval) *
+                                      100
+                                  )}
+                                />
+                              </td>
+                            </tr>
+                          ))}
+
+                           {/* network po list */}
+
+                           {purchaseordersnetwork.map((purchase, index) => (
                             <tr
                               key={index}
                               className={`${

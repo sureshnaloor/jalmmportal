@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
-import GithubProvider from "next-auth/providers/github";
-import  CredentialsProvider  from "next-auth/providers/credentials";
-// import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
-// import clientPromise from "../../../lib/mongodb";
+
+import CredentialsProvider from "next-auth/providers/credentials";
+import { uuid } from "uuidv4";
+//
 
 export default NextAuth({
   //configure auth providers
@@ -10,7 +10,7 @@ export default NextAuth({
     CredentialsProvider({
       name: "JALMMWebAPP",
       // credentials:{},
-      credentials: { 
+      credentials: {
         email: {
           label: "Email",
           type: "email",
@@ -21,7 +21,7 @@ export default NextAuth({
           label: "name",
           type: "text",
           required: true,
-          placeholder: "username"
+          placeholder: "username",
         },
         password: {
           label: "Password",
@@ -31,24 +31,17 @@ export default NextAuth({
         },
       },
       async authorize(credentials, req, session) {
-
         let user = null
         
-        // Add logic here to look up the user from the credentials supplied
         if (credentials.email == "suresh.n@jalint.com.sa" && credentials.name == "suresh"){
-          user = { id: 1, email: credentials.email, name: credentials.name};
+          user = { id: uuid(), email: credentials.email, name: credentials.name};
+          return user
         }
-        
-        console.log(user, "user");
 
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          console.log("user", user);
-          console.log(session, "session");
-          return user;
-        } else {
+       
+        else {
           // If you return null then an error will be displayed advising the user to check their details.
-          console.log("no user");
+          // console.log("no user");
           return null;
 
           // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
@@ -70,23 +63,18 @@ export default NextAuth({
           session.user.accessToken = token.accessToken;
           session.user.refreshToken = token.refreshToken;
           session.user.tokenExpires = token.tokenExpires;
-          
+
           console.log(session, "async session");
           return session;
         },
       },
     }),
-    // GithubProvider({
-    //   clientId: process.env.GITHUB_CLIENT_ID,
-    //   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    // }),
+    
   ],
   // pages:{
   //   signIn: "/auth/login",
   // },
-  
-  
-  
+
   // adapter: MongoDBAdapter(clientPromise),
   session: {
     jwt: {
