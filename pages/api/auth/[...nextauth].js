@@ -1,8 +1,7 @@
 import NextAuth from "next-auth";
 
 import CredentialsProvider from "next-auth/providers/credentials";
-import { uuid } from "uuidv4";
-//
+import { connectToDatabase } from "../../../lib/mongoconnect";
 
 export default NextAuth({
   //configure auth providers
@@ -12,70 +11,48 @@ export default NextAuth({
       // credentials:{},
       credentials: {
         email: {
-          label: "Email",
-          type: "email",
-          required: true,
-          placeholder: "email",
+          
         },
         name: {
-          label: "name",
-          type: "text",
-          required: true,
-          placeholder: "username",
+          
         },
         password: {
-          label: "Password",
-          type: "password",
-          required: true,
-          placeholder: "password",
+          
         },
       },
       async authorize(credentials, req, session) {
-        let user = null
+        const { db } = await connectToDatabase();
+
+        const user = await db
+          .collection("users")
+          .findOne({ email: credentials.email });
         
-        if (credentials.email == "suresh.n@jalint.com.sa" && credentials.name == "suresh"){
-          user = { id: uuid(), email: credentials.email, name: credentials.name};
-          return user
-        }
+        console.log(user)
 
-       
-        else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          // console.log("no user");
+        if (!user) {
+          console.log("no such user")
           return null;
-
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
         }
-      },
-      callbacks: {
-        async jwt({ token, user, account }) {
-          if (user) {
-            console.log(token, "callback token");
-            return {
-              ...token,
-              accessToken: user.data.token,
-              refreshToken: user.data.refreshToken,
-            };
-          }
-          console.log("user not found");
-        },
-        async session({ session, token }) {
-          session.user.accessToken = token.accessToken;
-          session.user.refreshToken = token.refreshToken;
-          session.user.tokenExpires = token.tokenExpires;
 
-          console.log(session, "async session");
-          return session;
-        },
+        if (
+          
+          user.password !== credentials.password
+        ) {
+          console.log("nor right credentials")
+          return null;
+        }
+        else{
+          console.log({ credentials });
+          return user;
+        }
+       
       },
     }),
-    
   ],
-  // pages:{
-  //   signIn: "/auth/login",
-  // },
+  pages:{
+    signIn: "/auth/login",
+  },
 
-  // adapter: MongoDBAdapter(clientPromise),
   session: {
     jwt: {
       encryption: true,
