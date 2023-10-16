@@ -17,7 +17,7 @@ function Projectdetails({ projects }) {
   const [network, setNetwork] = useState({});
   const [specialstk, setSpecialstk] = useState([]);
   const [purchaseorders, setPurchaseorders] = useState([]);
-  const [purchaseordersnetwork, setPurchaseordersnetwork] = useState([])
+  const [purchaseordersnetwork, setPurchaseordersnetwork] = useState([]);
   const [openrequisitions, setOpenrequisitions] = useState([]);
   const [selectedProject, setSelectedProject] = useState("IS%2FGP.22.001");
   const [isLoading, setLoading] = useState(true);
@@ -72,13 +72,13 @@ function Projectdetails({ projects }) {
   useEffect(() => {
     const fetchPurchaseordersnetwork = async () => {
       const response = await fetch(
-        `/api/purchaseorders/project/consolidated/network/${network}`
+        `/api/purchaseorders/project/consolidated/network/${network["network-num"]}`
       );
       const json = await response.json();
       setPurchaseordersnetwork(json);
     };
     fetchPurchaseordersnetwork();
-  }, [selectedProject]);
+  }, [network]);
 
   // render detailed PO
   useEffect(() => {
@@ -105,11 +105,12 @@ function Projectdetails({ projects }) {
     fetchOpenrequisitions();
   }, [selectedProject]);
 
-  // console.log(project)
+  console.log(project);
   // console.log(specialstk);
   console.log(purchaseorders);
   console.log(purchaseordersnetwork);
   // console.log(openrequisitions);
+  console.log(network);
 
   const setActiveProject = (projectid, index) => {
     console.log(projectid);
@@ -365,12 +366,30 @@ function Projectdetails({ projects }) {
                     SCHEDULE DETAILS
                   </h2>
                   <div className="leading-relaxed text-base">
-                    <h3 className="w-1/2 bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400"> Sch. Project start: </h3>
-                    <h3 className="w-1/2 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1  rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500"> Sch Project end:</h3>
-                    <h3 className="w-1/2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1  rounded dark:bg-gray-700 dark:text-green-400 border border-green-400"> Est. Project start:</h3>
-                    <h3 className="w-1/2 bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300"> Est. Project end: </h3>
-                    <h3 className="w-1/2 bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-purple-400 border border-purple-400"> Actual Project start:</h3>
-                    <h3 className="w-1/2 bg-pink-100 text-pink-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-pink-400 border border-pink-400"> Actual Project end: </h3>
+                    <h3 className="w-1/2 bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                      {" "}
+                      Sch. Project start:{" "}
+                    </h3>
+                    <h3 className="w-1/2 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1  rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
+                      {" "}
+                      Sch Project end:
+                    </h3>
+                    <h3 className="w-1/2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1  rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">
+                      {" "}
+                      Est. Project start:
+                    </h3>
+                    <h3 className="w-1/2 bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">
+                      {" "}
+                      Est. Project end:{" "}
+                    </h3>
+                    <h3 className="w-1/2 bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-purple-400 border border-purple-400">
+                      {" "}
+                      Actual Project start:
+                    </h3>
+                    <h3 className="w-1/2 bg-pink-100 text-pink-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-pink-400 border border-pink-400">
+                      {" "}
+                      Actual Project end:{" "}
+                    </h3>
                   </div>
                 </div>
               </div>
@@ -393,12 +412,30 @@ function Projectdetails({ projects }) {
                     BUDGET DETAILS
                   </h2>
                   <div className="leading-relaxed text-base">
-                    <h3 className="w-1/2 bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400"> Materials- Budgeted: </h3>
-                    <h3 className="w-1/2 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1  rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500"> Materials- Committed: (PO Value)</h3>
-                    <h3 className="w-1/2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1  rounded dark:bg-gray-700 dark:text-green-400 border border-green-400"> Materials Actual: (GR and SES)</h3>
-                    <h3 className="w-1/2 bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300"> Services- Budgeted: </h3>
-                    <h3 className="w-1/2 bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-purple-400 border border-purple-400"> Services - Committed:</h3>
-                    <h3 className="w-1/2 bg-pink-100 text-pink-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-pink-400 border border-pink-400"> Services Actual: </h3>
+                    <h3 className="w-1/2 bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                      {" "}
+                      Materials- Budgeted:{" "}
+                    </h3>
+                    <h3 className="w-1/2 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1  rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
+                      {" "}
+                      Materials- Committed: (PO Value)
+                    </h3>
+                    <h3 className="w-1/2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1  rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">
+                      {" "}
+                      Materials Actual: (GR and SES)
+                    </h3>
+                    <h3 className="w-1/2 bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">
+                      {" "}
+                      Services- Budgeted:{" "}
+                    </h3>
+                    <h3 className="w-1/2 bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-purple-400 border border-purple-400">
+                      {" "}
+                      Services - Committed:
+                    </h3>
+                    <h3 className="w-1/2 bg-pink-100 text-pink-800 text-xs font-medium mr-2 px-2.5 py-1.5 mb-1 rounded dark:bg-gray-700 dark:text-pink-400 border border-pink-400">
+                      {" "}
+                      Services Actual:{" "}
+                    </h3>
                   </div>
                 </div>
               </div>
@@ -507,10 +544,43 @@ function Projectdetails({ projects }) {
                               </td>
                             </tr>
                           ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
 
-                           {/* network po list */}
+                  <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
+                    Purchase Orders under network: {network["network-num"]}
+                  </h2>
 
-                           {purchaseordersnetwork.map((purchase, index) => (
+                  <div className="leading-relaxed text-base">
+                    <div className="overflow-x-auto relative">
+                      <table className="text-sm text-right text-gray-500 dark:text-gray-400">
+                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                          <tr>
+                            <th scope="col" className="py-3 px-1">
+                              PO Number
+                            </th>
+                            <th scope="col" className="py-3 px-1">
+                              PO Date
+                            </th>
+                            <th scope="col" className="py-3 px-1">
+                              Vendor
+                            </th>
+                            <th scope="col" className="py-3 px-1">
+                              Total PO Value
+                            </th>
+
+                            <th scope="col" className="py-3 px-1 text-teal-800">
+                              Bal value
+                            </th>
+                            <th scope="col" className="py-3 px-1">
+                              PO Progress
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {purchaseordersnetwork.map((purchase, index) => (
                             <tr
                               key={index}
                               className={`${

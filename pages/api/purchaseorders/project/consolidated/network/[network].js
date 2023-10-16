@@ -11,7 +11,7 @@ const handler = async (req, res) => {
         
         const purchaseorders = await db
           .collection("purchaseorders")
-          .find({"account.network" : "4004676", "account.wbs" : null}).toArray()
+          .find({"account.network" : network, "account.wbs" : null}).toArray()
           
           // const povalue = purchaseorders.reduce((total,current) => current["po-value-sar"] + total, 0)
           // const balgrvalue = purchaseorders.reduce((total, current) => current["pending-val-sar"] + total, 0)
