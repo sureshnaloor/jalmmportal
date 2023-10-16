@@ -457,12 +457,12 @@ function Projectdetails({ projects }) {
                       <path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"></path>
                     </svg>
                   </div>
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
+                  <h2 className="text-[14px] shadow-slate-600 shadow-md  text-gray-900 font-medium title-font mb-2">
                     Purchase Orders for: {project["project-wbs"]}
                   </h2>
                   <div className="leading-relaxed text-base">
                     <div className="overflow-x-auto relative">
-                      <table className="text-sm text-right text-gray-500 dark:text-gray-400">
+                      <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                           <tr>
                             <th scope="col" className="py-3 px-1">
@@ -549,13 +549,13 @@ function Projectdetails({ projects }) {
                     </div>
                   </div>
 
-                  <h2 className="text-lg text-gray-900 font-medium title-font mb-2">
+                  <h2 className="text-[14px] shadow-md shadow-slate-800 text-gray-900 font-medium title-font mb-2">
                     Purchase Orders under network: {network["network-num"]}
                   </h2>
 
                   <div className="leading-relaxed text-base">
                     <div className="overflow-x-auto relative">
-                      <table className="text-sm text-right text-gray-500 dark:text-gray-400">
+                      <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                           <tr>
                             <th scope="col" className="py-3 px-1">
@@ -697,13 +697,13 @@ function Projectdetails({ projects }) {
                                     <tr>
                                       <th
                                         scope="col"
-                                        className="text-[10px] py-2 font-medium text-gray-900 px-2"
+                                        className="text-[102x] py-2 font-medium text-gray-900 px-2"
                                       >
                                         PO Item
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-2"
+                                        className="text-[12px] font-medium text-gray-900 px-2"
                                       >
                                         Material
                                       </th>
@@ -721,37 +721,37 @@ function Projectdetails({ projects }) {
                                         </th> */}
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-2"
+                                        className="text-[12px] font-medium text-gray-900 px-2"
                                       >
                                         PO Quantity
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-2"
+                                        className="text-[12px] font-medium text-gray-900 px-2"
                                       >
                                         PO UOM
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-2"
+                                        className="text-[12px] font-medium text-gray-900 px-2"
                                       >
                                         PO Unit Price
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-2"
+                                        className="text-[12px] font-medium text-gray-900 px-2"
                                       >
                                         PO Item Value (SR)
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-2"
+                                        className="text-[12px] font-medium text-gray-900 px-2"
                                       >
                                         Pending Qty
                                       </th>
                                       <th
                                         scope="col"
-                                        className="text-[10px] font-medium text-gray-900 px-2"
+                                        className="text-[12px] font-medium text-gray-900 px-2"
                                       >
                                         Pending Value (SR)
                                       </th>
@@ -774,11 +774,11 @@ function Projectdetails({ projects }) {
                                           key={index}
                                           className="bg-stone-300  border-b"
                                         >
-                                          <td className="px-2 whitespace-nowrap text-[8px] font-thin text-black">
+                                          <td className="px-2 whitespace-nowrap text-[10px] font-thin text-black">
                                             {row["po-line-item"]}
                                           </td>
 
-                                          <td className="px-2 whitespace-nowrap text-[8px] font-bold text-black">
+                                          <td className="px-2 whitespace-nowrap text-[12px] font-bold text-black">
                                             {row["material"]["matdescription"]}
                                           </td>
                                           {/* <td className="px-2 whitespace-nowrap text-[8px] font-medium text-black">
@@ -787,30 +787,30 @@ function Projectdetails({ projects }) {
                                             <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
                                               {row["plant-code"]}
                                             </td> */}
-                                          <td className="text-[10px] text-black font-medium px-2 max-h-full whitespace-nowrap">
+                                          <td className="text-[12px] text-black font-medium px-2 max-h-full whitespace-nowrap">
                                             {row["po-quantity"].$numberDecimal}
                                           </td>
-                                          <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
+                                          <td className="text-[12px] text-black font-light px-2 max-h-full whitespace-nowrap">
                                             {row["po-unit-of-measure"]}
                                           </td>
-                                          <td className="text-[10px] text-black font-medium px-2 max-h-full whitespace-nowrap">
+                                          <td className="text-[12px] text-black font-medium px-2 max-h-full whitespace-nowrap">
                                             {(
                                               Math.round(
                                                 row["po-unit-price"] * 100
                                               ) / 100
                                             ).toLocaleString()}
                                           </td>
-                                          <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
+                                          <td className="text-[12px] text-black font-bold px-2 max-h-full whitespace-nowrap">
                                             {(
                                               Math.round(
                                                 row["po-value-sar"] * 100
                                               ) / 100
                                             ).toLocaleString()}
                                           </td>
-                                          <td className="text-[10px] text-black font-medium px-2 max-h-full whitespace-nowrap">
+                                          <td className="text-[12px] text-black font-medium px-2 max-h-full whitespace-nowrap">
                                             {row["pending-qty"].$numberDecimal}
                                           </td>
-                                          <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
+                                          <td className="text-[10px] text-red-800  font-black px-2 max-h-full whitespace-nowrap">
                                             {(
                                               Math.round(
                                                 row["pending-val-sar"] * 100

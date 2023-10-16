@@ -518,14 +518,14 @@ function SectionComponent() {
 
         <div className="relative flex py-5 items-center">
         <div className="flex-grow border-t border-gray-400 border-4"></div>
-        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand">
+        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand tracking-widest">
           TOP-20 DATA 
         </span>
         <div className="flex-grow border-t border-gray-400 border-4"></div>
       </div>
 
       <div className="grid grid-cols-6 gap-3 pb-6">
-      <div className="bg-white col-span-1 flex flex-col">
+      <div className="bg-white col-span-1 flex flex-col w-full">
           
             <h3 className="mx-auto text-[12px] uppercase border-emerald-900  font-semibold  text-red-900 py-3">
               {" "}
@@ -544,10 +544,10 @@ function SectionComponent() {
                   <p
                     key={row._id}
                     aria-current="true"
-                    className="block w-full px-4 py-3 text-zinc-800 text-sm bg-blue-50 border-b border-gray-200 rounded-t-lg  dark:bg-gray-800 dark:border-gray-600"
+                    className="block w-full px-4 py-3 font-bold  text-zinc-800 text-[12px] bg-blue-50 border-b border-gray-200 rounded-t-lg  dark:bg-gray-800 dark:border-gray-600"
                   >
                     {row._id}{" "}
-                    <h3 className="pl-3 bg-green-50 text-green-800 text-xs tracking-wider font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 ">
+                    <h3 className="w-3/4 mr-2 bg-green-50 text-stone-800 text-xs tracking-wider font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 ">
                       {(Math.round(row.count * 100) / 100).toLocaleString(
                         "en-US",
                         { style: "currency", currency: "SAR" }
@@ -577,7 +577,7 @@ function SectionComponent() {
                 <p
                   key={row._id}
                   aria-current="true"
-                  className="block w-full px-4 py-3 text-zinc-800 text-sm bg-blue-50 border-b border-gray-200 rounded-t-lg  dark:bg-gray-800 dark:border-gray-600"
+                  className="block w-full font-bold px-4 py-3 text-zinc-800 text-[12px] bg-blue-50 border-b border-gray-200 rounded-t-lg  dark:bg-gray-800 dark:border-gray-600"
                 >
                   {row._id}{" "}
                   <h3 className="pl-3 bg-green-50 text-green-800 text-xs tracking-wider font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 ">
@@ -618,11 +618,11 @@ function SectionComponent() {
                   >
                     <th
                       scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="px-6 py-4 text-[12px] font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {row["material-code"]}
                     </th>
-                    <td className="px-6 py-4 tracking-wider font-semibold">
+                    <td className="px-6 py-4 tracking-wider text-[12px] font-semibold">
                       {(
                         Math.round(row["current-stkval"] * 100) / 100
                       ).toLocaleString("en-US", {
@@ -630,7 +630,7 @@ function SectionComponent() {
                         currency: "SAR",
                       })}
                     </td>
-                    <td className="px-6 py-4 tracking-wider text-red-800">
+                    <td className="px-6 py-4 tracking-wider text-[12px] font-black text-red-800">
                       {(
                         Math.round(row["receipt-val"] * 100) / 100
                       ).toLocaleString("en-US", {
@@ -638,7 +638,7 @@ function SectionComponent() {
                         currency: "SAR",
                       })}
                     
-                    <span className="px-6 py-4 tracking-wider text-green-900">
+                    <span className="px-6 py-4 tracking-wider text-[12px] font-black text-green-900">
                       { (Math.round(row["issue-val"])) == 0 ? null :
                         (Math.round(row["issue-val"] * 100) / 100
                       ).toLocaleString("en-US", {
@@ -688,21 +688,21 @@ function SectionComponent() {
                   .map((row) => (
                     <tr
                       key={row._id.ponum}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                      className="bg-white border-b  dark:bg-gray-800 dark:border-gray-700"
                     >
                       <th
                         scope="row"
-                        className="px-2 py-4 font-medium pl-6 text-gray-900 whitespace-nowrap dark:text-white"
+                        className="px-2 py-4 font-medium pl-6 text-[12px] font-bold  text-gray-900 whitespace-nowrap dark:text-white"
                       >
                         {row._id.ponum}
                       </th>
                       <td className="px-2 py-4 text-xs pl-6  font-semibold">
                         {row._id.vendor}
                       </td>
-                      <td className="px-2 py-4 text-xs text-red-800">
+                      <td className="px-2 py-4 text-[10px] font-bold text-red-800">
                         {row._id.venname}
                       </td>
-                      <td className="px-2 py-4 tracking-wider text-green-900">
+                      <td className="px-2 py-4 tracking-wider text-green-900 text-[12px] font-semibold">
                         {(Math.round(row.count * 100) / 100).toLocaleString(
                           "en-US",
                           { style: "currency", currency: "SAR" }

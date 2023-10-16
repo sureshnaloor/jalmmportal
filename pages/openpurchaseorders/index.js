@@ -99,7 +99,7 @@ function Openpurchaseorders() {
     (async () => {
       const result = await fetch(`/api/purchaseorders/openpo`);
       const json = await result.json();
-      setOpenpolist(json.filter(row =>row.openvalue > 100000 && row._id["po-number"].substring(0,2) !== '61' && row._id["po-number"].substring(0,2) !=='71' && row._id["po-number"].substring(0,2) !== '91' ));
+      setOpenpolist(json.filter(row =>row.openvalue > 1000 && row._id["po-number"].substring(0,2) !== '47' && row._id["po-number"].substring(0,2) !=='71' && row._id["po-number"].substring(0,2) !== '91' ));
     })();
   }, []);
 
