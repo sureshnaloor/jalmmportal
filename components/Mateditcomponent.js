@@ -217,9 +217,9 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
 
   return (
     // <div className="absolute inset-0 w-[100vw] h-full flex  opacity-90 bg-gray-50 justify-center  z-50 align-middle">
-    <div className="fixed inset-0 z-40 w-full h-full bg-stone-400 opacity-100">
+    <div className="fixed inset-0 z-40 w-full h-full bg-stone-200 opacity-100">
       {/* <div className="w-[60vw] p-12 border-2 bg-stone-300 border-gray-900 b opacity-100">  */}
-      <div className="fixed inset-1/2 z-50 w-[90%] h-[90%] justify-center align-middle -translate-x-1/2 -translate-y-1/2 bg-white opacity-100 rounded-[20px] border-r-2 border-b-2 ">
+      <div className="fixed inset-1/2 z-50 w-[97%] h-[97%] justify-center align-middle -translate-x-1/2 -translate-y-1/2 bg-white opacity-100 rounded-[20px] border-r-2 border-b-2 ">
         <button
           className="fixed top-5 right-5 text-[14px] font-semibold text-amber-900 bg-green-600 px-3 py-1 border-2 hover:text-white hover:bg-red-600"
           onClick={() => setShowModal(false)}
@@ -227,16 +227,16 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
           X
         </button>
 
-        <div className="grid grid-cols-8 gap-2">
-          <div className="col-span-3 border-r-4 border-sky-800 px-6 py-3 flex flex-col">
-            <h2 className="bg-sky-600 mx-auto px-9 py-1 text-white text-[10px]  tracking-wider mb-3">
+        <div className="grid grid-cols-5 gap-2">
+          <div className="col-span-2 border-r-2 border-zinc-800 px-3 py-1 flex flex-col">
+            <h2 className="px-9 py-1 text-zinc-800 text-[12px] uppercase tracking-wider font-bold shadow-sm shadow-slate-300 mb-3">
               {" "}
               {editmode
                 ? "Material to edit:"
                 : "Suggest suitable description for:"}
             </h2>
 
-            <div className="w-full bg-sky-100 flex-col px-3 mb-3">
+            <div className="w-full bg-sky-50 flex-col px-3 mb-3 uppercase font-semibold">
               <div className="flex flex-row justify-between mb-3">
                 <p className="text-gray-700 text-xs pb-3"> Material Code: </p>
                 <h5 className="text-sky-900 text-sm font-semibold ">
@@ -271,65 +271,71 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
               </div>
             </div>
           </div>
-          <div className="col-span-4 pt-4">
+          <div className="col-span-3 pt-4">
+            <div className="grid grid-cols-8 w-full">
             {matrl.length > 0 ? (
-              <table className="mt-3 mb-3 pb-3">
-                <thead>
-                  <tr className="font-semibold text-xs bg-sky-800 text-yellow-200 max-h-44">
-                    <th>Material code</th>
-                    <th>Suggested Material description</th>
-                    <th>Suggested Material Type</th>
-                    <th>Suggested Material Group</th>
-                    <th> Suggested Matgroup-sec</th>
-                    <th>Contributed User</th>
+              <div className="col-span-7">
+              <table className="mt-3 mb-3 pb-3 w-full">
+                <thead >
+                  <tr className="text-[10px] text-zinc-600 grid grid-cols-10 uppercase font-Roboto border-b border-stone-500 mb-3">
+                    <div className="col-span-1"><th >Material code</th></div>
+                    <div className="col-span-3"><th >Suggested Material description</th></div>
+                    <div className="col-span-1"><th >Suggested MatType</th></div>
+                    <div className="col-span-2"><th >Suggested Material Group</th></div>
+                    <div className="col-span-2"><th > Suggested Matgroup-sec</th></div>
+                    <div className="col-span-1"><th >Contributed User</th></div>
                   </tr>
                 </thead>
-                <tbody className="bg-blue-100 text-xs">
+                
+                <tbody className="text-xs bg-slate-200">
                   {matrl.map((row, index) => (
                     <tr
                       key={index}
-                      className="font-semibold text-[10px] bg-sky-800 text-white"
+                      className="font-semibold text-[10px] text-zinc-800 grid grid-cols-10"
                     >
-                      <td>{row.materialcode}</td>
-                      <td>{row.matdescriptionnew}</td>
-                      <td>{row.mattypenew}</td>
-                      <td>{row.matgroupnew}</td>
-                      <td> {row.matgroupsecnew}</td>
-                      <td>{row.username}</td>
+                     <div className="col-span-1"> <td>{row.materialcode}</td> </div>
+                     <div className="col-span-3"><td>{row.matdescriptionnew}</td></div>
+                      <div className="col-span-1"><td>{row.mattypenew}</td></div>
+                      <div className="col-span-2"><td>{row.matgroupnew}</td></div>
+                      <div className="col-span-2"><td> {row.matgroupsecnew}</td></div>
+                      <div className="col-span-1"><td>{row.username}</td></div>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              </div>
+              
             ) : (
-              <div className="mt-6 pt-6 flex justify-center">
-                <h2 className=" py-3 px-3 bg-sky-100 tracking-widest text-sm">
+              <div className="mt-6 pt-6 flex justify-center col-span-5">
+                <h2 className=" py-3 px-3 bg-sky-50 tracking-wider uppercase font-semibold text-sm">
                   {" "}
                   NO contribution from any user so far
                 </h2>{" "}
               </div>
             )}
+            </div>
           </div>
         </div>
 
         {JSON.stringify(materialedited) === "{}" ? (
           <form
-            className=" w-full bg-sky-300 p-1"
+            className=" w-full bg-zinc-300 p-1"
             onSubmit={editmode ? handleEdit : handlecomment}
           >
             
-            <div className="shadow overflow-hidden  sm:rounded-md">
+            <div className="shadow-2xl overflow-hidden  shadow-sky-800 sm:rounded-md">
               
-              <div className="px-2 py-2 flex flex-col bg-white sm:p-3 text-[10px]">
-                <h3 className="w-1/4 bg-sky-600 mx-auto text-white tracking-wider font-bold px-2 py-2">
+              <div className="px-1 py-1 flex flex-col bg-white sm:p-3 text-[12px]">
+                <h3 className="w-1/4 bg-stone-100 mx-auto text-stone-800 tracking-wider uppercase font-bold px-2 py-2">
                   {" "}
                   Corrected Material description:{" "}
                 </h3>
 
-                <div className="grid grid-cols-12 bg-sky-800 border-b-2 gap-2 py-3 mt-4 mb-6 pb-6">
+                <div className="grid grid-cols-12 bg-sky-100 border-b-2 gap-2 py-3 mt-4 mb-6 pb-6">
                   <div className="col-span-3 mx-auto">
                     <label
                       htmlFor="mattypenew"
-                      className="block text-[10px] font-bold uppercase text-white"
+                      className="block text-[10px] font-bold uppercase text-zinc-600"
                     >
                       Material Type - New/corrected (if required)
                     </label>
@@ -401,7 +407,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                   <div className="col-span-3 mx-auto">
                     <label
                       htmlFor="matgroupnew"
-                      className="block text-[10px] font-bold uppercase text-white px-9"
+                      className="block text-[10px] font-bold uppercase text-zinc-600 px-9"
                     >
                       Material Group-Primary (Corrected)
                     </label>
@@ -438,7 +444,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                   <div className="col-span-3">
                     <label
                       htmlFor="matgroupsecnew"
-                      className="block text-[10px] tracking-wider font-bold uppercase text-white px-12"
+                      className="block text-[10px] tracking-wider font-bold uppercase text-zinc-600 px-12"
                     >
                       Material Group-Secondary
                     </label>
@@ -465,15 +471,15 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                         ))}
                     </select>
                   </div>
-                  <p className="col-span-3 mt-4 ml-12  bg-sky-500 mr-3 text-white font-semibold uppercase text-[12px] px-2 py-2">
+                  <p className="col-span-3 mt-2 ml-12  bg-zinc-200 mr-3 text-zinc-900 font-bold uppercase text-[10px] px-2 py-1">
                     length of new description:{" "}
-                    <span className="font-bold text-red-900 pl-3 text-[12px]">
+                    <span className="font-bold text-orange-900 pl-3 text-[12px]">
                       {length}
                     </span>
                   </p>
                 </div>
               </div>
-              <div className="bg-zinc-100 pt-3">
+              <div className="bg-zinc-100 pt-1">
                 <div className="grid grid-cols-8 gap-2 mt-1">
                   <div className="col-span-2">
                     <div className="relative z-0 w-full mb-2 group">
@@ -616,7 +622,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                 <div className="w-11/12 px-6 mb-1 flex flex-col align-middle justify-center  ">
                   <label
                     htmlFor="longtext"
-                    className="block text-[10px] font-extrabold uppercase text-amber-900 dark:text-white mb-3"
+                    className="block text-[10px] font-extrabold uppercase text-stone-900 dark:text-white mb-3"
                   >
                     Large Text Description:{" "}
                   </label>
@@ -624,20 +630,20 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                   <ReactQuill value={longDesc} onChange={(longDesc) => setLongDesc(longDesc)}
                    modules={{
                     toolbar: [
-                      [{ font: [] }],
-                      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                      ["bold", "italic", "underline", "strike"],
-                      [{ color: [] }, { background: [] }],
-                      [{ script:  "sub" }, { script:  "super" }],
-                      ["blockquote", "code-block"],
+                      
+                      
+                      ["bold", "italic", "underline"],
+                      [{ color: [] }],
+                      
+                      
                       [{ list:  "ordered" }, { list:  "bullet" }],
                       [{ indent:  "-1" }, { indent:  "+1" }, { align: [] }],
-                      ["link", "image", "video"],
-                      ["clean"],
+                      
+                      
                   ],
                   }}
                   theme="snow"
-                  className="bg-slate-100 border-2 border-slate-800 min-h-[150px]"
+                  className="bg-slate-50 border-2 border-slate-500 min-h-[200px]"
                   />
                   
                   

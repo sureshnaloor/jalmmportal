@@ -82,6 +82,12 @@ const handler = async (req, res) => {
             ffnoMinateddate: req.body.ffnoMinateddate,
             finalremarks: req.body.finalremarks,
           },
+
+          bgtab: req.body.bgtab,
+          lctab: req.body.lctab,
+          testing: req.body.testing,
+          shipping: req.body.shipping,
+
         });
 
 
@@ -147,6 +153,10 @@ const handler = async (req, res) => {
               "shipdata.saberreceiveddate": req.body.saberreceiveddate,
               "shipdata.ffnoMinateddate": req.body.ffnoMinateddate,
               "shipdata.finalremarks": req.body.finalremarks,
+              "bgtab": req.body.bgtab,
+              "lctab": req.body.lctab,
+              "testing" : req.body.testing,
+              "shipping": req.body.shipping,
             },
           });
 

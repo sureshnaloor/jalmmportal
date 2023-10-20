@@ -137,7 +137,7 @@ function Matgroup() {
   return (
     <>
       <HeaderComponent />
-      <div className="min-h-screen bg-gray-50 text-gray-900 w-11/12 ml-9">
+      <div className="min-h-screen bg-gray-50 text-gray-900 w-[98%] ml-9">
         <div className="mt-6">
           <p className="font-bold text-md mb-3">
             List of materials in group {matgroupid}

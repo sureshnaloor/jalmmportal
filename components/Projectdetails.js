@@ -190,8 +190,8 @@ function Projectdetails({ projects }) {
                 </span>
                 {project["project-name"]}
               </h1>
-              <p className="lg:w-1/2 w-full leading-relaxed border-b-[1px] border-stone-600  lowercase text-xl font-semibold text-amber-900 pb-3">
-                <span className="text-md text-fuchsia-800">
+              <p className="lg:w-1/2 w-full leading-relaxed border-b-[1px] border-stone-600  uppercase text-xl font-semibold text-amber-900 pb-3">
+                <span className="text-[14px] text-fuchsia-800 ">
                   {" "}
                   Project Manager:{" "}
                 </span>
@@ -510,7 +510,7 @@ function Projectdetails({ projects }) {
                               <th>
                                 <p className="text-[10px] text-purple-700">
                                   {moment(purchase["podate"]).format(
-                                    "MM-DD-YYYY"
+                                    "DD-MM-YYYY"
                                   )}
                                 </p>
                               </th>

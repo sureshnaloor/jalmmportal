@@ -150,7 +150,7 @@ export function Numberstyle({ value }) {
 
 export function Boldstyle1({ value }) {
   return (
-    <span className={classNames("px-3 py-1 text-zinc-900 font-bold text-[14px]")}>
+    <span className={classNames("px-3 py-1 text-zinc-900 font-bold text-[12px]")}>
       {value}
     </span>
   );
@@ -160,7 +160,7 @@ export function Boldstyle2({ value }) {
   return (
     <span
       className={classNames(
-        "px-3 py-1 text-sky-800 bg-sky-50 font-bold text-md"
+        "px-3 py-1 text-zinc-800 font-bold border-sm border-zinc-900 text-[12px] tracking-wide "
       )}
     >
       {value}

@@ -19,6 +19,9 @@ export default NextAuth({
         password: {
           
         },
+        role:{
+
+        },
       },
       async authorize(credentials, req, session) {
         const { db } = await connectToDatabase();
@@ -58,5 +61,16 @@ export default NextAuth({
       encryption: true,
     },
   },
+
+  // callbacks: {
+  //   async jwt({user,token}){
+  //     token.role = user.role
+  //     return token
+  //   },
+
+  //   async session({session, token}){
+  //     session.user.role = token.role
+  //   }
+  // },
   secret: process.env.NEXTAUTH_SECRET,
 });
