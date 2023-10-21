@@ -1526,6 +1526,7 @@ function Purchaseorderschedule({ ponumber }) {
                 Letter of Credit
                 <br /> Data{" "}
               </h3>
+              <br />
 
               <input
                   id="lctabchk"
@@ -1867,7 +1868,7 @@ function Purchaseorderschedule({ ponumber }) {
                 Progress <br /> Milestones
                 <br /> Data
               </h3>
-
+              <br />
               <input
                   id="testingtabchk"
                   type="checkbox"
@@ -2121,6 +2122,8 @@ function Purchaseorderschedule({ ponumber }) {
                 Packing & <br /> Shipment <br /> Related <br /> Data (for
                 Ex-works only)
               </h3>
+
+              <br /> 
 
               <input
                   id="shiptabchk"
