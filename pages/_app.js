@@ -7,11 +7,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import {useRouter} from 'next/router'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 
 import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically
+
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const router = useRouter()
@@ -19,6 +23,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <AnimatePresence mode="sync">
     <SessionProvider session={session}>
       <ThemeProvider attribute="class">
+      <QueryClientProvider client={queryClient}>
         <motion.div
         key={router.route}
         initial="initialState" animate="animateState" exit="exitState" 
@@ -42,6 +47,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
         <Component {...pageProps} />
         <ToastContainer />
         </motion.div>
+        </QueryClientProvider>
       </ThemeProvider>
     </SessionProvider>
     </AnimatePresence>

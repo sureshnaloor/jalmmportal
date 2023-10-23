@@ -7,15 +7,15 @@ const handler = async (req, res) => {
       case "GET": {
         const { db } = await connectToDatabase();
         // const nperPage = 100;
-        const page = req.query.page || 1
-        const limit = parseInt(req.query.limit) || 10
+        const page = parseInt(req.query.page) || 100
+        const limit = parseInt(req.query.limit) || 100
         // console.log(limit);
         const matdoclist = await db
           .collection("materialdocuments")
           .find({})
           .sort({ "doc-date": -1 })
           .limit(limit)
-          .skip(page > 0 ? (page - 1) * limit: 0)
+          .skip(page)
           .toArray();
         return res.json(matdoclist);
       }
