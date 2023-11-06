@@ -190,7 +190,7 @@ export function Boldstylesim({ value }) {
   return (
     <span
       className={classNames(
-        "text-zinc-800 font-bold text-[12px]   "
+        "text-zinc-800 font-bold text-[13px] p-1 shadow-md shadow-zinc-400"
       )}
     >
       {value}
@@ -214,7 +214,7 @@ export function Normalstylesim({ value }) {
   return (
     <span
       className={classNames(
-        " text-zinc-800 font-semibold text-[12px] tracking-tighter "
+        "text-teal-900 text-[14px] bg-white p-1 font-bold shadow-md shadow-white"
       )}
     >
       {value}
@@ -360,7 +360,7 @@ function Tablecomponent({ columns, data }) {
   const [selectedMatcode, setSelectedMatcode] = useState("");
   const setActiveMatcode = (matcode) => {
     setSelectedMatcode(matcode);
-    console.log(selectedMatcode);
+    // console.log(selectedMatcode);
   };
 
   return (
@@ -388,7 +388,7 @@ function Tablecomponent({ columns, data }) {
       </div>
 
       {/* table component */}
-      <table className="mt-6  divide-y divide-gray-300">
+      <table className="mt-9  divide-y divide-gray-300">
         <thead
           className="bg-zinc-100 text-zinc-800  font-black"
           {...getTableProps()}
@@ -423,14 +423,14 @@ function Tablecomponent({ columns, data }) {
           ))}
         </thead>
         <tbody
-          className="bg-white divide-y divide-gray-200"
+          className="bg-white mb-9 divide-y divide-gray-200"
           {...getTableBodyProps()}
         >
           {rows.map((row, i) => {
             prepareRow(row);
             return (
               // eslint-disable-next-line react/jsx-key
-              <tr
+              <tr className="bg-slate-50 mb-9 "
                 {...row.getRowProps()}
                 // onClick={() => {
                 //   setActiveMatcode(row.values["material-code"]);
@@ -446,7 +446,7 @@ function Tablecomponent({ columns, data }) {
                     // eslint-disable-next-line react/jsx-key
                     <td
                       {...cell.getCellProps()}
-                      className="px-6 py-4 text-[10px] text-zinc-600  whitespace-nowrap"
+                      className="px-2 py-7 text-[10px] border-y-2 mb-10 border-slate-500  whitespace-nowrap "
                     >
                       {cell.render("Cell")}
                     </td>

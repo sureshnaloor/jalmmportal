@@ -58,15 +58,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
     })();
   }, [material]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const result = await fetch(
-  //       `/api/materialcleanse/comments/${material["material-code"]}`
-  //     );
-  //     const json = await result.json();
-      
-  //   })();
-  // }, [material]);
+ 
 
   useEffect(() => {
     (async () => {
@@ -349,7 +341,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                     >
                       <option
                         value="ZCVL"
-                        className="text-sky-900 text-[10px] font-bold"
+                        className="text-zinc-900 text-[10px] font-bold"
                       >
                         ZCVL- Civil Materials
                       </option>

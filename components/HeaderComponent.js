@@ -60,7 +60,7 @@ function HeaderComponent() {
       
         <div className=" flex align-middle w-auto bg-blue-200 lg:text-center ">
           <a
-            className="text-lg text-gray-800 font-Montserrat font-black font-heading"
+            className="text-[14px] text-gray-800 font-Montserrat font-black font-heading"
             href="/"
           ></a>
           <Image
@@ -76,23 +76,23 @@ function HeaderComponent() {
           ></Image>
         </div>
 
-        <div className="w-1/3 pt-5 flex tracking-widest justify-start align-bottom">
+        <div className="w-1/5 pt-5 flex tracking-widest justify-start align-bottom">
 
-        <div className="text-[14px] cursor-pointer font-Poppins  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
+        <div className="ml-3 text-[12px] cursor-pointer font-Poppins  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
             <Link href="/">
               <a>
                 Home
                 <span>
                   <FontAwesomeIcon
                     icon={faHomeUser}
-                    className="text-zinc-800 dark:text-yellow-300 fa-thin ml-1 text-[12px]"
+                    className="text-zinc-800 dark:text-yellow-300 fa-thin ml-1 text-lg"
                   />
                 </span>
               </a>
             </Link>
           </div>
 
-          <div className="ml-6 text-[14px] font-Poppins cursor-pointer  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
+          <div className="ml-3 text-[12px] font-Poppins cursor-pointer  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
             <Link href="/materials">
               <a>
                 Materials
@@ -103,61 +103,61 @@ function HeaderComponent() {
               </a>
             </Link>
           </div>
-          <div className="ml-6 text-[14px] font-Poppins cursor-pointer  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
+          <div className="ml-3 text-[12px] font-Poppins cursor-pointer  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
             <Link href="/projects">
               <a>
                 Projects
                 <FontAwesomeIcon
                   icon={faCircleQuestion}
-                  className="text-zinc-800 dark:text-yellow-300 fa-thin ml-2 text-sm"
+                  className="text-zinc-800 dark:text-yellow-300 fa-thin ml-2 text-lg"
                 />
               </a>
             </Link>
           </div>
 
-          <div className="ml-6 text-[14px] font-Poppins cursor-pointer  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
+          <div className="ml-3 text-[12px] font-Poppins cursor-pointer  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
             <Link href="/vendorpage">
               <a>
                 Vendors
                 <FontAwesomeIcon
                   icon={faAddressCard}
-                  className="text-zinc-800 dark:text-yellow-300 fa-thin ml-2 text-sm"
+                  className="text-zinc-800 dark:text-yellow-300 fa-thin ml-2 text-lg"
                 />
               </a>
             </Link>
           </div>
         </div>
 
-        <div className="px-3">
+        <div className="px-1">
           <Lottie options={defaultOptions1} height={96} width={96} />
         </div>
 
         <div className="flex flex-row align-middle tracking-wide ">
             <Link href="/openpurchaseorders">
-              <a className="text-[12px] mr-2 my-auto py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
                 Open PO's
               </a>
             </Link>
 
             <Link href="/vendorswithpo">
-              <a className="text-[12px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
                 Vendor Details
               </a>
             </Link>
 
             <Link href="/notyetqualifiedvendors">
-              <a className="text-[12px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
                 Non SAP Vendors              </a>
             </Link>
 
             <Link href="/projectdetails">
-              <a className="text-[12px] mr-2 my-auto py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
                 Project Details
               </a>
             </Link>
 
             <Link href="/materialdocuments">
-              <a className="text-[12px] mr-2 my-auto  py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              <a className="text-[10px] mr-2 my-auto  py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
                 Material Docs
               </a>
             </Link>
@@ -173,21 +173,30 @@ function HeaderComponent() {
 
         <div className="w-1/8 tracking-widest bg-gray-100 dark:bg-gray-400 text-white dark:text-white">
         <div>
-            <Link href="/materialdocuments">
+            <Link href="/equipments">
               <a className="text-[12px] mr-2 block border-b-2 border-blue-600 p-1 text-gray-900  hover:text-gray-600 dark:hover:text-white  font-semibold">
                 Equipment
               </a>
             </Link>
-            <Link href="/materialdocuments">
+            <Link href="/pperecords">
               <a className="text-[12px] mr-2 block border-b-2 border-blue-600 p-1 text-gray-900  hover:text-gray-600 dark:hover:text-white  font-semibold">
                 PPE
               </a>
             </Link>
-            <Link href="/materialdocuments">
-              <a className="text-[12px] mr-2 border-b-2 border-blue-600 p-1 text-gray-900  hover:text-gray-600 dark:hover:text-white  font-semibold">
-                SIM
+            <span>
+            <Link href="/simlist">
+              <a className="text-[10px] mr-2 border-b-2 border-blue-600 p-1 text-gray-900  hover:text-gray-600 dark:hover:text-white  font-semibold">
+                SIM List
               </a>
             </Link>
+            </span>
+            <span>
+            <Link href="/simlist">
+              <a className="text-[10px] mr-2 border-b-2 border-blue-600 p-1 text-teal-900 opacity-90  hover:text-gray-600 dark:hover:text-white  font-semibold">
+                Cleaned List
+              </a>
+            </Link>
+            </span>
           </div>
         </div>
        

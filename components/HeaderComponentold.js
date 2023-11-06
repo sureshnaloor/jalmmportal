@@ -142,17 +142,17 @@ function HeaderComponent() {
           </div>
 
           <div>
-            <Link href="/materialdocuments">
+            <Link href="/equipments">
               <a className="text-[12px] mr-2 block border-b-2 border-blue-600 bg-sky-100 p-1 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
                 Equipment
               </a>
             </Link>
-            <Link href="/materialdocuments">
+            <Link href="/pperecords">
               <a className="text-[12px] mr-2 block border-b-2 border-blue-600  bg-sky-100 p-1 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
                 PPE
               </a>
             </Link>
-            <Link href="/materialdocuments">
+            <Link href="/simlist">
               <a className="text-[12px] mr-2 border-b-2 border-blue-600 bg-sky-100 p-1 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
                 SIM
               </a>
