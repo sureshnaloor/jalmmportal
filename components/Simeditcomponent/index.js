@@ -18,7 +18,7 @@ function Simeditcomponent({ account, setShowModal }) {
 
   const { data: session } = useSession();
 
-  useEffect(() => {
+  useEffect(() => {console.log
     (async () => {
       const result = await fetch(`/api/usermaster/${account["emp-number"]}`);
       const json = await result.json();
@@ -26,18 +26,18 @@ function Simeditcomponent({ account, setShowModal }) {
     })();
   }, [account]);
 
-  console.log(correctname);
+  // console.log(correctname);
   console.log(account);
 
   const updateCleansedsimlist = async (e) => {
     e.preventDefault();
-    console.log("clicked inside");
+    // console.log("clicked inside");
     // set relevant fields in collection
     // simultanneously set the 'cleansed' flag in the original simlist collection
   };
 
   const setdeleteFlag = async (e) => {
-    console.log("clicked to close the flag");
+    // console.log("clicked to close the flag");
     await fetch(
       `/api/sim/closeconnection/${account["account-number"]}`,
 

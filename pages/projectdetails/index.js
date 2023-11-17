@@ -3,6 +3,8 @@ import React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 
+import {getSession} from 'next-auth/react'
+
 // import moment from 'moment'
 import HeaderComponent from "../../components/HeaderComponent";
 import FooterComponent from "../../components/FooterComponent";
@@ -114,6 +116,23 @@ function Projectdetails() {
       <FooterComponent />
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
 }
 
 export default Projectdetails;

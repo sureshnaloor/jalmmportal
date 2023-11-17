@@ -3,6 +3,8 @@ import React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 
+import {useSession, getSession} from "next-auth/react"
+
 import {
   ChevronDoubleRightIcon,
   HandIcon,
@@ -168,6 +170,23 @@ function Openpurchaseorders() {
       <FooterComponent />
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
 }
 
 export default Openpurchaseorders;

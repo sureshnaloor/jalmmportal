@@ -6,6 +6,8 @@ import {useRouter} from 'next/router'
 // import moment from 'moment'
 import HeaderComponent from "../../components/HeaderComponent";
 import FooterComponent from "../../components/FooterComponent";
+
+import {getSession} from 'next-auth/react'
 import Tablecomponent, {
   SelectColumnFilter,
   Boldstyle1,
@@ -102,6 +104,23 @@ function Vendorswithpo() {
       <FooterComponent />
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
 }
 
 export default Vendorswithpo;

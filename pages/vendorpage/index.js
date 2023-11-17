@@ -9,6 +9,8 @@ import Vendordocviews from "../../components/Vendor/VendordocsView";
 import Vendordocupload from "../../components/Vendor/Vendordocupload";
 import Vendorevaluation from "../../components/Vendor/Vendorevaluation";
 
+import {useSession, getSession} from 'next-auth/react'
+
 // import Search from '../../components/searchComponent'
 import { useRouter } from "next/router";
 
@@ -677,6 +679,23 @@ function Vendor() {
       <Footercomponent />
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
 }
 
 export default Vendor;

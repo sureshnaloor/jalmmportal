@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react'
 import Projectdetails from '../../components/Projectdetails'
 import HeaderComponent from '../../components/HeaderComponent'
 
+import { useSession, getSession } from "next-auth/react";
+
 
 function Projects() {
   const [searchterm, setSearchterm] = useState('')
@@ -77,6 +79,23 @@ function Projects() {
     
     </>
   )
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
 }
 
 export default Projects

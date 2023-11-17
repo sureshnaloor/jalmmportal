@@ -5,6 +5,8 @@ import { useState, useEffect, useMemo } from "react";
 import HeaderComponent from "../../components/HeaderComponent";
 import FooterComponent from "../../components/FooterComponent";
 
+import {getSession} from "next-auth/react"
+
 import Tablecomponent, {
  Numberstylesim,
   Boldstylesim,  
@@ -174,6 +176,23 @@ function Simlist() {
       <FooterComponent />
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
 }
 
 export default Simlist;

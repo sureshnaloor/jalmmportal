@@ -2,6 +2,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import Navigationcomp from '../../components/Navigationcomponent';
 
+import {getSession} from "next-auth/react"
+
 function index() {
   const {
     register,
@@ -123,6 +125,23 @@ function index() {
 
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
 }
 
 export default index;
