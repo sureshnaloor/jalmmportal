@@ -18,7 +18,7 @@ function Simeditcomponent({ account, setShowModal }) {
 
   const { data: session } = useSession();
 
-  useEffect(() => {console.log
+  useEffect(() => {
     (async () => {
       const result = await fetch(`/api/usermaster/${account["emp-number"]}`);
       const json = await result.json();

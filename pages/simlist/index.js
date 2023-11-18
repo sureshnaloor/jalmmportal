@@ -29,7 +29,7 @@ function Simlist() {
     // console.log("clicked!! I am inside edit mode ")
     const account = row.row.values;
     setEditmode(true)
-    console.log(row.row.values["close-flag"]);
+    // console.log(row.row.values["close-flag"]);
     setSelectedAccount({ ...account});
     setShowModal(true);
     return null;
@@ -155,7 +155,7 @@ function Simlist() {
     })();
   }, []);
 
-  console.log(simlist);
+  // console.log(simlist);
 
   return (
     <>
@@ -180,6 +180,7 @@ function Simlist() {
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
+  // console.log(session.user)
 
   if (!session) {
     return {
@@ -189,6 +190,15 @@ export async function getServerSideProps(context) {
       },
     };
   }
+
+  // else if(session.user.role !== "admin"){
+  //   return {
+  //     redirect: {
+  //       destination: "/auth/login",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
   return {
     props: { session },
