@@ -1,13 +1,50 @@
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
-import dynamic from "next/dynamic";
-import moment from "moment";
-import DatePicker from "react-datepicker";
+import { useRouter } from "next/router";
+
 import "react-datepicker/dist/react-datepicker.css";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+// data (input) for coordinators
+
+const coordinators = [
+  "MOHAMED ABDUL RASEED",
+  "ARNEL BALENA",
+  "GYANANDRA ADHIKARI",
+  "ASIF SYED",
+  "KUMAR LAMA",
+  "AFTAB HAYAT",
+  "WALEED M ISHMAIL",
+];
+
+// data for departments
+
+const departments = [
+  "ESD",
+  "ISD",
+  "MMD",
+  "HRD",
+  "MGT",
+  "FIN",
+  "John-Hopkins",
+  "NEOM",
+  "EPMO",
+];
+
+// data for sections
+
+// data for locations
+const locations = [
+  "HEAD OFFICE",
+  "JUBAIL",
+  "SUBSTATION PROJECTS",
+  "OTHER ESD PROJECTS",
+  "ISD PROJECTS",
+  "KHOBAR MALL",
+  "ALHASA/DHAHRAN/ABQAIQ/RASTANURA",
+];
 
 function Simeditcomponent({ account, setShowModal }) {
   const [simedited, setSimedited] = useState({});
@@ -17,6 +54,73 @@ function Simeditcomponent({ account, setShowModal }) {
   const [empno, setEmpno] = useState(null);
 
   const { data: session } = useSession();
+  const router = useRouter();
+
+  // for coordinators
+
+  const [filter1, setFilter1] = useState("");
+  const [suggestions1, setSuggestions1] = useState([]);
+
+  const handleInputChange1 = (e) => {
+    const newFilter = e.target.value.toLowerCase();
+    setFilter1(newFilter);
+
+    const filteredSuggestionscoord = coordinators.filter((item) =>
+      item.toLowerCase().includes(newFilter)
+    );
+    setSuggestions1(filteredSuggestionscoord);
+  };
+
+  const handleSuggestionClick1 = (item) => {
+    setFilter1(item);
+    setSuggestions1([]);
+  };
+
+  // for departments
+
+  const [filter2, setFilter2] = useState("");
+  const [suggestions2, setSuggestions2] = useState([]);
+
+  const handleInputChange2 = (e) => {
+    const newFilter = e.target.value.toLowerCase();
+    setFilter2(newFilter);
+
+    const filteredSuggestionsdep = departments.filter((item) =>
+      item.toLowerCase().includes(newFilter)
+    );
+    setSuggestions2(filteredSuggestionsdep);
+  };
+
+  const handleSuggestionClick2 = (item) => {
+    setFilter2(item);
+    setSuggestions2([]);
+  };
+
+  // for sections
+
+  // for locations
+
+  const [filter3, setFilter3] = useState("");
+  const [suggestions3, setSuggestions3] = useState([]);
+
+  const handleInputChange3 = (e) => {
+    const newFilter = e.target.value.toLowerCase();
+    setFilter3(newFilter);
+
+    const filteredSuggestionsloc = locations.filter((item) =>
+      item.toLowerCase().includes(newFilter)
+    );
+    setSuggestions3(filteredSuggestionsloc);
+  };
+
+  const handleSuggestionClick3 = (item) => {
+    setFilter3(item);
+    setSuggestions3([]);
+  };
+
+  // for credit limit
+
+  const [creditlimit, setCreditlimit] = useState(50)
 
   useEffect(() => {
     (async () => {
@@ -27,13 +131,38 @@ function Simeditcomponent({ account, setShowModal }) {
   }, [account]);
 
   // console.log(correctname);
-  console.log(account);
+  // console.log(account);
 
   const updateCleansedsimlist = async (e) => {
     e.preventDefault();
-    // console.log("clicked inside");
+    console.log("clicked inside");
     // set relevant fields in collection
     // simultanneously set the 'cleansed' flag in the original simlist collection
+    console.log(filter1, filter2, filter3, creditlimit)
+    const cleansed = await fetch(`/api/sim/cleansesim/${account["account-number"]}`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        filter2,
+        filter3,
+        filter1,
+        creditlimit,
+        correctname,
+      }),
+
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+    }
+    );
+    toast.success("Submitted succesfully!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+
+    router.reload();
+    return cleansed
+
   };
 
   const setdeleteFlag = async (e) => {
@@ -126,103 +255,123 @@ function Simeditcomponent({ account, setShowModal }) {
             onSubmit={updateCleansedsimlist}
             // simultanneously set the 'cleansed' flag in the original simlist collection
           >
-            <div>
-              <div className="grid grid-cols-3">
-                <div className="col-span-1">
+            <div> <p className="text-sky-800 font-think text-[10px] mb-3"> (For department, location and coordinator fields, press spacebar & backspace to get ALL options... enter suggestion to autocomplete) </p>
+              <div className="grid grid-cols-9">
+                <div className="col-span-3 w-full">
+                  
                   <label
-                    htmlFor="employee name"
+                    htmlFor="department"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Department
                   </label>
                   <input
                     type="text"
-                    id="empno"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 pb-3 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Employee number..."
-                    value={account["emp-number"]}
-                    onChange={(e) => setEmpno(e.target.value)}
+                    id="department"
+                    className="border-none outline-none bg-slate-100/70 text-gray-900 uppercase mb-3 font-bold  text-[12px] focus:ring-blue-500 focus:border-blue-500 block w-full py-1   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:lowercase placeholder:text-stone-600/80 placeholder:font-thin  placeholder:text-[10px]"
+                    placeholder="department..."
+                    value={filter2}
+                    onChange={handleInputChange2}
                   />
+                  <div id="autocomplete-list">
+                    {suggestions2.map((item, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleSuggestionClick2(item)}
+                      >
+                        <p className="text-gray-900/90 text-xs italic mb-1">
+                          {item}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="col-span-1">
+                <div className="col-span-3 w-full">
                   <label
-                    htmlFor="employee name"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Section:
-                  </label>
-                  <input
-                    type="text"
-                    id="empno"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 pb-3 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Employee number..."
-                    value={account["emp-number"]}
-                    onChange={(e) => setEmpno(e.target.value)}
-                  />
-                </div>
-
-                <div className="col-span-1">
-                  <label
-                    htmlFor="employee name"
+                    htmlFor="location"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Location:
                   </label>
                   <input
                     type="text"
-                    id="empno"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 pb-3 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Employee number..."
-                    value={account["emp-number"]}
-                    onChange={(e) => setEmpno(e.target.value)}
+                    id="location"
+                    className="border-none outline-none bg-slate-100/70 text-gray-900 uppercase mb-3 font-bold  text-[12px] focus:ring-blue-500 focus:border-blue-500 block w-full py-1   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:lowercase placeholder:text-stone-600/80 placeholder:font-thin  placeholder:text-[10px]"
+                    value={filter3}
+                    onChange={handleInputChange3}
+                    placeholder="Location..."
                   />
+                  <div id="autocomplete-list">
+                    {suggestions3.map((item, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleSuggestionClick3(item)}
+                      >
+                        <p className="text-gray-900/90 text-xs italic mb-1">
+                          {item}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="col-span-3 w-full">
+                  <label
+                    htmlFor="coordinator"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Coordinator:
+                  </label>
+                  <input
+                    type="text"
+                    id="coordinator"
+                    className="border-none outline-none bg-slate-100/70 text-gray-900 uppercase mb-3 font-bold  text-[12px] focus:ring-blue-500 focus:border-blue-500 block w-full py-1   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:lowercase placeholder:text-stone-600/80 placeholder:font-thin  placeholder:text-[10px]"
+                    value={filter1}
+                    onChange={handleInputChange1}
+                    placeholder="press spacebar to get options... enter suggestion to autocomplete"
+                  />
+                  <div id="autocomplete-list">
+                    {suggestions1.map((item, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleSuggestionClick1(item)}
+                      >
+                        <p className="text-gray-900/90 text-xs italic mb-1">
+                          {item}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
               <div className="w-1/2">
-                <label
-                  htmlFor="employee name"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Coordinator:
-                </label>
-                <input
-                  type="text"
-                  id="empno"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 pb-3 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Employee number..."
-                  value={account["emp-number"]}
-                  onChange={(e) => setEmpno(e.target.value)}
-                />
-              </div>
-
-              <div className="w-1/2 grid grid-cols-2">
-                <div className="col-span-1">
+                <div>
                   <label
-                    htmlFor="employee name"
+                    htmlFor="creditlimit"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Credit Limit:
                   </label>
                   <input
                     type="text"
-                    id="empno"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 pb-3 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    id="creditlimit"
+                    className="border-none outline-none bg-slate-100/70 text-gray-900 uppercase mb-3 font-bold  text-[12px] focus:ring-blue-500 focus:border-blue-500 block w-1/4 py-1   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:lowercase placeholder:text-stone-600/80 placeholder:font-thin  placeholder:text-[10px]"
                     placeholder="Employee number..."
-                    value={account["emp-number"]}
-                    onChange={(e) => setEmpno(e.target.value)}
+                    value={creditlimit}
+                    onChange={(e) => setCreditlimit(e.target.value)}
                   />
                 </div>
-                <div className="col-span-1">
-                  <button
-                    className="mt-9 mx-auto  bg-blue-500 hover:bg-blue-400 text-white text-xs font-bold py-2 my-2 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-                    type="submit"
-                  >
-                    {" "}
-                    SAVE{" "}
-                  </button>
-                </div>
+              </div>
+              <div>
+                <button
+                  className="mt-9 mx-auto  bg-blue-500 hover:bg-blue-400 text-white text-xs font-bold py-2 my-2 px-2 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+                  type="submit"
+                >
+                  {" "}
+                  SAVE{" "}
+                </button>
               </div>
             </div>
           </form>
