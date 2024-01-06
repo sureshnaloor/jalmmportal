@@ -191,11 +191,11 @@ function HeaderComponent() {
             </Link>
             </span>
             <span>
-            <Link href="/simlist">
+            {/* <Link href="/simlist">
               <a className="text-[10px] mr-2 border-b-2 border-blue-600 p-1 text-teal-900 opacity-90  hover:text-gray-600 dark:hover:text-white  font-semibold">
                 Cleaned List
               </a>
-            </Link>
+            </Link> */}
             </span>
           </div>
         </div>

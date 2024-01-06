@@ -30,11 +30,11 @@ function VendorevalRemarks({vendornumber}) {
         setTextContent(contentdisplay)
     }
   return (
-    <div className="bg-zinc-100 mx-auto w-5/6 drop-shadow border-2 border-slate-800 rounded-md mb-9">
-    <h4 className="mb-3 py-3 shadow-lg shadow-slate-200 mx-auto my-auto bg-emerald-400 text-white font-bold font-italic tracking-widest">
+    <div className="bg-zinc-100 mx-auto w-5/6 drop-shadow shadow-lg shadow-stone-800 mb-9">
+    <div className="w-1/2 mb-3 py-1 shadow-lg text-[14px] shadow-slate-200 mx-auto my-auto bg-emerald-800 text-white font-bold font-italic tracking-widest">
       {" "}
-      The Evaluation REMARKS FOR THE vendor code: {vendornumber}
-    </h4>
+      <h3 className='flex justify-center'>The Evaluation Remarks for vendor code: {vendornumber}</h3>
+    </div>
     {
       textContent["remarks"] ? 
 

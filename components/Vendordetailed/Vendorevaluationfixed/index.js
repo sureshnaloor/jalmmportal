@@ -94,61 +94,61 @@ function Vendorevaluation({ vendornumber }) {
                   <div className="grid grid-cols-12 mb-10"> 
                   {" "}
                   <p className="col-span-5 text-[14px] font-bold font-Lato ">Quotation submission Rating:{" "} </p>
-                  <h4 className="col-span-1 font-bold text-xl text-green-900 shadow-lg shadow-slate-900 mr-10 pl-3">{vendorevaled["fixedevalyear1"]["fixedeval"][0]}{" "}</h4>
+                  <h4 className="col-span-1 font-bold text-[16px] text-green-900 shadow-lg shadow-slate-900 mr-10 pl-3">{vendorevaled["fixedevalyear1"]["fixedeval"][0]}{" "}</h4>
                   
                   {vendorevaled["fixedevalyear1"]["fixedeval"][0] == 3 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-green-800"> Always submits quotation timely! </span>
+                    <span className="col-span-6 font-Freehand text-xl text-green-800"> Always submits quotation timely! </span>
                   ) : vendorevaled["fixedevalyear1"]["fixedeval"][0] == 2 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-amber-600"> Submits quotation after reminders </span>
+                    <span className="col-span-6 font-Freehand text-xl text-amber-600"> Submits quotation after reminders </span>
                   ) : vendorevaled["fixedevalyear1"]["fixedeval"][0] == 1 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-red-800"> Very rarely submits, after reminders only. </span>
+                    <span className="col-span-6 font-Freehand text-xl text-red-800"> Very rarely submits, after reminders only. </span>
                   ) : null} 
                 </div>
 
                 <div className="grid grid-cols-12 mb-10">
                 <p className="col-span-5 text-[14px] font-bold font-Lato"> Payment terms Rating:{" "}</p>
-                  <h4 className="col-span-1 font-bold text-xl text-green-900 shadow-lg shadow-slate-900 mr-10 pl-3">{vendorevaled["fixedevalyear1"]["fixedeval"][1]}{" "}</h4>
+                  <h4 className="col-span-1 font-bold text-[16px] text-green-900 shadow-lg shadow-slate-900 mr-10 pl-3">{vendorevaled["fixedevalyear1"]["fixedeval"][1]}{" "}</h4>
                   {vendorevaled["fixedevalyear1"]["fixedeval"][1] == 20 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-green-800"> Credit terms </span>
+                    <span className="col-span-6 font-Freehand text-xl text-green-800"> Credit terms </span>
                   ) : vendorevaled["fixedevalyear1"]["fixedeval"][1] == 10 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-amber-600">
+                    <span className="col-span-6 font-Freehand text-xl text-amber-600">
                       {" "}
                       Partial credit terms, but insists on some advance{" "}
                     </span>
                   ) : vendorevaled["fixedevalyear1"]["fixedeval"][1] == 5 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-amber-600"> Full advance, no credit </span>
+                    <span className="col-span-6 font-Freehand text-xl text-amber-600"> Full advance, no credit </span>
                   ) : null}
                 </div>
 
                 <div className="grid grid-cols-12 mb-10">
                   {" "}
                   <p className="col-span-5 text-[14px] font-bold font-Lato"> Quality Certification:{" "}</p>
-                  <h4 className="col-span-1 font-bold text-xl text-green-900 shadow-lg shadow-slate-900 mr-10 pl-3">{vendorevaled["fixedevalyear1"]["fixedeval"][2]}{" "}</h4>
+                  <h4 className="col-span-1 font-bold text-[16px] text-green-900 shadow-lg shadow-slate-900 mr-10 pl-3">{vendorevaled["fixedevalyear1"]["fixedeval"][2]}{" "}</h4>
                   {vendorevaled["fixedevalyear1"]["fixedeval"][2] == 3 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-green-800"> ISO certified in quality and valid currently! </span>
+                    <span className="col-span-6 font-Freehand text-xl text-green-800"> ISO certified in quality and valid currently! </span>
                   ) : vendorevaled["fixedevalyear1"]["fixedeval"][2] == 2 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-amber-600"> Has no ISO but in-house QMS </span>
+                    <span className="col-span-6 font-Freehand text-xl text-amber-600"> Has no ISO but in-house QMS </span>
                   ) : vendorevaled["fixedevalyear1"]["fixedeval"][2] == 1 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-red-800"> Has no ISO and no in-house QMS. </span>
+                    <span className="col-span-6 font-Freehand text-xl text-red-800"> Has no ISO and no in-house QMS. </span>
                   ) : null}
                 </div>
 
                 <div className="grid grid-cols-12 mb-10">
                   {" "}
                   <p className="col-span-5 text-[14px] font-bold font-Lato">Technical clarity of bids and post PO documentation:{" "}</p>
-                  <h4 className="col-span-1 font-bold text-xl text-green-900 shadow-lg shadow-slate-900 mr-10 pl-3">{vendorevaled["fixedevalyear1"]["fixedeval"][3]}{" "}</h4>
+                  <h4 className="col-span-1 font-bold text-[16px] text-green-900 shadow-lg shadow-slate-900 mr-10 pl-3">{vendorevaled["fixedevalyear1"]["fixedeval"][3]}{" "}</h4>
                   {vendorevaled["fixedevalyear1"]["fixedeval"][3] == 3 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-green-800">
+                    <span className="col-span-6 font-Freehand text-xl text-green-800">
                       {" "}
                       Submits required documents timely and with quality!{" "}
                     </span>
                   ) : vendorevaled["fixedevalyear1"]["fixedeval"][3] == 2 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-amber-600">
+                    <span className="col-span-6 font-Freehand text-xl text-amber-600">
                       {" "}
                       Submits after reminders and followups and needs revisions{" "}
                     </span>
                   ) : vendorevaled["fixedevalyear1"]["fixedeval"][3] == 1 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-red-800">
+                    <span className="col-span-6 font-Freehand text-xl text-red-800">
                       {" "}
                       Very bad quality documentation.{" "}
                     </span>
@@ -158,16 +158,16 @@ function Vendorevaluation({ vendornumber }) {
                 <div className="grid grid-cols-12">
                   {" "}
                   <p className="col-span-5 text-[14px] font-bold font-Lato">Salesman Interaction:{" "}</p>
-                  <h4 className="col-span-1 font-bold text-xl text-green-900 shadow-lg shadow-slate-900 mr-10 pl-3">{vendorevaled["fixedevalyear1"]["fixedeval"][4]}{" "}</h4>
+                  <h4 className="col-span-1 font-bold text-[16px] text-green-900 shadow-lg shadow-slate-900 mr-10 pl-3">{vendorevaled["fixedevalyear1"]["fixedeval"][4]}{" "}</h4>
                   {vendorevaled["fixedevalyear1"]["fixedeval"][4] == 3 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-green-800"> Frequently visits and always accessible! </span>
+                    <span className="col-span-6 font-Freehand text-xl text-green-800"> Frequently visits and always accessible! </span>
                   ) : vendorevaled["fixedevalyear1"]["fixedeval"][4] == 2 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-amber-600">
+                    <span className="col-span-6 font-Freehand text-xl text-amber-600">
                       {" "}
                       Visits rarely but mostly responsive over phone and mail{" "}
                     </span>
                   ) : vendorevaled["fixedevalyear1"]["fixedeval"][4] == 1 ? (
-                    <span className="col-span-6 font-Freehand text-2xl text-red-800" >
+                    <span className="col-span-6 font-Freehand text-xl text-red-800" >
                       {" "}
                       very rarely visits and difficult to access also.{" "}
                     </span>

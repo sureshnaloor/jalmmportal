@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 // import moment from 'moment'
 import HeaderComponent from "../../components/HeaderComponent";
 import FooterComponent from "../../components/FooterComponent";
+import Link from 'next/link'
 
 import { TrashIcon, CheckCircleIcon, LightBulbIcon } from "@heroicons/react/solid";
 
@@ -290,7 +291,9 @@ function Simlist() {
             <p> List of STC SIM Mobiles and routers </p>
             <button className="absolute top-3 right-5 text-[12px] font-semibold text-amber-100 bg-green-600 px-2 py-1 border-2 hover:text-white hover:bg-green-800">
               {" "}
-              + New SIM{" "}
+              <Link  href="/simlist/newsim">
+              + New SIM
+              </Link>
             </button>
           </div>
           <div className="w-full">

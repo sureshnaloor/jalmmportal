@@ -268,8 +268,8 @@ function Simeditcomponent({ account, setShowModal }) {
                   <input
                     type="text"
                     id="department"
-                    className="border-none outline-none bg-slate-100/70 text-gray-900 uppercase mb-3 font-bold  text-[12px] focus:ring-blue-500 focus:border-blue-500 block w-full py-1   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:lowercase placeholder:text-stone-600/80 placeholder:font-thin  placeholder:text-[10px]"
-                    placeholder="department..."
+                    className="border-none outline-none bg-slate-100/70 text-gray-900 uppercase mb-3 font-bold  text-[12px] focus:ring-blue-500 focus:border-blue-500 block w-full py-1   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:uppercase placeholder:text-stone-600/80 placeholder:font-bold  placeholder:text-[12px]"
+                    placeholder={account.department}
                     value={filter2}
                     onChange={handleInputChange2}
                   />
@@ -297,10 +297,10 @@ function Simeditcomponent({ account, setShowModal }) {
                   <input
                     type="text"
                     id="location"
-                    className="border-none outline-none bg-slate-100/70 text-gray-900 uppercase mb-3 font-bold  text-[12px] focus:ring-blue-500 focus:border-blue-500 block w-full py-1   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:lowercase placeholder:text-stone-600/80 placeholder:font-thin  placeholder:text-[10px]"
+                    className="border-none outline-none bg-slate-100/70 text-gray-900 uppercase mb-3 font-bold  text-[12px] focus:ring-blue-500 focus:border-blue-500 block w-full py-1   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:uppercase placeholder:text-stone-600/80 placeholder:font-bold  placeholder:text-[12px]"
                     value={filter3}
                     onChange={handleInputChange3}
-                    placeholder="Location..."
+                    placeholder={account.location}
                   />
                   <div id="autocomplete-list">
                     {suggestions3.map((item, index) => (
@@ -326,10 +326,10 @@ function Simeditcomponent({ account, setShowModal }) {
                   <input
                     type="text"
                     id="coordinator"
-                    className="border-none outline-none bg-slate-100/70 text-gray-900 uppercase mb-3 font-bold  text-[12px] focus:ring-blue-500 focus:border-blue-500 block w-full py-1   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:lowercase placeholder:text-stone-600/80 placeholder:font-thin  placeholder:text-[10px]"
+                    className="border-none outline-none bg-slate-100/70 text-gray-900 uppercase mb-3 font-bold  text-[12px] focus:ring-blue-500 focus:border-blue-500 block w-full py-1   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:uppercase placeholder:text-stone-600/80 placeholder:font-bold  placeholder:text-[12px]"
                     value={filter1}
                     onChange={handleInputChange1}
-                    placeholder="press spacebar to get options... enter suggestion to autocomplete"
+                    placeholder={account.coordinator}
                   />
                   <div id="autocomplete-list">
                     {suggestions1.map((item, index) => (

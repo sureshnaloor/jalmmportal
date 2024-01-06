@@ -245,7 +245,7 @@ function Projectdetails({ projects }) {
                 </div>
               </div>
 
-              <div className="xl:w-1/2 md:w-1/2 p-4  h-96 max-h-96 overflow-y-scroll  hide-scroll-bar">
+              <div className="xl:w-1/2 md:w-1/2 p-4   overflow-y-scroll  hide-scroll-bar">
                 <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl bg-zinc-100 p-6 rounded-lg">
                   <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                     <svg
@@ -440,7 +440,7 @@ function Projectdetails({ projects }) {
                 </div>
               </div>
 
-              <div className="xl:w-1/2 md:w-1/2 p-4 max-h-96 overflow-y-scroll  hide-scroll-bar">
+              <div className="xl:w-1/2 md:w-1/2 p-4 overflow-y-scroll  hide-scroll-bar">
                 <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl p-6 bg-zinc-100 rounded-lg">
                   <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                     <svg
@@ -457,7 +457,7 @@ function Projectdetails({ projects }) {
                       <path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"></path>
                     </svg>
                   </div>
-                  <h2 className="text-[14px] shadow-slate-600 shadow-md  text-gray-900 font-medium title-font mb-2">
+                  <h2 className="text-[14px] shadow-slate-600 shadow-md py-3 bg-slate-800 text-white flex justify-center font-medium title-font mb-2">
                     Purchase Orders for: {project["project-wbs"]}
                   </h2>
                   <div className="leading-relaxed text-base">
@@ -549,7 +549,7 @@ function Projectdetails({ projects }) {
                     </div>
                   </div>
 
-                  <h2 className="text-[14px] shadow-md shadow-slate-800 text-gray-900 font-medium title-font mb-2">
+                  <h2 className="text-[14px] shadow-md py-3 flex justify-center bg-stone-800 text-white shadow-slate-800 font-medium title-font mb-2">
                     Purchase Orders under network: {network["network-num"]}
                   </h2>
 
@@ -645,8 +645,8 @@ function Projectdetails({ projects }) {
               </div>
 
               {/* po details component1 */}
-              <div className="xl:w-1/2 md:w-1/2 p-4 max-h-96 overflow-y-scroll  hide-scroll-bar">
-                <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl p-6 bg-zinc-100 rounded-lg">
+              <div className="xl:w-1/2 md:w-1/2 p-4 overflow-y-scroll  hide-scroll-bar">
+                <div className="border-1 border-zinc-600 shadow-md hover:shadow-2xl p-6 bg-zinc-100 rounded-lg">
                   <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                     <svg
                       fill="none"
@@ -661,13 +661,14 @@ function Projectdetails({ projects }) {
                       <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                   </div>
-                  <div className="bg-stone-300  rounded text-[12px] text-black font-semibold">
+                  <div className="bg-stone-900 py-3  rounded text-[12px] text-white  font-semibold">
                     {/* PO Details for:{currentPurchaseorder}{" "} */}
                     {selectedProject ? (
                       <div className="text-sm">
                         {" "}
-                        Selected PO against Project{" "}
-                        {selectedProject.replace("%2F", "/")}{" "}
+                        Selected PO: {" "}
+                        {/* {selectedProject.replace("%2F", "/")}{" "} */}
+                        {currentPurchaseorder}
                       </div>
                     ) : null}
                     {/* <div className="rounded-lg h-64 overflow-hidden"> */}
@@ -688,7 +689,7 @@ function Projectdetails({ projects }) {
                         animate="visible"
                         variants={variant}
                       >
-                        <div className="flex flex-col">
+                        <div className="flex flex-col py-1">
                           <div className="overflow-y-auto sm:-mx-6 lg:-mx-8">
                             <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                               <div className="overflow-y-auto">
@@ -772,13 +773,13 @@ function Projectdetails({ projects }) {
                                       .map((row, index) => (
                                         <tr
                                           key={index}
-                                          className="bg-stone-300  border-b"
+                                          className="bg-stone-100  border-b-4 py-3 my-3"
                                         >
-                                          <td className="px-2 whitespace-nowrap text-[10px] font-thin text-black">
+                                          <td className="px-2 py-3 whitespace-nowrap text-[10px] font-thin text-black">
                                             {row["po-line-item"]}
                                           </td>
 
-                                          <td className="px-2 whitespace-nowrap text-[12px] font-bold text-black">
+                                          <td className="px-1 py-2 whitespace-nowrap text-[11px] font-bold text-black">
                                             {row["material"]["matdescription"]}
                                           </td>
                                           {/* <td className="px-2 whitespace-nowrap text-[8px] font-medium text-black">
@@ -793,24 +794,24 @@ function Projectdetails({ projects }) {
                                           <td className="text-[12px] text-black font-light px-2 max-h-full whitespace-nowrap">
                                             {row["po-unit-of-measure"]}
                                           </td>
-                                          <td className="text-[12px] text-black font-medium px-2 max-h-full whitespace-nowrap">
+                                          <td className="text-[12px] text-black font-medium px-2 max-h-full whitespace-nowrap text-right">
                                             {(
                                               Math.round(
                                                 row["po-unit-price"] * 100
                                               ) / 100
                                             ).toLocaleString()}
                                           </td>
-                                          <td className="text-[12px] text-black font-bold px-2 max-h-full whitespace-nowrap">
+                                          <td className="text-[12px] text-black font-bold px-2 max-h-full whitespace-nowrap text-right">
                                             {(
                                               Math.round(
                                                 row["po-value-sar"] * 100
                                               ) / 100
                                             ).toLocaleString()}
                                           </td>
-                                          <td className="text-[12px] text-black font-medium px-2 max-h-full whitespace-nowrap">
+                                          <td className="text-[12px] text-black font-medium px-2 max-h-full whitespace-nowrap text-right">
                                             {row["pending-qty"].$numberDecimal}
                                           </td>
-                                          <td className="text-[10px] text-red-800  font-black px-2 max-h-full whitespace-nowrap">
+                                          <td className="text-[10px] text-red-800  font-black px-2 max-h-full whitespace-nowrap text-right">
                                             {(
                                               Math.round(
                                                 row["pending-val-sar"] * 100
@@ -848,7 +849,7 @@ function Projectdetails({ projects }) {
               {/* </div> */}
               {/* </div> */}
 
-              <div className="xl:w-1/2 md:w-1/2 p-4 max-h-96 overflow-y-scroll  hide-scroll-bar">
+              <div className="xl:w-1/2 md:w-1/2 p-4  overflow-y-scroll  hide-scroll-bar">
                 <div className="border-2 border-zinc-600 shadow-md hover:shadow-2xl p-6 bg-zinc-100 rounded-lg">
                   <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-pink-100 text-pink-500 mb-4">
                     <svg

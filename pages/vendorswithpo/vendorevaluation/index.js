@@ -3,9 +3,11 @@ import Vendorevaluationfixed from "../../../components/Vendordetailed/Vendoreval
 import Vendorevaluationyearwise from "../../../components/Vendordetailed/Vendorevaluationyearwise";
 import Vendorcompletecontacts from "../../../components/Vendordetailed/Vendorcontacts";
 import Vendormatgroups from "../../../components/Vendordetailed/Vendormatgroups";
-import Navigationcomp from "../../../components/Navigationcomponent";
+// import Navigationcomp from "../../../components/Navigationcomponent";
+import HeaderComponent from "../../../components/HeaderComponent";
 import Vendorevaluationpastyears from "../../../components/Vendordetailed/vendorevaluationpastyears";
 import VendorevalRemarks from "../../../components/Vendordetailed/VendorevalRemarks";
+import Vendorfreetext  from "../../../components/Vendordetailed/Vendorfreetext"
 
 
 import Router, { useRouter } from "next/router";
@@ -16,7 +18,8 @@ function Vendorevaluationcomp() {
 
   return (
     <div>
-      <Navigationcomp />
+      {/* <Navigationcomp /> */}
+      < HeaderComponent /> 
       <div class="relative pb-6 mb-3 overflow-hidden rounded-lg shadow-lg cursor-pointer m-4 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
       <img
           class="object-cover w-full h-60"
@@ -34,6 +37,7 @@ function Vendorevaluationcomp() {
       <VendorevalRemarks vendornumber={vendornumber} /> 
 
       <Vendorcompletecontacts vendornumber={vendornumber} />
+      <Vendorfreetext vendornumber = {vendornumber} />
       
     </div>
   );

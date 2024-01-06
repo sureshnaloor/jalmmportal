@@ -57,10 +57,12 @@ function Vendorevaluationyearwise({ vendornumber }) {
   return (
     <div className="bg-zinc-100 mx-auto w-5/6 drop-shadow rounded-md mb-9">
       
-      <h4 className="mb-3 py-3 shadow-lg shadow-slate-200 mx-auto my-auto bg-sky-900 text-white font-bold font-italic tracking-widest">
+      <div className="flex justify-center align-middle">
+      <h4 className="mb-3 py-3 px-16 text-[14px] shadow-lg shadow-slate-200 mx-auto my-auto bg-sky-900 text-white font-bold font-italic tracking-widest">
         {" "}
         The Variable yearly PO wise parameters:{" "}
       </h4>
+      </div>
       
       <div className="mx-auto drop-shadow rounded-md mb-9">
         

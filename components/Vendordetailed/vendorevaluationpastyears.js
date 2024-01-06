@@ -35,36 +35,36 @@ function vendorevaluationpastyears({ vendornumber }) {
   }, [vendornumber]);
 
   return (
-    <div className="bg-zinc-100 mx-auto w-5/6 drop-shadow rounded-md mb-9">
-      <h4 className="mb-3 py-3 shadow-lg shadow-slate-200 mx-auto my-auto bg-teal-600 text-white font-bold font-italic tracking-widest">
+    <div className="bg-zinc-100 p-6 mx-auto w-5/6 drop-shadow rounded-md mb-9 shadow-xl shadow-zinc-800">
+      <h4 className="mb-3 py-1 px-6 w-1/2 shadow-lg text-[14px] shadow-slate-200 mx-auto my-auto bg-teal-600 text-white font-bold font-italic tracking-widest">
         {" "}
         The Evaluation marks for past years for the vendor code: {vendornumber}
       </h4>
 
       <div>
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-4 gap-10">
           <div className="col-span-1">
             {" "}
-            <h3 className="bg-amber-200 text-green-900 pr-9 mr-9">
-              Year 2019 Score
+            <h3 className="w-1/2 bg-amber-200 text-green-900 mx-auto py-1 font-bold text-[12px]">
+              2019:
             </h3>
           </div>
           <div className="col-span-1">
             {" "}
-            <h3 className="bg-sky-200 text-green-900 pr-9 mr-9">
-              Year 2020 Score
+            <h3 className="w-1/2 bg-sky-200 text-green-900 mx-auto py-1 font-bold text-[12px]">
+              2020:
             </h3>
           </div>
           <div className="col-span-1">
             {" "}
-            <h3 className="bg-emerald-200 text-green-900 pr-9 mr-9">
-              Year 2021 Score{" "}
+            <h3 className="w-1/2 bg-emerald-200 text-green-900 mx-auto py-1 font-bold text-[12px]">
+              2021:
             </h3>
           </div>
           <div className="col-span-1">
             {" "}
-            <h3 className="bg-teal-200 text-green-900 pr-9 mr-9">
-              Year 2022 Score
+            <h3 className="w-1/2 bg-teal-200 text-green-900 mx-auto py-1 font-bold text-[12px]">
+              2022:
             </h3>
           </div>
 
@@ -72,13 +72,13 @@ function vendorevaluationpastyears({ vendornumber }) {
 
           {vendorpastscores["past"]?.find(past=>past.pastyear=="2019")?.pastyearscore >= 0 ? ( 
           
-            <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
+            <p className="pt-3 ml-20 mt-1 font-bold text-[12px] text-teal-900">
               {" "}
-              Score is updated: 
-              <span className="bg-amber-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores["past"].find(past=>past.pastyear=="2019")?.pastyearscore.toString()}</span>
+              Score:
+              <span className=" bg-amber-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores["past"].find(past=>past.pastyear=="2019")?.pastyearscore.toString()}</span>
             </p>
           ) : (
-            <div className="mt-3 grid grid-cols-2">
+            <div className="ml-20 mt-3 grid grid-cols-2">
               <input
                 type="text"
                 id="year2019"
@@ -123,9 +123,9 @@ function vendorevaluationpastyears({ vendornumber }) {
           )}
 
           {vendorpastscores["past"]?.find(past=>past.pastyear=="2020")?.pastyearscore >= 0 ? (
-            <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
+            <p className="pt-3 mt-1 ml-20 font-bold  text-sm text-teal-900">
               {" "}
-              score is updated:
+              Score:
               <span className="bg-sky-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores["past"].find(past=>past.pastyear=="2020")?.pastyearscore.toString()}</span>
             </p>
           ) : (
@@ -173,9 +173,9 @@ function vendorevaluationpastyears({ vendornumber }) {
           )}
 
           {vendorpastscores["past"]?.find(past=>past.pastyear=="2021")?.pastyearscore >= 0 ? (
-            <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
+            <p className="pt-3 mt-1 ml-20 font-bold text-sm text-teal-900">
               {" "}
-              score is updated:{" "}
+              Score:
               <span className="bg-emerald-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores["past"].find(past=>past.pastyear=="2021")?.pastyearscore.toString()}</span>
             </p>
           ) : (
@@ -223,10 +223,10 @@ function vendorevaluationpastyears({ vendornumber }) {
           )}
 
           {vendorpastscores["past"]?.find(past=>past.pastyear=="2022")?.pastyearscore >= 0 ? (
-            <p className="pt-3 mt-1 font-bold uppercase text-sm text-teal-900">
+            <p className="pt-3 mt-1 ml-20 font-bold text-sm text-teal-900">
               {" "}
-              score is updated:{" "}
-              <span className="bg-amber-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores["past"].find(past=>past.pastyear=="2022")?.pastyearscore.toString()}</span>
+              Score:
+              <span className="bg-teal-300 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">{vendorpastscores["past"].find(past=>past.pastyear=="2022")?.pastyearscore.toString()}</span>
             </p>
           ) : (
             <div className="mt-3 grid grid-cols-2">

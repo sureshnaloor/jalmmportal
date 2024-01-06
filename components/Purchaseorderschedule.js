@@ -5,9 +5,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTheme } from "next-themes";
+import { useSession,  } from "next-auth/react";
 
 function Purchaseorderschedule({ ponumber }) {
   const [poheader, setPoheader] = useState([]);
+  const { data: session } = useSession();
 
   const [editGeneraldata, setEditGeneraldata] = useState(false);
   const [gendata, setGendata] = useState({});
@@ -28,7 +31,7 @@ function Purchaseorderschedule({ ponumber }) {
   const [poackdate, setPOackdate] = useState(null);
   const [delysch, setDelysch] = useState("");
   const [podelydate, setPodelydate] = useState(null);
-  const [estdelydate, setEstdelydate] = useState(null);
+  const [estdelydate, setEstdelydate] = useState(new Date(null));
   const [basedesignrecdate, setBasedesignrecdate] = useState(null);
   const [basedesignapprdate, setBasedesignapprdate] = useState(null);
   const [basedesigncomments, setBasedesigncomments] = useState("");
@@ -515,7 +518,7 @@ function Purchaseorderschedule({ ponumber }) {
             >
               Estimated delivery date as per current status.
             </label>
-            {gendata?.generaldata?.estdelydate ? (
+            {gendata?.generaldata?.estdelydate ?  (
               <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
                 {" "}
                 {moment(estdelydate).format("DD-MM-YYYY")}{" "}
@@ -523,7 +526,7 @@ function Purchaseorderschedule({ ponumber }) {
             ) : (
               <DatePicker
                 className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                selected={estdelydate}
+                selected={new Date(estdelydate)}
                 onChange={(date) => setEstdelydate(date)}
                 popperModifiers={[
                   {

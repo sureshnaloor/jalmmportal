@@ -267,16 +267,16 @@ function Vendor() {
                 </p>
               </div> */}
               
-                  <div className="flex flex-col container mx-auto h-[600px]">
+                  <div className="flex flex-col container mx-auto min-h-[600px]">
                   
                     <div className="overflow-x-auto sm:-mx-6 lg:-mx-8  overflow-y-scroll hide-scroll-bar">
                       <div className="py-2 inline-block min-w-full  sm:px-3 lg:px-8 ">
                       
                         <div className="overflow-hidden border-2 border-zinc-600 shadow-md hover:shadow-2xl rounded-2xl">
-                        {selectedVendor ? <div className="text-sm"> POs against vendor {selectedVendor}</div> : null }
+                        {selectedVendor ? <div className="text-sm font-bold bg-zinc-800 py-3 text-white tracking-wider"> POs against vendor: <span className="font-italic tracking-widest"> {selectedVendor}</span></div> : null }
 
-                        <div className="rounded-lg h-64 overflow-hidden">
-                <Image
+                        {/* <div className="rounded-lg h-64 overflow-hidden"> */}
+                {/* <Image
                   width="100%"
                   height="50%"
                   objectFit="cover"
@@ -284,20 +284,20 @@ function Vendor() {
                   alt="content"
                   className="object-cover object-center h-1/2 w-1/2 opacity-70"
                   src="/images/vendorpage1.jpg"
-                />
-              </div>
+                /> */}
+              {/* </div> */}
                           <table className="min-w-full">
                             <thead className=" bg-stone-400 border-b">
                               <tr>
                                 <th
                                   scope="col"
-                                  className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                                  className="text-[12px] font-medium text-gray-900 px-3 py-4 text-left"
                                 >
                                   #
                                 </th>
                                 <th
                                   scope="col"
-                                  className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                                  className="text-[12px] font-bold tracking-wider text-gray-900 px-3 py-4 text-left"
                                 >
                                   PO Number
                                 </th>
@@ -309,28 +309,28 @@ function Vendor() {
                               </th> */}
                                 <th
                                   scope="col"
-                                  className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                                  className="text-[12px] font-bold tracking-wider text-gray-900 px-3 py-4 text-right"
                                 >
                                   PO Value
                                 </th>
 
                                 <th
                                   scope="col"
-                                  className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                                  className="text-[12px] font-medium tracking-wider text-gray-900 px-3 py-4 text-right"
                                 >
                                   Pending PO Value
                                 </th>
 
                                 <th
                                   scope="col"
-                                  className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                                  className="text-[12px] font-medium text-gray-900 px-3 py-4 text-left"
                                 >
                                   PO Date
                                 </th>
 
                                 <th
                                   scope="col"
-                                  className="text-[10px] font-medium text-gray-900 px-3 py-4 text-left"
+                                  className="text-[12px] font-medium tracking-wider text-gray-900 px-3 py-4 text-left"
                                 >
                                   Completion %
                                 </th>
@@ -348,34 +348,34 @@ function Vendor() {
                                 .map((row, index) => (
                                   <tr
                                     key={index}
-                                    className="bg-zinc-300 border-b transition duration-300 ease-in-out active:bg-neutral-700  visited:bg-violet-700 hover:bg-gray-100 "
+                                    className="bg-zinc-300  border-b-4 transition duration-300 ease-in-out active:bg-neutral-700  visited:bg-violet-700 hover:bg-gray-100 "
                                     onClick={() => {
                                       setActivePo(row.ponum, index);
                                       console.log("I am clicked!");
                                     }}
                                   >
-                                    <td className="px-1 py-1 whitespace-nowrap text-[8px] font-medium text-gray-900">
+                                    <td className="px-1 py-3 whitespace-nowrap text-[10px] font-medium text-gray-900">
                                       {index + 1}
                                     </td>
-                                    <td className="text-[10px] text-gray-900 font-semibold px-1 py-1 whitespace-nowrap">
+                                    <td className="text-[12px] text-gray-900 font-bold px-1 py-1 whitespace-nowrap">
                                       {row.ponum}
                                     </td>
                                     {/* <td className="text-[12px] text-gray-600 font-semibold px-2 py-1 whitespace-nowrap">
                                     {row.vendor}
                                   </td> */}
-                                    <td className="text-[10px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap ">
+                                    <td className="text-[12px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap text-right ">
                                       {(
                                         Math.round(row.poval * 100) / 100
                                       ).toLocaleString()}
                                     </td>
 
-                                    <td className="text-[10px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap ">
+                                    <td className="text-[12px] text-gray-900 font-semibold px-2 py-1 whitespace-nowrap text-right ">
                                       {(
                                         Math.round(row.balgrval * 100) / 100
                                       ).toLocaleString()}
                                     </td>
 
-                                    <td className="text-[10px] text-gray-800 font-semibold px-2 py-1 whitespace-nowrap ">
+                                    <td className="text-[12px] text-gray-800 font-semibold px-2 py-1 whitespace-nowrap ">
                                       {moment(row.podate).format("MM-DD-YYYY")}
                                     </td>
                                     {/* <td> */}
@@ -450,12 +450,12 @@ function Vendor() {
               </div> */}
                   {/* <div className="fixed top-0 left-0 h-full w-full bg-slate-400 bg-opacity-10 backdrop-blur-0 flex justify-center items-center"> */}
 
-                  <div className="w-[900px] py-0 border-2 border-zinc-600 shadow-md hover:shadow-2xl rounded-2xl flex flex-col h-[600px]  overflow-y-scroll  hide-scroll-bar">
-                    <div className="bg-stone-300  rounded text-[12px] text-black font-semibold">
+                  <div className="w-[900px] py-0 border-2 border-zinc-600 shadow-md hover:shadow-2xl rounded-2xl flex flex-col min-h-[600px] overflow-y-scroll  hide-scroll-bar">
+                    <div className="bg-stone-500  py-3 shadow-md shadow-slate-600 rounded text-[12px] text-white font-bold">
                       {/* PO Details for:{currentPurchaseorder}{" "} */}
-                      {selectedVendor ? <div className="text-sm"> Selected PO against vendor {selectedVendor} </div> : null }
-                      <div className="rounded-lg h-64 overflow-hidden">
-                <Image
+                      {selectedVendor ? <div className="text-sm tracking-wide font-bold"> Selected PO:   {currentPurchaseorder} </div> : null }
+                      {/* <div className="rounded-lg h-64 overflow-hidden"> */}
+                {/* <Image
                   width="100%"
                   height="50%"
                   objectFit="cover"
@@ -463,8 +463,8 @@ function Vendor() {
                   alt="content"
                   className="object-cover object-center h-1/2 w-1/2 opacity-70"
                   src="/images/vendorpage2.jpg"
-                />
-              </div>
+                /> */}
+              {/* </div> */}
                       
                       {!isLoading ? (
                         <motion.div
@@ -559,13 +559,13 @@ function Vendor() {
                                         .map((row, index) => (
                                           <tr
                                             key={index}
-                                            className="bg-stone-300  border-b"
+                                            className="bg-stone-300  border-b-4"
                                           >
-                                            <td className="px-2 py-2 whitespace-nowrap text-[8px] font-medium text-black">
+                                            <td className="px-1 py-4  whitespace-nowrap text-[8px] font-medium text-black">
                                               {row["po-line-item"]}
                                             </td>
                                             
-                                            <td className="px-2 whitespace-nowrap text-[9px] font-bold text-black">
+                                            <td className="px-2 whitespace-nowrap text-[11px] font-semibold text-black">
                                               {row["material"]["matdescription"]}
                                             </td>
                                             {/* <td className="px-2 whitespace-nowrap text-[8px] font-medium text-black">
@@ -590,20 +590,20 @@ function Vendor() {
                                                 ) / 100
                                               ).toLocaleString()}
                                             </td>
-                                            <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
+                                            <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap text-right">
                                               {(
                                                 Math.round(
                                                   row["po-value-sar"] * 100
                                                 ) / 100
                                               ).toLocaleString()}
                                             </td>
-                                            <td className="text-[10px] text-black font-medium px-2 max-h-full whitespace-nowrap">
+                                            <td className="text-[10px] text-black font-bold px-2 max-h-full whitespace-nowrap text-right">
                                               {
                                                 row["pending-qty"]
                                                   .$numberDecimal
                                               }
                                             </td>
-                                            <td className="text-[10px] text-black font-light px-2 max-h-full whitespace-nowrap">
+                                            <td className="text-[10px] text-black font-semibold px-2 max-h-full whitespace-nowrap text-right">
                                               {(
                                                 Math.round(
                                                   row["pending-val-sar"] * 100
@@ -663,14 +663,14 @@ function Vendor() {
                   </div>
                 </div>
 
-                <div className="relative flex flex-col gap-3 p-2 border-2 border-zinc-600 shadow-md hover:shadow-2xl sm:flex-row md:flex-col lg:flex-row bg-stone-200 ">
+                {/* <div className="relative flex flex-col gap-3 p-2 border-2 border-zinc-600 shadow-md hover:shadow-2xl sm:flex-row md:flex-col lg:flex-row bg-stone-200 ">
                   <div className="sm:min-w-0 sm:flex-1 ">
-                    <div className="font-semibold leading-8 text-gray-900">
+                    {/* <div className="font-semibold leading-8 text-gray-900">
                       {/* Vendor evaluation */}
-                      <Vendorevaluation />
-                    </div>
-                  </div>
-                </div>
+                      {/* <Vendorevaluation /> */}
+                    {/* </div> */} 
+                  {/* </div>
+                </div>  */}
               </div>
             </div>
           </div>

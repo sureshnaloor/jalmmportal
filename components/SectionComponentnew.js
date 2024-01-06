@@ -194,7 +194,7 @@ function SectionComponent() {
 
       <div className="relative flex py-5 items-center">
         <div className="flex-grow border-t border-gray-400 border-4"></div>
-        <span className="flex-shrink mx-4 text-sky-800 font-semibold text-2xl tracking-wider font-Freehand">
+        <span className="flex-shrink mx-4 text-sky-900  text-2xl tracking-widest font-Freehand">
           PO's Value and Numbers so far
         </span>
         <div className="flex-grow border-t border-gray-400 border-4"></div>
@@ -274,7 +274,7 @@ function SectionComponent() {
 
       <div className="relative flex py-5 items-center">
         <div className="flex-grow border-t border-gray-400 border-4"></div>
-        <span className="flex-shrink mx-4 text-sky-800 font-semibold text-2xl font-Freehand">
+        <span className="flex-shrink mx-4 text-sky-900 tracking-widest text-2xl font-Freehand">
           Inventory Values
         </span>
         <div className="flex-grow border-t border-gray-400 border-4"></div>
@@ -349,7 +349,7 @@ function SectionComponent() {
 
       <div className="relative flex py-5 items-center">
         <div className="flex-grow border-t border-gray-400 border-4"></div>
-        <span className="flex-shrink mx-4 text-sky-800 font-semibold text-2xl font-Freehand">
+        <span className="flex-shrink mx-4 text-sky-900 tracking-widest text-2xl font-Freehand">
           Year-wise Online Transactions
         </span>
         <div className="flex-grow border-t border-gray-400 border-4"></div>
@@ -437,17 +437,17 @@ function SectionComponent() {
 
       <div className="relative flex py-5 items-center">
         <div className="flex-grow border-t border-gray-400 border-4"></div>
-        <span className="flex-shrink mx-4 text-sky-800 font-semibold text-2xl font-Freehand">
+        <span className="flex-shrink mx-4 text-sky-900 tracking-widest text-2xl font-Freehand">
           Material cleansing exercise updates & other misc SAP data
         </span>
         <div className="flex-grow border-t border-gray-400 border-4"></div>
       </div>
 
       <div>
-          <h5 className="text-md font-bold leading-none text-zinc-900 dark:text-white">
+          {/* <h5 className="text-md font-bold leading-none text-zinc-900 w-1/4 mx-auto  dark:text-white">
             Total materials coded in Material master:
-          </h5>
-          <div className="flow-root">
+          </h5> */}
+          <div className="flow-root w-1/4 mx-auto">
             <ul
               role="list"
               className="divide-y divide-gray-200 dark:divide-gray-700"
@@ -518,8 +518,8 @@ function SectionComponent() {
 
         <div className="relative flex py-5 items-center">
         <div className="flex-grow border-t border-gray-400 border-4"></div>
-        <span className="flex-shrink mx-4 text-sky-800 font-bold font-Freehand tracking-widest">
-          TOP-20 DATA 
+        <span className="flex-shrink mx-4 text-sky-800 text-2xl font-Freehand tracking-widest">
+          Top-20 Data
         </span>
         <div className="flex-grow border-t border-gray-400 border-4"></div>
       </div>
@@ -547,7 +547,7 @@ function SectionComponent() {
                     className="block w-full px-4 py-3 font-bold  text-zinc-800 text-[12px] bg-blue-50 border-b border-gray-200 rounded-t-lg  dark:bg-gray-800 dark:border-gray-600"
                   >
                     {row._id}{" "}
-                    <h3 className="w-3/4 mr-2 bg-green-50 text-stone-800 text-xs tracking-wider font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 ">
+                    <h3 className="w-3/4 mr-2 bg-blue-50 text-stone-800 text-xs tracking-wider font-bold px-1.5 py-0.5 rounded shadow-lg shadow-slate-800 dark:bg-gray-700 dark:text-green-400 border border-green-400 ">
                       {(Math.round(row.count * 100) / 100).toLocaleString(
                         "en-US",
                         { style: "currency", currency: "SAR" }
@@ -580,7 +580,7 @@ function SectionComponent() {
                   className="block w-full font-bold px-4 py-3 text-zinc-800 text-[12px] bg-blue-50 border-b border-gray-200 rounded-t-lg  dark:bg-gray-800 dark:border-gray-600"
                 >
                   {row._id}{" "}
-                  <h3 className="pl-3 bg-green-50 text-green-800 text-xs tracking-wider font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 ">
+                  <h3 className="w-1/4 pl-3 bg-green-50 mx-auto text-green-900 shadow-lg shadow-green-800 text-xs tracking-wider font-bold px-1.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 ">
                     {" "}
                     {row.count}{" "}
                   </h3>
@@ -598,13 +598,13 @@ function SectionComponent() {
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-3 py-3">
                     Matcode
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-3 py-3">
                     Inventory(in SAR)
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-3 py-3">
                     Receipts & issues
                   </th>
                   
@@ -618,11 +618,11 @@ function SectionComponent() {
                   >
                     <th
                       scope="row"
-                      className="px-6 py-4 text-[12px] font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="px-3 py-4 text-[12px] font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {row["material-code"]}
                     </th>
-                    <td className="px-6 py-4 tracking-wider text-[12px] font-semibold">
+                    <td className="px-3 py-4 tracking-wider text-[12px] font-semibold">
                       {(
                         Math.round(row["current-stkval"] * 100) / 100
                       ).toLocaleString("en-US", {
@@ -630,7 +630,7 @@ function SectionComponent() {
                         currency: "SAR",
                       })}
                     </td>
-                    <td className="px-6 py-4 tracking-wider text-[12px] font-black text-red-800">
+                    <td className="px-3 py-4 tracking-wider text-[12px] font-black text-red-800">
                       {(
                         Math.round(row["receipt-val"] * 100) / 100
                       ).toLocaleString("en-US", {
@@ -638,7 +638,7 @@ function SectionComponent() {
                         currency: "SAR",
                       })}
                     
-                    <span className="px-6 py-4 tracking-wider text-[12px] font-black text-green-900">
+                    <span className="px-3 py-4 tracking-wider text-[12px] font-black text-green-900">
                       { (Math.round(row["issue-val"])) == 0 ? null :
                         (Math.round(row["issue-val"] * 100) / 100
                       ).toLocaleString("en-US", {

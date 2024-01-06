@@ -78,7 +78,7 @@ function Navigationcomponent() {
                   data-te-nav-link-ref
                 >
                   <p className="text-xs bg-sky-600 text-sky-50 py-2 px-3 ">
-                    Vendor details
+                    Vendor Evaluation
                   </p>
                 </a>
               </li>
@@ -89,7 +89,7 @@ function Navigationcomponent() {
                   data-te-nav-link-ref
                 >
                   <p className="text-xs bg-sky-600 text-sky-50 py-2 px-3 ">
-                    Project details
+                    Project Schedule
                   </p>
                 </a>
               </li>
