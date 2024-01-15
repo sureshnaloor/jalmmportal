@@ -35,9 +35,9 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
   };
 
   const [matgroupselected, setMatgroupselected] =
-    useState("OFFICE CONSUMABLES");
+    useState("");
   const [secondarymatgroupselected, setSecondarymatgroupselected] =
-    useState("GIFT ITEMS");
+    useState("");
 
   const matgroupChange = (event) => {
     setMatgroupselected(event.target.value);
@@ -88,7 +88,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
       const json = await result.json();
       // setPlaceholder(json);
     })();
-  }, [material]);
+  }, [secondarymatgroupselected]);
 
   useEffect(() => {
     (async () => {
@@ -494,7 +494,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                         }}
                       />
                       <label
-                        htmlFor="floating_company"
+                        htmlFor="primary"
                         className="peer-focus:font-medium opacity-50  absolute text-[12px] text-gray-900 font-bold dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                       >
                         {mattypes
@@ -529,7 +529,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
                         }}
                       />
                       <label
-                        htmlFor="floating_company"
+                        htmlFor="secondary"
                         className="peer-focus:font-medium opacity-30 absolute text-[12px] text-gray-900 font-bold dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                       >
                         {mattypes

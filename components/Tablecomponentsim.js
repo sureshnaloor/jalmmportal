@@ -24,14 +24,14 @@ function GlobalFilter({
 
   return (
     <label className="flex gap-x-2 items-baseline">
-      <span className="text-red-500 text-sm font-medium uppercase">
+      <span className="text-red-500 text-[16px] font-medium pb-3 mb-3">
         {" "}
         Search
       </span>
 
       <input
         type="text"
-        className="mt-1 px-3 py-2 block text-sm w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        className="mt-1 px-9 block text-sm w-9/12 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         value={value || ""}
         onChange={(e) => {
           setValue(e.target.value);
