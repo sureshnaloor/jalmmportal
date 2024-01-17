@@ -7,6 +7,11 @@ import Tablecomponent from "../../components/Tablecomponentsim";
 import FooterComponent from "../../components/FooterComponent";
 import Link from "next/link";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { useRouter } from "next/router";
+
 import {
   TrashIcon,
   CheckCircleIcon,
@@ -30,7 +35,38 @@ function index() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) =>  {
+    console.log(data)
+    await fetch("/api/registeredvendors", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+
+    toast.success("Vendor record is inserted succesfully!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+    
+    router.reload();
+  };
+
+  const router = useRouter();
+
+  function handleEdit(row) {
+    const vendor = row.row.values;
+    // setEditmode(true)
+    console.log(vendor);
+    // console.log(editmode)
+    // setSelectedopenpo({ ...ponumber, "_id.po-number" });
+    // setShowModal(true);
+    let vendorstring = JSON.stringify(vendor)
+    router.push(
+      `/registeredvendors/vendoredit?vendor=${vendorstring}`
+    );
+  }
+
 
   const onErrors = (errors) => console.error(errors);
 
@@ -41,7 +77,7 @@ function index() {
         accessor: "vendorname",
         Cell: (props) => (
           <div className="flex justify-between">
-            <p className="text-teal-800 text-[12px] font-Lato font-bold uppercase">
+            <p className="text-teal-800 text-[10px] max-w-sm font-Lato font-bold uppercase">
               {props.row.original.vendorname}
             </p>
           </div>
@@ -68,25 +104,25 @@ function index() {
           <div className="flex flex-col justify-between">
             <p className="text-teal-800 text-[12px]">
               <span className="font-lato font-semibold mr-3" > Country:</span>
-              {props.row.original.address.countrycode}
+              {props.row.original.address?.countrycode}
             </p>
             <p className="text-teal-800 text-[12px]">
               <span className="font-lato font-semibold mr-3" > City:</span>
-              {props.row.original.address.city}
+              {props.row.original.address?.city}
             </p>
             <p className="text-teal-800 text-[12px]">
-              <span className="font-lato font-semibold mr-3" > Address1: </span>{props.row.original.address.address1}
+              <span className="font-lato font-semibold mr-3" > Address1: </span>{props.row.original.address?.address1}
             </p>
             <p className="text-teal-800 text-[12px]">
-              <span className="font-lato font-semibold mr-3"> Address2:</span>{props.row.original.address.address2}
+              <span className="font-lato font-semibold mr-3"> Address2:</span>{props.row.original.address?.address2}
             </p>
             <p className="text-teal-800 text-[12px]">
               <span className="font-lato font-semibold mr-3"> Zipcode:</span>
-              {props.row.original.address.zipcode}
+              {props.row.original.address?.zipcode}
             </p>
             <p className="text-teal-800 text-[12px]">
               <span className="font-lato font-semibold mr-3"> PO Box: </span>
-              {props.row.original.address.pobox}
+              {props.row.original.address?.pobox}
             </p>
           </div>
         ),
@@ -133,6 +169,22 @@ function index() {
             <p className="text-teal-800 text-[12px] ">
               <span className="mr-2 font-bold"> Fax: </span>{props.row.original.contact?.fax}
             </p>
+          </div>
+        ),
+      },
+
+      {
+        Header: "vendoredit",
+        accesor: "action",
+        Cell: (row) => (
+          <div className="flex flex-col justify-between">
+          <div className=" w-4/6 py-1 bg-sky-500 hover:bg-sky-700 text-white text-[10px] font-bold my-5 rounded">
+            <button onClick={(e) => handleEdit(row)} className="mx-auto"> Edit Vendor </button>
+          </div>
+
+          <div className="w-4/6 py-1 bg-green-500 hover:bg-green-700 text-white text-[10px] font-bold my-5 rounded">
+            <button onClick={(e) => handleEdit(row)}> Map to Mat/ <br /> Service group </button>
+          </div>
           </div>
         ),
       },
@@ -542,7 +594,31 @@ function index() {
                     htmlFor="registrationnumber"
                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                   >
-                    Company Registration number:
+                    Company Registration Number:
+                  </label>
+                </div>
+
+                <div className="relative z-0 w-full mb-6 group">
+                  <input
+                    type="text"
+                    name="webaddress"
+                    id="webaddress"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
+                    {...register("webaddress", {
+                      required: "Company website is required, if doesnt exist put 'www.notavailable.com",
+                    })}
+                  />
+                  <p className="text-[10px] text-red-900">
+                    {errors?.webaddress &&
+                      errors.webaddress.message}{" "}
+                  </p>
+
+                  <label
+                    htmlFor="registrationnumber"
+                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >
+                    Company Website:
                   </label>
                 </div>
               </div>
@@ -551,13 +627,13 @@ function index() {
             <div className="flex justify-around align-middle">
               <button
                 type="submit"
-                className="bg-red-900  text-white p-1 rounded-md shadow-md shadow-red-200"
+                className="bg-red-900  text-white p-1 rounded-md shadow-md text-[10px] shadow-red-200"
               >
                 Exit/Cancel
               </button>
               <button
                 type="submit"
-                className="bg-green-900  text-white p-1 rounded-md shadow-md shadow-green-200"
+                className="bg-green-900  text-white p-1 rounded-md shadow-md text-[10px] shadow-green-200"
               >
                 Submit
               </button>
@@ -575,7 +651,8 @@ function index() {
       <FooterComponent />
     </>
   );
-}
+                    
+                    }             
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);

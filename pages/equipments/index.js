@@ -54,7 +54,7 @@ function equipments() {
       },
 
       {
-        Header: "Calibrationdetails",
+        Header: "Calibration details",
         accessor: "calibration",
         Cell: (props) => (
           <div className="flex flex-col justify-between">
@@ -80,7 +80,7 @@ function equipments() {
               <span className="font-lato font-semibold mr-3"> Custodian Number: </span>{props.row.original["equipment_users"].CustodianEmpno}
             </p>
             <p className="text-teal-800 text-[12px]">
-              <span className="font-lato font-semibold mr-3"> LOcation: </span>{props.row.original["equipment_users"].Location}
+              <span className="font-lato font-semibold mr-3"> Location: </span>{props.row.original["equipment_users"].Location}
             </p>
             <p className="text-teal-800 text-[12px]">
               <span className="font-lato font-semibold mr-3"> Since: </span>{props.row.original["equipment_users"].Custodyfromdate}

@@ -19,7 +19,7 @@ const handler = async (req, res) => {
         
         const material = await db
           .collection("materials")
-          .updateOne({ "material-code": materialcode },{ $set:{
+          .updateOne({ "material-code": materialid },{ $set:{
             "updated-date": req.body["updated-date"],
             "updated-by": req.body["updated-by"],
             "material-group": req.body["material-group"],
