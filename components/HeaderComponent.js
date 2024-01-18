@@ -163,9 +163,11 @@ function HeaderComponent() {
             </Link>
           </div>
 
-          <div className=" w-[64px] my-auto py-1 px-3 bg-slate-400 text-white">
-            <div className="font-bold text-xl"> + </div><p className="text-xs font-Poppins"> Request new Matcode</p>
-          </div>
+          <Link href="/reqmatcode">
+          {/* <div className=" w-[64px] my-auto py-1 px-3 bg-slate-400 text-white"> */}
+            <a className="text-[10px] mr-2 my-auto  py-2 px-1 bg-amber-900 hover:bg-amber-800 dark:bg-zinc-600 text-gray-50 dark:text-white hover:text-white dark:hover:text-white font-sembold">   Request new Matcode </a>
+          {/* </div> */}
+          </Link>
 
           <div className="px-3">
             <Lottie options={defaultOptions2}  width={96} height={96}/>
