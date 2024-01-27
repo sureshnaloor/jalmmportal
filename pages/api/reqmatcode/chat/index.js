@@ -1,4 +1,4 @@
-import { connectToDatabase } from  "../../../lib/mongoconnect";
+import { connectToDatabase } from  "../../../../lib/mongoconnect";
 
 const handler =  async (req, res) => {
   // handle different methods

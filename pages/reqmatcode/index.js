@@ -5,30 +5,6 @@ import HeaderComponent from "../../components/HeaderComponent";
 import dynamic from "next/dynamic";
 import moment from "moment";
 
-
-
-const departments = [
-  {
-    id: "1",
-    name: "ESD",
-    coordinator: "MOHAMED ABDUL RASEED",
-    inactive: false,
-  },
-  { id: "2", name: "ISD", coordinator: "KUMAR LAMA", inactive: false },
-  { id: "3", name: "MMD", coordinator: "ARNEL BALENA", inactive: false },
-  { id: "4", name: "HRD", coordinator: "GYANANDRA ADHIKARI", inactive: false },
-  { id: "5", name: "MGT", coordinator: "WALEED M ISHMAIL", inactive: false },
-  { id: "6", name: "FIN", coordinator: "ASIF SYED", inactive: false },
-  {
-    id: "7",
-    name: "John-Hopkins",
-    coordinator: "WALEED M ISHMAIL",
-    inactive: true,
-  },
-  { id: "8", name: "NEOM", coordinator: "WALEED M ISHMAIL", inactive: false },
-  { id: "9", name: "EPMO", coordinator: "AFTAB HAYAT", inactive: false },
-];
-
 const matflag = [
   {
     id: "1",
@@ -61,21 +37,23 @@ import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
 import { useRouter } from "next/router";
 
-
 function Reqmatcode() {
   const { data: session } = useSession();
-  const [selectedMatflag, setSelectedmatflag] = useState(matflag[0]);
+  const [selectedMatflag, setSelectedmatflag] = useState(matflag[2]);
   const [mattypes, setMattypes] = useState([]);
+  // const [filteredMattypes, setFilteredmattypes] = useState([])
   const [mattypeselected, setMattypeselected] = useState("ZOFC");
   const [maxLimit, setMaxlimit] = useState(40);
 
   const [longDesc, setLongDesc] = useState("");
   const [newdescription, setNewdescription] = useState("");
   const [length, setLength] = useState(0);
-  
+  const [query, setQuery] = useState("");
+  const [matcodechat, setMatcodechat] = useState([]);
+  const [uom, setUom] = useState("");
+
   const router = useRouter();
 
-  
   const mattypeChange = (event) => {
     console.log(event.target.value);
     setMattypeselected(event.target.value);
@@ -102,15 +80,37 @@ function Reqmatcode() {
     })();
   }, []);
 
+  // useEffect(() => {
+  //   (
+  //     async () => {
+  //       setFilteredmattypes(selectedMatflag.id == "1"
+  //       ? mattypes.filter((mt) => mt.isChannelpartner == "TRUE")
+  //       : selectedMatflag.id == "2"
+  //       ? mattypes.filter((mt) => mt.isAsset == "TRUE")
+  //       : mattypes)
+  //     }
+  //   )()
+
+  // }, [selectedMatflag]);
+
   useEffect(() => {
     (async () => {
       const result = await fetch(`/api/reqmatcode/${session.user.name}`);
       const json = await result.json();
       setMatcodereq(json);
+      console.log(selectedMatflag);
     })();
   }, []);
 
-  console.log(matcodereq);
+  useEffect(() => {
+    (async () => {
+      const result = await fetch(`/api/reqmatcode/chat/${session.user.name}`);
+      const json = await result.json();
+      setMatcodechat(json);
+    })();
+  }, []);
+
+  // console.log(matcodereq);
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -119,7 +119,8 @@ function Reqmatcode() {
       longDesc,
       matgroupselected,
       secondarymatgroupselected,
-      mattypeselected
+      mattypeselected,
+      uom
     );
     let body = {
       mattypeselected,
@@ -128,6 +129,7 @@ function Reqmatcode() {
       newdescription,
       longDesc,
       user: session.user.name,
+      uom,
     };
 
     const result = await fetch(`/api/reqmatcode`, {
@@ -146,7 +148,24 @@ function Reqmatcode() {
     router.reload();
   };
 
-  
+  const handleQuery = async (e) => {
+    e.preventDefault();
+    console.log(query, session.user.name);
+    let body = {
+      query: query,
+      user: session.user.name,
+    };
+
+    const result = await fetch(`/api/reqmatcode/chat`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+    });
+  };
+
   return (
     <>
       <HeaderComponent />
@@ -167,7 +186,21 @@ function Reqmatcode() {
       </div>
 
       {/* chat section - to be developed*/}
-      
+
+      {/* <input
+        type="text"
+        className="mt-1 px-9 block text-sm w-9/12 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        value={query}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          
+        }}
+        placeholder="enter your query here...."
+      />
+      <button type="button" onClick={handleQuery}> Submit </button>
+
+      <div> {JSON.stringify(matcodechat)}</div>
+     */}
 
       {session.user.role == "admin" || session.user.role == "project" ? (
         <div>
@@ -179,95 +212,7 @@ function Reqmatcode() {
               </span>
             </h3>
           </div>
-          {/* display already made requests */}
-          <div>
-            <h3 className="py-3 my-3 mx-auto text-stone-900 italic uppercase font-bold tracking-widest">
-              {" "}
-              Previously created requests:{" "}
-            </h3>
-            <div className="bg-zinc-100 w-full p-3">
-              <table className="w-full  text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-1">
-                      Request number:
-                    </th>
 
-                    <th scope="col" className="px-1">
-                      Brief description
-                    </th>
-                    <th scope="col" className="px-1">
-                      Long description
-                    </th>
-                    <th scope="col" className="px-1">
-                      Requested on:
-                    </th>
-                    <th scope="col" className="px-1">
-                      Mat type, Primary Matgroup, Secondary Matgroup
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {matcodereq.map((mreq, index) => (
-                    <tr
-                      key={index}
-                      className={`${
-                        index % 2 ? "bg-red-50" : null
-                      } border-b dark:bg-gray-900 dark:border-gray-700`}
-                    >
-                      <th
-                        scope="row"
-                        className="font-medium text-gray-900 whitespace-nowrap dark:text-white "
-                      >
-                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold mx-auto">
-                          {mreq._id.substr(5, 9)}
-                        </p>
-                      </th>
-                      <th
-                        scope="row"
-                        className="font-medium text-gray-900 whitespace-nowrap dark:text-white mx-auto"
-                      >
-                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
-                          {mreq.newdescription}
-                        </p>
-                      </th>
-                      <th
-                        scope="row"
-                        className="py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        <p
-                          className="text-[12px] text-blue-900 font-Montserrat font-semibold"
-                          dangerouslySetInnerHTML={{ __html: mreq.longDesc }}
-                        ></p>
-                      </th>
-                      <th
-                        scope="row"
-                        className="py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
-                          {moment(mreq.created_at).format("DD/MM/YYYY")}
-                        </p>
-                      </th>
-                      <th
-                        scope="row"
-                        className="flex flex-col py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
-                          {mreq.mattypeselected}
-                        </p>
-                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
-                          {mreq.matgroupselected}
-                        </p>
-                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
-                          {mreq.secondarymatgroupselected}
-                        </p>
-                      </th>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
           {/* new request */}
           <div>
             <h3 className="py-3 my-3 mx-auto text-stone-900 italic uppercase font-bold tracking-widest">
@@ -309,45 +254,108 @@ function Reqmatcode() {
           </div>
           <div className="border-1 border-slate-800 shadow-md shadow-slate-400 p-3 m-3 bg-slate-200">
             <div className="mt-6">
-              <div className="min-h-[105px]">
-                <Listbox
-                  as="div"
-                  value={selectedMatflag}
-                  onChange={setSelectedmatflag}
-                >
-                  <Listbox.Label className="uppercase text-[12px] text-slate-800 px-3 font-lato font-bold">
-                    Material type:
-                  </Listbox.Label>
-                  <Listbox.Button className="text-[12px] font-bold text-sky-800 bg-white shadow-md py-1 px-3 shadow-slate-600">
-                    {selectedMatflag.name}
-                  </Listbox.Button>
+              <div className="bg-pink-50 grid grid-cols-3 min-h-[105px]">
+                <div className="col-span-1">
+                  <Listbox
+                    as="div"
+                    value={selectedMatflag}
+                    onChange={setSelectedmatflag}
+                  >
+                    <Listbox.Label className="uppercase text-[12px] text-slate-800 px-3 font-lato font-bold">
+                      Material type:
+                    </Listbox.Label>
+                    <Listbox.Button className="text-[12px] font-bold text-sky-800 bg-white shadow-md py-1 px-3 shadow-slate-600">
+                      {selectedMatflag.name}
+                    </Listbox.Button>
 
-                  <Listbox.Options>
-                    {matflag.map((mflag) => (
-                      <Listbox.Option
-                        key={mflag.id}
-                        value={mflag}
-                        disabled={mflag.inactive}
-                        as={Fragment}
-                      >
-                        {({ active, selected }) => (
-                          <li
-                            className={`${
-                              active
-                                ? "bg-blue-500 text-white w-1/4 text-[12px] p-1 "
-                                : "bg-zinc-100 text-black w-1/4 text-[12px] p-1 "
-                            } px-5 ml-3`}
-                          >
-                            {selected && (
-                              <CheckIcon className="h-5 w-5 inline-block" />
-                            )}
-                            {mflag.type}
-                          </li>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </Listbox>
+                    <Listbox.Options>
+                      {matflag.map((mflag) => (
+                        <Listbox.Option
+                          key={mflag.id}
+                          value={mflag}
+                          disabled={mflag.inactive}
+                          as={Fragment}
+                        >
+                          {({ active, selected }) => (
+                            <li
+                              className={`${
+                                active
+                                  ? "bg-blue-500 text-white w-1/4 text-[12px] p-1 "
+                                  : "bg-zinc-100 text-black w-1/4 text-[12px] p-1 "
+                              } px-5 ml-3`}
+                            >
+                              {selected && (
+                                <CheckIcon className="h-5 w-5 inline-block" />
+                              )}
+                              {mflag.type}
+                            </li>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Listbox>
+                </div>
+                <div className="col-span-1">
+                  {selectedMatflag.id == 1 ? (
+                    <p className="text-[10px] text-pink-900 font-bold">
+                      <span className="text-green-900 mb-3 border-b-2 border-slate-800"> Please choose any of these material groups only</span> <br />
+                      FURNITURE & FURNISHINGS === AC, WASHING MACHINES,
+                      REFRIGERATORS <br />
+                      FURNITURE & FURNISHINGS=== TABLE, CHAIRS, CABINETS <br />
+                      FURNITURE & FURNISHINGS=== SMALL APPLIANCES <br />
+                      FURNITURE & FURNISHINGS=== GYM EQUIPMENTS <br /> <br />
+                      MOTORS & GENERATORS === DIESEL GENERATOR SETS & ACC <br />
+                      MOTORS & GENERATORS=== MOTORS- AC, DC & ACC <br /> <br />
+                      EQUIPMENT & TOOLS === TEST EQUIPMENT <br />
+                      MECHANICAL TOOLS === MECHANICAL EQUIPMENT <br />
+                      VEHICLE & ACCESSORIES === VEHICLES- LIGHT <br />
+                      VEHICLE & ACCESSORIES=== VEHICLES- HEAVY <br /> <br />
+                    </p>
+                  ) : selectedMatflag.id == 2 ? (
+                    <p className="text-[10px] text-cyan-900 font-bold mb-20">
+                      <span className="text-green-900 mb-3 border-b-2 border-slate-800"> Please choose any of these material groups only</span> <br />
+                      ANALYZER === TELEDYNE ANALYZERS <br />
+                      STROBE LIGHTS & SOUNDERS === STROBE /HORN MEDC <br />
+                      GAUGE/INDICATOR === PRESSURE GAUGE- CHANNEL PARTNER <br />
+                      GAUGE/INDICATOR === LEVEL GAUGE- CHANNEL PARTNER <br />
+                      SENSORS === SENSORS - CHANNEL PARTNER <br /> <br />
+                      SENSORS === SENSOR ACCESSORIES- CHANNEL PARTNER <br />
+                      SWITCHES ===SWITCHES - CHANNEL PARTNER <br />
+                      
+                      
+                    </p>
+                  ) : <p className="text-[12px] font-bold mb-36"> Use any except those of CAPEX and CHN </p>}
+                </div>
+
+                <div className="col-span-1">
+                  {selectedMatflag.id == 1 ? (
+                    <p className="text-[10px] text-amber-900 font-bold">
+                      <span className="text-green-900 mb-3 border-b-2 border-slate-800"> Please choose any of these material groups only</span> <br />
+                      WELDING SETS & ACCESSORIES === WELDING SETS <br />
+                      COMPUTERS AND ACCESSORIES === DESKTOPS & LAPTOPS <br />
+                      COMPUTERS AND ACCESSORIES=== MONITORS & DISPLAYS <br />{" "}
+                      <br />
+                      PRINTERS & ACCESSORIES === PRINTERS <br />
+                      COMMUNICATION DEVICES === TELEPHONES & EXCHANGES <br />
+                      NETWORK & OTHER IT DEVICES === CCTV EQUIPMENT <br />{" "}
+                      <br />
+                      SOFTWARE === CAPEX SOFTWARE (PERPETUAL LICENSE) <br />
+                      TEST & MEASURING INSTRUMENTS === MEASURING EQUIPMENT{" "}
+                      <br />
+                    </p>
+                  ) : selectedMatflag.id == 2 ? (
+                    <p className="text-[10px] text-teal-900 font-bold"> 
+                    <span className="text-green-900 mb-3 border-b-2 border-slate-800"> Please choose any of these material groups only</span> <br />
+                    TRANSMITTERS === TRANSMITTERS- CHANNEL PARTNER <br />
+                    
+                    INSTRUMENT ACCESSORIES === INSTRUMENT ACCESSORIES- CHANNEL
+                    PARTNER <br />
+                    INSTRUMENT COMMUNICATION DEVICES === GE DEVICES <br /> <br />
+                    DETECTORS === DETECTORS- CHANNEL PARTNER <br />
+                    INSTRUMENT FILTERS === FILTERS- CHANNEL PARTNER <br />
+                    INSTRUMENT GAS === INSTRUMENT GAS- CHANNEL PARTNER <br /></p>
+                  ) : null}
+                </div>
               </div>
               <div className="shadow-md shadow-zinc-200 bg-zinc-100">
                 <div>
@@ -466,6 +474,26 @@ function Reqmatcode() {
                             </option>
                           ))}
                       </select>
+                    </div>
+
+                    <div className="col-span-3 flex flex-col">
+                      <label
+                        htmlFor="uom"
+                        className="block text-[10px] tracking-wider font-bold uppercase text-zinc-600 px-12 mb-2"
+                      >
+                        {" "}
+                        Unit of Measure:
+                      </label>
+                      <input
+                        type="text"
+                        className="w-1/2 py-2 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer placeholder:text-[10px] placeholder:text-gray-600"
+                        placeholder="EA/Lot/Box/PAC/...."
+                        name="uom"
+                        id="uom"
+                        value={uom}
+                        required
+                        onChange={(e) => setUom(e.target.value)}
+                      ></input>
                     </div>
                   </div>
                 </div>
@@ -646,10 +674,105 @@ function Reqmatcode() {
               </div>
             </div>
           </div>
+          {/* display already made requests */}
+          <div>
+            <h3 className="py-3 my-3 mx-auto text-stone-900 italic uppercase font-bold tracking-widest">
+              {" "}
+              Previously created requests:{" "}
+            </h3>
+            <div className="bg-zinc-100 w-full p-3">
+              <table className="w-full  text-gray-500 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" className="px-1">
+                      Request number:
+                    </th>
+
+                    <th scope="col" className="px-1">
+                      Brief description & UOM:
+                    </th>
+                    <th scope="col" className="px-1">
+                      Long description
+                    </th>
+                    <th scope="col" className="px-1">
+                      Requested on:
+                    </th>
+                    <th scope="col" className="px-1">
+                      Mat type, Primary Matgroup, Secondary Matgroup
+                    </th>
+                    <th scope="col" className="px-1">
+                      Material code assigned:
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {matcodereq.map((mreq, index) => (
+                    <tr
+                      key={index}
+                      className={`${
+                        index % 2 ? "bg-red-50" : null
+                      } border-b dark:bg-gray-900 dark:border-gray-700`}
+                    >
+                      <th
+                        scope="row"
+                        className="font-medium text-gray-900 whitespace-nowrap dark:text-white "
+                      >
+                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold mx-auto">
+                          {mreq._id.substr(5, 9)}
+                        </p>
+                      </th>
+                      <th
+                        scope="row"
+                        className="font-medium text-gray-900 whitespace-nowrap dark:text-white mx-auto"
+                      >
+                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
+                          {mreq.newdescription}
+                        </p>
+                        <p className="text-[12px] font-black text-stone-900 font-Montserrat mx-auto">
+                          {" "}
+                          {mreq.uom}{" "}
+                        </p>
+                      </th>
+                      <th
+                        scope="row"
+                        className="py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        <p
+                          className="text-[12px] text-blue-900 font-Montserrat font-semibold"
+                          dangerouslySetInnerHTML={{ __html: mreq.longDesc }}
+                        ></p>
+                      </th>
+                      <th
+                        scope="row"
+                        className="py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
+                          {moment(mreq.created_at).format("DD/MM/YYYY")}
+                        </p>
+                      </th>
+                      <th
+                        scope="row"
+                        className="flex flex-col py-4 px-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
+                          {mreq.mattypeselected}
+                        </p>
+                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
+                          {mreq.matgroupselected}
+                        </p>
+                        <p className="text-[12px] text-blue-900 font-Montserrat font-semibold">
+                          {mreq.secondarymatgroupselected}
+                        </p>
+                      </th>
+                      <th>{mreq.matcode}</th>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       ) : null}
-
-      
 
       <div className="mt-36">
         <FooterComponent />

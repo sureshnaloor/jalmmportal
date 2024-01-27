@@ -22,6 +22,7 @@ const handler =  async (req, res) => {
               longDesc: req.body.longDesc,
               created_by: req.body.user,
               created_at: new Date(),
+              uom: req.body.uom,
               
             }
           )
