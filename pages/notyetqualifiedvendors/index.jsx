@@ -52,16 +52,16 @@ function index() {
     router.reload();
   };
 
-  const router = useRouter();
+  const router = useRouter(); 
 
   function handleEdit(row) {
-    const vendor = row.row.values;
-    // setEditmode(true)
-    console.log(vendor);
+    const vendor = row.row.original;
+        console.log(row);
     // console.log(editmode)
     // setSelectedopenpo({ ...ponumber, "_id.po-number" });
     // setShowModal(true);
     let vendorstring = JSON.stringify(vendor)
+    console.log(vendorstring)
     router.push(
       `/registeredvendors/vendoredit?vendor=${vendorstring}`
     );
@@ -91,7 +91,7 @@ function index() {
         Cell: (props) => (
           <div className="flex justify-between">
             <p className="text-purple-900 text-[12px] font-semibold">
-              {props.row.original.vendorcode}
+              {props.row.original.vendorcode  || "N/Allotted"}
             </p>
           </div>
         ),
@@ -140,17 +140,20 @@ function index() {
               <span className="font-lato font-semibold mr-3"> CR Number: </span>{props.row.original.companyregistrationnumber}
             </p>
             <p className="text-teal-800 text-[12px]">
-              <span className="font-lato font-semibold mr-3"> email: </span>{props.row.original.companyemail}
+              <span className="font-lato font-semibold mr-3"> website: </span>{props.row.original.companywebsite}
             </p>
           </div>
         ),
       },
 
       {
-        Header: "Contact salesperson:",
+        Header: "Contact details:",
         accessor: "contact",
         Cell: (props) => (
           <div className="flex flex-col justify-between">
+            <p className="text-stone-800 text-[12px] uppercase font-semibold">
+              {props.row.original.companyemail}
+            </p>
             <p className="text-stone-800 text-[12px] uppercase font-semibold">
               {props.row.original.contact?.salesname}
             </p>
@@ -158,10 +161,10 @@ function index() {
               {props.row.original.contact?.salesemail}
             </p>
             <p className="text-sky-800 text-[12px] italic font-bold pb-2">
-              {props.row.original.contact?.salesmobile}
+              <span> Mobile: </span>{props.row.original.contact?.salesmobile}
             </p>
             <p className="text-teal-800 text-[12px] ">
-              <span className="mr-2 font-bold"> Telephone: </span>{props.row.original.contact?.telelphone1}
+              <span className="mr-2 font-bold"> Telephone: </span>{props.row.original.contact?.telephone1}
             </p>
             <p className="text-teal-800 text-[12px] ">
               <span className="mr-2 font-bold"> Telephone:</span>{props.row.original.contact?.telephone2}
@@ -183,7 +186,7 @@ function index() {
           </div>
 
           <div className="w-4/6 py-1 bg-green-500 hover:bg-green-700 text-white text-[10px] font-bold my-5 rounded">
-            <button onClick={(e) => handleEdit(row)}> Map to Mat/ <br /> Service group </button>
+            <button onClick={(e) => handleEdit(row)}> Map to Matgroups or <br /> Service group </button>
           </div>
           </div>
         ),
@@ -214,7 +217,7 @@ function index() {
       <div className="mb-5">
         <form onSubmit={handleSubmit(onSubmit, onErrors)}>
           <div className="w-10/12 bg-slate-100 px-3 pb-2 mx-auto">
-            <h3 className="mx-auto text-white bg-red-600 mt-1 text-[12px] tracking-widest">
+            <h3 className="mx-auto p-3 w-1/2 text-white bg-red-600 mt-1 text-[12px] tracking-widest">
               {" "}
               Note: Please Register Vendor only after pre-qualifiying by MMD
               Manager.
@@ -471,7 +474,7 @@ function index() {
                   </p>
 
                   <label
-                    htmlFor="telephone1"
+                    htmlFor="faxnumber"
                     className="peer-focus:font-medium absolute text-sm text-teal-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                   >
                     Facsimile Number:
@@ -648,7 +651,7 @@ function index() {
         <Tablecomponent columns={columns} data={vendorslist} />
       </div>
 
-      <FooterComponent />
+      <div className="mt-32"><FooterComponent /></div>
     </>
   );
                     

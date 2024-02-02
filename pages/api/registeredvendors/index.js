@@ -33,10 +33,10 @@ const handler =  async (req, res) => {
               contact:{
                 telephone1: req.body.telephone1,
                 telephone2: req.body.telephone2,
-                salesname: req.body.salesname,
+                salesname: req.body.salesperson,
                 salesemail: req.body.salesemail,
                 salesmobile: req.body.salesmobile,
-                fax: req.body.fax,
+                fax: req.body.faxnumber,
               }
             }
           )

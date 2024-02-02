@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import HeaderComponent from "../../components/HeaderComponent";
 import dynamic from "next/dynamic";
 import moment from "moment";
+import Image from "next/image";
 
 const matflag = [
   {
@@ -169,19 +170,33 @@ function Reqmatcode() {
   return (
     <>
       <HeaderComponent />
-      <div className="flex justify-center align-middle ml-3">
+      <div className="flex mt-6 justify-center align-middle ml-3">
         {session.user.role == "admin" ||
         session.user.role == "project" ? null : (
-          <p className="bg-amber-200 text-stone-800 text-2xl min-h-[80vh] min-w-[80vw] p-44 italic">
-            {" "}
-            Sorry, you do not have authorization to use this page to request new
-            material codes, please{" "}
-            <span className="bg-stone-800 text-white text-lg p-1 m-2 font-lato">
-              mail to: suresh.n@jalint.com.sa with subject: "Request for role
-              access for Material code"{" "}
-            </span>
-            to get the access for this role.
-          </p>
+          <div className="bg-amber-200 mx-auto w-[90%] min-h-[80vh] min-w-[80vw] p-3">
+            <div className="grid grid-cols-2 gap-1">
+              <div className="w-3/4 h-4/5 col-span-1">
+                <Image
+                  src="/images/noentry.jpg"
+                  width={1200}
+                  height={1200}
+                  quality={100}
+                  priority
+                  placeholder="blur"
+                  blurDataURL="/images/noentry.jpg"
+                  objectFit="contain"
+                  alt="notauthorized"
+                ></Image>
+              </div>
+              <div className="col-span-1 py-9">
+                <p className="text-[16px] font-bold tracking-widest mb-12">
+                  Sorry, you do not have authorization to request new material
+                  codes{" "}
+                </p>
+                <h4 className="bg-sky-800 text-white p-3"> Please mail to <span className="bg-white text-slate-900"> <br /> suresh.n@jalint.com.sa</span> <br />to get access to this page </h4>
+              </div>
+            </div>
+          </div>
         )}
       </div>
 
@@ -298,7 +313,11 @@ function Reqmatcode() {
                 <div className="col-span-1">
                   {selectedMatflag.id == 1 ? (
                     <p className="text-[10px] text-pink-900 font-bold">
-                      <span className="text-green-900 mb-3 border-b-2 border-slate-800"> Please choose any of these material groups only</span> <br />
+                      <span className="text-green-900 mb-3 border-b-2 border-slate-800">
+                        {" "}
+                        Please choose any of these material groups only
+                      </span>{" "}
+                      <br />
                       FURNITURE & FURNISHINGS === AC, WASHING MACHINES,
                       REFRIGERATORS <br />
                       FURNITURE & FURNISHINGS=== TABLE, CHAIRS, CABINETS <br />
@@ -313,7 +332,11 @@ function Reqmatcode() {
                     </p>
                   ) : selectedMatflag.id == 2 ? (
                     <p className="text-[10px] text-cyan-900 font-bold mb-20">
-                      <span className="text-green-900 mb-3 border-b-2 border-slate-800"> Please choose any of these material groups only</span> <br />
+                      <span className="text-green-900 mb-3 border-b-2 border-slate-800">
+                        {" "}
+                        Please choose any of these material groups only
+                      </span>{" "}
+                      <br />
                       ANALYZER === TELEDYNE ANALYZERS <br />
                       STROBE LIGHTS & SOUNDERS === STROBE /HORN MEDC <br />
                       GAUGE/INDICATOR === PRESSURE GAUGE- CHANNEL PARTNER <br />
@@ -321,16 +344,23 @@ function Reqmatcode() {
                       SENSORS === SENSORS - CHANNEL PARTNER <br /> <br />
                       SENSORS === SENSOR ACCESSORIES- CHANNEL PARTNER <br />
                       SWITCHES ===SWITCHES - CHANNEL PARTNER <br />
-                      
-                      
                     </p>
-                  ) : <p className="text-[12px] font-bold mb-36"> Use any except those of CAPEX and CHN </p>}
+                  ) : (
+                    <p className="text-[12px] font-bold mb-36">
+                      {" "}
+                      Use any except those of CAPEX and CHN{" "}
+                    </p>
+                  )}
                 </div>
 
                 <div className="col-span-1">
                   {selectedMatflag.id == 1 ? (
                     <p className="text-[10px] text-amber-900 font-bold">
-                      <span className="text-green-900 mb-3 border-b-2 border-slate-800"> Please choose any of these material groups only</span> <br />
+                      <span className="text-green-900 mb-3 border-b-2 border-slate-800">
+                        {" "}
+                        Please choose any of these material groups only
+                      </span>{" "}
+                      <br />
                       WELDING SETS & ACCESSORIES === WELDING SETS <br />
                       COMPUTERS AND ACCESSORIES === DESKTOPS & LAPTOPS <br />
                       COMPUTERS AND ACCESSORIES=== MONITORS & DISPLAYS <br />{" "}
@@ -344,16 +374,21 @@ function Reqmatcode() {
                       <br />
                     </p>
                   ) : selectedMatflag.id == 2 ? (
-                    <p className="text-[10px] text-teal-900 font-bold"> 
-                    <span className="text-green-900 mb-3 border-b-2 border-slate-800"> Please choose any of these material groups only</span> <br />
-                    TRANSMITTERS === TRANSMITTERS- CHANNEL PARTNER <br />
-                    
-                    INSTRUMENT ACCESSORIES === INSTRUMENT ACCESSORIES- CHANNEL
-                    PARTNER <br />
-                    INSTRUMENT COMMUNICATION DEVICES === GE DEVICES <br /> <br />
-                    DETECTORS === DETECTORS- CHANNEL PARTNER <br />
-                    INSTRUMENT FILTERS === FILTERS- CHANNEL PARTNER <br />
-                    INSTRUMENT GAS === INSTRUMENT GAS- CHANNEL PARTNER <br /></p>
+                    <p className="text-[10px] text-teal-900 font-bold">
+                      <span className="text-green-900 mb-3 border-b-2 border-slate-800">
+                        {" "}
+                        Please choose any of these material groups only
+                      </span>{" "}
+                      <br />
+                      TRANSMITTERS === TRANSMITTERS- CHANNEL PARTNER <br />
+                      INSTRUMENT ACCESSORIES === INSTRUMENT ACCESSORIES- CHANNEL
+                      PARTNER <br />
+                      INSTRUMENT COMMUNICATION DEVICES === GE DEVICES <br />{" "}
+                      <br />
+                      DETECTORS === DETECTORS- CHANNEL PARTNER <br />
+                      INSTRUMENT FILTERS === FILTERS- CHANNEL PARTNER <br />
+                      INSTRUMENT GAS === INSTRUMENT GAS- CHANNEL PARTNER <br />
+                    </p>
                   ) : null}
                 </div>
               </div>
