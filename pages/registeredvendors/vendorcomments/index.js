@@ -24,9 +24,10 @@ function Vendorcomments() {
 
   const [comments, setComments] = useState([]);
 
-  const handleaddcomment = async () => {
+  const handleaddcomment = async (e) => {
     console.log(" will now put into mongodb the comments for vendor");
     console.log(vendor, title, comment);
+    e.preventDefault()
     let body = {
       title,
       comment,
