@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import HeaderComponent from "../../components/HeaderComponent";
 import Tablecomponent from "../../components/Tablecomponentsim";
 import FooterComponent from "../../components/FooterComponent";
+import moment from "moment";
 
 import { getSession } from "next-auth/react";
 
@@ -59,10 +60,10 @@ function equipments() {
         Cell: (props) => (
           <div className="flex flex-col justify-between">
             <p className="text-teal-800 text-[12px]">
-              <span className="font-lato font-semibold mr-3"> Lastcalibrateddate: </span>{props.row.original["equipment_calibration"].Lastcalibrateddate}
+              <span className="font-lato font-semibold mr-3"> Lastcalibrateddate: </span>  {moment(props.row.original["equipment_calibration"].Lastcalibrateddate).format("DD/MM/YYYY")}
             </p>
             <p className="text-teal-800 text-[12px]">
-              <span className="font-lato font-semibold mr-3"> Calib due: </span>{props.row.original["equipment_calibration"].calibrationdue}
+              <span className="font-lato font-semibold mr-3"> Calib due: </span>{moment(props.row.original["equipment_calibration"].calibrationdue).format("DD/MM/YYYY")}
             </p>
             <p className="text-teal-800 text-[12px]">
               <span className="font-lato font-semibold mr-3"> Calib. certificate: </span>{props.row.original["equipment_calibration"].Calibrationcertificateinfo}
@@ -83,7 +84,7 @@ function equipments() {
               <span className="font-lato font-semibold mr-3"> Location: </span>{props.row.original["equipment_users"].Location}
             </p>
             <p className="text-teal-800 text-[12px]">
-              <span className="font-lato font-semibold mr-3"> Since: </span>{props.row.original["equipment_users"].Custodyfromdate}
+              <span className="font-lato font-semibold mr-3"> Since: </span>{moment(props.row.original["equipment_users"].Custodyfromdate).format("DD/MM/YYYY")}
             </p>
           </div>
         ),

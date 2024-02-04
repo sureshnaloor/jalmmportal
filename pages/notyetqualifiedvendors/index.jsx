@@ -67,6 +67,18 @@ function index() {
     );
   }
 
+  function handleMapgroup(row){
+    const vendor = row.row.original.vendorname
+    // console.log(`clicked for mapping vendor ${vendor}`)
+    router.push(`/registeredvendors/vendormap?vendor=${vendor}`)
+  }
+
+  function handleComments(row){
+    const vendor = row.row.original.vendorname
+    // console.log(`clicked for comments on vendor ${vendor}`)
+    router.push(`/registeredvendors/vendorcomments?vendor=${vendor}`)
+  }
+
 
   const onErrors = (errors) => console.error(errors);
 
@@ -181,12 +193,16 @@ function index() {
         accesor: "action",
         Cell: (row) => (
           <div className="flex flex-col justify-between">
-          <div className=" w-4/6 py-1 bg-sky-500 hover:bg-sky-700 text-white text-[10px] font-bold my-5 rounded">
+          <div className=" w-4/6 py-1 bg-sky-500 hover:bg-sky-700 text-white text-[10px] font-bold my-1 rounded">
             <button onClick={(e) => handleEdit(row)} className="mx-auto"> Edit Vendor </button>
           </div>
 
-          <div className="w-4/6 py-1 bg-green-500 hover:bg-green-700 text-white text-[10px] font-bold my-5 rounded">
-            <button onClick={(e) => handleEdit(row)}> Map to Matgroups or <br /> Service group </button>
+          <div className="w-4/6 py-1 bg-green-500 hover:bg-green-700 text-white text-[10px] font-bold my-1 rounded">
+            <button onClick={(e) => handleMapgroup(row)}> Map to Matgroups or <br /> Service group </button>
+          </div>
+
+          <div className="w-4/6 py-1 bg-purple-500 hover:bg-purple-700 text-white text-[10px] font-bold my-1 rounded">
+            <button onClick={(e) => handleComments(row)}> Comments  </button>
           </div>
           </div>
         ),
