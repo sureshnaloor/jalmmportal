@@ -19,7 +19,7 @@ const handler = async (req, res) => {
           matgroupprimarydesc: req.body.matgroupprimarydesc,
           datgroupsecondarydesc: req.body.datgroupsecondarydesc,          
         });
-        return res.json(material);
+        return res.json(mattype);
       }
 
       default:

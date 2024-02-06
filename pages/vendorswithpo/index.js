@@ -1,23 +1,23 @@
 import React from "react";
 // import { useRouter } from "next/router";
 import { useState, useEffect, useMemo } from "react";
-import {useRouter} from 'next/router'
+import { useRouter } from "next/router";
 
 // import moment from 'moment'
 import HeaderComponent from "../../components/HeaderComponent";
 import FooterComponent from "../../components/FooterComponent";
 
-import {getSession} from 'next-auth/react'
+import { getSession } from "next-auth/react";
 import Tablecomponent, {
   SelectColumnFilter,
   Boldstyle1,
   Boldstyle2,
   Boldstyle3,
   Boldstyle4,
-  Numberstyle
+  Numberstyle,
 } from "../../components/Tablecomponent";
 
-import Purchaseorderschedule  from "../../components/Purchaseorderschedule";
+import Purchaseorderschedule from "../../components/Purchaseorderschedule";
 // import { useSession } from "next-auth/react";
 
 function Vendorswithpo() {
@@ -26,19 +26,32 @@ function Vendorswithpo() {
   const [selectedVendor, setSelectedVendor] = useState({});
   // const [editmode, setEditmode] = useState(false);
 
-
   function handleEdit(row) {
     const vendor = row.row.values;
     // setEditmode(true)
     console.log(vendor);
-    // console.log(editmode)
-    // setSelectedopenpo({ ...ponumber, "_id.po-number" });
-    // setShowModal(true);
-    // router.push(`/openpurchaseorders/podetailedsch?ponumber=${ponumber["_id.po-number"]}`)
-    router.push(`/vendorswithpo/vendorevaluation?vendornumber=${vendor["vendor-code"]}`)
+        router.push(
+      `/vendorswithpo/vendorevaluation?vendornumber=${vendor["vendor-code"]}`
+    );
   }
 
-  
+  function handleComent(row) {
+    const vendor = row.row.values;
+    // setEditmode(true)
+    console.log(vendor);
+        router.push(
+      `/registeredvendors/vendorcomments/?vendor=${vendor["vendor-name"]}`
+    );
+  }
+
+  function handleMapgroup(row) {
+    const vendor = row.row.values;
+    // setEditmode(true)
+    console.log(vendor);
+        router.push(
+      `/registeredvendors/vendormap/?vendor=${vendor["vendor-name"]}`
+    );
+  }
 
   const columns = useMemo(
     () => [
@@ -57,16 +70,25 @@ function Vendorswithpo() {
         accessor: "vendor-name",
         Cell: Boldstyle4,
       },
-     
-      
+
       {
         Header: "Action",
         accesor: "action",
         Cell: (row) => (
-          <div className="bg-blue-500 hover:bg-blue-700 text-white text-[14px] font-bold py-2 px-4 rounded">
-            
-              <button onClick={(e) => handleEdit(row)}> Vendor Eval.score </button>
-            
+          <div className="flex justify-around">
+            {" "}
+            <div className="bg-blue-500 hover:bg-blue-700 text-white text-[12px] font-bold py-2 px-4 rounded-xl mx-2">
+              <button onClick={(e) => handleEdit(row)}> Evaluation </button>
+            </div>
+            <div className="bg-orange-500 hover:bg-orange-700 text-white text-[12px] font-bold py-2 px-4 rounded-xl mx-2">
+              <button onClick={(e) => handleComent(row)}> Comments </button>
+            </div>
+            <div className="bg-emerald-500 hover:bg-emerald-700 text-white text-[12px] font-bold py-2 px-4 rounded-xl mx-2">
+              <button onClick={(e) => handleMapgroup(row)}>
+                {" "}
+                Map to group{" "}
+              </button>
+            </div>
           </div>
         ),
       },
@@ -77,7 +99,6 @@ function Vendorswithpo() {
   );
 
   const [vendorlist, setVendorlist] = useState([]);
-  
 
   useEffect(() => {
     (async () => {
@@ -94,11 +115,10 @@ function Vendorswithpo() {
       <div className="min-h-screen bg-gray-50 text-gray-900 w-11/12 ml-9">
         <div className="mt-6">
           <p className="font-bold text-lg mb-3">
-            Vendors' List who have PO's issued to them so far and hence evaluated.
+            Vendors' List who have PO's issued to them so far and hence
+            evaluated.
           </p>
           <Tablecomponent columns={columns} data={vendorlist} />
-          
-          
         </div>
       </div>
       <FooterComponent />

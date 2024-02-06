@@ -47,7 +47,8 @@ function Vendorcomments() {
       position: toast.POSITION.TOP_RIGHT,
     });
 
-    router.push(`/notyetqualifiedvendors`);
+    // router.push(`/notyetqualifiedvendors`);
+    router.back()
   };
 
   // fetch earlier comments
@@ -64,13 +65,16 @@ function Vendorcomments() {
   return (
     <>
       <HeaderComponent />
-
+      <p className="w-1/2 mx-auto text-[14px] font-bold uppercase border-b-4 border-b-sky-800"> comments page for the vendor: {vendor} </p>
       <div className="w-1/2 mx-auto mt-3 bg-sky-600/80 py-3 shadow-md shadow-stone-400 text-white flex justify-center ">
         {" "}
         <h4 className="text-[14px]"> earlier comments </h4>
       </div>
 
       <div>
+        {
+          comments.length > 0 ? (
+            <div>
         <table className="w-1/2 border-collapse border border-sky-500  mt-5 mx-auto">
           <thead>
             <tr className="bg-stone-200/50 text-zinc-900 border-b-2 border-slate-600">
@@ -91,6 +95,14 @@ function Vendorcomments() {
           </tbody>
         </table>
       </div>
+
+          )
+: (
+  <p className="w-1/2 mx-auto flex justify-center mt-3 text-[12px] font-bold tracking-widest"> NIL </p>
+)}        
+      
+      </div>
+
       <div className="w-1/2 mx-auto mt-3 bg-sky-600/80 py-3 shadow-md shadow-stone-400 text-white flex justify-center ">
         {" "}
         <h4 className="text-[14px]"> For new comment/feedback: </h4>
@@ -98,7 +110,7 @@ function Vendorcomments() {
 
       <form onSubmit={handleaddcomment}>
         <div className="w-1/2 bg-sky-50 mx-auto mt-5 border-t-2 border-sky-200 shadow-md shadow-sky-100">
-        <span> Title: </span>
+        <span className="border-b-2 uppercase font-semibold border-emerald-800 text-[12px]"> Title: </span>
       <input
         type="text"
         name="title"
@@ -114,7 +126,7 @@ function Vendorcomments() {
 
       </div>
      <div className="w-1/2 mx-auto">
-     <span> Brief comments/feedback: </span>
+     <span className="border-b-2 uppercase font-semibold border-emerald-800 text-[12px] mb-3"> Brief comments/feedback: </span>
       <ReactQuill
         value={comment}
         onChange={(comment) => setComment(comment)}
@@ -128,9 +140,9 @@ function Vendorcomments() {
           ],
         }}
         theme="snow"
-        className="bg-slate-50 border-2 border-slate-500 min-h-[200px]"
+        className="bg-slate-50 border-2 border-slate-500 min-h-[200px] mt-3"
       />
-      <button type="submit"> Submit comment</button>
+      <button type="submit" className=" mt-3 text-[10px] bg-emerald-800 p-2 rounded-xl text-white"> Submit comment</button>
       </div>
       </form>
 
