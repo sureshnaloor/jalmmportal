@@ -3,7 +3,7 @@ import React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 
-import {useSession, getSession} from "next-auth/react"
+import { useSession, getSession } from "next-auth/react";
 
 import {
   ChevronDoubleRightIcon,
@@ -41,6 +41,15 @@ function Openpurchaseorders() {
     // setShowModal(true);
     router.push(
       `/openpurchaseorders/podetailedsch?ponumber=${ponumber["_id.po-number"]}`
+    );
+  }
+
+  function handleComment(row) {
+    const ponumber = row.row.values;
+        console.log(ponumber);
+    
+    router.push(
+      `/openpurchaseorders/pocomments?ponumber=${ponumber["_id.po-number"]}`
     );
   }
 
@@ -137,9 +146,15 @@ function Openpurchaseorders() {
         Header: "PO Schedule",
         accesor: "action",
         Cell: (row) => (
-          <div className="bg-blue-500 hover:bg-blue-700 text-white text-[14px] font-bold py-2 px-4 rounded">
-            <button onClick={(e) => handleEdit(row)}> PO schedule </button>
-          </div>
+          <>
+            <div className="bg-blue-500 hover:bg-blue-700 text-white text-[10px] font-bold py-2 px-4 rounded my-2">
+              <button onClick={(e) => handleEdit(row)}> PO schedule </button>
+            </div>
+
+            <div className="bg-emerald-500 hover:bg-blue-700 text-white text-[10px] font-bold py-2 px-4 rounded my-2">
+              <button onClick={(e) => handleComment(row)}> PO comments </button>
+            </div>
+          </>
         ),
       },
 
