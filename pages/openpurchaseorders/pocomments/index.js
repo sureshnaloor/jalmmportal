@@ -99,7 +99,7 @@ function Pocomments() {
 
           </div>
       ) : (
-        <p className="bg-pink-900 min-w-3/4 min-h-1/2 text-white"> Nil...................... no comments </p>
+        <p className="bg-pink-100 min-w-3/4 min-h-1/2 text-white"> No comments so far </p>
       )}
 
      </div>

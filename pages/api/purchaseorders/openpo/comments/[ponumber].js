@@ -8,7 +8,7 @@ const handler =  async (req, res) => {
     switch (req.method) {
         case "GET": {
           const { db } = await connectToDatabase();
-          const pocomments = await db.collection("pocomments").find({}).toArray();
+          const pocomments = await db.collection("pocomments").find({ponumber: ponumber}).toArray();
           return res.json(pocomments);
           
         } 

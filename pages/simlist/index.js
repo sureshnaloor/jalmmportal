@@ -42,6 +42,7 @@ function Simlist() {
 
   const columns = useMemo(
     () => [
+      
       {
         Header: "Account details",
         accessor: "type",
@@ -86,7 +87,7 @@ function Simlist() {
             </div>
           </h2>
         ),
-      },
+      } ,
       // {
       //   Header: "Account No",
       //   accessor: "account-number",

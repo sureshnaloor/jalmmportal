@@ -12,6 +12,9 @@ import ProjdocUpload from "../components/ProjdocuploadComponent";
 import ProjDocsView from "../components/projdocsViewComponent";
 import FooterComponent from "./FooterComponent";
 
+
+import Router, { useRouter } from "next/router";
+
 function Projectdetails({ projects }) {
   const [project, setProject] = useState({});
   const [network, setNetwork] = useState({});
@@ -28,6 +31,9 @@ function Projectdetails({ projects }) {
   // let projectid = "IS%2FGP.22.001";
 
   const { data: session } = useSession();
+
+  const router = useRouter();
+ 
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -104,6 +110,9 @@ function Projectdetails({ projects }) {
     };
     fetchOpenrequisitions();
   }, [selectedProject]);
+
+  
+
 
   console.log(project);
   // console.log(specialstk);
@@ -484,6 +493,10 @@ function Projectdetails({ projects }) {
                             <th scope="col" className="py-3 px-1">
                               PO Progress
                             </th>
+
+                            <th scope="col" className="py-3 px-1">
+                              Comments
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -542,6 +555,17 @@ function Projectdetails({ projects }) {
                                   )}
                                 />
                               </td>
+
+                              <td className="p-2">
+                              <buton className="cursor-pointer bg-emerald-800 text-white text-[10px]" type="submit"  onClick = {() => {
+                                 
+                             
+                             router.push(
+                               `/openpurchaseorders/pocomments?ponumber=${purchase["ponum"]}`
+                             );
+                              }} > <Image src="/images/comment.png" width={30} height={10}></Image> </buton>
+                              </td>
+                             
                             </tr>
                           ))}
                         </tbody>
@@ -577,6 +601,11 @@ function Projectdetails({ projects }) {
                             <th scope="col" className="py-3 px-1">
                               PO Progress
                             </th>
+
+                            <th scope="col" className="py-3 px-1">
+                              Comments
+                            </th>
+
                           </tr>
                         </thead>
                         <tbody>
@@ -634,6 +663,15 @@ function Projectdetails({ projects }) {
                                       100
                                   )}
                                 />
+                              </td>
+                              <td className="p-2">
+                              <buton type="submit" onClick = {() => {
+                                 
+                             
+                             router.push(
+                               `/openpurchaseorders/pocomments?ponumber=${purchase["ponum"]}`
+                             );
+                              }} > Comments </buton>
                               </td>
                             </tr>
                           ))}
