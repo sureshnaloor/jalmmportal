@@ -20,6 +20,10 @@ import Tablecomponent, {
   Normalstylesim,
   Specialstylesim,
   Spstylesim,
+  simStyle,
+  simStyle1,
+  simStyle2,
+  simStyle3,
 } from "../../components/Tablecomponentsim";
 
 import Simedit from "../../components/Simeditcomponent";
@@ -43,115 +47,138 @@ function Simlist() {
   const columns = useMemo(
     () => [
       
+      // {
+      //   Header: "Account details",
+      //   accessor: "type",
+      //   Cell: (props) => (
+      //     <h2 className="bg-zinc-100 shadow-md shadow-slate-800 px-3 font-bold border-r-8 min-h-[150px] min-w-[300px]">
+      //       <div className="flex justify-between mb-1 pb-1 border-b-2 border-teal-600">
+      //         <h1 className="font-black tracking-wider"> Type: </h1>{" "}
+      //         <p className="text-teal-800 text-[12px] p-1 shadow-md tracking-widest font-lato font-black shadow-slate-600 border-b-2 border-red-600">
+      //           {props.row.original.type}
+      //         </p>
+      //       </div>
+      //       <div className="bg-teal-50 shadow-lg shadow-white p-3">
+      //         <div className="flex justify-between pb-1">
+      //           <h1 className="mb-3 font-bold text-[10px] font-Poppins tracking-wider">
+      //             {" "}
+      //             Account No#:{" "}
+      //           </h1>
+      //           <h1 className="text-stone-800 text-[12px] p-1 shadow-sm shadow-slate-200 font-black tracking-wider font-Montserrat">
+      //             {" "}
+      //             {props.row.original["account-number"]}
+      //           </h1>
+      //         </div>
+      //         <div className="flex justify-between pb-1">
+      //           <h1 className="mb-3 font-bold font-Poppins tracking-wider">
+      //             {" "}
+      //             Service No#:{" "}
+      //           </h1>
+      //           <h1 className="text-cyan-900 text-[12px] p-1 shadow-md shadow-slate-200 font-black tracking-wider">
+      //             {props.row.original["service-number"]}
+      //           </h1>
+      //         </div>
+      //         <div className="flex justify-between pb-1">
+      //           {" "}
+      //           <h1 className="mb-3 font-bold font-Poppins tracking-wider">
+      //             {" "}
+      //             Current Plan:
+      //           </h1>
+      //           <h1 className="text-stone-800 text-[12px] shadow-md shadow-slate-100 font-black pr-2">
+      //             {props.row.original.plan}
+      //           </h1>
+      //         </div>
+      //       </div>
+      //     </h2>
+      //   ),
+      // } ,
       {
-        Header: "Account details",
-        accessor: "type",
-        Cell: (props) => (
-          <h2 className="bg-zinc-100 shadow-md shadow-slate-800 px-3 font-bold border-r-8 min-h-[150px] min-w-[300px]">
-            <div className="flex justify-between mb-1 pb-1 border-b-2 border-teal-600">
-              <h1 className="font-black tracking-wider"> Type: </h1>{" "}
-              <p className="text-teal-800 text-[12px] p-1 shadow-md tracking-widest font-lato font-black shadow-slate-600 border-b-2 border-red-600">
-                {props.row.original.type}
-              </p>
-            </div>
-            <div className="bg-teal-50 shadow-lg shadow-white p-3">
-              <div className="flex justify-between pb-1">
-                <h1 className="mb-3 font-bold text-[10px] font-Poppins tracking-wider">
-                  {" "}
-                  Account No#:{" "}
-                </h1>
-                <h1 className="text-stone-800 text-[12px] p-1 shadow-sm shadow-slate-200 font-black tracking-wider font-Montserrat">
-                  {" "}
-                  {props.row.original["account-number"]}
-                </h1>
-              </div>
-              <div className="flex justify-between pb-1">
-                <h1 className="mb-3 font-bold font-Poppins tracking-wider">
-                  {" "}
-                  Service No#:{" "}
-                </h1>
-                <h1 className="text-cyan-900 text-[12px] p-1 shadow-md shadow-slate-200 font-black tracking-wider">
-                  {props.row.original["service-number"]}
-                </h1>
-              </div>
-              <div className="flex justify-between pb-1">
-                {" "}
-                <h1 className="mb-3 font-bold font-Poppins tracking-wider">
-                  {" "}
-                  Current Plan:
-                </h1>
-                <h1 className="text-stone-800 text-[12px] shadow-md shadow-slate-100 font-black pr-2">
-                  {props.row.original.plan}
-                </h1>
-              </div>
-            </div>
-          </h2>
-        ),
-      } ,
+        Header: "Account",
+        accessor: "account-number",
+        Cell: simStyle
+              },
+      {
+        Header: "Mobile",
+        accessor: "service-number",
+        Cell: simStyle1,
+        
+      },
+      {
+        Header: "Emp number",
+        accessor: "emp-number",
+        Cell: simStyle2,
+        
+      },
+      {
+        Header: "Dept coordinator",
+        accessor: "coordinator",
+        Cell: simStyle3,
+        
+      },
+
       // {
-      //   Header: "Account No",
-      //   accessor: "account-number",
-      //   Cell: Boldstylesim1,
-      // },
-      // {
-      //   Header: "Mobile No",
-      //   accessor: "service-number",
-      //   Cell: Boldstylesim1,
-      // },
-      // {
-      //   Header: "Employee number",
-      //   accessor: "emp-number",
-      //   Cell: Boldstylesim
+      //   Header: "Pre-cleansed Employee details",
+      //   accessor: "emp",
+      //   Cell: (props) => (
+      //     <h2 className="p-3 text-[12px] font-bold border-r-8 shadow-md shadow-zinc-800 min-h-[150px] min-w-[300px] flex flex-col justify-between">
+      //       <div className="flex justify-between">
+      //         {" "}
+      //         <h2> Emp Name:</h2>
+      //         <p className="text-teal-800">
+      //           {props.row.original["employee-name"]}
+      //         </p>
+      //       </div>
+      //       <div className="flex justify-between">
+      //         {" "}
+      //         <h2> Emp Coordinator:</h2>
+      //         <p className="text-stone-800">
+      //           {props.row.original.coordinator}
+      //         </p>{" "}
+      //       </div>
+      //       <div className="flex justify-between">
+      //         {" "}
+      //         <h2> Department:</h2>
+      //         <p className="text-cyan-900">{props.row.original.department}</p>
+      //       </div>
+      //       <div className="flex justify-between">
+      //         {" "}
+      //         <h2> Location: </h2>
+      //         <p className="text-stone-800">
+      //           {props.row.original.location}
+      //         </p>{" "}
+      //       </div>
+      //       <div className="flex justify-between">
+      //         {" "}
+      //         <h2> Section: </h2>
+      //         <p className="text-cyan-900">{props.row.original.section}</p>{" "}
+      //       </div>
+      //     </h2>
+      //   ),
       // },
 
+   
+
       {
-        Header: "Pre-cleansed Employee details",
-        accessor: "emp",
-        Cell: (props) => (
-          <h2 className="p-3 text-[12px] font-bold border-r-8 shadow-md shadow-zinc-800 min-h-[150px] min-w-[300px] flex flex-col justify-between">
-            <div className="flex justify-between">
-              {" "}
-              <h2> Emp Name:</h2>
-              <p className="text-teal-800">
-                {props.row.original["employee-name"]}
-              </p>
-            </div>
-            <div className="flex justify-between">
-              {" "}
-              <h2> Emp Coordinator:</h2>
-              <p className="text-stone-800">
-                {props.row.original.coordinator}
-              </p>{" "}
-            </div>
-            <div className="flex justify-between">
-              {" "}
-              <h2> Department:</h2>
-              <p className="text-cyan-900">{props.row.original.department}</p>
-            </div>
-            <div className="flex justify-between">
-              {" "}
-              <h2> Location: </h2>
-              <p className="text-stone-800">
-                {props.row.original.location}
-              </p>{" "}
-            </div>
-            <div className="flex justify-between">
-              {" "}
-              <h2> Section: </h2>
-              <p className="text-cyan-900">{props.row.original.section}</p>{" "}
-            </div>
-          </h2>
-        ),
+        Header: "Pre-cleansed Dept details",
+        accessor: d => (
+          <div className="text-[13px] text-cyan-900 tracking-widest">
+            <div>Dept: {d.department}</div>
+            <div>Section: {d.section}</div>
+            <div>Location:{d.location}</div>
+            <div>Credit Limit:{d.creditlimit?.$numberDecimal}</div>
+            <div>Plan: {d.plan}</div>
+          </div>
+        )
       },
 
       {
         Header: "Cleansed details",
         accessor: "cleansed",
         Cell: (props) =>  (
-          <h2 className="p-3 bg-green-50 shadow-lg shadow-zinc-600 font-bold border-r-8 min-h-[150px] min-w-[400px] flex flex-col justify-between">
+          <h2 className="w-2/3 flex flex-col justify-between text-[13px] tracking-wider">
             {props.row.original.cleansed?.employee ? <div className="flex justify-between">
               <h2> Employee as in SAP: </h2>
-              <p className="text-cyan-900 font-bold text-[13px] tracking-wider bg-zinc-200 px-3">
+              <p className="text-cyan-900">
                 {props.row.original.cleansed?.employee}
               </p>
             </div> : null }
@@ -165,7 +192,7 @@ function Simlist() {
 
             {props.row.original.cleansed?.department ? <div className="flex justify-between">
               <h2> Department:</h2>
-              <p className="text-teal-800 font-bold text-[13px] tracking-wider bg-zinc-200 px-3">
+              <p className="text-teal-800 ">
                 {props.row.original.cleansed?.department}
               </p>
             </div> : null }
@@ -179,7 +206,7 @@ function Simlist() {
 
             {props.row.original.cleansed?.creditlimit ? <div className="flex justify-between">
               <h2> Credit Limit: </h2>
-              <p className="text-cyan-900 font-bold text-[13px] tracking-wider bg-zinc-200 px-3">
+              <p className="text-cyan-900">
                 {props.row.original.cleansed?.creditlimit} SAR
               </p>
             </div> : null }
@@ -188,12 +215,6 @@ function Simlist() {
           </h2>
         ),
       },
-
-      // {
-      //   Header: "Coordinator of user",
-      //   accessor: "coordinator",
-      //   Cell: Spstylesim,
-      // },
 
       // {
       //   Header: "Plan",

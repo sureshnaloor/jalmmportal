@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import Projectdetails from '../../components/Projectdetails'
 import HeaderComponent from '../../components/HeaderComponent'
-
-import { useSession, getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react'
 
 
 function Projects() {

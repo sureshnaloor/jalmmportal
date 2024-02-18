@@ -10,6 +10,27 @@ const handler =  async (req, res) => {
           return res.json(simlist);
           
         } 
+
+        case "POST":{
+          const { db } = await connectToDatabase();
+          const simlist = await db.collection("simdetails").insertOne(
+            {
+              type:"MOBILE",
+              "account-number": req.body.accountNumber,
+              "service-number": req.body.Mobile,
+              "emp-number": req.body.empno,
+              "employee-name": req.body.empname,
+              department: req.body.deptname,
+              coordinator: req.body.coordinator,
+              plan: req.body.selectedPlan,
+              location: req.body.location,
+              "credit-limit": req.body.creditlimit,
+              section: req.body.section,
+            }
+          );
+          return res.json(simlist);
+          
+        }
        
         default:
           return res.json({ error: "Method not supported" });

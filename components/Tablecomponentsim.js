@@ -164,6 +164,40 @@ export function Numberstylesim({ value }) {
   );
 }
 
+export function simStyle({ value }) {
+  return (
+    <span className={classNames(" text-stone-900 text-[12px] font-bold tracking-wider")}>
+      {value}
+     
+    </span>
+  );
+}
+
+export function simStyle1({ value }) {
+  return (
+    <span className={classNames(" text-zinc-900 text-[12px] font-semibold tracking-wide")}>
+      {value}
+     
+    </span>
+  );
+}
+export function simStyle2({ value }) {
+  return (
+    <span className={classNames(" text-emerald-900 text-[12px] font-bold tracking-wide text-right")}>
+      {value}
+     
+    </span>
+  );
+}
+export function simStyle3({ value }) {
+  return (
+    <span className={classNames(" text-sky-900 text-[12px] font-bold tracking-wider right-0")}>
+      {value}
+     
+    </span>
+  );
+}
+
 // function to apply bold and color
 
 export function Boldstyle1({ value }) {
@@ -388,7 +422,7 @@ function Tablecomponent({ columns, data }) {
       </div>
 
       {/* table component */}
-      <table className="mt-9  divide-y divide-gray-300">
+      <table className="mt-9  divide-y divide-gray-300 w-full">
         <thead
           className="bg-zinc-100 text-zinc-800  font-black"
           {...getTableProps()}
@@ -401,7 +435,7 @@ function Tablecomponent({ columns, data }) {
                 // eslint-disable-next-line react/jsx-key
                 <th
                   scope="col"
-                  className="px-6 py-2 text-left text-[10px] font-bold text-gray-800 uppercase tracking-wider"
+                  className="text-left py-2 text-[11px] font-bold text-gray-800 uppercase tracking-wider"
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                 >
                   {column.render("Header")}

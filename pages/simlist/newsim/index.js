@@ -2,14 +2,23 @@ import React, { useState, Fragment, useEffect } from "react";
 import { Listbox } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/solid";
 import HeaderComponent from "../../../components/HeaderComponent";
+import { ToastContainer, toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const departments = [
+  {
+    id: "0",
+    name: "Dept....",
+    coordinator: "Coordinator...",
+    inactive: false,
+  },
   {
     id: "1",
     name: "ESD",
     coordinator: "MOHAMED ABDUL RASEED",
     inactive: false,
   },
+ 
   { id: "2", name: "ISD", coordinator: "KUMAR LAMA", inactive: false },
   { id: "3", name: "MMD", coordinator: "ARNEL BALENA", inactive: false },
   { id: "4", name: "HRD", coordinator: "GYANANDRA ADHIKARI", inactive: false },
@@ -34,6 +43,8 @@ function Newsim() {
   const [employees, setEmployees] = useState([]);
 
   const [accounts, setAccounts] = useState([]);
+  const router = useRouter();
+
 
   // fetch all records of employees
 
@@ -57,6 +68,10 @@ function Newsim() {
   const [inputValue, setInputvalue] = useState("");
   const [Mobile, setMobile] = useState(null);
   const [accountNumber, setAccountNumber] = useState(null);
+  const [creditlimit, setCreditlimit] = useState(0)
+  const [plan,setPlan] = useState("")
+  const [location, setLocation] = useState("")
+  const [section, setSection] = useState("")
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -110,16 +125,51 @@ function Newsim() {
     setMobile(value);
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) =>  {
     e.preventDefault();
-    console.log("save clicked");
-    console.log(
-      selectedDepartment,
-      selectedDepartment.coordinator,
-      inputValue,
+    // console.log("save clicked");
+    // console.log(
+    const deptname = selectedDepartment.name
+    const coordinator = selectedDepartment.coordinator
+    const empno = inputValue.split(":")[0]
+    const empname = inputValue.split(":")[1]
+    //   accountNumber,
+    //   Mobile,
+    //   selectedPlan,
+    //   location,
+    //   creditlimit
+
+    // );
+
+    let body = {
+      deptname,
+      coordinator,
+      empno,
+      empname,
       accountNumber,
-      Mobile
-    );
+      Mobile,
+      selectedPlan,
+      location,
+      creditlimit,
+      section
+    };
+
+    const result = await fetch(`/api/sim`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }),
+    });
+
+    toast.success("new SIM inserted succesfully!", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+
+    console.log("clickd save button")
+
+    router.reload();
   };
 
   const handleBack = (e) => {
@@ -180,7 +230,7 @@ function Newsim() {
                 {" "}
                 Coordinator:{" "}
               </span>{" "}
-              <p className="py-2 px-3 bg-zinc-900 text-zinc-50 shadow-sm shadow-zinc-300 mt-3 mr-12">
+              <p className="py-2 px-3 bg-sky-400 text-zinc-900 font-bold shadow-sm shadow-zinc-300 mt-3 mr-12">
                 {" "}
                 {selectedDepartment.coordinator}
               </p>
@@ -193,7 +243,7 @@ function Newsim() {
                 User:{" "}
               </span>
               <input
-                className=" mt-3 w-80  uppercase tracking-wider font-bold font-lato text-[12px] p-2 bg-slate-900 text-white shadow-sm shadow-slate-300"
+                className=" mt-3 w-80  uppercase tracking-wider font-bold font-lato text-[12px] p-2 bg-teal-400 text-stone-900 shadow-sm shadow-slate-300"
                 label="employee"
                 id="employee"
                 value={inputValue}
@@ -203,7 +253,7 @@ function Newsim() {
 
               <ul>
                 {suggestions.map((item, index) => (
-                  <li key={index} onClick={() => handleSelect(item.empname)}>
+                  <li key={index} onClick={() => handleSelect(item.empno + " :" + item.empname)}>
                     {item.empno} {item.empname}
                   </li>
                 ))}
@@ -211,7 +261,7 @@ function Newsim() {
             </div>
           </div>
           <div className="grid grid-cols-12 bg-gray-300 p-3 m-3">
-            <div className="col-span-7 bg-sky-100 m-1 border-1 border-sky-800 shadow-lg shadow-sky-400">
+            <div className="col-span-7 bg-sky-50 m-1 border-1 border-sky-800 shadow-lg shadow-sky-400">
               <p className="text-[10px] font-semibold text-red-800 p-1 m-auto font-lato">
                 {" "}
                 (Please exit by clicking 'back' if the 'account number' or
@@ -260,7 +310,7 @@ function Newsim() {
               </div>
             </div>
 
-            <div className="col-span-5 bg-emerald-100 m-1 border-1 border-emerald-800 shadow-lg shadow-emerald-400 flex">
+            <div className="col-span-5 bg-emerald-50 m-1 border-1 border-emerald-800 shadow-lg shadow-emerald-400 flex">
               
               <div className="py-9">
                 <div >
@@ -311,6 +361,8 @@ function Newsim() {
                 <input
                   type="text"
                   id="creditlimit"
+                  value={creditlimit}
+                  onChange={ e => setCreditlimit(e.target.value)}
                   className="w-1/2 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                 />{" "} <span> SAR </span>
               </div>
@@ -325,6 +377,24 @@ function Newsim() {
                 <input
                   type="text"
                   id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="block w-11/12 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                />{" "}
+              </div>
+
+              <div className="px-1 py-3">
+                <label
+                  htmlFor="location"
+                  className="block mb-2 text-[10px] font-lato font-semibold uppercase text-gray-900 dark:text-white"
+                >
+                  Section:
+                </label>
+                <input
+                  type="text"
+                  id="location"
+                  value={section}
+                  onChange={(e) => setSection(e.target.value)}
                   className="block w-11/12 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                 />{" "}
               </div>
