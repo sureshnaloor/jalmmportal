@@ -68,7 +68,7 @@ function Vendoredit() {
       position: toast.POSITION.TOP_RIGHT,
     });
     
-    router.reload();
+    router.back();
   };
     
 

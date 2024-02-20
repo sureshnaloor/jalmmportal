@@ -1,7 +1,7 @@
 import { connectToDatabase } from "../../../../lib/mongoconnect";
 
 const handler = async (req, res) => {
-  const { venname } = req.query;
+  const { vendorname } = req.query;
   const { db } = await connectToDatabase();
   // console.log(matcode)
 
@@ -10,20 +10,20 @@ const handler = async (req, res) => {
       case "GET": {
         const vendor = await db
           .collection("registeredvendors")
-          .findOne({ "vendorname": venname }) || {}
+          .findOne({ "vendorname": vendorname }) || {}
 
         return res.json(vendor);
       }
      
       case "PUT": {
         const vendor = await db.collection("registeredvendors").updateOne(
-          { vendorname: venname },
+          { vendorname: vendorname },
           {
             $set: {
               vendorname: req.body.vendorName,
-              group: req.body.group,
-              type: req.body.type,
-              secondarygroup: req.body.secondarygroup,
+              companyregistrationnumber: req.body.companyregnumber,
+              taxnumber: req.body.taxnumber,
+
               updatedBy: req.body.username,
               updatedAt: new Date()
             },

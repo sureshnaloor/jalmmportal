@@ -32,6 +32,7 @@ const departments = [
   },
   { id: "8", name: "NEOM", coordinator: "WALEED M ISHMAIL", inactive: false },
   { id: "9", name: "EPMO", coordinator: "AFTAB HAYAT", inactive: false },
+  {id: "10", name: "MKTG", coordinator: "MOHAMED ABDUL RASEED", inactive: false}
 ];
 
 const plans = ["BN50", "BN80", "BN100", "BN200"];

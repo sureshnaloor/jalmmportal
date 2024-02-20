@@ -175,6 +175,7 @@ function Simlist() {
         Header: "Cleansed details",
         accessor: "cleansed",
         Cell: (props) =>  (
+          
           <h2 className="w-2/3 flex flex-col justify-between text-[13px] tracking-wider">
             {props.row.original.cleansed?.employee ? <div className="flex justify-between">
               <h2> Employee as in SAP: </h2>
@@ -211,7 +212,7 @@ function Simlist() {
               </p>
             </div> : null }
 
-            {props.row.original.cleansed ? null : <div className="flex justify-center"><Image  src="/images/datanotclean.png" alt="datanotclean" width={"100%"} height={"100%"} /> </div>}
+            { !props.row.original.cleansed && props.row.original["close-flag"] !== "true"?  ( <div className="flex justify-center"><Image  src="/images/datanotclean.png" alt="datanotclean" width={"100%"} height={"100%"} /> </div>) : (props.row.original["close-flag"]== "true" ? <p> Deleted</p> : null) }
           </h2>
         ),
       },
