@@ -21,8 +21,10 @@ function Vendoredit() {
 
   let vendor1 = JSON.parse(vendor)
 
-  const [vendorname, setVendorName] = useState(vendor1.vendorname)
-  const [vendorcode, setVendorcode] = useState(vendor1.vendorcode)
+  const [vendorName, setVendorName] = useState(vendor1.vendorname)
+  const [vendorcode, setVendorcode] = useState(vendor1.vendorcode || null)
+
+  // address related fields 
 
   const [countrycode, setCountrycode] = useState(vendor1.address.countrycode)
   const [city,setCity] = useState(vendor1.address.city)
@@ -31,6 +33,8 @@ function Vendoredit() {
   const [pobox, setPobox] = useState(vendor1.address.pobox)
   const [zipcode, setZipcode] = useState(vendor1.address.zipcode)
 
+  // contact related fields 
+
   const [salesname, setSalesname] = useState(vendor1.contact.salesname)
   const [telephone1, setTelephone1] = useState(vendor1.contact.telephone1)
   const [telephone2, setTelephone2] = useState(vendor1.contact.telephone2)
@@ -38,10 +42,17 @@ function Vendoredit() {
   const [salesemail, setSalesemail] = useState(vendor1.contact.salesemail)
   const [salesmobile, setSalesmobile] = useState(vendor1.contact.salesmobile)
 
+  //company related fields 
+
   const [ taxnumber, setTaxnumber] = useState(vendor1.taxnumber)
   const [companyregnumber, setCompanyregnumber] = useState(vendor1.companyregistrationnumber)
   const [website, setWebsite] = useState(vendor1.companywebsite)
   const [email, setEmail] = useState(vendor1.companyemail)
+
+  // metadata
+
+  // const [createdDate, setCreatedDate] = useState(vendor1["created_date"])
+  // const [createdBy, setCreatedBy] = useState(vendor1["created_by"])
 
   
 
@@ -54,9 +65,13 @@ function Vendoredit() {
   const onSubmit = async (data) =>  {
     console.log(data)
     console.log("I am clicked- submit")
+    // console.log(vendorname)
+    console.log(session.user.name)
     data.username = session.user.name
+    data.created_date = vendor1["created_date"]
+    data.created_by = vendor1["created_by"]
 
-    await fetch(`/api/registeredvendors/update/${vendorname}`, {
+    await fetch(`/api/registeredvendors/update/${vendor1.vendorname}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -120,7 +135,7 @@ function Vendoredit() {
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
                     {...register("vendorName")}
-                    value={vendorname}
+                    value={vendorName}
                     onChange = {(e) => setVendorName(e.target.value)}
                     readOnly = {session.user.role != "admin" }
                   />
@@ -140,22 +155,22 @@ function Vendoredit() {
                 <div className="relative z-0 w-full mb-6 group">
                   <input
                     type="text"
-                    name="vendorCode"
-                    id="vendorCode"
+                    name="vendorcode"
+                    id="vendorcode"
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
-                    {...register("vendorCode")}
+                    {...register("vendorcode")}
                     value={vendorcode}
                     onChange = {(e) => setVendorcode(e.target.value)}
                     readOnly = {session.user.role != "admin" }
                   />
 
                   <p className="text-[10px] text-red-900">
-                    {errors?.vendorCode && errors.vendorCode.message}{" "}
+                    {errors?.vendorcode && errors.vendorcode.message}{" "}
                   </p>
 
                   <label
-                    htmlFor="vendorName"
+                    htmlFor="vendorcode"
                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                   >
                     Vendor Code assigned:
@@ -165,17 +180,17 @@ function Vendoredit() {
                 <div className="relative z-0 w-full mb-6 group">
                   <input
                     type="text"
-                    name="vendorCountry"
-                    id="vendorCountry"
+                    name="countrycode"
+                    id="countrycode"
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
-                    {...register("vendorCountry")}
+                    {...register("countrycode")}
                     onChange={(e => setCountrycode(e.target.value))}
                     value = {countrycode}
                   />
 
                   <p className="text-[10px] text-red-900">
-                    {errors?.vendorCountry && errors.vendorCountry.message}{" "}
+                    {errors?.countrycode && errors.countrycode.message}{" "}
                   </p>
 
                   <label
@@ -189,17 +204,17 @@ function Vendoredit() {
                 <div className="relative z-0 w-full mb-6 group">
                   <input
                     type="text"
-                    name="vendorCity"
-                    id="vendorCity"
+                    name="city"
+                    id="city"
                     className="block py-2.5 px-0 w-1/2 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
-                    {...register("vendorCity")}
+                    {...register("city")}
                     onChange={e => setCity(e.target.value)}
                     value = {city}
                   />
 
                   <p className="text-[10px] text-red-900">
-                    {errors?.vendorCity && errors.vendorCity.message}{" "}
+                    {errors?.city && errors.city.message}{" "}
                   </p>
 
                   <label
@@ -387,17 +402,17 @@ function Vendoredit() {
                 <div className="relative z-0 w-full mb-6 group">
                   <input
                     type="text"
-                    name="faxnumber"
-                    id="faxnumber"
+                    name="fax"
+                    id="fax"
                     className="block py-2.5 px-0 w-1/2 text-sm text-teal-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
-                    {...register("faxnumber")}
+                    {...register("fax")}
                     onChange={e=> setFax(e.target.value)}
                     value = {fax}
                   />
 
                   <p className="text-[10px] text-red-900">
-                    {errors?.faxnumber && errors.faxnumber.message}{" "}
+                    {errors?.fax && errors.fax.message}{" "}
                   </p>
 
                   <label
@@ -411,17 +426,17 @@ function Vendoredit() {
                 <div className="relative z-0 w-full mb-6 group">
                   <input
                     type="text"
-                    name="salesperson"
-                    id="salesperson"
+                    name="salesname"
+                    id="salesname"
                     className="block py-2.5 px-0 w-2/3 text-sm text-teal-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
-                    {...register("salesperson")}
+                    {...register("salesname")}
                     onChange={e => setSalesname(e.target.value)}
                     value = {salesname}
                   />
 
                   <p className="text-[10px] text-red-900">
-                    {errors?.salesperson && errors.salesperson.message}{" "}
+                    {errors?.salesname && errors.salesname.message}{" "}
                   </p>
 
                   <label
@@ -511,21 +526,21 @@ function Vendoredit() {
                 <div className="relative z-0 w-full mb-6 group">
                   <input
                     type="text"
-                    name="registrationnumber"
-                    id="registrationnumber"
+                    name="companyregnumber"
+                    id="companyregnumber"
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
-                    {...register("registrationnumber")}
+                    {...register("companyregnumber")}
                     onChange={e => setCompanyregnumber(e.target.value)}
                     value={companyregnumber}
                   />
                   <p className="text-[10px] text-red-900">
-                    {errors?.registrationnumber &&
-                      errors.registrationnumber.message}{" "}
+                    {errors?.companyregnumber &&
+                      errors.companyregnumber.message}{" "}
                   </p>
 
                   <label
-                    htmlFor="registrationnumber"
+                    htmlFor="companyregnumber"
                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                   >
                     Company Registration Number:
@@ -535,17 +550,17 @@ function Vendoredit() {
                 <div className="relative z-0 w-full mb-6 group">
                   <input
                     type="text"
-                    name="webaddress"
-                    id="webaddress"
+                    name="website"
+                    id="website"
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
-                    {...register("webaddress")}
+                    {...register("website")}
                     onChange={e => setWebsite(e.target.value)}
                     value = {website}
                   />
                   <p className="text-[10px] text-red-900">
-                    {errors?.webaddress &&
-                      errors.webaddress.message}{" "}
+                    {errors?.website &&
+                      errors.website.message}{" "}
                   </p>
 
                   <label
