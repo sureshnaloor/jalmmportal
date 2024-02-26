@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HeaderComponent from "../../../components/HeaderComponent";
+import FooterComponent from "../../../components/FooterComponent";
 
 function Vendormap() {
   const { data: session } = useSession();
@@ -37,7 +38,7 @@ function Vendormap() {
     });
 
     // router.push(`/notyetqualifiedvendors`);
-    router.back()
+    router.back();
   };
 
   const handleServicegroupadd = async () => {
@@ -51,49 +52,51 @@ function Vendormap() {
       user: session.user.name,
     };
 
-    const result = await fetch(`/api/registeredvendors/servicegroupmap/${vendor}`, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      }),
-    });
+    const result = await fetch(
+      `/api/registeredvendors/servicegroupmap/${vendor}`,
+      {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }),
+      }
+    );
 
     toast.success("new request made succesfully!", {
       position: toast.POSITION.TOP_RIGHT,
     });
 
     // router.push(`/notyetqualifiedvendors`);
-    router.back()
+    router.back();
   };
 
   // material and service group selection
 
-  const [selectedValue, setSelectedValue] = useState("material")
+  const [selectedValue, setSelectedValue] = useState("material");
 
-  const handleRadioChange = ( 
-    value 
-) => { 
-    setSelectedValue(value); 
-}; 
-//service types
+  const handleRadioChange = (value) => {
+    setSelectedValue(value);
+  };
+  //service types
 
-const [servicetypes, setServicetypes] = useState([])
+  const [servicetypes, setServicetypes] = useState([]);
 
-const [servicecategorySelected, setServicecategorySelected] = useState("")
-const [servicesubcategorySelected, setServicesubcategorySelected] = useState("")
+  const [servicecategorySelected, setServicecategorySelected] = useState("");
+  const [servicesubcategorySelected, setServicesubcategorySelected] =
+    useState("");
 
-const servicecategoryChange = (event) => {
-  // console.log(event.target.value);
-  setServicecategorySelected(event.target.value);
-};
+  const servicecategoryChange = (event) => {
+    // console.log(event.target.value);
+    setServicecategorySelected(event.target.value);
+  };
 
-const servicesubcategoryChange = (event) => {
-  setServicesubcategorySelected(event.target.value)
-}
+  const servicesubcategoryChange = (event) => {
+    setServicesubcategorySelected(event.target.value);
+  };
 
-// material types 
+  // material types
 
   const [mattypes, setMattypes] = useState([]);
   // const [filteredMattypes, setFilteredmattypes] = useState([])
@@ -104,7 +107,8 @@ const servicesubcategoryChange = (event) => {
   };
   const [mattypeselected, setMattypeselected] = useState("");
   const [matgroupselected, setMatgroupselected] = useState("");
-  const [secondarymatgroupselected, setSecondarymatgroupselected] = useState("");
+  const [secondarymatgroupselected, setSecondarymatgroupselected] =
+    useState("");
 
   const matgroupChange = (event) => {
     setMatgroupselected(event.target.value);
@@ -320,8 +324,7 @@ const servicesubcategoryChange = (event) => {
                 onChange={servicecategoryChange}
                 className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 font-Montserrat font-bold text-zinc-900 text-[10px]"
               >
-
-              {/* {servicetypes
+                {/* {servicetypes
                               
                   .map((mg, idx) => (
                     <option
@@ -388,7 +391,6 @@ const servicesubcategoryChange = (event) => {
                 >
                   Logistics
                 </option>
-              
               </select>
             </div>
 
@@ -408,7 +410,7 @@ const servicesubcategoryChange = (event) => {
                 className="mt-1 block w-full py-2 px-3 border font-Montserrat font-bold text-stone-900 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-[10px]"
               >
                 {servicetypes
-                  .filter((mt) => mt.servicecategory == servicecategorySelected)             
+                  .filter((mt) => mt.servicecategory == servicecategorySelected)
                   .map((mg, idx) => (
                     <option
                       key={idx}
@@ -428,9 +430,6 @@ const servicesubcategoryChange = (event) => {
               {" "}
               Add +{" "}
             </button>
-
-           
-           
           </div>
           <div className="w-3/4 flex justify-around bg-teal-400/40 text-stone-900 p-1 shadow-lg shadow-teal-400 mx-auto font-bold tracking-wider">
             <h4>
@@ -448,7 +447,6 @@ const servicesubcategoryChange = (event) => {
               </span>{" "}
               {servicesubcategorySelected}
             </h3>
-           
           </div>
         </div>
       </>
@@ -463,9 +461,12 @@ const servicesubcategoryChange = (event) => {
         Material/service groups dealt by vendor: {vendor}
       </p>
 
-      <div className="w-1/2 mx-auto mt-3 bg-emerald-100/60 py-3 shadow-md shadow-stone-400 text-white flex justify-center ">
+      <div className="w-1/2 mx-auto mt-3 uppercase tracking-wider bg-stone-200/60 py-3 shadow-md shadow-stone-400 text-white flex justify-center ">
         {" "}
-        <h4 className="text-[14px] font-bold text-stone-900 tracking-wider"> Already mapped groups: </h4>
+        <h4 className="text-[14px] font-bold text-stone-900 tracking-wider">
+          {" "}
+          Already mapped groups:{" "}
+        </h4>
       </div>
       <div>
         {mappedgroups.length > 0 ? (
@@ -473,7 +474,9 @@ const servicesubcategoryChange = (event) => {
             <table className="w-4/5 border-collapse border border-sky-500  mt-5 mx-auto">
               <thead>
                 <tr className="bg-stone-200/50 text-zinc-900 border-b-2 border-slate-600">
-                  <th className="py-2 px-4 text-[12px] text-left">Material type</th>
+                  <th className="py-2 px-4 text-[12px] text-left">
+                    Material type
+                  </th>
                   <th className="py-2 px-4 text-[12px] text-left">
                     Primary Material group
                   </th>
@@ -510,65 +513,60 @@ const servicesubcategoryChange = (event) => {
             </table>
           </div>
         ) : (
-          <p className="w-1/2 mx-auto flex justify-center mt-3 text-[12px] font-bold tracking-widest"> NIL </p>
+          <p className="w-1/2 mx-auto flex justify-center mt-3 text-[12px] font-bold tracking-widest">
+            {" "}
+            NIL{" "}
+          </p>
         )}
       </div>
-      <div className="w-1/2 mx-auto mt-3 py-3 bg-emerald-100/60 shadow-md shadow-stone-400 text-white grid grid-cols-4">
+
+      <div className="bg-emerald-50/90 w-4/5 mt-5  mx-auto border-2 border-slate-500/60 shadow-md shadow-emerald-600/80 mb-9">
+      <div className="w-1/2 mx-auto mt-3 py-3 bg-emerald-200/60 shadow-md shadow-stone-400 text-white grid grid-cols-4">
         {" "}
-        <h4 className="text-[14px] col-span-3 flex  justify-center text-zinc-900 font-bold tracking-wider"> To map new groups: </h4>
-        <div className="col-span-1 text-[12px] text-stone-900 font-black tracking-wider">
-        <div className="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]">
-          <input
-            
-            type="radio"
-            name="material"
-            id="material"
-            value = "material"
-            checked={ 
-              selectedValue === 
-              "material"
-          } 
-          onChange={() => 
-              handleRadioChange( 
-                  "material"
-              ) }
-          />
-          <label
-            className="mt-px inline-block pl-[0.15rem] opacity-50 hover:pointer-events-none"
-            htmlFor="material"
-          >
-          Material
-          </label>
-      </div>
-      <div className="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]">
-          <input
-            
-            type="radio"
-            name="service"
-            id="service"
-            value = "service"
-            checked={ 
-              selectedValue === 
-              "service"
-          } 
-          onChange={() => 
-              handleRadioChange( 
-                  "service"
-              ) }
-            
-          />
-          <label
-            className="mt-px inline-block pl-[0.15rem] opacity-50 hover:pointer-events-none"
-            htmlFor="service"
-          >
-          Service
-          </label>
-      </div>
-      </div>
+        <h4 className="text-[14px] col-span-3 flex  justify-center text-zinc-900 font-bold tracking-wider">
+          {" "}
+          To map new groups:{" "}
+        </h4>
+        <div className="col-span-1 text-[12px] text-stone-900 font-black flex tracking-wider">
+          <div className="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]">
+            <input
+              type="radio"
+              name="material"
+              id="material"
+              value="material"
+              checked={selectedValue === "material"}
+              onChange={() => handleRadioChange("material")}
+            />
+            <label
+              className="mt-px inline-block pl-[0.15rem] opacity-50 hover:pointer-events-none"
+              htmlFor="material"
+            >
+              Material
+            </label>
+          </div>
+          <div className="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]">
+            <input
+              type="radio"
+              name="service"
+              id="service"
+              value="service"
+              checked={selectedValue === "service"}
+              onChange={() => handleRadioChange("service")}
+            />
+            <label
+              className="mt-px inline-block pl-[0.15rem] opacity-50 hover:pointer-events-none"
+              htmlFor="service"
+            >
+              Service
+            </label>
+          </div>
+        </div>
       </div>
       <div>
-        {selectedValue == "material" ?  <Matgroups /> : <Servicegroups />}
+        {selectedValue == "material" ? <Matgroups /> : <Servicegroups />}
       </div>
+      </div>
+      <FooterComponent /> 
     </>
   );
 }
