@@ -63,7 +63,7 @@ function Openpurchaseorders() {
       setOpenpolist(
         json.filter(
           (row) =>
-            row.openvalue > 1000 &&
+            row.openvalue > 10 &&
             row._id["po-number"].substring(0, 2) !== "47" &&
             row._id["po-number"].substring(0, 2) !== "71" &&
             row._id["po-number"].substring(0, 2) !== "91"

@@ -21,7 +21,7 @@ const handler = async (req, res) => {
             },
             {
                 $match: {
-                    openvalue:{$gt:10000}
+                    openvalue:{$gt:100}
                 }
             }
             
