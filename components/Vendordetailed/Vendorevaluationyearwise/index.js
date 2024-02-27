@@ -55,20 +55,20 @@ function Vendorevaluationyearwise({ vendornumber }) {
   const [vendorevaled, setVendorevaled] = useState({});
 
   return (
-    <div className="bg-zinc-100 mx-auto w-5/6 drop-shadow rounded-md mb-9">
+    <div className="bg-zinc-100 mx-auto w-5/6 drop-shadow rounded-md mb-9 shadow-md shadow-stone-500">
       
-      <div className="flex justify-center align-middle">
-      <h4 className="mb-3 py-3 px-16 text-[14px] shadow-lg shadow-slate-200 mx-auto my-auto bg-sky-900 text-white font-bold font-italic tracking-widest">
+      <div className="flex justify-center align-middle ">
+      <h4 className="mb-3 py-1 px-16 text-[14px] shadow-lg shadow-slate-200 mx-auto my-auto bg-sky-100/80 text-stone-800 font-bold italic tracking-widest">
         {" "}
-        The Variable yearly PO wise parameters:{" "}
+        The Variable yearly PO wise parameters for vendor: {vendornumber}
       </h4>
       </div>
       
       <div className="mx-auto drop-shadow rounded-md mb-9">
         
-        <h1 className="text-[14px] tracking-wider font-semibold text-center py-3  text-black mb-10 italic bg-slate-400">
-          Evaluation for the highest value PO in 2021 for the vendor code:{" "}
-          {vendornumber}
+        <h1 className="text-[14px] tracking-wider w-1/5 mx-auto font-semibold text-center py-1  text-black mb-3 italic bg-zinc-100 shadow-md shadow-zinc-800">
+          Year 2021
+          
         </h1>
 
         {vendorevaled["powiseevalyear1"] ? (

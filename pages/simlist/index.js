@@ -110,6 +110,12 @@ function Simlist() {
         
       },
       {
+        Header: "Emp Name",
+        accessor: "employee-name",
+        Cell: simStyle2,
+        
+      },
+      {
         Header: "Dept coordinator",
         accessor: "coordinator",
         Cell: simStyle3,

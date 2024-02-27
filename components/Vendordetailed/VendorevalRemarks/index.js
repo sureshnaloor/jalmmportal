@@ -31,7 +31,7 @@ function VendorevalRemarks({vendornumber}) {
     }
   return (
     <div className="bg-zinc-100 mx-auto w-5/6 drop-shadow shadow-lg shadow-stone-800 mb-9">
-    <div className="w-1/2 mb-3 py-1 shadow-lg text-[14px] shadow-slate-200 mx-auto my-auto bg-emerald-800 text-white font-bold font-italic tracking-widest">
+    <div className="w-1/2 mb-3 py-1 shadow-lg text-[14px] shadow-slate-200 mx-auto my-auto mt-2 bg-emerald-100/80 text-stone-800 font-bold font-italic tracking-widest">
       {" "}
       <h3 className='flex justify-center'>The Evaluation Remarks for vendor code: {vendornumber}</h3>
     </div>
@@ -101,7 +101,7 @@ function VendorevalRemarks({vendornumber}) {
         />
         
          
-        <button className='bg-emerald-400 text-white px-2 rounded-lg shadow-md shadow-slate-500 align-middle justify-end'> Save</button>
+        <button className='bg-emerald-400 text-white px-2 rounded-lg shadow-md shadow-slate-500 align-middle justify-end mb-2 ml-2'> Save</button>
         </form>
       )
 

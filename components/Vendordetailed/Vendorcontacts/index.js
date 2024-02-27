@@ -3,7 +3,7 @@ import React from "react";
 function Vendorcontacts() {
   return (
     <div className="bg-zinc-100 w-5/6 mx-auto drop-shadow rounded-md  mb-6">
-      <details className="bg-sky-300 open:bg-blue-100 duration-300 mb-9">
+      <details className="bg-sky-100/80 open:bg-blue-50/80 duration-300 mb-9">
         <summary className="bg-inherit px-5 py-1 text-[14px] cursor-pointer">
           <h2 className="font-semibold text-[16px] tracking-wider mb-3 text-zinc-900">
             Vendor salesman contact details for different divisions:
