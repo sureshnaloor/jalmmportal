@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function Vendorevaluationyearwise({ vendornumber }) {
+function Vendorevaluationyear2021({ vendornumber }) {
   const [purchaseorders, setPurchaseorders] = useState([]);
   const [numpo, setNumpo] = useState(0);
 
@@ -18,7 +18,7 @@ function Vendorevaluationyearwise({ vendornumber }) {
   useEffect(() => {
     const fetchPurchaserorders = async () => {
       const response = await fetch(
-        `/api/purchaseorders/vendor/yearwise/${vendornumber}`
+        `/api/purchaseorders/vendor/yearwise2021/${vendornumber}`
       );
       const json = await response.json();
       setPurchaseorders(json);
@@ -30,7 +30,7 @@ function Vendorevaluationyearwise({ vendornumber }) {
   useEffect(() => {
     const fetchPOEvaluated = async () => {
       const response = await fetch(
-        `/api/vendors/vendorevalyearly/${vendornumber}`
+        `/api/vendors/vendorevalyearly1/${vendornumber}`
       );
       const json = await response.json();
       setVendorevaled(json);
@@ -57,66 +57,253 @@ function Vendorevaluationyearwise({ vendornumber }) {
   return (
     <div className="bg-zinc-100 mx-auto w-5/6 drop-shadow rounded-md mb-9 shadow-md shadow-stone-500">
       
-      <div className="flex justify-center align-middle ">
-      <h4 className="mb-3 py-1 px-16 text-[14px] shadow-lg shadow-slate-200 mx-auto my-auto bg-sky-100/80 text-stone-800 font-bold italic tracking-widest">
-        {" "}
-        The Variable yearly PO wise parameters for vendor: {vendornumber}
-      </h4>
-      </div>
-      
+
       <div className="mx-auto drop-shadow rounded-md mb-9">
-        
         <h1 className="text-[14px] tracking-wider w-1/5 mx-auto font-semibold text-center py-1  text-black mb-3 italic bg-zinc-100 shadow-md shadow-zinc-800">
           Year 2021
-          
         </h1>
 
         {vendorevaled["powiseevalyear1"] ? (
-          <div className="grid grid-cols-5 gap-3 bg-sky-900">
-          
-            <h3 className="bg-slate-100 grid-span-1 px-6 pt-16 text-slate-900 shadow-md mr-3 shadow-zinc-500" >
+          // if already evaluated, get the scores
+
+          // parent flex div
+          <div className="flex justify-between">
+            {/* 1st child */}
+            <h3 className="bg-slate-100 px-6 pt-16 text-slate-900 shadow-md mr-3 shadow-zinc-500">
               {" "}
-              <span  className="font-bold tracking-wide">Yearly PO wise evaluation </span>  <br /> result for the vendor <br /> <span  className="font-bold tracking-wide">{vendornumber}</span>
+              <span className="font-bold text-[12px] font-Lato tracking-wide">
+                2021 Year PO wise evaluation{" "}
+              </span>{" "}
+              <br /> result for the vendor <br />{" "}
+              <span className="font-bold tracking-wide">{vendornumber}</span>
             </h3>
-            <div className="col-start-2 col-end-6 bg-sky-100 grid border-r-4 border-slate-500">
-              <div className="grid grid-cols-2 mb-10"> 
-              <div>
-                <h4 className="font-bold text-zinc-900 mb-3">
-                {" "}
-                PO number: <span className="text-amber-900 bg-zinc-50 px-3 shadow-lg shadow-zinc-300"> {vendorevaled["powiseevalyear1"]["powiserating"][0].ponumber} </span>
-                
-              
-                </h4>
-              <p className="text-sky-900 font-bold pb-9 "> PO Value: <span className="px-3 shadow-lg shadow-zinc-300 bg-zinc-50"> {vendorevaled["powiseevalyear1"]["powiserating"][0].povalue}</span></p>
-             <div className="grid grid-cols-5"> <p className=" col-span-4 font-Lato font-black italic mb-3 "> Delivery rating:</p> <h5 className=" col-span-1 ml-9 font-bold px-3 text-slate-800 bg-sky-100 shadow-lg shadow-sky-800 mr-3 mb-1"> {vendorevaled["powiseevalyear1"]["powiserating"][0].deliveryrating}</h5>  </div>
-             <div className="grid grid-cols-5"> <p className=" col-span-4 font-Lato font-black italic mb-3 "> Price competitiveness  rating: </p><h5 className="col-span-1 ml-9 font-bold px-3 text-slate-800 bg-sky-100 shadow-lg shadow-sky-800 mr-3 mb-1"> {vendorevaled["powiseevalyear1"]["powiserating"][0].pricerating} </h5> </div>
-             <div className="grid grid-cols-5"> <p className=" col-span-4 font-Lato font-black italic mb-3 "> Quality rating:</p> <h5 className="col-span-1 ml-9 font-bold px-3 text-slate-800 bg-sky-100 shadow-lg shadow-sky-800 mr-3 mb-1">{vendorevaled["powiseevalyear1"]["powiserating"][0].qualityrating} </h5> </div>
+
+            {/* 2nd child */}
+            <div className="flex justify-between bg-sky-300 text-[13px] ">
+              {/* first PO */}
+              <div className="bg-zinc-50/90 flex flex-col mr-2 px-1 shadow-md shadow-zinc-00">
+              <>
+                    <div className="flex justify-between">
+                      <h4 className="font-bold text-zinc-900 mb-3">
+                        {" "}
+                        PO number:{" "}
+                        
+                      </h4>
+                      <h5 className="text-amber-900 font-bold tracking-wider">
+                          {" "}
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][0]
+                              .ponumber
+                          }{" "}
+                        </h5>
+                        </div>
+
+                        <div className="flex justify-between">
+                      <p className="text-sky-900 font-bold pb-9">
+                        {" "}
+                        PO Value:{" "}
+                        
+                      </p>
+                      <h4 className="px-3 font-bold tracking-wider font-Lato">
+                          {" "}
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][0]
+                              .povalue
+                          }{" "}
+                        </h4>
+                        </div>
+                      <div className="flex justify-between font-mono text-[14px]">
+                        <p className="font-black italic mb-3">
+                          {" "}
+                          Delivery rating:{" "}
+                        </p>{" "}
+                        <h5 className=" ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][0]
+                              .deliveryrating
+                          }{" "}
+                        </h5>{" "}
+                      </div>
+                      <div className="flex justify-between font-mono text-[14px]">
+                        <p className="font-black italic mb-3">
+                          {" "}
+                          Price competitiveness rating:{" "}
+                        </p>{" "}
+                        <h5 className="ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][0]
+                              .pricerating
+                          }{" "}
+                        </h5>{" "}
+                      </div>
+                      <div className="flex justify-between font-mono text-[14px]">
+                        <p className="font-black italic mb-3">
+                          {" "}
+                          Quality rating:{" "}
+                        </p>
+                        <h5 className="ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][0]
+                              .qualityrating
+                          }
+                        </h5>{" "}
+                      </div>
+                    </>
+              </div>
+              {/* second PO */}
+
+              <div className="bg-zinc-50/90 flex flex-col mr-2 px-1 shadow-md shadow-zinc-300">
+                {vendorevaled["powiseevalyear1"]["powiserating"][1] ? (
+                  <div>
+                    <>
+                    <div className="flex justify-between">
+                      <h4 className="font-bold text-zinc-900 mb-3">
+                        {" "}
+                        PO number:{" "}
+                        
+                      </h4>
+                      <h5 className="text-amber-900 font-bold tracking-wider">
+                          {" "}
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][1]
+                              .ponumber
+                          }{" "}
+                        </h5>
+                        </div>
+
+                        <div className="flex justify-between">
+                      <p className="text-sky-900 font-bold pb-9">
+                        {" "}
+                        PO Value:{" "}
+                        
+                      </p>
+                      <h4 className="px-3 font-bold tracking-wider font-Lato">
+                          {" "}
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][1]
+                              .povalue
+                          }{" "}
+                        </h4>
+                        </div>
+                      <div className="flex justify-between font-mono text-[14px]">
+                        <p className="font-black italic mb-3">
+                          {" "}
+                          Delivery rating:{" "}
+                        </p>{" "}
+                        <h5 className=" ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][1]
+                              .deliveryrating
+                          }{" "}
+                        </h5>{" "}
+                      </div>
+                      <div className="flex justify-between text-[14px] font-mono">
+                        <p className="font-black italic mb-3">
+                          {" "}
+                          Price competitiveness rating:{" "}
+                        </p>{" "}
+                        <h5 className="ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][1]
+                              .pricerating
+                          }{" "}
+                        </h5>{" "}
+                      </div>
+                      <div className="flex justify-between  text-[14px] font-mono">
+                        <p className="font-black italic mb-3">
+                          {" "}
+                          Quality rating:{" "}
+                        </p>
+                        <h5 className="ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][1]
+                              .qualityrating
+                          }
+                        </h5>{" "}
+                      </div>
+                    </>
+                  </div>
+                ) : null}
               </div>
 
-              { vendorevaled["powiseevalyear1"]["powiserating"][1] ? (
-                <div>
-                <>
-                 <h4 className="font-bold text-zinc-900 mb-3">
-                 {" "}
-                 PO number: <span className="text-amber-900 bg-zinc-50 px-3 shadow-lg shadow-zinc-300"> {vendorevaled["powiseevalyear1"]["powiserating"][1].ponumber} </span>
-                 
-               
-               </h4>
-               <p className="text-sky-900 font-bold pb-9"> PO Value: <span className="px-3 shadow-lg shadow-zinc-300 bg-zinc-50"> {vendorevaled["powiseevalyear1"]["powiserating"][1].povalue} </span></p>
-               <div className="grid grid-cols-5"><p className="col-span-4 font-Lato font-black italic mb-3"> Delivery rating:  </p> <h5 className="col-span-1 ml-9 font-bold px-3 text-slate-800 bg-sky-100 shadow-lg shadow-sky-800 mr-3 mb-1">{vendorevaled["powiseevalyear1"]["powiserating"][1].deliveryrating} </h5> </div>
-               <div className="grid grid-cols-5"><p className="col-span-4 font-Lato font-black italic mb-3"> Price competitiveness  rating: </p> <h5 className="col-span-1 ml-9 font-bold px-3 text-slate-800 bg-sky-100 shadow-lg shadow-sky-800 mr-3 mb-1">{vendorevaled["powiseevalyear1"]["powiserating"][1].pricerating} </h5> </div>
-               <div className="grid grid-cols-5"><p className="col-span-4 font-Lato font-black italic mb-3"> Quality rating: </p><h5 className="col-span-1 ml-9 font-bold px-3 text-slate-800 bg-sky-100 shadow-lg shadow-sky-800 mr-3 mb-1">{vendorevaled["powiseevalyear1"]["powiserating"][1].qualityrating}</h5> </div>
-               </>
-               </div>
-              ) : (null)}
-              </div>
-          </div>
-          </div>
+              {/* third PO */}
+              <div className="bg-zinc-50/90 flex flex-col mr-2 px-1 shadow-md shadow-zinc-300">
+                {vendorevaled["powiseevalyear1"]["powiserating"][2] ? (
+                  <div>
+                    <>
+                    <div className="flex justify-between">
+                      <h4 className="font-bold text-zinc-900 mb-3">
+                        {" "}
+                        PO number:{" "}
+                        
+                      </h4>
+                      <h5 className="text-amber-900 font-bold tracking-wider">
+                          {" "}
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][2]
+                              .ponumber
+                          }{" "}
+                        </h5>
+                        </div>
 
-          
-        ) :
-        
-        (
+                        <div className="flex justify-between">
+                      <p className="text-sky-900 font-bold pb-9">
+                        {" "}
+                        PO Value:{" "}
+                        
+                      </p>
+                      <h4 className="px-3 font-bold tracking-wider font-Lato">
+                          {" "}
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][2]
+                              .povalue
+                          }{" "}
+                        </h4>
+                        </div>
+                      <div className="flex justify-between font-mono text-[14px]">
+                        <p className="font-black italic mb-3">
+                          {" "}
+                          Delivery rating:{" "}
+                        </p>{" "}
+                        <h5 className=" ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][2]
+                              .deliveryrating
+                          }{" "}
+                        </h5>{" "}
+                      </div>
+                      <div className="flex justify-between font-mono text-[14px]">
+                        <p className="font-black italic mb-3">
+                          {" "}
+                          Price competitiveness rating:{" "}
+                        </p>{" "}
+                        <h5 className="ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][2]
+                              .pricerating
+                          }{" "}
+                        </h5>{" "}
+                      </div>
+                      <div className="flex justify-between font-mono text-[14px]">
+                        <p className="font-black italic mb-3">
+                          {" "}
+                          Quality rating:{" "}
+                        </p>
+                        <h5 className="ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
+                          {
+                            vendorevaled["powiseevalyear1"]["powiserating"][2]
+                              .qualityrating
+                          }
+                        </h5>{" "}
+                      </div>
+                    </>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        ) : (
+          // if not evaluated already, evaluate now
           <>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
               <table className="w-full text-sm  text-gray-500 dark:text-gray-400">
@@ -350,7 +537,7 @@ function Vendorevaluationyearwise({ vendornumber }) {
 
             <div>
               {purchaseorders.length > 0 ? (
-                <div className="bg-sky-800 text-gray-100 p-2 text-sm ">
+                <div className="bg-sky-200/90 text-gray-100 p-2 text-sm mx-5 mt-2 ">
                   {" "}
                   <span
                     onClick={async () => {
@@ -363,7 +550,7 @@ function Vendorevaluationyearwise({ vendornumber }) {
                       };
 
                       await fetch(
-                        `/api/vendors/vendorevalyearly/${vendornumber}`,
+                        `/api/vendors/vendorevalyearly1/${vendornumber}`,
                         {
                           method: "PUT",
                           body: JSON.stringify(body),
@@ -386,14 +573,14 @@ function Vendorevaluationyearwise({ vendornumber }) {
                   >
                     <button
                       type="button"
-                      class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-[12px] px-3 py-1 text-center mr-2 mb-2"
+                      className=" ml-2 text-white uppercase font-bold  bg-gradient-to-r from-red-300 via-red-300 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 rounded-lg text-[12px] px-3 py-1 text-center mr-2 mb-2"
                     >
                       Finalize
                     </button>
                   </span>{" "}
-                  <span className=" ml-72 bg-zinc-100 text-zinc-900 py-1 px-3">
+                  <span className=" ml-[800px] bg-zinc-100 text-[12px] uppercase font-bold text-zinc-900 py-1 px-3 rounded-md">
                     {" "}
-                    Total Year-wise Score:
+                    Total Year-wise Score for year 2021:
                   </span>
                 </div>
               ) : null}
@@ -405,4 +592,4 @@ function Vendorevaluationyearwise({ vendornumber }) {
   );
 }
 
-export default Vendorevaluationyearwise;
+export default Vendorevaluationyear2021;

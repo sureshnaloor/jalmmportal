@@ -9,10 +9,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function vendorevaluationpastyears({ vendornumber }) {
-  const [score2022, setScore2022] = useState(0);
+  const [score2018, setScore2018] = useState(0);
   const [score2019, setScore2019] = useState(0);
   const [score2020, setScore2020] = useState(0);
   const [score2021, setScore2021] = useState(0);
+  const [score2022, setScore2022] = useState(0);
 
   const { data: session } = useSession();
   const router = useRouter();
@@ -49,7 +50,7 @@ function vendorevaluationpastyears({ vendornumber }) {
               Score:
               <span className="bg-sky-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">
                 {vendorpastscores["past"]
-                  .find((past) => past.pastyear == "2021")
+                  .find((past) => past.pastyear == "2018")
                   ?.pastyearscore.toString()}
               </span>
             </p>
@@ -58,7 +59,7 @@ function vendorevaluationpastyears({ vendornumber }) {
               <input
                 type="text"
                 id="year2018"
-                onChange={(e) => setScore2021(e.target.value)}
+                onChange={(e) => setScore2018(e.target.value)}
                 className="h-[24px] col-span-1 w-1/2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
 
@@ -70,8 +71,8 @@ function vendorevaluationpastyears({ vendornumber }) {
                     {
                       method: "PUT",
                       body: JSON.stringify({
-                        pastyear: "2021",
-                        score: score2021,
+                        pastyear: "2018",
+                        score: score2018,
                         createdBy: session?.user?.name,
                         createdAt: new Date(),
                       }),
@@ -83,7 +84,7 @@ function vendorevaluationpastyears({ vendornumber }) {
                   );
 
                   toast.success(
-                    `The PAST EVALUATION SCORE FOR YEAR 2021 for the vendor ${vendornumber} is updated, thanks!`,
+                    `The PAST EVALUATION SCORE FOR YEAR 2018 for the vendor ${vendornumber} is updated, thanks!`,
                     {
                       position: toast.POSITION.TOP_RIGHT,
                     }
