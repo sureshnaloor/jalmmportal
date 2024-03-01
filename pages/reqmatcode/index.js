@@ -53,6 +53,8 @@ function Reqmatcode() {
   const [matcodechat, setMatcodechat] = useState([]);
   const [uom, setUom] = useState("");
 
+  const [unallottedRequests, setUnallottedrequests] = useState([])
+
   const router = useRouter();
 
   const mattypeChange = (event) => {
@@ -81,18 +83,7 @@ function Reqmatcode() {
     })();
   }, []);
 
-  // useEffect(() => {
-  //   (
-  //     async () => {
-  //       setFilteredmattypes(selectedMatflag.id == "1"
-  //       ? mattypes.filter((mt) => mt.isChannelpartner == "TRUE")
-  //       : selectedMatflag.id == "2"
-  //       ? mattypes.filter((mt) => mt.isAsset == "TRUE")
-  //       : mattypes)
-  //     }
-  //   )()
-
-  // }, [selectedMatflag]);
+ 
 
   useEffect(() => {
     (async () => {
@@ -201,6 +192,10 @@ function Reqmatcode() {
       </div>
 
       {/* chat section - to be developed*/}
+
+     
+
+
 
       {/* <input
         type="text"

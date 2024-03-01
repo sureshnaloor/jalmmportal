@@ -13,7 +13,7 @@ function vendorevaluationpastyears({ vendornumber }) {
   const [score2019, setScore2019] = useState(0);
   const [score2020, setScore2020] = useState(0);
   const [score2021, setScore2021] = useState(0);
-  const [score2022, setScore2022] = useState(0);
+  
 
   const { data: session } = useSession();
   const router = useRouter();
@@ -39,8 +39,9 @@ function vendorevaluationpastyears({ vendornumber }) {
 
       <div className="flex justify-evenly">
 
-        {/* 2018 score */}
+        
 
+        {/* 2018 score */}
         <div className="p-9 border-slate-100 shadow-lg shadow-stone-800">
           <h3 className="text-stone-900 font-bold text-[14px]">Year 2018:</h3>
           {vendorpastscores["past"]?.find((past) => past.pastyear == "2018")
@@ -66,7 +67,7 @@ function vendorevaluationpastyears({ vendornumber }) {
               <button
                 onClick={async () => {
                   // console.log("I am clicked", score2018)
-                  await fetch(
+                  const response = await fetch(
                     `/api/vendors/vendorevalpastyears/${vendornumber}`,
                     {
                       method: "PUT",
@@ -98,6 +99,8 @@ function vendorevaluationpastyears({ vendornumber }) {
             </div>
           )}
         </div>
+
+{/* 2019 score */}
 
 
         <div className="p-9 border-slate-100 shadow-lg shadow-stone-800">
@@ -158,11 +161,12 @@ function vendorevaluationpastyears({ vendornumber }) {
           )}
         </div>
 
+      {/* 2020 score */}
         <div className="p-9 border-slate-100 shadow-lg shadow-stone-800">
           <h3 className="text-stone-900 font-bold text-[14px]">Year 2020:</h3>
           {vendorpastscores["past"]?.find((past) => past.pastyear == "2020")
             ?.pastyearscore >= 0 ? (
-            <p className="pt-3 mt-1 ml-20 font-bold  text-sm text-teal-900">
+            <p className="pt-3 mt-1 ml-20 font-bold text-sm text-teal-900">
               {" "}
               Score:
               <span className="bg-sky-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">
@@ -183,7 +187,7 @@ function vendorevaluationpastyears({ vendornumber }) {
               <button
                 onClick={async () => {
                   // console.log("I am clicked", score2018)
-                  await fetch(
+                  const response = await fetch(
                     `/api/vendors/vendorevalpastyears/${vendornumber}`,
                     {
                       method: "PUT",
@@ -199,6 +203,7 @@ function vendorevaluationpastyears({ vendornumber }) {
                       }),
                     }
                   );
+
                   toast.success(
                     `The PAST EVALUATION SCORE FOR YEAR 2020 for the vendor ${vendornumber} is updated, thanks!`,
                     {
@@ -207,7 +212,7 @@ function vendorevaluationpastyears({ vendornumber }) {
                   );
                   router.reload();
                 }}
-                className="h-[24px] w-1/2 col-span-1 mr-20 font-bold text-[12px] bg-blue-500  hover:bg-blue-500 text-white  rounded-full"
+                className="h-[24px] w-1/2 col-span-1 mr-20 font-bold text-[12px] bg-blue-500 hover:bg-blue-700 text-white  rounded-full"
               >
                 Update
               </button>
@@ -215,11 +220,13 @@ function vendorevaluationpastyears({ vendornumber }) {
           )}
         </div>
 
+        {/* 2021 score */}
+
         <div className="p-9 border-slate-100 shadow-lg shadow-stone-800">
           <h3 className="text-stone-900 font-bold text-[14px]">Year 2021:</h3>
           {vendorpastscores["past"]?.find((past) => past.pastyear == "2021")
             ?.pastyearscore >= 0 ? (
-            <p className="pt-3 mt-1 ml-20 font-bold text-sm text-teal-900">
+            <p className="pt-3 mt-1 ml-20 font-bold  text-sm text-teal-900">
               {" "}
               Score:
               <span className="bg-sky-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">
@@ -256,16 +263,15 @@ function vendorevaluationpastyears({ vendornumber }) {
                       }),
                     }
                   );
-
                   toast.success(
                     `The PAST EVALUATION SCORE FOR YEAR 2021 for the vendor ${vendornumber} is updated, thanks!`,
                     {
                       position: toast.POSITION.TOP_RIGHT,
                     }
                   );
-                  router.reload();
+                  router.back();
                 }}
-                className="h-[24px] w-1/2 col-span-1 mr-20 font-bold text-[12px] bg-blue-500 hover:bg-blue-700 text-white  rounded-full"
+                className="h-[24px] w-1/2 col-span-1 mr-20 font-bold text-[12px] bg-blue-500  hover:bg-blue-500 text-white  rounded-full"
               >
                 Update
               </button>
@@ -273,62 +279,7 @@ function vendorevaluationpastyears({ vendornumber }) {
           )}
         </div>
 
-        <div className="p-9 border-slate-100 shadow-lg shadow-stone-800">
-          <h3 className="text-stone-900 font-bold text-[14px]">Year 2022:</h3>
-          {vendorpastscores["past"]?.find((past) => past.pastyear == "2022")
-            ?.pastyearscore >= 0 ? (
-            <p className="pt-3 mt-1 ml-20 font-bold text-sm text-teal-900">
-              {" "}
-              Score:
-              <span className="bg-sky-500 text-white shadow-md shadow-slate-300 text-sm p-2 ml-3">
-                {vendorpastscores["past"]
-                  .find((past) => past.pastyear == "2022")
-                  ?.pastyearscore.toString()}
-              </span>
-            </p>
-          ) : (
-            <div className="mt-3 grid grid-cols-2">
-              <input
-                type="text"
-                id="year2022"
-                onChange={(e) => setScore2022(e.target.value)}
-                className="h-[24px] col-span-1 w-1/2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
-
-              <button
-                onClick={async () => {
-                  // console.log("I am clicked", score2018)
-                  await fetch(
-                    `/api/vendors/vendorevalpastyears/${vendornumber}`,
-                    {
-                      method: "PUT",
-                      body: JSON.stringify({
-                        pastyear: "2022",
-                        score: score2022,
-                        createdBy: session?.user?.name,
-                        createdAt: new Date(),
-                      }),
-                      headers: new Headers({
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                      }),
-                    }
-                  );
-                  toast.success(
-                    `The PAST EVALUATION SCORE FOR YEAR 2022 for the vendor ${vendornumber} is updated, thanks!`,
-                    {
-                      position: toast.POSITION.TOP_RIGHT,
-                    }
-                  );
-                  router.reload();
-                }}
-                className="h-[24px] w-1/2 col-span-1 mr-20 font-bold text-[12px] bg-blue-500 hover:bg-blue-700 text-white  rounded-full"
-              >
-                Update
-              </button>
-            </div>
-          )}
-        </div>
+       
 
         {/* now for the input or output display of the scores */}
       </div>
