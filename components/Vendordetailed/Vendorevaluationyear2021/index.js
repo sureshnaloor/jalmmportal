@@ -55,6 +55,7 @@ function Vendorevaluationyear2021({ vendornumber }) {
   const [vendorevaled, setVendorevaled] = useState({});
 
   return (
+
     <div className="bg-zinc-100 mx-auto w-5/6 drop-shadow rounded-md mb-9 shadow-md shadow-stone-500">
       
 
@@ -62,8 +63,9 @@ function Vendorevaluationyear2021({ vendornumber }) {
         <h1 className="text-[14px] tracking-wider w-1/5 mx-auto font-semibold text-center py-1  text-black mb-3 italic bg-zinc-100 shadow-md shadow-zinc-800">
           Year 2021
         </h1>
-
-        {vendorevaled["powiseevalyear1"] ? (
+        <div>
+       
+        {purchaseorders.length > 0 && vendorevaled["powiseevalyear1"] ? (
           // if already evaluated, get the scores
 
           // parent flex div
@@ -302,7 +304,7 @@ function Vendorevaluationyear2021({ vendornumber }) {
               </div>
             </div>
           </div>
-        ) : (
+        ) : (purchaseorders.length > 0 && !vendorevaled["powiseevalyear1"] ?
           // if not evaluated already, evaluate now
           <>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -586,7 +588,11 @@ function Vendorevaluationyear2021({ vendornumber }) {
               ) : null}
             </div>
           </>
+          : (
+            <p className="text-[12px] uppercase p-3 font-Lato mx-auto"> No Purchases in year 2001.</p>
+          )
         )}
+      </div>
       </div>
     </div>
   );

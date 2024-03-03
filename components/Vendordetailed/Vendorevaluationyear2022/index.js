@@ -62,8 +62,8 @@ function Vendorevaluationyear2022({ vendornumber }) {
         <h1 className="text-[14px] tracking-wider w-1/5 mx-auto font-semibold text-center py-1  text-black mb-3 italic bg-zinc-100 shadow-md shadow-zinc-800">
           Year 2022
         </h1>
-
-        {vendorevaled["powiseevalyear2"] ? (
+        <div>
+        {purchaseorders.length > 0 && vendorevaled["powiseevalyear2"] ? (
           // if already evaluated, get the scores
 
           // parent flex div
@@ -302,7 +302,9 @@ function Vendorevaluationyear2022({ vendornumber }) {
               </div>
             </div>
           </div>
-        ) : (
+        ) : (purchaseorders.length > 0 && !vendorevaled["powiseevalyear1"] ?
+                          
+        
           // if not evaluated already, evaluate now
           <>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -586,7 +588,12 @@ function Vendorevaluationyear2022({ vendornumber }) {
               ) : null}
             </div>
           </>
-        )}
+         : (
+          <p className="text-[12px] uppercase p-3 font-Lato mx-auto"> No Purchases in year 2002.</p>
+        )
+        
+        ) }
+      </div>
       </div>
     </div>
   );
