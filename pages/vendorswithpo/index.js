@@ -77,13 +77,13 @@ function Vendorswithpo() {
         Cell: (row) => (
           <div className="flex justify-around">
             {" "}
-            <div className="bg-blue-500 hover:bg-blue-700 text-white text-[12px] font-bold py-2 px-4 rounded-xl mx-2">
+            <div className="bg-blue-500 hover:bg-blue-700 text-white text-[10px] font-bold py-2 px-1 rounded-xl mx-1">
               <button onClick={(e) => handleEdit(row)}> Evaluation </button>
             </div>
-            <div className="bg-orange-500 hover:bg-orange-700 text-white text-[12px] font-bold py-2 px-4 rounded-xl mx-2">
+            <div className="bg-orange-500 hover:bg-orange-700 text-white text-[10px] font-bold py-2 px-1 rounded-xl mx-1">
               <button onClick={(e) => handleComent(row)}> Comments </button>
             </div>
-            <div className="bg-emerald-500 hover:bg-emerald-700 text-white text-[12px] font-bold py-2 px-4 rounded-xl mx-2">
+            <div className="bg-emerald-500 hover:bg-emerald-700 text-white text-[10px] font-bold py-2 px-1 rounded-xl mx-1">
               <button onClick={(e) => handleMapgroup(row)}>
                 {" "}
                 Map to group{" "}
@@ -112,7 +112,7 @@ function Vendorswithpo() {
   return (
     <>
       <HeaderComponent />
-      <div className="min-h-screen bg-gray-50 text-gray-900 w-11/12 ml-9">
+      <div className="min-h-screen bg-gray-50 text-gray-900 w-full ml-1">
         <div className="mt-6">
           <p className="font-bold text-lg mb-3">
             Vendors' List who have PO's issued to them so far and hence

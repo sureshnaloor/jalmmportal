@@ -60,7 +60,7 @@ export function SelectColumnFilter({
 
   // Render a multi-select box
   return (
-    <label className="flex gap-x-3 items-baseline">
+    <label className="flex gap-x-1 items-baseline">
       <span className="text-red-500 text-sm font-bold uppercase">
         {render("Header")}:{" "}
       </span>
@@ -446,7 +446,7 @@ function Tablecomponent({ columns, data }) {
                     // eslint-disable-next-line react/jsx-key
                     <td
                       {...cell.getCellProps()}
-                      className="px-6 py-4 text-[10px] text-zinc-600  whitespace-nowrap"
+                      className="px-2 py-4 text-[10px] text-zinc-600  whitespace-nowrap"
                     >
                       {cell.render("Cell")}
                     </td>
