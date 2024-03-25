@@ -391,6 +391,13 @@ function Vendormap() {
                 >
                   Logistics
                 </option>
+
+                <option
+                  value="Third party services"
+                  className="text-zinc-900 text-[10px] font-bold"
+                >
+                  Third party services
+                </option>
               </select>
             </div>
 
