@@ -22,7 +22,7 @@ import Tablecomponent, {
   Boldstyle3,
   Boldstyle4,
   Numberstyle,
-} from "../../components/Tablecomponent";
+} from "../../components/tablecomponent";
 // import Purchaseorderschedule  from "../../components/Purchaseorderschedule";
 // import { useSession } from "next-auth/react";
 

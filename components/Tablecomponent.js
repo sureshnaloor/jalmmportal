@@ -146,6 +146,8 @@ export function Numberstyle({ value }) {
   );
 }
 
+
+
 export function Numberstylesim1({ value }) {
   return (
     <span className={classNames(" text-yellow-900 text-[12px] font-bold  text-copper-900 shadow-md shadow-stone-600")}>
@@ -446,7 +448,7 @@ function Tablecomponent({ columns, data }) {
                     // eslint-disable-next-line react/jsx-key
                     <td
                       {...cell.getCellProps()}
-                      className="px-2 py-4 text-[10px] text-zinc-600  whitespace-nowrap"
+                      className="px-2 py-2 text-[10px] text-zinc-600  whitespace-nowrap"
                     >
                       {cell.render("Cell")}
                     </td>

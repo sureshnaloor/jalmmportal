@@ -175,7 +175,7 @@ function HeaderComponent() {
 
         <div className="w-1/8 tracking-widest bg-gray-100 dark:bg-gray-400 text-white dark:text-white">
         <div>
-            <Link href="/equipments">
+            <Link href="/equipmentlist">
               <a className="text-[12px] mr-2 block border-b-2 border-blue-600 p-1 text-gray-900  hover:text-gray-600 dark:hover:text-white  font-semibold">
                 Equipment
               </a>
