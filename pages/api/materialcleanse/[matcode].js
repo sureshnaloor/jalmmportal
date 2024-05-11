@@ -3,7 +3,7 @@ import { connectToDatabase } from "../../../lib/mongoconnect";
 const handler = async (req, res) => {
   const { matcode } = req.query;
   const { db } = await connectToDatabase();
-  // console.log(matcode)
+  console.log(matcode)
 
   try {
     switch (req.method) {
@@ -14,6 +14,7 @@ const handler = async (req, res) => {
 
         return res.json(material);
       }
+      
 
       //   case "POST": {
       //     const material = await db.collection("materialcleanse").insertOne({

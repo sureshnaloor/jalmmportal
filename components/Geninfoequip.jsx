@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import  { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/router";
@@ -6,6 +6,21 @@ import { useRouter } from "next/router";
 function Geninfoform({ equip }) {
 
   const router = useRouter()
+
+  
+
+  // const [geninfo, setGeninfo] = useState([])
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const result = await fetch(`/api/calibequipment/${equip}`);
+  //     const json = await result.json();
+
+  //     setGeninfo(json);
+  //   })();
+  // }, [equip]);
+
+  // console.log(geninfo)
 
   const {
     register,
@@ -24,6 +39,15 @@ function Geninfoform({ equip }) {
       },
       body: JSON.stringify(data),
     })
+
+    await fetch(`/api/fixedassets/genInfo/${equip}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+            
+    })
+
 
     toast.success("submitted succesfully!", {
       position: toast.POSITION.TOP_RIGHT,

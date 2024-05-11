@@ -31,6 +31,8 @@ const handler =  async (req, res) => {
                 serialnumber:req.body.serialnumber,
                 legacynumber:req.body.oldassetnumber
               },
+
+              // infoFlag: true,
               
             }
           )

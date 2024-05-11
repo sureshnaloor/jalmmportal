@@ -31,14 +31,22 @@ function Calibform({ equip }) {
       body: JSON.stringify(data),
     })
 
+    await fetch(`/api/fixedassets/calibInfo/${equip}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+            
+    })
+
     toast.success("submitted succesfully!", {
       position: toast.POSITION.TOP_RIGHT,
     });
 
     reset();
-   
+    router.reload();
 
-    // router.reload();
+    
   };
 
   const onErrors = (errors) => console.error(errors);
