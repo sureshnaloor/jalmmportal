@@ -22,6 +22,7 @@ const handler = async (req, res) => {
             calibrationfromdate: req.body.calibrationfromdate,
             calibrationtodate: req.body.calibrationtodate,
             remarks: req.body.remarks,
+            calibrationpo: req.body.calibrationpo,
             
           });
 

@@ -143,7 +143,7 @@ function Calibform({ equip }) {
                         Calibration File#:
                       </label>
                       <input
-                        placeholder="Project Name"
+                        placeholder="File Number#..."
                         className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
                         type="text"
                         name="calibfile"
@@ -158,6 +158,7 @@ function Calibform({ equip }) {
                       <input
                         className="block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4 md:w-full "
                         required="required"
+                        placeholder="SAP PO number#...."
                         type="text"
                         name="calibrationpo"
                         id="calibrationpo"

@@ -7,19 +7,25 @@ import HeaderComponent from "../../components/HeaderComponent";
 import Tablecomponent from "../../components/tablecomponent";
 import FooterComponent from "../../components/FooterComponent";
 import Geninfoform from "../../components/Geninfoequip";
-import Calibform from "../../components/Calibform";
 import Geninfoform1 from "../../components/Geninfoequip1";
+
+import Calibform from "../../components/Calibform";
+import Calibform1 from "../../components/Calibform1";
+
 import Userform from "../../components/Userform";
+import Userform1 from "../../components/Userform1";
+
 import moment from "moment";
 
 import { getSession } from "next-auth/react";
 
 function equipmentlist() {
   const [visibleinfo, setVisibleinfo] = useState(false);
-  const [visibleuser, setVisibleuser] = useState(false);
-  const [visiblecalib, setVisiblecalib] = useState(false);
-
   const [visibleinfo1, setVisibleinfo1] = useState(false)
+  const [visibleuser, setVisibleuser] = useState(false);
+  const [visibleuser1, setVisibleuser1] = useState(false);
+  const [visiblecalib, setVisiblecalib] = useState(false);
+  const [visiblecalib1, setVisiblecalib1] = useState(false);  
 
   const [selectedEquipment, setSelectedequipment] = useState(null);
 
@@ -41,15 +47,25 @@ function equipmentlist() {
 
   const showmodaluser = (row) => {
     console.log("inside USER modal");
-
     setVisibleuser(true);
+    setSelectedequipment(row.original.assetnumber);
+  };
+
+  const showmodaluser1 = (row) => {
+    console.log("inside USER modal filled up with data");
+    setVisibleuser1(true);
     setSelectedequipment(row.original.assetnumber);
   };
 
   const showmodalcalib = (row) => {
     console.log("inside CALIB modal");
-
     setVisiblecalib(true);
+    setSelectedequipment(row.original.assetnumber);
+  };
+
+  const showmodalcalib1 = (row) => {
+    console.log("inside CALIB modal filled with data");
+    setVisiblecalib1(true);
     setSelectedequipment(row.original.assetnumber);
   };
 
@@ -139,6 +155,7 @@ function equipmentlist() {
                    alt="info"
                    width={15}
                    height={15}
+                   onClick={(e) => showmodaluser1(props.row)}
                    
                  />
                 ) : (
@@ -159,6 +176,7 @@ function equipmentlist() {
                    alt="info"
                    width={15}
                    height={15}
+                   onClick={(e) => showmodalcalib1(props.row)}
                    
                  />
                 ) : (
@@ -206,8 +224,8 @@ function equipmentlist() {
   return (
     <main>
       <HeaderComponent />
-      <div className="w-11/12 bg-stone-100 p-3">
-        <div className="w-11/12 flex flex-col justify-center mx-auto">
+      <div className="min-h-screen  w-11/12 bg-stone-100 p-3">
+        <div className=" w-11/12 flex flex-col justify-center mx-auto">
           <Tablecomponent columns={columns} data={equipmentlist} />
           <Rodal
             animation="door"
@@ -249,6 +267,20 @@ function equipmentlist() {
               <Userform equip={selectedEquipment} />{" "}
             </div>
           </Rodal>
+
+          <Rodal
+            animation="spin"
+            width={1000}
+            height={600}
+            visible={visibleuser1}
+            onClose={() => setVisibleuser1(false)}
+          >
+            <div className="bg-teal-50/90 p-1">
+              {" "}
+              <Userform1 equip={selectedEquipment} />{" "}
+            </div>
+          </Rodal>
+
           <Rodal
             animation="door"
             width={1000}
@@ -262,9 +294,26 @@ function equipmentlist() {
               <Calibform equip={selectedEquipment} />{" "}
             </div>
           </Rodal>
+
+          <Rodal
+            animation="door"
+            width={1000}
+            height={600}
+            className="bg-teal-200/50"
+            visible={visiblecalib1}
+            onClose={() => setVisiblecalib1(false)}
+          >
+            <div className="bg-teal-50/90 p-1">
+              {" "}
+              <Calibform1 equip={selectedEquipment} />{" "}
+            </div>
+          </Rodal>
+
         </div>
       </div>
+      <div className="mt-12">
       <FooterComponent />
+      </div>
     </main>
   );
 }

@@ -10,7 +10,7 @@ const handler = async (req, res) => {
       case "GET": {
         try {
           const equipment = await db
-            .collection("calibequipments")
+            .collection("calibequipmentscustody")
             .findOne({ assetnumber: equipid });
           if (equipment) {
             return res.json(equipment);
