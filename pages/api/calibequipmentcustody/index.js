@@ -4,22 +4,17 @@ const handler = async (req, res) => {
   // handle different methods
   try {
     switch (req.method) {
-    //   case "GET": {
-    //     const { db } = await connectToDatabase();
-    //     const calibequiplist = await db
-    //       .collection("calibequipmentscustody")
-    //       .find({
-    //         $or: [
-    //             {assetnumber: req.body.equip},
-    //             {custodydate : null}
-    //         ]
-    //       }
-    //       )
-    //     return res.json(calibequiplist);
-    //   }
+    
 
       case "POST": {
         const { db } = await connectToDatabase();
+
+        const todateupdate = await db.collection("calibequipmentscustody").findOneAndUpdate(
+          {assetnumber: req.body.equip, custodyto: {$eq:null}},
+          {$set:{custodyto:req.body.datefrom}},
+          { new: true}
+        )
+        
         const newcalibequipcustody = await db
           .collection("calibequipmentscustody")
           .insertOne({

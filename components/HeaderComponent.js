@@ -9,9 +9,9 @@ import { useRouter } from "next/router";
 import SwitchComponent from "./Switch";
 import Link from "next/link";
 
-import Lottie from 'react-lottie'
-import animationData from "/public/images/lottie3"
-import animationData2 from "/public/images/lottie4"
+import Lottie from "react-lottie";
+import animationData from "/public/images/lottie3";
+import animationData2 from "/public/images/lottie4";
 
 // import { Link, animateScroll as scroll } from "react-scroll";
 
@@ -37,27 +37,26 @@ function HeaderComponent() {
     autoplay: true,
     animationData: animationData,
     rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice"
-    }}
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
-    const defaultOptions2 = {
-      loop: true,
-      autoplay: true,
-      animationData: animationData2,
-      rendererSettings: {
-        preserveAspectRatio: "xMidYMid slice"
-      }}
+  const defaultOptions2 = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData2,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   const path = useRouter().asPath;
   // console.log(path)
 
-  
-
   if (!mounted) return null;
   return (
     <>
-    <nav className="flex  justify-between w-full bg-gradient-to-br from-sky-500 to-blue-900 via-sky-200 dark:from-zinc-200 dark:to-zinc-900  dark:bg-slate-800 border-b-2 border-zinc-400  shadow-md px-1 z-50 ">
-      
+      <nav className="flex  justify-between w-full bg-gradient-to-br from-sky-500 to-blue-900 via-sky-200 dark:from-zinc-200 dark:to-zinc-900  dark:bg-slate-800 border-b-2 border-zinc-400  shadow-md px-1 z-50 ">
         <div className=" flex align-middle w-auto bg-blue-200 lg:text-center ">
           <a
             className="text-[14px] text-gray-800 font-Montserrat font-black font-heading"
@@ -77,8 +76,7 @@ function HeaderComponent() {
         </div>
 
         <div className="w-1/5 pt-5 flex tracking-widest justify-start align-bottom">
-
-        <div className="ml-3 text-[12px] cursor-pointer font-Poppins  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
+          <div className="ml-3 text-[12px] cursor-pointer font-Poppins  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
             <Link href="/">
               <a>
                 Home
@@ -133,119 +131,118 @@ function HeaderComponent() {
         </div>
 
         <div className="flex flex-row align-middle tracking-wide ">
-            <Link href="/openpurchaseorders">
-              <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
-                Open PO's
-              </a>
-            </Link>
-
-            <Link href="/vendorswithpo">
-              <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
-                Vendor Details
-              </a>
-            </Link>
-
-            <Link href="/notyetqualifiedvendors">
-              <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
-                Non SAP Vendors              </a>
-            </Link>
-
-            <Link href="/projectdetails">
-              <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
-                Project Details
-              </a>
-            </Link>
-
-            <Link href="/materialdocuments">
-              <a className="text-[10px] mr-2 my-auto  py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
-                Material Docs
-              </a>
-            </Link>
-          </div>
-
-          <Link href="/reqmatcode">
-          {/* <div className=" w-[64px] my-auto py-1 px-3 bg-slate-400 text-white"> */}
-            <a className="text-[10px] mr-2 my-auto  py-2 px-1 bg-amber-900 hover:bg-amber-800 dark:bg-zinc-600 text-gray-50 dark:text-white hover:text-white dark:hover:text-white font-sembold">   Request new Matcode </a>
-          {/* </div> */}
+          <Link href="/openpurchaseorders">
+            <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              Open PO's
+            </a>
           </Link>
 
-          <div className="px-3">
-            <Lottie options={defaultOptions2}  width={96} height={96}/>
-          </div>
+          <Link href="/vendorswithpo">
+            <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              Vendor Details
+            </a>
+          </Link>
 
-        <div className="w-1/8 tracking-widest bg-gray-100 dark:bg-gray-400 text-white dark:text-white">
-        <div>
+          <Link href="/notyetqualifiedvendors">
+            <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              Non SAP Vendors{" "}
+            </a>
+          </Link>
+
+          <Link href="/projectdetails">
+            <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              Project Details
+            </a>
+          </Link>
+
+          <Link href="/materialdocuments">
+            <a className="text-[10px] mr-2 my-auto  py-2 px-1 bg-amber-100 hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              Material Docs
+            </a>
+          </Link>
+        </div>
+
+        <Link href="/reqmatcode">
+          {/* <div className=" w-[64px] my-auto py-1 px-3 bg-slate-400 text-white"> */}
+          <a className="text-[10px] mr-2 my-auto  py-2 px-1 bg-amber-900 hover:bg-amber-800 dark:bg-zinc-600 text-gray-50 dark:text-white hover:text-white dark:hover:text-white font-sembold">
+            {" "}
+            Request new Matcode{" "}
+          </a>
+          {/* </div> */}
+        </Link>
+
+        <div className="px-3">
+          <Lottie options={defaultOptions2} width={96} height={96} />
+        </div>
+
+        <div className="w-1/8 tracking-widest bg-gray-100  dark:bg-gray-400 text-white dark:text-white">
+          
             <Link href="/equipmentlist">
-              <a className="text-[12px] mr-2 block border-b-2 border-blue-600 p-1 text-gray-900  hover:text-gray-600 dark:hover:text-white  font-semibold">
+              <a className="text-[10px] mr-2  border-b-2 border-blue-600 p-1 text-gray-900  hover:text-gray-600 dark:hover:text-white  font-semibold">
                 Equipment
               </a>
             </Link>
             <Link href="/pperecords">
-              <a className="text-[12px] mr-2 block border-b-2 border-blue-600 p-1 text-gray-900  hover:text-gray-600 dark:hover:text-white  font-semibold">
+              <a className="text-[10px] mr-2 block border-b-2 border-blue-600 p-1 text-gray-900  hover:text-gray-600 dark:hover:text-white  font-semibold">
                 PPE
               </a>
             </Link>
-            <span>
+
+            <Link href="/fixedassetlist">
+              <a className="text-[10px] mr-2  border-b-2 border-blue-600 p-1 text-gray-900  hover:text-gray-600 dark:hover:text-white  font-semibold">
+                Fixed Assets
+              </a>
+            </Link>
+
             <Link href="/simlist">
               <a className="text-[10px] mr-2 border-b-2 border-blue-600 p-1 text-gray-900  hover:text-gray-600 dark:hover:text-white  font-semibold">
                 SIM List
               </a>
             </Link>
-            </span>
-            <span>
-            {/* <Link href="/simlist">
-              <a className="text-[10px] mr-2 border-b-2 border-blue-600 p-1 text-teal-900 opacity-90  hover:text-gray-600 dark:hover:text-white  font-semibold">
-                Cleaned List
-              </a>
-            </Link> */}
-            </span>
-          </div>
+          
         </div>
-       
-        
+
         <div className="flex">
-        <div className="block order-9 mt-3  text-gray-900  hover:text-gray-600 dark:hover:text-white font-semibold">
-          <SwitchComponent setTheme={setTheme} theme={theme} />
-          <p className="text-[8px] font-bold"> toggle dark/light</p>
-        </div>
-
-
-        {session?.user ? (
-          <div className="flex flex-col order-10">
-            <p className="pt-1 text-[12px] tracking-wider  dark:text-white  text-slate-800 font-Poppins">
-              Welcome <span className="font-bold">{session.user.name}</span>
-            </p>
-            <button
-              className=" bg-stone-200 hover:bg-stone-300 text-[10px] px-2 py-1 my-1 mx-2 rounded-md outline-none focus:outline-none text-emerald-900"
-              onClick={() => signOut()}
-            >
-              Sign Out
-              <FontAwesomeIcon
-                icon={faRightFromBracket}
-                className="color-primary fa-thin ml-2"
-              />
-            </button>
+          <div className="block order-9 mt-3  text-gray-900  hover:text-gray-600 dark:hover:text-white font-semibold">
+            <SwitchComponent setTheme={setTheme} theme={theme} />
+            <p className="text-[8px] font-bold"> toggle dark/light</p>
           </div>
-        ) : (
-          <div className="flex flex-col order-10">
-            <p className="pt-1 text-[12px] tracking-wider   dark:text-white  text-slate-800 font-Poppins">
-              Welcome <span className="font-bold">Guest!</span>
-            </p>
-            <button
-              className="bg-stone-200 hover:bg-stone-300 text-[10px] px-2 py-1 my-1 mx-2 rounded-md outline-none focus:outline-none text-emerald-900"
-              onClick={() => signIn()}
-            >
-              Sign in
-              <FontAwesomeIcon
-                icon={faSignInAlt}
-                className="color-primary fa-thin ml-2"
-              />
-            </button>
-          </div>
-        )}
+
+          {session?.user ? (
+            <div className="flex flex-col order-10">
+              <p className="pt-1 text-[12px] tracking-wider  dark:text-white  text-slate-800 font-Poppins">
+                Welcome <span className="font-bold">{session.user.name}</span>
+              </p>
+              <button
+                className=" bg-stone-200 hover:bg-stone-300 text-[10px] px-2 py-1 my-1 mx-2 rounded-md outline-none focus:outline-none text-emerald-900"
+                onClick={() => signOut()}
+              >
+                Sign Out
+                <FontAwesomeIcon
+                  icon={faRightFromBracket}
+                  className="color-primary fa-thin ml-2"
+                />
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col order-10">
+              <p className="pt-1 text-[12px] tracking-wider   dark:text-white  text-slate-800 font-Poppins">
+                Welcome <span className="font-bold">Guest!</span>
+              </p>
+              <button
+                className="bg-stone-200 hover:bg-stone-300 text-[10px] px-2 py-1 my-1 mx-2 rounded-md outline-none focus:outline-none text-emerald-900"
+                onClick={() => signIn()}
+              >
+                Sign in
+                <FontAwesomeIcon
+                  icon={faSignInAlt}
+                  className="color-primary fa-thin ml-2"
+                />
+              </button>
+            </div>
+          )}
         </div>
-      
-    </nav>
+      </nav>
       {path == "/" ? (
         <div className="w-full h-36 mb-[-90px] z-10">
           <svg

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
+
+import { useQuery } from "@tanstack/react-query";
 // import Image from 'next/image'
 import Rodal from "rodal";
 import "rodal/lib/rodal.css";
@@ -220,7 +222,9 @@ function equipmentlist() {
     })();
   }, []);
 
-  // console.log(equipmentlist);
+  console.log(equipmentlist);
+
+  
   return (
     <main>
       <HeaderComponent />

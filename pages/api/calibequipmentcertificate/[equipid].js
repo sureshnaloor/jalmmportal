@@ -11,7 +11,7 @@ const handler = async (req, res) => {
         try {
           const equipment = await db
             .collection("calibequipmentscertificate")
-            .findOne({ assetnumber: equipid });
+            .find({ assetnumber: equipid }).sort({calibrationtodate:-1 }).toArray();
           if (equipment) {
             return res.json(equipment);
           }
