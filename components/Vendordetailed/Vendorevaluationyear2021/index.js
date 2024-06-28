@@ -390,7 +390,7 @@ function Vendorevaluationyear2021({ vendornumber }) {
                         <td className="px-6 py-4">
                           {moment(ponum.podate).format("MM-DD-YYYY")}
                         </td>
-                        <td class="px-6 py-4 text-right font-medium">
+                        <td className="px-6 py-4 text-right font-medium">
                           {(
                             Math.round(ponum.poval * 100) / 100
                           ).toLocaleString()}
@@ -430,7 +430,7 @@ function Vendorevaluationyear2021({ vendornumber }) {
                             })}
                           </div>
                         </td>
-                        <td class="px-6 py-4 text-right">
+                        <td className="px-6 py-4 text-right">
                           <div>
                             {[...Array(5)].map((star, index) => {
                               index += 1;

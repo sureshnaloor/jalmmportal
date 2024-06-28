@@ -1116,17 +1116,17 @@ function Purchaseorderschedule({ ponumber }) {
                 Adv/Performance <br /> Bank <br /> Guarantee <br /> Data{" "}
               </h3>
               <br />
-              <div class="flex items-center">
+              <div className="flex items-center">
                 <input
                   id="bgtabchk"
                   type="checkbox"
                   onChange={(e) => setBgtab(e.target.value)}
                   value="not applicable"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
                   for="bgtabchk"
-                  class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Not Applicable
                 </label>
@@ -1536,11 +1536,11 @@ function Purchaseorderschedule({ ponumber }) {
                   type="checkbox"
                   onChange={(e) => setLctab(e.target.value)}
                   value="not applicable"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
                   for="lctabchk"
-                  class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Not Applicable
                 </label>
@@ -1877,11 +1877,11 @@ function Purchaseorderschedule({ ponumber }) {
                   type="checkbox"
                   onChange={(e) => setTesting(e.target.value)}
                   value="not applicable"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
                   for="testingtabchk"
-                  class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Not Applicable
                 </label>
@@ -2133,11 +2133,11 @@ function Purchaseorderschedule({ ponumber }) {
                   type="checkbox"
                   onChange={(e) => setShipping(e.target.value)}
                   value="not applicable"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
                   for="shiptabchk"
-                  class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Not Applicable
                 </label>
@@ -2347,113 +2347,113 @@ function Purchaseorderschedule({ ponumber }) {
         )}
       </form>
 
-      <section class="container px-4 w-full mx-auto">
-        <div class="flex flex-col">
-          <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-              <div class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead class="bg-gray-200 dark:bg-gray-800">
+      <section className="container px-4 w-full mx-auto">
+        <div className="flex flex-col">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+              <div className="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead className="bg-gray-200 dark:bg-gray-800">
                     <tr className="font-bold text-[12px] ">
                       <th
                         scope="col"
-                        class="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
+                        className="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
                       >
                         Material code/group
                       </th>
                       <th
                         scope="col"
-                        class="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
+                        className="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
                       >
                         Material description
                       </th>
                       <th
                         scope="col"
-                        class="px-4 py-3.5 text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                        className="px-4 py-3.5 text-left rtl:text-right text-gray-500 dark:text-gray-400"
                       >
                         Quantity
                       </th>
                       <th
                         scope="col"
-                        class="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                        className="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
                       >
                         Unit
                       </th>
                       <th
                         scope="col"
-                        class="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                        className="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
                       >
                         Unit rate/currency
                       </th>
                       <th
                         scope="col"
-                        class="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
+                        className="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
                       >
                         Item value
                       </th>
                       <th
                         scope="col"
-                        class="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                        className="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
                       >
                         Pending qty
                       </th>
                       <th
                         scope="col"
-                        class="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                        className="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
                       >
                         Pending Value
                       </th>
                       <th
                         scope="col"
-                        class="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                        className="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
                       >
                         Pending Inv Quantity
                       </th>
                       <th
                         scope="col"
-                        class="px-4 py-3.5 text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                        className="px-4 py-3.5 text-left rtl:text-right text-gray-500 dark:text-gray-400"
                       >
                         Pending Inv value
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+                  <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
                     {poheader.map((row, index) => (
                       <tr key={index}>
-                        <td class="px-4 py-4 text-[12px] font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                        <td className="px-4 py-4 text-[12px] font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                           {row.material["matcode"]}/{row.material["matgroup"]}
                         </td>
-                        <td class="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                        <td className="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
                           {row.material["matdescription"]}
                         </td>
-                        <td class="px-4 py-4 text-[12px] font-light text-right text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                        <td className="px-4 py-4 text-[12px] font-light text-right text-gray-700 dark:text-gray-200 whitespace-nowrap">
                           {row["po-quantity"].$numberDecimal}
                         </td>
-                        <td class="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                        <td className="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
                           {row["po-unit-of-measure"]}
                         </td>
-                        <td class="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                        <td className="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
                           {row["po-unit-price"].toLocaleString()}/{row.currency}
                         </td>
-                        <td class="px-4 py-4 text-[12px] font-medium text-right text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                        <td className="px-4 py-4 text-[12px] font-medium text-right text-gray-700 dark:text-gray-200 whitespace-nowrap">
                           {row["po-value-sar"].toLocaleString("en-US", {
                             style: "currency",
                             currency: "SAR",
                           })}
                         </td>
-                        <td class="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                        <td className="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
                           {row["pending-qty"].$numberDecimal}
                         </td>
-                        <td class="px-4 py-4 text-[12px] font-light text-right text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                        <td className="px-4 py-4 text-[12px] font-light text-right text-gray-700 dark:text-gray-200 whitespace-nowrap">
                           {row["pending-val-sar"].toLocaleString("en-US", {
                             style: "currency",
                             currency: "SAR",
                           })}
                         </td>
-                        <td class="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                        <td className="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
                           {row["pending-inv-qty"].$numberDecimal}
                         </td>
-                        <td class="px-4 py-4 text-[12px] text-right font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                        <td className="px-4 py-4 text-[12px] text-right font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
                           {row["pending-inv-val"].toLocaleString("en-US", {
                             style: "currency",
                             currency: "SAR",

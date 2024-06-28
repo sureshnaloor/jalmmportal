@@ -10,7 +10,7 @@ const handler = async (req, res) => {
       case "PUT": {
         try {
           const equipment = await db
-            .collection("fixedassets")
+            .collection("measuringinstruments")
             .updateOne(
               { assetnumber: equipid },
               { $set: { calibFlag: "yes" } }

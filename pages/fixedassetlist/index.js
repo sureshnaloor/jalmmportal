@@ -220,7 +220,7 @@ function fixedaassetlist() {
                       <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="first-name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           First Name
                         </label>
@@ -228,7 +228,7 @@ function fixedaassetlist() {
                           type="text"
                           name="first-name"
                           id="first-name"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Bonnie"
                           required=""
                         />
@@ -236,7 +236,7 @@ function fixedaassetlist() {
                       <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="last-name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           Last Name
                         </label>
@@ -244,7 +244,7 @@ function fixedaassetlist() {
                           type="text"
                           name="last-name"
                           id="last-name"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Green"
                           required=""
                         />
@@ -252,7 +252,7 @@ function fixedaassetlist() {
                       <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="email"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           Email
                         </label>
@@ -260,7 +260,7 @@ function fixedaassetlist() {
                           type="email"
                           name="email"
                           id="email"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="example@company.com"
                           required=""
                         />
@@ -268,7 +268,7 @@ function fixedaassetlist() {
                       <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="phone-number"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           Phone Number
                         </label>
@@ -276,7 +276,7 @@ function fixedaassetlist() {
                           type="number"
                           name="phone-number"
                           id="phone-number"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="e.g. +(12)3456 789"
                           required=""
                         />
@@ -284,7 +284,7 @@ function fixedaassetlist() {
                       <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="department"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           Department
                         </label>
@@ -292,7 +292,7 @@ function fixedaassetlist() {
                           type="text"
                           name="department"
                           id="department"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Development"
                           required=""
                         />
@@ -300,7 +300,7 @@ function fixedaassetlist() {
                       <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="company"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           Company
                         </label>
@@ -308,7 +308,7 @@ function fixedaassetlist() {
                           type="number"
                           name="company"
                           id="company"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="123456"
                           required=""
                         />
@@ -316,7 +316,7 @@ function fixedaassetlist() {
                       <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="current-password"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           Current Password
                         </label>
@@ -324,7 +324,7 @@ function fixedaassetlist() {
                           type="password"
                           name="current-password"
                           id="current-password"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="••••••••"
                           required=""
                         />
@@ -332,7 +332,7 @@ function fixedaassetlist() {
                       <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="new-password"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           New Password
                         </label>
@@ -340,7 +340,7 @@ function fixedaassetlist() {
                           type="password"
                           name="new-password"
                           id="new-password"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="••••••••"
                           required=""
                         />

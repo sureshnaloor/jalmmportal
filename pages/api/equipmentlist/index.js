@@ -7,7 +7,7 @@ const handler =  async (req, res) => {
         case "GET": {
           const { db } = await connectToDatabase();
         //   const equipmentlist = await db.collection("equipmentmaster").find({}).toArray();
-        const assetlist = await db.collection("fixedassets").find({"category":"TOOLS & HEAVY EQUIPMENTS"}).toArray()
+        const assetlist = await db.collection("measuringinstruments").find({}).toArray()
           return res.json(assetlist);
           
         } 

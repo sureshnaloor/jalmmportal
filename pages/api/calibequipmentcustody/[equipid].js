@@ -2,7 +2,7 @@ import { connectToDatabase } from "../../../lib/mongoconnect";
 
 const handler = async (req, res) => {
   const { equipid } = req.query;
-  const {todate} = req.body;
+  
   const { db } = await connectToDatabase();
   console.log(equipid);
 
@@ -22,19 +22,7 @@ const handler = async (req, res) => {
         }
       }
 
-      case "PUT":{
-        try {
-          const equipment = await db
-            .collection("calibequipmentscustody")
-            .findOneAndUpdate({ assetnumber: equipid }, {custodyto:{ $eq: null }},
-              {custodyto: todate },
-              { new: true }
-            )
-          
-        } catch (error) {
-          console.error(err);
-        }
-      }
+      
 
       default:
         return res.json({ error: "Method not supported" });
