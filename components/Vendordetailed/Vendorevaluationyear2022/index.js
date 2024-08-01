@@ -60,7 +60,7 @@ function Vendorevaluationyear2022({ vendornumber }) {
 
       <div className="mx-auto drop-shadow rounded-md mb-9">
         <h1 className="text-[14px] tracking-wider w-1/5 mx-auto font-semibold text-center py-1  text-black mb-3 italic bg-zinc-100 shadow-md shadow-zinc-800">
-          Year 2022
+          Year 2023
         </h1>
         <div>
         {purchaseorders.length > 0 && vendorevaled["powiseevalyear2"] ? (
@@ -72,7 +72,7 @@ function Vendorevaluationyear2022({ vendornumber }) {
             <h3 className="bg-slate-100 px-6 pt-16 text-slate-900 shadow-md mr-3 shadow-zinc-500">
               {" "}
               <span className="font-bold text-[12px] font-Lato tracking-wide">
-                2022 Year PO wise evaluation{" "}
+                2023 Year PO wise evaluation{" "}
               </span>{" "}
               <br /> result for the vendor <br />{" "}
               <span className="font-bold tracking-wide">{vendornumber}</span>
@@ -565,7 +565,7 @@ function Vendorevaluationyear2022({ vendornumber }) {
 
                       // console.log(powiserating)
                       toast.success(
-                        `The PO-wise rating for the year 2022 for the vendor ${vendornumber} is completed, thanks!`,
+                        `The PO-wise rating for the year 2023 for the vendor ${vendornumber} is completed, thanks!`,
                         {
                           position: toast.POSITION.TOP_RIGHT,
                         }
@@ -582,14 +582,14 @@ function Vendorevaluationyear2022({ vendornumber }) {
                   </span>{" "}
                   <span className=" ml-[800px] bg-zinc-100 text-[12px] uppercase font-bold text-zinc-900 py-1 px-3 rounded-md">
                     {" "}
-                    Total Year-wise Score for year 2022:
+                    Total Year-wise Score for year 2023:
                   </span>
                 </div>
               ) : null}
             </div>
           </>
          : (
-          <p className="text-[12px] uppercase p-3 font-Lato mx-auto"> No Purchases in year 2022.</p>
+          <p className="text-[12px] uppercase p-3 font-Lato mx-auto"> No Purchases in year 2023.</p>
         )
         
         ) }

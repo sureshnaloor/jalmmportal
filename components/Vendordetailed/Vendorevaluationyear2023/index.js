@@ -60,7 +60,7 @@ function Vendorevaluationyear2023({ vendornumber }) {
 
       <div className="mx-auto drop-shadow rounded-md mb-9">
         <h1 className="text-[14px] tracking-wider w-1/5 mx-auto font-semibold text-center py-1  text-black mb-3 italic bg-zinc-100 shadow-md shadow-zinc-800">
-          Year 2023
+          Year 2024
         </h1>
         <div>
         {purchaseorders.length > 0 && vendorevaled["powiseevalyear3"] ? (
@@ -580,7 +580,7 @@ function Vendorevaluationyear2023({ vendornumber }) {
                   </span>{" "}
                   <span className=" ml-[800px] bg-zinc-100 text-[12px] uppercase font-bold text-zinc-900 py-1 px-3 rounded-md">
                     {" "}
-                    Total Year-wise Score for year 2023:
+                    Total Year-wise Score for year 2024:
                   </span>
                 </div>
               ) : null}
