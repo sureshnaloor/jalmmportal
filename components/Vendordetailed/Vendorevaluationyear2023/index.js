@@ -588,7 +588,7 @@ function Vendorevaluationyear2023({ vendornumber }) {
           </>
 
 : (
-  <p className="text-[12px] uppercase p-3 font-Lato mx-auto"> No Purchases in year 2003.</p>
+  <p className="text-[12px] uppercase p-3 font-Lato mx-auto"> No Purchases in year 2023.</p>
 )
         )}
       </div>
