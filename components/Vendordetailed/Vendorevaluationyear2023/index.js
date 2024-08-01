@@ -92,8 +92,8 @@ function Vendorevaluationyear2023({ vendornumber }) {
                       <h5 className="text-amber-900 font-bold tracking-wider">
                           {" "}
                           {
-                            vendorevaled["powiseevalyear3"]["powiserating"][0]
-                              .ponumber
+                            vendorevaled["powiseevalyear3"]["powiserating"][0]?.ponumber
+                              
                           }{" "}
                         </h5>
                         </div>
@@ -107,8 +107,8 @@ function Vendorevaluationyear2023({ vendornumber }) {
                       <h4 className="px-3 font-bold tracking-wider font-Lato">
                           {" "}
                           {
-                            vendorevaled["powiseevalyear3"]["powiserating"][0]
-                              .povalue
+                            vendorevaled["powiseevalyear3"]["powiserating"][0]?.povalue
+                              
                           }{" "}
                         </h4>
                         </div>
@@ -119,8 +119,8 @@ function Vendorevaluationyear2023({ vendornumber }) {
                         </p>{" "}
                         <h5 className=" ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
                           {
-                            vendorevaled["powiseevalyear3"]["powiserating"][0]
-                              .deliveryrating
+                            vendorevaled["powiseevalyear3"]["powiserating"][0]?.deliveryrating
+                              
                           }{" "}
                         </h5>{" "}
                       </div>
@@ -131,8 +131,8 @@ function Vendorevaluationyear2023({ vendornumber }) {
                         </p>{" "}
                         <h5 className="ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
                           {
-                            vendorevaled["powiseevalyear3"]["powiserating"][0]
-                              .pricerating
+                            vendorevaled["powiseevalyear3"]["powiserating"][0]>.pricerating
+                              
                           }{" "}
                         </h5>{" "}
                       </div>
@@ -143,8 +143,8 @@ function Vendorevaluationyear2023({ vendornumber }) {
                         </p>
                         <h5 className="ml-9 font-bold px-3 text-slate-800  mr-3 mb-1">
                           {
-                            vendorevaled["powiseevalyear3"]["powiserating"][0]
-                              .qualityrating
+                            vendorevaled["powiseevalyear3"]["powiserating"][0]?.qualityrating
+                              
                           }
                         </h5>{" "}
                       </div>
