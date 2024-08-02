@@ -8,7 +8,7 @@ const handler = async (req, res) => {
         const vendorpolist = await db.collection("vendorsandtheirpo").aggregate([
           { $match: { vendorpo: { $ne: [], $exists: true }, }, },
           { $unwind: { path: "$vendorpo", preserveNullAndEmptyArrays: false }, },
-          { $addFields: { year: { $year: "$vendorpo.podate" }, }, },
+          { $addFields: { year: { $year: "$vendorpo.po-date" }, }, },
           { $match: { year: { $in: [2021, 2022, 2023] }, }, },
           { $group: { _id: "$vendor-code", count: { $sum: 1 }, "vendor-name": { $first: "$vendor-name" }, "vendor-code": { $first: "$vendor-code" }, }, },
           { $project: { _id: 0, "vendor-code": 1, "vendor-name": 1 } ,}
