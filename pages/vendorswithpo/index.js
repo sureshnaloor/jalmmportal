@@ -102,7 +102,8 @@ function Vendorswithpo() {
 
   useEffect(() => {
     (async () => {
-      const result = await fetch(`/api/vendors/vendorswithpo`);
+      // const result = await fetch(`/api/vendors/vendorswithpo`);
+      const result = await fetch(`/api/vendors/povendor/lastyearspofound`)
       const json = await result.json();
       setVendorlist(json);
     })();
