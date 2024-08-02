@@ -302,7 +302,7 @@ function Vendorevaluationyear2022({ vendornumber }) {
               </div>
             </div>
           </div>
-        ) : (purchaseorders.length > 0 && !vendorevaled["powiseevalyear1"] ?
+        ) : (purchaseorders.length > 0 && !vendorevaled["powiseevalyear2"] ?
                           
         
           // if not evaluated already, evaluate now
