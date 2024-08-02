@@ -302,7 +302,7 @@ function Vendorevaluationyear2023({ vendornumber }) {
               </div>
             </div>
           </div>
-        ) : (purchaseorders.length > 0 && !vendorevaled["powiseevalyear1"] ?
+        ) : (purchaseorders.length > 0 && !vendorevaled["powiseevalyear3"] ?
           // if not evaluated already, evaluate now
           <>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
