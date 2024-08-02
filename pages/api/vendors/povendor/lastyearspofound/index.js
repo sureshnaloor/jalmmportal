@@ -13,7 +13,7 @@ const handler = async (req, res) => {
           {
             $unwind: {path: "$vendorpo", preserveNullAndEmptyArrays: false},
           },
-          {$addFields: {year:{$year: {$toDate: "$vendorpo.podate"}}}},
+          {$addFields: {year:{$year: "$vendorpo.podate"}}},
           {$match: {year: {$in:[2021, 2022, 2023]}}},
           {$group: {_id: "$vendor-code", count: {$sum:1},
           "vendor-name": {$first: "$vendor-name"},
