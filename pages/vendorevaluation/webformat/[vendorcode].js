@@ -16,7 +16,7 @@ function vendorevaluation() {
       })();
     }, []);
   
-    console.log(evalmarks);
+    console.log(evalmarks.filter(evalmark => evalmark.vendorcode === vendorcode))
   return (
     <>
     <div> Evaluation of vendor {vendorcode} </div>
