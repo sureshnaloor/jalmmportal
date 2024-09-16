@@ -23,11 +23,17 @@ function vendorevaluation() {
     <>
     <div> Evaluation of vendor {vendorcode} </div>
     <h1> Past year scores </h1>
-    <p> Year {vendoreval[0].past[0].pastyear} <span> {vendoreval[0].past[0].pastyearscore} </span></p>
-    <p> Year {vendoreval[0].past[1].pastyear} <span> {vendoreval[0].past[1].pastyearscore} </span></p>
-    <p> Year {vendoreval[0].past[2].pastyear} <span> {vendoreval[0].past[2].pastyearscore} </span></p>
-    <p> Year {vendoreval[0].past[3].pastyear} <span> {vendoreval[0].past[3].pastyearscore} </span></p> 
-    </>
+    {vendoreval && vendoreval[0].past.length > 0 ? (
+      <div>
+        <p> Year {vendoreval[0].past[0].pastyear} <span> {vendoreval[0].past[0].pastyearscore} </span></p>
+        <p> Year {vendoreval[0].past[1].pastyear} <span> {vendoreval[0].past[1].pastyearscore} </span></p>
+        <p> Year {vendoreval[0].past[2].pastyear} <span> {vendoreval[0].past[2].pastyearscore} </span></p>
+        <p> Year {vendoreval[0].past[3].pastyear} <span> {vendoreval[0].past[3].pastyearscore} </span></p>
+      </div>
+    ) : (
+      <div> No scores </div>
+    )}
+   </>
   )
 }
 
