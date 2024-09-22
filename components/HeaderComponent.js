@@ -142,6 +142,20 @@ function HeaderComponent() {
               Vendor Details
             </a>
           </Link>
+          <div className="flex">
+          <Link href="/vendorevaluation/pdfformat/pdfview">
+            <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              Vendor evaluation-PDF
+            </a>
+          </Link>
+
+          <Link href="/vendorevaluation/webformat">
+            <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
+              Vendor evaluation-WEB
+            </a>
+          </Link>
+
+          </div>
 
           <Link href="/notyetqualifiedvendors">
             <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
