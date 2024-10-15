@@ -31,7 +31,7 @@ function Purchaseorderschedule({ ponumber }) {
   const [poackdate, setPOackdate] = useState(null);
   const [delysch, setDelysch] = useState("");
   const [podelydate, setPodelydate] = useState(null);
-  const [estdelydate, setEstdelydate] = useState(new Date(null));
+  const [estdelydate, setEstdelydate] = useState(null);
   const [basedesignrecdate, setBasedesignrecdate] = useState(null);
   const [basedesignapprdate, setBasedesignapprdate] = useState(null);
   const [basedesigncomments, setBasedesigncomments] = useState("");
@@ -519,10 +519,32 @@ function Purchaseorderschedule({ ponumber }) {
               Estimated delivery date as per current status.
             </label>
             {gendata?.generaldata?.estdelydate ?  (
-              <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
-                {" "}
-                {moment(estdelydate).format("DD-MM-YYYY")}{" "}
-              </div>
+              // <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
+              //   {" "}
+              //   {moment(estdelydate).format("DD-MM-YYYY")}{" "}
+              // </div>
+              <DatePicker
+                className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={new Date(estdelydate)}
+                onChange={(date) => setEstdelydate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+           
             ) : (
               <DatePicker
                 className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -1125,7 +1147,7 @@ function Purchaseorderschedule({ ponumber }) {
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
-                  for="bgtabchk"
+                  htmlFor="bgtabchk"
                   className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Not Applicable
@@ -1277,7 +1299,7 @@ function Purchaseorderschedule({ ponumber }) {
             <div className="flex-1 shadow-xl px-3 bg-sky-100/70 ">
               <div className="px-3">
                 <label
-                  for="pbgestdate"
+                  htmlFor="pbgestdate"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Performance BG Date estimated as per PO term.
@@ -1539,7 +1561,7 @@ function Purchaseorderschedule({ ponumber }) {
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
-                  for="lctabchk"
+                  htmlFor="lctabchk"
                   className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Not Applicable
@@ -1880,7 +1902,7 @@ function Purchaseorderschedule({ ponumber }) {
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
-                  for="testingtabchk"
+                  htmlFor="testingtabchk"
                   className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Not Applicable
@@ -2136,7 +2158,7 @@ function Purchaseorderschedule({ ponumber }) {
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
-                  for="shiptabchk"
+                  htmlFor="shiptabchk"
                   className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Not Applicable

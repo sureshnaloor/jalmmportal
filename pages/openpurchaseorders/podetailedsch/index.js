@@ -5,15 +5,16 @@ import Router , {useRouter}  from 'next/router';
 import Headercomponent from '../../../components/HeaderComponent'
 
 function Podetailedsch() {
-    const router = useRouter()
+    const router = useRouter()    
     const {ponumber} = router.query
+    // console.log(ponumber)
   return (
     <div>
       {/* <Navigationcomp />  */}
       < Headercomponent />
-      <div class="relative pb-6 mb-3 overflow-hidden rounded-lg shadow-lg cursor-pointer m-4 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
+      <div className="relative pb-6 mb-3 overflow-hidden rounded-lg shadow-lg cursor-pointer m-4 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
       <img
-          class="object-cover w-full h-60"
+          className="object-cover w-full h-60"
           src="/images/openpo.jpg"
           alt="openpoimg"
         />
