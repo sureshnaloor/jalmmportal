@@ -35,6 +35,7 @@ function Purchaseorderschedule({ ponumber }) {
   const [basedesignrecdate, setBasedesignrecdate] = useState(null);
   const [basedesignapprdate, setBasedesignapprdate] = useState(null);
   const [basedesigncomments, setBasedesigncomments] = useState("");
+  const [generalcomments, setGeneralcomments] = useState("");
   const [detdesignrecdate, setDetdesignrecdate] = useState(null);
   const [detdesignaprdate, setDetdesignaprdate] = useState(null);
   const [mfgclearancedate, setMfgclearancedate] = useState(null);
@@ -128,6 +129,7 @@ function Purchaseorderschedule({ ponumber }) {
       setBasedesignrecdate(json.generaldata?.basedesignrecdate || null);
       setBasedesignapprdate(json.generaldata?.basedesignapprdate || null);
       setBasedesigncomments(json.generaldata?.basedesigncomments || "");
+      setGeneralcomments(json.generaldata?.generalcomments || "");
       setDetdesignrecdate(json.generaldata?.detdesignrecdate || null);
       setDetdesignaprdate(json.generaldata?.detdesignaprdate || null);
       setMfgclearancedate(json.generaldata?.mfgclearancedate || null);
@@ -232,6 +234,7 @@ function Purchaseorderschedule({ ponumber }) {
       basedesignrecdate,
       basedesignapprdate,
       basedesigncomments,
+      generalcomments,
       detdesignrecdate,
       detdesignaprdate,
       mfgclearancedate,
@@ -316,6 +319,7 @@ function Purchaseorderschedule({ ponumber }) {
       basedesignrecdate,
       basedesignapprdate,
       basedesigncomments,
+      generalcomments,
       detdesignrecdate,
       detdesignaprdate,
       mfgclearancedate,
@@ -524,7 +528,7 @@ function Purchaseorderschedule({ ponumber }) {
               //   {moment(estdelydate).format("DD-MM-YYYY")}{" "}
               // </div>
               <DatePicker
-                className="h-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-sky-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 selected={new Date(estdelydate)}
                 onChange={(date) => setEstdelydate(date)}
                 popperModifiers={[
@@ -665,6 +669,31 @@ function Purchaseorderschedule({ ponumber }) {
                   className="bg-gray-50  px-3  w-4/5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  pb-24 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   id="basedesigncomments"
                   onChange={(e) => setBasedesigncomments(e.target.value)}
+                  placeholder=" "
+                />
+              )}
+
+              {/* New General comments textbox */}
+              <label
+                htmlFor="generalcomments"
+                className="block mb-2  mx-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                General comments
+              </label>
+
+              {gendata?.generaldata?.generalcomments ? (
+                <div className="py-2 px-3 w-full h-[150px] text-[12px] bg-cyan-200 text-stone-800 font-bold">
+                  {" "}
+                  {generalcomments}{" "}
+                </div>
+              ) : (
+                <input
+                  type="text"
+                  name="generalcomments"
+                  value={generalcomments}
+                  className="bg-gray-50  px-3  w-4/5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  pb-24 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  id="generalcomments"
+                  onChange={(e) => setGeneralcomments(e.target.value)}
                   placeholder=" "
                 />
               )}

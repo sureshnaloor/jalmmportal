@@ -24,12 +24,13 @@ const handler = async (req, res) => {
             delysch: req.body.delysch,
             basedesignapprdate: req.body.basedesignapprdate,
             basedesigncomments: req.body.basedesigncomments,
+            generalcomments: req.body.generalcomments,
             basedesignrecdate: req.body.basedesignrecdate,
             mfgclearancedate: req.body.mfgclearancedate,
             itpapprdate: req.body.itpapprdate,
             detdesignrecdate: req.body.detdesignrecdate,
             detdesignaprdate: req.body.detdesignaprdate,
-            grdate:req.body.grdate,
+            grdate: req.body.grdate,
             finalworkcompleteddate: req.body.finalworkcompleteddate,
           },
           paymentdata: {
@@ -107,6 +108,7 @@ const handler = async (req, res) => {
               "generaldata.basedesignapprdate": req.body.basedesignapprdate,
               "generaldata.basedesignrecdate": req.body.basedesignrecdate,
               "generaldata.basedesigncomments": req.body.basedesigncomments,
+              "generaldata.generalcomments": req.body.generalcomments,
               "generaldata.mfgclearancedate": req.body.mfgclearancedate,
               "generaldata.itpapprdate": req.body.itpapprdate,
               "generaldata.grdate": req.body.grdate,
@@ -168,6 +170,7 @@ const handler = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
