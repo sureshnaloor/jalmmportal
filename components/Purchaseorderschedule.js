@@ -1659,7 +1659,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcincoterm ? (
-                <div className={savedFieldStyle}>
+                <div className={savedFieldStyleWide}>
                   {lcincoterm}
                 </div>
               ) : (
