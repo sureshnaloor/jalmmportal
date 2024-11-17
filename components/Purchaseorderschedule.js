@@ -1624,7 +1624,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcestopendate ? (
-                <div className={savedFieldStyle}>
+                <div className={savedFieldStyleWide}>
                   {moment(lcestopendate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1681,7 +1681,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcamount ? (
-                <div className={savedFieldStyle}>
+                <div className={savedFieldStyleWide}>
                   {lcamount}
                 </div>
               ) : (
@@ -1729,7 +1729,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcdatadate ? (
-                <div className={savedFieldStyle}>
+                <div className={savedFieldStyleWide}>
                   {moment(lcdatadate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1764,7 +1764,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcopeneddate ? (
-                <div className={savedFieldStyle}>
+                <div className={savedFieldStyleWide}>
                   {moment(lcopeneddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1803,7 +1803,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcswift ? (
-                <div className={savedFieldStyle}>
+                <div className={savedFieldStyleWide}>
                   {lcswift}
                 </div>
               ) : (
@@ -1825,7 +1825,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lclastshipdate ? (
-                <div className={savedFieldStyle}>
+                <div className={savedFieldStyleWide}>
                   {moment(lclastshipdate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1861,7 +1861,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcexpirydate ? (
-                <div className={savedFieldStyle}>
+                <div className={savedFieldStyleWide}>
                   {moment(lcexpirydate).format("DD-MM-YYYY")}
                 </div>
               ) : (
