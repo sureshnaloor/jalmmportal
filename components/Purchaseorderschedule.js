@@ -8,11 +8,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { useTheme } from "next-themes";
 import { useSession,  } from "next-auth/react";
 
+// Define styles outside the component
+const savedFieldStyle = "py-2 px-3 w-1/3 bg-sky-100 border border-sky-200 rounded-md text-gray-700 font-medium cursor-not-allowed select-none shadow-inner";
+const savedFieldStyleWide = "py-2 px-3 w-full bg-sky-100 border border-sky-200 rounded-md text-gray-700 font-medium cursor-not-allowed select-none shadow-inner";
+
 function Purchaseorderschedule({ ponumber }) {
-  const [poheader, setPoheader] = useState([]);
   const { data: session } = useSession();
 
-  const [editGeneraldata, setEditGeneraldata] = useState(false);
+  const [poheader, setPoheader] = useState([]);
   const [gendata, setGendata] = useState({});
 
   // for applicable tag flags
@@ -52,8 +55,8 @@ function Purchaseorderschedule({ ponumber }) {
   const [milestoneamountpaiddate, setMilestoneamountpaiddate] = useState(null);
   const [milestoneamountpaid, setMilestoneamountpaid] = useState("");
   const [finalpaiddate, setFinalpaiddate] = useState(null);
-  const [finalcomments, setFinalpaidcomments] = useState("");
   const [finalpaidamt, setFinalpaidamt] = useState("");
+  const [finalcomments, setFinalpaidcomments] = useState("");
 
   //Bank guarantee data
 
@@ -101,6 +104,9 @@ function Purchaseorderschedule({ ponumber }) {
   const [finalremarks, setFinalremarks] = useState("");
 
   const router = useRouter();
+
+  // Add editGeneralData state (note the capital D)
+  const [editGeneralData, setEditGeneralData] = useState(false);
 
   // fetch PO header data
 
@@ -215,7 +221,7 @@ function Purchaseorderschedule({ ponumber }) {
         return JSON.stringify(objectName) === "{}";
       };
       if (!isObjectEmpty(json)) {
-        setEditGeneraldata(true);
+        setEditGeneralData(true);
       }
     };
     fetchGeneraldata();
@@ -223,8 +229,29 @@ function Purchaseorderschedule({ ponumber }) {
 
   // console.log(gendata);
 
+  const [activeBlock, setActiveBlock] = useState(null);
+
+  const updateBlockData = (blockName, newData) => {
+    switch (blockName) {
+      case "generalData":
+        setGendata(prevState => ({
+          ...prevState,
+          generaldata: { ...prevState.generaldata, ...newData }
+        }));
+        break;
+      case "paymentData":
+        setGendata(prevState => ({
+          ...prevState,
+          paymentdata: { ...prevState.paymentdata, ...newData }
+        }));
+        break;
+      // Add cases for other blocks as needed
+    }
+  };
+
   const handleSubmitGendata = async (event) => {
     event.preventDefault();
+    setActiveBlock("generalData");
     const data = {
       ponumber,
       poackdate,
@@ -287,30 +314,37 @@ function Purchaseorderschedule({ ponumber }) {
       testing,
     };
 
-    const result = await fetch(
-      `/api/purchaseorders/schedule/generaldata/${ponumber}`,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        }),
-      }
-    );
+    try {
+      const result = await fetch(
+        `/api/purchaseorders/schedule/generaldata/${ponumber}`,
+        {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: new Headers({
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }),
+        }
+      );
 
-    toast.success("submitted succesfully!", {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-
-    router.push({ pathname: `/openpurchaseorders` });
+      const updatedData = await result.json();
+      updateBlockData("generalData", updatedData.generaldata);
+      toast.success("Submitted successfully!", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      toast.error("Error submitting data. Please try again.", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } finally {
+      setActiveBlock(null);
+    }
   };
-
-  // submit general data
 
   const handleEditGendata = async (e) => {
     e.preventDefault();
-
+    setActiveBlock("generalData");
     const data = {
       poackdate,
       podelydate,
@@ -372,23 +406,32 @@ function Purchaseorderschedule({ ponumber }) {
       shipping,
     };
 
-    const result = await fetch(
-      `/api/purchaseorders/schedule/generaldata/${ponumber}`,
-      {
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        }),
-      }
-    );
+    try {
+      const result = await fetch(
+        `/api/purchaseorders/schedule/generaldata/${ponumber}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(data),
+          headers: new Headers({
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }),
+        }
+      );
 
-    toast.success("Submitted succesfully!", {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-
-    router.push({ pathname: `/openpurchaseorders` });
+      const updatedData = await result.json();
+      updateBlockData("generalData", updatedData.generaldata);
+      toast.success("Updated successfully!", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } catch (error) {
+      console.error("Error updating data:", error);
+      toast.error("Error updating data. Please try again.", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } finally {
+      setActiveBlock(null);
+    }
   };
 
   return (
@@ -411,7 +454,7 @@ function Purchaseorderschedule({ ponumber }) {
 
       {/* Delivery sch details */}
       <form
-        onSubmit={!editGeneraldata ? handleSubmitGendata : handleEditGendata}
+        onSubmit={!editGeneralData ? handleSubmitGendata : handleEditGendata}
       >
         <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
           <div className="text-[14px] font-italic py-3 px-6  bg-cyan-600 text-white">
@@ -429,8 +472,7 @@ function Purchaseorderschedule({ ponumber }) {
               PO Acknowledgment date:
             </label>
             {gendata?.generaldata?.poackdate ? (
-              <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
-                {" "}
+              <div className={savedFieldStyle}>
                 {moment(poackdate).format("DD-MM-YYYY")}
               </div>
             ) : (
@@ -464,9 +506,8 @@ function Purchaseorderschedule({ ponumber }) {
               Delivery schedule as per PO
             </label>
             {gendata?.generaldata?.delysch ? (
-              <div className="py-2 px-3 w-full text-sm bg-cyan-200 text-stone-800 font-bold">
-                {" "}
-                {delysch}{" "}
+              <div className={savedFieldStyleWide}>
+                {delysch}
               </div>
             ) : (
               <input
@@ -584,9 +625,8 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.generaldata?.basedesignrecdate ? (
-                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
-                  {" "}
-                  {moment(basedesignrecdate).format("DD-MM-YYYY")}{" "}
+                <div className={savedFieldStyle}>
+                  {moment(basedesignrecdate).format("DD-MM-YYYY")}
                 </div>
               ) : (
                 <DatePicker
@@ -621,9 +661,8 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.generaldata?.basedesignapprdate ? (
-                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
-                  {" "}
-                  {moment(basedesignapprdate).format("DD-MM-YYYY")}{" "}
+                <div className={savedFieldStyle}>
+                  {moment(basedesignapprdate).format("DD-MM-YYYY")}
                 </div>
               ) : (
                 <DatePicker
@@ -657,9 +696,8 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.generaldata?.basedesigncomments ? (
-                <div className="py-2 px-3 w-full h-[150px] text-[12px] bg-cyan-200 text-stone-800 font-bold">
-                  {" "}
-                  {basedesigncomments}{" "}
+                <div className={savedFieldStyleWide}>
+                  {basedesigncomments}
                 </div>
               ) : (
                 <input
@@ -682,9 +720,8 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.generaldata?.generalcomments ? (
-                <div className="py-2 px-3 w-full h-[150px] text-[12px] bg-cyan-200 text-stone-800 font-bold">
-                  {" "}
-                  {generalcomments}{" "}
+                <div className={savedFieldStyleWide}>
+                  {generalcomments}
                 </div>
               ) : (
                 <input
@@ -710,9 +747,8 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.generaldata?.detdesignrecdate ? (
-                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
-                  {" "}
-                  {moment(detdesignrecdate).format("DD-MM-YYYY")}{" "}
+                <div className={savedFieldStyle}>
+                  {moment(detdesignrecdate).format("DD-MM-YYYY")}
                 </div>
               ) : (
                 <DatePicker
@@ -746,9 +782,8 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.generaldata?.detdesignaprdate ? (
-                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
-                  {" "}
-                  {moment(detdesignaprdate).format("DD-MM-YYYY")}{" "}
+                <div className={savedFieldStyle}>
+                  {moment(detdesignaprdate).format("DD-MM-YYYY")}
                 </div>
               ) : (
                 <DatePicker
@@ -781,9 +816,8 @@ function Purchaseorderschedule({ ponumber }) {
                 Manufacturing clearance issued date:
               </label>
               {gendata?.generaldata?.mfgclearancedate ? (
-                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
-                  {" "}
-                  {moment(mfgclearancedate).format("DD-MM-YYYY")}{" "}
+                <div className={savedFieldStyle}>
+                  {moment(mfgclearancedate).format("DD-MM-YYYY")}
                 </div>
               ) : (
                 <DatePicker
@@ -816,9 +850,8 @@ function Purchaseorderschedule({ ponumber }) {
                 ITP Approval date
               </label>
               {gendata?.generaldata?.itpapprdate ? (
-                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
-                  {" "}
-                  {moment(itpapprdate).format("DD-MM-YYYY")}{" "}
+                <div className={savedFieldStyle}>
+                  {moment(itpapprdate).format("DD-MM-YYYY")}
                 </div>
               ) : (
                 <DatePicker
@@ -851,9 +884,8 @@ function Purchaseorderschedule({ ponumber }) {
                 Final work completed date
               </label>
               {gendata?.generaldata?.finalworkcompleteddate ? (
-                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold">
-                  {" "}
-                  {moment(finalworkcompleteddate).format("DD-MM-YYYY")}{" "}
+                <div className={savedFieldStyle}>
+                  {moment(finalworkcompleteddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
                 <DatePicker
@@ -886,9 +918,8 @@ function Purchaseorderschedule({ ponumber }) {
                 GR/SES posted date
               </label>
               {gendata?.generaldata?.grdate ? (
-                <div className="py-2 px-3 w-1/3 bg-cyan-200 text-stone-800 font-bold mb-2">
-                  {" "}
-                  {moment(grdate).format("DD-MM-YYYY")}{" "}
+                <div className={savedFieldStyle}>
+                  {moment(grdate).format("DD-MM-YYYY")}
                 </div>
               ) : (
                 <DatePicker
@@ -918,10 +949,11 @@ function Purchaseorderschedule({ ponumber }) {
 
           <button
             type="submit"
-            className="absolute p-3 rounded-lg bg-sky-800/10 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"
+            onClick={!editGeneralData ? handleSubmitGendata : handleEditGendata}
+            className="absolute p-3 rounded-lg bg-sky-800/10 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3"
+            disabled={activeBlock === "generalData"}
           >
-            {" "}
-            {!editGeneraldata ? "Save" : "Edit"}{" "}
+            {activeBlock === "generalData" ? "Saving..." : (!editGeneralData ? "Save" : "Edit")}
           </button>
         </div>
 
@@ -943,8 +975,7 @@ function Purchaseorderschedule({ ponumber }) {
               Advance Paid date
             </label>
             {gendata?.paymentdata?.advpaiddate ? (
-              <div className="py-2 px-3 w-1/3 bg-green-200 text-stone-800 font-bold">
-                {" "}
+              <div className={savedFieldStyle}>
                 {moment(advpaiddate).format("DD-MM-YYYY")}
               </div>
             ) : (
@@ -978,8 +1009,7 @@ function Purchaseorderschedule({ ponumber }) {
               Advance Amount paid
             </label>
             {gendata?.paymentdata?.advamountpaid ? (
-              <div className="py-2 px-3 w-1/3 bg-green-200 text-stone-800 font-bold">
-                {" "}
+              <div className={savedFieldStyle}>
                 {advamountpaid}
               </div>
             ) : (
@@ -1006,8 +1036,7 @@ function Purchaseorderschedule({ ponumber }) {
             </label>
 
             {gendata?.paymentdata?.milestoneamountpaiddate ? (
-              <div className="py-2 px-3 w-1/3 bg-green-200 text-stone-800 font-bold">
-                {" "}
+              <div className={savedFieldStyle}>
                 {moment(milestoneamountpaiddate).format("DD-MM-YYYY")}
               </div>
             ) : (
@@ -1042,8 +1071,7 @@ function Purchaseorderschedule({ ponumber }) {
             </label>
 
             {gendata?.paymentdata?.milestoneamountpaid ? (
-              <div className="py-2 px-3 w-1/3 bg-green-200 text-stone-800 font-bold">
-                {" "}
+              <div className={savedFieldStyle}>
                 {milestoneamountpaid}
               </div>
             ) : (
@@ -1070,8 +1098,7 @@ function Purchaseorderschedule({ ponumber }) {
             </label>
 
             {gendata?.paymentdata?.finalpaiddate ? (
-              <div className="py-2 px-3 w-1/3 bg-green-200 text-stone-800 font-bold">
-                {" "}
+              <div className={savedFieldStyle}>
                 {moment(finalpaiddate).format("DD-MM-YYYY")}
               </div>
             ) : (
@@ -1106,8 +1133,7 @@ function Purchaseorderschedule({ ponumber }) {
             </label>
 
             {gendata?.paymentdata?.finalpaidamt ? (
-              <div className="py-2 px-3 w-1/3 bg-green-200 text-stone-800 font-bold">
-                {" "}
+              <div className={savedFieldStyle}>
                 {finalpaidamt}
               </div>
             ) : (
@@ -1132,8 +1158,7 @@ function Purchaseorderschedule({ ponumber }) {
             </label>
 
             {gendata?.paymentdata?.finalcomments ? (
-              <div className="py-2 px-3 w-1/3 bg-green-200 text-stone-800 font-bold  mb-3">
-                {" "}
+              <div className={savedFieldStyle}>
                 {finalcomments}
               </div>
             ) : (
@@ -1153,7 +1178,7 @@ function Purchaseorderschedule({ ponumber }) {
             className="absolute p-3 rounded-lg bg-green-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3"
           >
             {" "}
-            {!editGeneraldata ? "Save" : "Edit"}{" "}
+            {!editGeneralData ? "Save" : "Edit"}{" "}
           </button>
         </div>
 
@@ -1194,8 +1219,7 @@ function Purchaseorderschedule({ ponumber }) {
                 </label>
 
                 {gendata?.bgdata?.abgestdate ? (
-                  <div className="py-2 px-3 w-1/3 bg-sky-200 text-stone-800 font-bold">
-                    {" "}
+                  <div className={savedFieldStyle}>
                     {moment(abgestdate).format("DD-MM-YYYY")}
                   </div>
                 ) : (
@@ -1230,8 +1254,7 @@ function Purchaseorderschedule({ ponumber }) {
                 </label>
 
                 {gendata?.bgdata?.abgamount ? (
-                  <div className="py-2 px-3 w-1/3 bg-sky-200 text-stone-800 font-bold">
-                    {" "}
+                  <div className={savedFieldStyle}>
                     {abgamount}
                   </div>
                 ) : (
@@ -1257,8 +1280,7 @@ function Purchaseorderschedule({ ponumber }) {
                 </label>
 
                 {gendata?.bgdata?.abgactualdate ? (
-                  <div className="py-2 px-3 w-1/3 bg-sky-200 text-stone-800 font-bold">
-                    {" "}
+                  <div className={savedFieldStyle}>
                     {moment(abgactualdate).format("DD-MM-YYYY")}
                   </div>
                 ) : (
@@ -1293,8 +1315,7 @@ function Purchaseorderschedule({ ponumber }) {
                 </label>
 
                 {gendata?.bgdata?.abgexpirydate ? (
-                  <div className="py-2 px-3 w-1/3 bg-sky-200 text-stone-800 font-bold mb-2">
-                    {" "}
+                  <div className={savedFieldStyle}>
                     {moment(abgexpirydate).format("DD-MM-YYYY")}
                   </div>
                 ) : (
@@ -1335,8 +1356,7 @@ function Purchaseorderschedule({ ponumber }) {
                 </label>
 
                 {gendata?.bgdata?.pbgestdate ? (
-                  <div className="py-2 px-3 w-1/3 bg-sky-200 text-stone-800 font-bold">
-                    {" "}
+                  <div className={savedFieldStyle}>
                     {moment(pbgestdate).format("DD-MM-YYYY")}
                   </div>
                 ) : (
@@ -1371,8 +1391,7 @@ function Purchaseorderschedule({ ponumber }) {
                 </label>
 
                 {gendata?.bgdata?.pbgamount ? (
-                  <div className="py-2 px-3 w-1/3 bg-sky-200 text-stone-800 font-bold">
-                    {" "}
+                  <div className={savedFieldStyle}>
                     {pbgamount}
                   </div>
                 ) : (
@@ -1399,8 +1418,7 @@ function Purchaseorderschedule({ ponumber }) {
                 </label>
 
                 {gendata?.bgdata?.pbgactualdate ? (
-                  <div className="py-2 px-3 w-1/3 bg-sky-200 text-stone-800 font-bold">
-                    {" "}
+                  <div className={savedFieldStyle}>
                     {moment(pbgactualdate).format("DD-MM-YYYY")}
                   </div>
                 ) : (
@@ -1435,8 +1453,7 @@ function Purchaseorderschedule({ ponumber }) {
                 </label>
 
                 {gendata?.bgdata?.pbgexpirydate ? (
-                  <div className="py-2 px-3 w-1/3 bg-sky-200 text-stone-800 font-bold mb-2">
-                    {" "}
+                  <div className={savedFieldStyle}>
                     {moment(pbgexpirydate).format("DD-MM-YYYY")}
                   </div>
                 ) : (
@@ -1473,8 +1490,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.bgdata?.abgreturneddate ? (
-                <div className="py-2 px-3 w-1/3 bg-sky-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(abgreturneddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1509,8 +1525,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.bgdata?.pbgreturneddate ? (
-                <div className="py-2 px-3 w-1/3 bg-sky-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(pbgreturneddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1545,8 +1560,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.bgdata?.bgremarks ? (
-                <div className="py-2 px-3 w-1/3 bg-sky-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {bgremarks}
                 </div>
               ) : (
@@ -1561,9 +1575,13 @@ function Purchaseorderschedule({ ponumber }) {
                 />
               )}
             </div>
-            <button className="absolute p-3 rounded-lg bg-blue-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3">
-              {" "}
-              {!editGeneraldata ? "Save" : "Edit"}{" "}
+            <button
+              type="submit"
+              onClick={!editGeneralData ? handleSubmitGendata : handleEditGendata}
+              className="absolute p-3 rounded-lg bg-sky-800/10 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3"
+              disabled={activeBlock === "generalData"}
+            >
+              {activeBlock === "generalData" ? "Saving..." : (!editGeneralData ? "Save" : "Edit")}
             </button>
 
             {/* Bonds / guarantees released back to supplier */}
@@ -1606,8 +1624,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcestopendate ? (
-                <div className="py-2 px-3 w-1/2 bg-purple-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(lcestopendate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1642,8 +1659,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcincoterm ? (
-                <div className="py-2 px-3 w-2/3 bg-purple-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {lcincoterm}
                 </div>
               ) : (
@@ -1665,8 +1681,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcamount ? (
-                <div className="py-2 px-3 w-2/3 bg-purple-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {lcamount}
                 </div>
               ) : (
@@ -1692,8 +1707,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcdocuments ? (
-                <div className="py-2 px-3 w-2/3 bg-purple-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyleWide}>
                   {lcdocuments}
                 </div>
               ) : (
@@ -1715,8 +1729,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcdatadate ? (
-                <div className="py-2 px-3 w-1/2 bg-purple-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(lcdatadate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1751,8 +1764,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcopeneddate ? (
-                <div className="py-2 px-3 w-1/2 bg-purple-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(lcopeneddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1791,8 +1803,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcswift ? (
-                <div className="py-2 px-3 w-2/3 bg-purple-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {lcswift}
                 </div>
               ) : (
@@ -1814,8 +1825,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lclastshipdate ? (
-                <div className="py-2 px-3 w-1/2 bg-purple-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(lclastshipdate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1851,8 +1861,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcexpirydate ? (
-                <div className="py-2 px-3 w-1/2 bg-purple-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(lcexpirydate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1890,8 +1899,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.lcdata?.lcremarks ? (
-                <div className="py-2 px-3 w-2/3 bg-purple-200 text-stone-800 font-bold">
-                  {" "}
+                <div className={savedFieldStyleWide}>
                   {lcremarks}
                 </div>
               ) : (
@@ -1905,9 +1913,13 @@ function Purchaseorderschedule({ ponumber }) {
                 />
               )}
             </div>
-            <button className="absolute p-3 rounded-lg bg-purple-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-2/3">
-              {" "}
-              {!editGeneraldata ? "Save" : "Edit"}{" "}
+            <button
+              type="submit"
+              onClick={!editGeneralData ? handleSubmitGendata : handleEditGendata}
+              className="absolute p-3 rounded-lg bg-purple-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-2/3"
+              disabled={activeBlock === "generalData"}
+            >
+              {activeBlock === "generalData" ? "Saving..." : (!editGeneralData ? "Save" : "Edit")}
             </button>
           </div>
         )}
@@ -1947,8 +1959,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.progressdata?.mfgstart ? (
-                <div className="py-2 px-3 w-1/2 bg-fuchsia-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(mfgstart).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -1983,8 +1994,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.progressdata?.Fatdate ? (
-                <div className="py-2 px-3 w-1/2 bg-fuchsia-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(Fatdate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -2021,8 +2031,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.progressdata?.Fatreportdate ? (
-                <div className="py-2 px-3 w-1/2 bg-fuchsia-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(Fatreportdate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -2057,8 +2066,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.progressdata?.Bldate ? (
-                <div className="py-2 px-3 w-1/2 bg-fuchsia-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(Bldate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -2095,8 +2103,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.progressdata?.vesselreacheddate ? (
-                <div className="py-2 px-3 w-1/2 bg-fuchsia-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(vesselreacheddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -2131,8 +2138,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.progressdata?.customscleareddate ? (
-                <div className="py-2 px-3 w-1/2 bg-fuchsia-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(customscleareddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -2159,9 +2165,13 @@ function Purchaseorderschedule({ ponumber }) {
                 />
               )}
             </div>
-            <button className="absolute p-3 rounded-lg bg-fuchsia-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2">
-              {" "}
-              {!editGeneraldata ? "Save" : "Edit"}{" "}
+            <button
+              type="submit"
+              onClick={!editGeneralData ? handleSubmitGendata : handleEditGendata}
+              className="absolute p-3 rounded-lg bg-fuchsia-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"
+              disabled={activeBlock === "generalData"}
+            >
+              {activeBlock === "generalData" ? "Saving..." : (!editGeneralData ? "Save" : "Edit")}
             </button>
           </div>
         )}
@@ -2203,8 +2213,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.shipdata?.grossweight ? (
-                <div className="py-2 px-3 w-1/2 bg-amber-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {grossweight}
                 </div>
               ) : (
@@ -2226,8 +2235,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.shipdata?.shipmentbookeddate ? (
-                <div className="py-2 px-3 w-1/2 bg-amber-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(shipmentbookeddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -2264,8 +2272,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.shipdata?.saberapplieddate ? (
-                <div className="py-2 px-3 w-1/2 bg-amber-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(saberapplieddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -2300,8 +2307,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.shipdata?.saberreceiveddate ? (
-                <div className="py-2 px-3 w-1/2 bg-amber-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(saberreceiveddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -2338,8 +2344,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.shipdata?.ffnoMinateddate ? (
-                <div className="py-2 px-3 w-1/2 bg-amber-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {moment(ffnoMinateddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
@@ -2374,8 +2379,7 @@ function Purchaseorderschedule({ ponumber }) {
               </label>
 
               {gendata?.shipdata?.finalremarks ? (
-                <div className="py-2 px-3 w-1/2 bg-amber-200 text-stone-800 font-bold mb-2">
-                  {" "}
+                <div className={savedFieldStyle}>
                   {finalremarks}
                 </div>
               ) : (
@@ -2390,9 +2394,13 @@ function Purchaseorderschedule({ ponumber }) {
               )}
             </div>
 
-            <button className="absolute p-3 rounded-lg bg-amber-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2">
-              {" "}
-              {!editGeneraldata ? "Save" : "Edit"}{" "}
+            <button
+              type="submit"
+              onClick={!editGeneralData ? handleSubmitGendata : handleEditGendata}
+              className="absolute p-3 rounded-lg bg-amber-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"
+              disabled={activeBlock === "generalData"}
+            >
+              {activeBlock === "generalData" ? "Saving..." : (!editGeneralData ? "Save" : "Edit")}
             </button>
           </div>
         )}
