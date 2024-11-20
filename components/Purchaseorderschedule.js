@@ -15,6 +15,24 @@ const savedFieldStyleWide = "py-2 px-3 w-full bg-sky-100 border border-sky-200 r
 function Purchaseorderschedule({ ponumber }) {
   const { data: session } = useSession();
 
+  // Edit states for different sections
+  const [editStates, setEditStates] = useState({
+    generalData: false,
+    paymentData: false,
+    bgData: false,
+    lcData: false,
+    progressData: false,
+    shipData: false
+  });
+
+  // Helper function to toggle edit states
+  const toggleEditState = (section) => {
+    setEditStates(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
   const [poheader, setPoheader] = useState([]);
   const [gendata, setGendata] = useState({});
 
@@ -57,6 +75,7 @@ function Purchaseorderschedule({ ponumber }) {
   const [finalpaiddate, setFinalpaiddate] = useState(null);
   const [finalpaidamt, setFinalpaidamt] = useState("");
   const [finalcomments, setFinalpaidcomments] = useState("");
+  const [paymentcomments, setPaymentcomments] = useState(""); // Changed from finalcomments
 
   //Bank guarantee data
 
@@ -105,11 +124,7 @@ function Purchaseorderschedule({ ponumber }) {
 
   const router = useRouter();
 
-  // Add editGeneralData state (note the capital D)
-  const [editGeneralData, setEditGeneralData] = useState(false);
-
-  // fetch PO header data
-
+  // Initial data loading effects
   useEffect(() => {
     const fetchPurchaserorderlines = async () => {
       const response = await fetch(`/api/purchaseorders/porder/${ponumber}`);
@@ -119,8 +134,6 @@ function Purchaseorderschedule({ ponumber }) {
     fetchPurchaserorderlines();
   }, [ponumber]);
 
-  // fetch all schedule data
-
   useEffect(() => {
     const fetchGeneraldata = async () => {
       const response = await fetch(
@@ -128,106 +141,98 @@ function Purchaseorderschedule({ ponumber }) {
       );
       const json = await response.json();
       setGendata(json);
-      setDelysch(json.generaldata?.delysch || "");
-      setPOackdate(json.generaldata?.poackdate || null);
-      setPodelydate(json.generaldata?.podelydate || null);
-      setEstdelydate(json.generaldata?.estdelydate || null);
-      setBasedesignrecdate(json.generaldata?.basedesignrecdate || null);
-      setBasedesignapprdate(json.generaldata?.basedesignapprdate || null);
-      setBasedesigncomments(json.generaldata?.basedesigncomments || "");
-      setGeneralcomments(json.generaldata?.generalcomments || "");
-      setDetdesignrecdate(json.generaldata?.detdesignrecdate || null);
-      setDetdesignaprdate(json.generaldata?.detdesignaprdate || null);
-      setMfgclearancedate(json.generaldata?.mfgclearancedate || null);
-      setItpapprdate(json.generaldata?.itpapprdate || null);
-      // setWorkmilestonecompleted(json.generaldata?.workmilestonecompleted || null)
-      // setWorkmilestonecompleteddate(json.generaldata?.workmilestonecompleteddate || null)
-      setFinalworkcompleteddate(
-        json.generaldata?.finalworkcompleteddate || null
-      );
-      setGrdate(json.generaldata?.grdate || null);
 
-      setAdvpaiddate(json.paymentdata?.advpaiddate || null);
-      setAdvamountpaid(json.paymentdata?.advamountpaid || "");
-      setMilestoneamountpaiddate(
-        json.paymentdata?.milestoneamountpaiddate || null
-      );
-      setMilestoneamountpaid(json.paymentdata?.milestoneamountpaid || 0);
-      setFinalpaiddate(json.paymentdata?.finalpaiddate || null);
-      setFinalpaidamt(json.paymentdata?.finalpaidamt || null);
-      setFinalpaidcomments(json.paymentdata?.finalcomments || "");
+      // Set edit states based on existing data
+      setEditStates({
+        generalData: !!json?.generaldata,
+        paymentData: !!json?.paymentdata,
+        bgData: !!json?.bgdata,
+        lcData: !!json?.lcdata,
+        progressData: !!json?.progressdata,
+        shipData: !!json?.shipdata
+      });
 
-      setAbgestdate(json.bgdata?.abgestdate || null);
-      setAbgactualdate(json.bgdata?.abgactualdate || null);
-      setAbgamount(json.bgdata?.abgamount || 0);
-      setAbgexpirydate(json.bgdata?.abgexpirydate || null);
-      setAbgreturneddate(json.bgdata?.abgreturneddate || null);
-      setPbgactualdate(json.bgdata?.pbgactualdate || null);
-      setPbgestdate(json.bgdata?.pbgestdate || null);
-      setPbgreturneddate(json.bgdata?.pbgreturneddate || null);
-      setPbgexpirydate(json.bgdata?.pbgexpirydate || null);
-      setPbgamount(json.bgdata?.pbgamount || null);
-      setBgremarks(json.bgdata?.bgremarks || "");
-
-      setLcDatadate(json.lcdata?.lcdatadate || null);
-      setLcEstopendate(json.lcdata?.lcestopendate || null);
-      setLcExpirydate(json.lcdata?.lcexpirydate);
-      setLcincoterm(json.lcdata?.lcincoterm || "");
-      setLcamount(json.lcdata?.lcamount || "");
-      setLcOpeneddate(json.lcdata?.lcopeneddate || null);
-      setLcdocuments(json.lcdata?.lcdocuments || "");
-      setLcLastshipdate(json.lcdata?.lclastshipdate || null);
-      setLcswift(json.lcdata?.lcswift || "");
-      setLcremarks(json.lcdata?.lcremarks || "");
-
-      setMfgstart(json.progressdata?.mfgstart || null);
-      setFatdate(json.progressdata?.Fatdate || null);
-      setFatreportdate(json.progressdata?.Fatreportdate || null);
-      setBldate(json.progressdata?.Bldate || null);
-      setVesselreacheddate(json.progressdata?.vesselreacheddate || null);
-      setCustomscleareddate(json.progressdata?.customscleareddate || null);
-
-      setShipmentbookeddate(json.shipdata?.shipmentbookeddate || null);
-      setGrossweight(json.shipdata?.grossweight || "");
-      setSaberapplieddate(json.shipdata?.saberapplieddate || null);
-      setSaberreceiveddate(json.shipdata?.saberreceiveddate || null);
-      setFinalremarks(json.shipdata?.finalremarks || "");
-      setFfnoMinateddate(json.shipdata?.ffnoMinateddate || null);
-
-      //set the tab flags
-      if (json.bgtab) {
-        setBgflagged(true);
-        setBgtab("not applicable")
+      // Set General Data states
+      if (json?.generaldata) {
+        setDelysch(json.generaldata.delysch || "");
+        setPOackdate(json.generaldata.poackdate ? new Date(json.generaldata.poackdate) : null);
+        setPodelydate(json.generaldata.podelydate ? new Date(json.generaldata.podelydate) : null);
+        setEstdelydate(json.generaldata.estdelydate ? new Date(json.generaldata.estdelydate) : null);
+        setBasedesignrecdate(json.generaldata.basedesignrecdate ? new Date(json.generaldata.basedesignrecdate) : null);
+        setBasedesignapprdate(json.generaldata.basedesignapprdate ? new Date(json.generaldata.basedesignapprdate) : null);
+        setBasedesigncomments(json.generaldata.basedesigncomments || "");
+        setGeneralcomments(json.generaldata.generalcomments || "");
+        setDetdesignrecdate(json.generaldata.detdesignrecdate ? new Date(json.generaldata.detdesignrecdate) : null);
+        setDetdesignaprdate(json.generaldata.detdesignaprdate ? new Date(json.generaldata.detdesignaprdate) : null);
+        setMfgclearancedate(json.generaldata.mfgclearancedate ? new Date(json.generaldata.mfgclearancedate) : null);
+        setItpapprdate(json.generaldata.itpapprdate ? new Date(json.generaldata.itpapprdate) : null);
+        setFinalworkcompleteddate(json.generaldata.finalworkcompleteddate ? new Date(json.generaldata.finalworkcompleteddate) : null);
+        setGrdate(json.generaldata.grdate ? new Date(json.generaldata.grdate) : null);
       }
 
-      if (json.lctab) {
-        setLcflagged(true);
-        setLctab("not applicable")
+      // Set Payment Data states if they exist
+      if (json?.paymentdata) {
+        setAdvamountpaid(json.paymentdata.advamountpaid || "");
+        setAdvpaiddate(json.paymentdata.advpaiddate ? new Date(json.paymentdata.advpaiddate) : null);
+        setMilestoneamountpaid(json.paymentdata.milestoneamountpaid || "");
+        setMilestoneamountpaiddate(json.paymentdata.milestoneamountpaiddate ? new Date(json.paymentdata.milestoneamountpaiddate) : null);
+        setFinalpaidamt(json.paymentdata.finalpaidamt || "");
+        setFinalpaiddate(json.paymentdata.finalpaiddate ? new Date(json.paymentdata.finalpaiddate) : null);
+        // setFinalcomments(json.paymentdata.finalcomments || "");
+        setPaymentcomments(json.paymentdata.paymentcomments || ""); // Changed from finalcomments
       }
 
-      if (json.testing) {
-        setTestflagged(true);
-        setTesting("not applicable")
+      // Set BG Data states
+      if (json?.bgdata) {
+        setAbgamount(json.bgdata.abgamount || "");
+        setAbgactualdate(json.bgdata.abgactualdate ? new Date(json.bgdata.abgactualdate) : null);
+        setAbgexpirydate(json.bgdata.abgexpirydate ? new Date(json.bgdata.abgexpirydate) : null);
+        setAbgreturneddate(json.bgdata.abgreturneddate ? new Date(json.bgdata.abgreturneddate) : null);
+        setPbgamount(json.bgdata.pbgamount || "");
+        setPbgestdate(json.bgdata.pbgestdate ? new Date(json.bgdata.pbgestdate) : null);
+        setPbgactualdate(json.bgdata.pbgactualdate ? new Date(json.bgdata.pbgactualdate) : null);
+        setPbgexpirydate(json.bgdata.pbgexpirydate ? new Date(json.bgdata.pbgexpirydate) : null);
+        setPbgreturneddate(json.bgdata.pbgreturneddate ? new Date(json.bgdata.pbgreturneddate) : null);
+        setBgremarks(json.bgdata.bgremarks || "");
       }
 
-      if (json.shipping) {
-        setShipflagged(true);
-        setTesting("not applicable")
+      // Set LC Data states
+      if (json?.lcdata) {
+        setLcEstopendate(json.lcdata.lcestopendate ? new Date(json.lcdata.lcestopendate) : null);
+        setLcOpeneddate(json.lcdata.lcopeneddate ? new Date(json.lcdata.lcopeneddate) : null);
+        setLcDatadate(json.lcdata.lcdatadate ? new Date(json.lcdata.lcdatadate) : null);
+        setLcLastshipdate(json.lcdata.lclastshipdate ? new Date(json.lcdata.lclastshipdate) : null);
+        setLcExpirydate(json.lcdata.lcexpirydate ? new Date(json.lcdata.lcexpirydate) : null);
+        setLcincoterm(json.lcdata.lcincoterm || "");
+        setLcdocuments(json.lcdata.lcdocuments || "");
+        setLcamount(json.lcdata.lcamount || "");
+        setLcremarks(json.lcdata.lcremarks || "");
+        setLcswift(json.lcdata.lcswift || "");
       }
 
-      // if PO already entered in sch data, it sets 'edit' mode flag
+      // Set Progress Data states
+      if (json?.progressdata) {
+        setMfgstart(json.progressdata.mfgstart ? new Date(json.progressdata.mfgstart) : null);
+        setBldate(json.progressdata.Bldate ? new Date(json.progressdata.Bldate) : null);
+        setFatdate(json.progressdata.Fatdate ? new Date(json.progressdata.Fatdate) : null);
+        setFatreportdate(json.progressdata.Fatreportdate ? new Date(json.progressdata.Fatreportdate) : null);
+        setVesselreacheddate(json.progressdata.vesselreacheddate ? new Date(json.progressdata.vesselreacheddate) : null);
+        setCustomscleareddate(json.progressdata.customscleareddate ? new Date(json.progressdata.customscleareddate) : null);
+      }
 
-      const isObjectEmpty = (objectName) => {
-        return JSON.stringify(objectName) === "{}";
-      };
-      if (!isObjectEmpty(json)) {
-        setEditGeneralData(true);
+      // Set Shipment Data states
+      if (json?.shipmentdata) {
+        setShipmentbookeddate(json.shipmentdata.shipmentbookeddate ? new Date(json.shipmentdata.shipmentbookeddate) : null);
+        setGrossweight(json.shipmentdata.grossweight || "");
+        setSaberapplieddate(json.shipmentdata.saberapplieddate ? new Date(json.shipmentdata.saberapplieddate) : null);
+        setSaberreceiveddate(json.shipmentdata.saberreceiveddate ? new Date(json.shipmentdata.saberreceiveddate) : null);
+        setFfnoMinateddate(json.shipmentdata.ffnoMinateddate ? new Date(json.shipmentdata.ffnoMinateddate) : null);
+        setFinalremarks(json.shipmentdata.finalremarks || "");
       }
     };
+
     fetchGeneraldata();
   }, [ponumber]);
-
-  // console.log(gendata);
 
   const [activeBlock, setActiveBlock] = useState(null);
 
@@ -246,18 +251,39 @@ function Purchaseorderschedule({ ponumber }) {
         }));
         break;
       // Add cases for other blocks as needed
+      case "bgData":
+        setGendata(prevState => ({
+          ...prevState,
+          bgdata: { ...prevState.bgdata, ...newData }
+        }));
+        break;
+      case "lcData":
+        setGendata(prevState => ({
+          ...prevState,
+          lcdata: { ...prevState.lcdata, ...newData }
+        }));
+        break;
+      case "shipData":
+        setGendata(prevState => ({
+          ...prevState,
+          shipdata: { ...prevState.shipdata, ...newData }
+        }));
+        break;
+      default:
+        break;
     }
   };
 
-  const handleSubmitGendata = async (event) => {
-    event.preventDefault();
+  // General Data Handler
+  const handleSubmitGendata = async (e) => {
+    e.preventDefault();
     setActiveBlock("generalData");
-    const data = {
-      ponumber,
+
+    const formData = {
+      delysch,
       poackdate,
       podelydate,
       estdelydate,
-      delysch,
       basedesignrecdate,
       basedesignapprdate,
       basedesigncomments,
@@ -267,76 +293,39 @@ function Purchaseorderschedule({ ponumber }) {
       mfgclearancedate,
       itpapprdate,
       finalworkcompleteddate,
-      grdate,
-      advpaiddate,
-      advamountpaid,
-      milestoneamountpaid,
-      milestoneamountpaiddate,
-      finalpaiddate,
-      finalpaidamt,
-      finalcomments,
-      abgestdate,
-      abgactualdate,
-      abgamount,
-      abgexpirydate,
-      abgreturneddate,
-      pbgactualdate,
-      pbgestdate,
-      pbgreturneddate,
-      pbgexpirydate,
-      pbgamount,
-      bgremarks,
-      lcdatadate,
-      lcestopendate,
-      lcopeneddate,
-      lclastshipdate,
-      lcexpirydate,
-      lcincoterm,
-      lcdocuments,
-      lcremarks,
-      lcamount,
-      lcswift,
-      mfgstart,
-      Bldate,
-      Fatdate,
-      Fatreportdate,
-      vesselreacheddate,
-      customscleareddate,
-      shipmentbookeddate,
-      grossweight,
-      saberapplieddate,
-      saberreceiveddate,
-      ffnoMinateddate,
-      finalremarks,
-      bgtab,
-      lctab,
-      shipping,
-      testing,
+      grdate
     };
 
     try {
       const result = await fetch(
         `/api/purchaseorders/schedule/generaldata/${ponumber}`,
         {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: new Headers({
-            "Content-Type": "application/json",
-            Accept: "application/json",
+          method: editStates.generalData ? "PUT" : "POST",
+          body: JSON.stringify({
+            section: 'generaldata',
+            formData
           }),
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
 
-      const updatedData = await result.json();
-      updateBlockData("generalData", updatedData.generaldata);
-      toast.success("Submitted successfully!", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      const json = await result.json();
+      
+      if (result.ok) {
+        setGendata(prevData => ({
+          ...prevData,
+          generaldata: json.generaldata
+        }));
+        toggleEditState('generalData');
+        toast.success("General data saved successfully!");
+      } else {
+        throw new Error(json.message || "Failed to save general data");
+      }
     } catch (error) {
-      console.error("Error submitting data:", error);
-      toast.error("Error submitting data. Please try again.", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      console.error("Error saving general data:", error);
+      toast.error("Error saving general data. Please try again.");
     } finally {
       setActiveBlock(null);
     }
@@ -385,6 +374,7 @@ function Purchaseorderschedule({ ponumber }) {
       lcexpirydate,
       lcincoterm,
       lcdocuments,
+      lcremarks,
       lcamount,
       lcswift,
       lcremarks,
@@ -434,6 +424,260 @@ function Purchaseorderschedule({ ponumber }) {
     }
   };
 
+  // Payment Data Handler
+  const handleSubmitPaymentdata = async (e) => {
+    e.preventDefault();
+    setActiveBlock("paymentData");
+
+    const formData = {
+      advamountpaid,
+      advpaiddate,
+      milestoneamountpaid,
+      milestoneamountpaiddate,
+      finalpaidamt,
+      finalpaiddate,
+      paymentcomments // Changed from finalcomments
+    };
+
+    try {
+      const result = await fetch(
+        `/api/purchaseorders/schedule/generaldata/${ponumber}`,
+        {
+          method: editStates.paymentData ? "PUT" : "POST",
+          body: JSON.stringify({
+            section: 'paymentdata',
+            formData
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const json = await result.json();
+      
+      if (result.ok) {
+        setGendata(prevData => ({
+          ...prevData,
+          paymentdata: json.paymentdata
+        }));
+        toggleEditState('paymentData');
+        toast.success("Payment data saved successfully!");
+      } else {
+        throw new Error(json.message || "Failed to save payment data");
+      }
+    } catch (error) {
+      console.error("Error saving payment data:", error);
+      toast.error("Error saving payment data. Please try again.");
+    } finally {
+      setActiveBlock(null);
+    }
+  };
+
+  // Bank Guarantee Handler
+  const handleSubmitBgdata = async (e) => {
+    e.preventDefault();
+    setActiveBlock("bgData");
+
+    const formData = {
+      abgamount,
+      abgactualdate,
+      abgexpirydate,
+      abgreturneddate,
+      pbgamount,
+      pbgestdate,
+      pbgactualdate,
+      pbgexpirydate,
+      pbgreturneddate,
+      bgremarks
+    };
+
+    try {
+      const result = await fetch(
+        `/api/purchaseorders/schedule/generaldata/${ponumber}`,
+        {
+          method: editStates.bgData ? "PUT" : "POST",
+          body: JSON.stringify({
+            section: 'bgdata',
+            formData
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const json = await result.json();
+      
+      if (result.ok) {
+        setGendata(prevData => ({
+          ...prevData,
+          bgdata: json.bgdata
+        }));
+        toggleEditState('bgData');
+        toast.success("BG data saved successfully!");
+      } else {
+        throw new Error(json.message || "Failed to save BG data");
+      }
+    } catch (error) {
+      console.error("Error saving BG data:", error);
+      toast.error("Error saving BG data. Please try again.");
+    } finally {
+      setActiveBlock(null);
+    }
+  };
+
+  // LC Data Handler
+  const handleSubmitLcdata = async (e) => {
+    e.preventDefault();
+    setActiveBlock("lcData");
+
+    const formData = {
+      lcestopendate,
+      lcopeneddate,
+      lcdatadate,
+      lclastshipdate,
+      lcexpirydate,
+      lcincoterm,
+      lcdocuments,
+      lcamount,
+      lcremarks,
+      lcswift
+    };
+
+    try {
+      const result = await fetch(
+        `/api/purchaseorders/schedule/generaldata/${ponumber}`,
+        {
+          method: editStates.lcData ? "PUT" : "POST",
+          body: JSON.stringify({
+            section: 'lcdata',
+            formData
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const json = await result.json();
+      
+      if (result.ok) {
+        setGendata(prevData => ({
+          ...prevData,
+          lcdata: json.lcdata
+        }));
+        toggleEditState('lcData');
+        toast.success("LC data saved successfully!");
+      } else {
+        throw new Error(json.message || "Failed to save LC data");
+      }
+    } catch (error) {
+      console.error("Error saving LC data:", error);
+      toast.error("Error saving LC data. Please try again.");
+    } finally {
+      setActiveBlock(null);
+    }
+  };
+
+  // Progress Data Handler
+  const handleSubmitProgressdata = async (e) => {
+    e.preventDefault();
+    setActiveBlock("progressData");
+
+    const formData = {
+      mfgstart,
+      Bldate,
+      Fatdate,
+      Fatreportdate,
+      vesselreacheddate,
+      customscleareddate
+    };
+
+    try {
+      const result = await fetch(
+        `/api/purchaseorders/schedule/generaldata/${ponumber}`,
+        {
+          method: editStates.progressData ? "PUT" : "POST",
+          body: JSON.stringify({
+            section: 'progressdata',
+            formData
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const json = await result.json();
+      
+      if (result.ok) {
+        setGendata(prevData => ({
+          ...prevData,
+          progressdata: json.progressdata
+        }));
+        toggleEditState('progressData');
+        toast.success("Progress data saved successfully!");
+      } else {
+        throw new Error(json.message || "Failed to save progress data");
+      }
+    } catch (error) {
+      console.error("Error saving progress data:", error);
+      toast.error("Error saving progress data. Please try again.");
+    } finally {
+      setActiveBlock(null);
+    }
+  };
+
+  // Shipment Data Handler
+  const handleSubmitShipmentdata = async (e) => {
+    e.preventDefault();
+    setActiveBlock("shipmentData");
+
+    const formData = {
+      shipmentbookeddate,
+      grossweight,
+      saberapplieddate,
+      saberreceiveddate,
+      ffnoMinateddate,
+      finalremarks
+    };
+
+    try {
+      const result = await fetch(
+        `/api/purchaseorders/schedule/generaldata/${ponumber}`,
+        {
+          method: editStates.shipmentData ? "PUT" : "POST",
+          body: JSON.stringify({
+            section: 'shipmentdata',
+            formData
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const json = await result.json();
+      
+      if (result.ok) {
+        setGendata(prevData => ({
+          ...prevData,
+          shipmentdata: json.shipmentdata
+        }));
+        toggleEditState('shipmentData');
+        toast.success("Shipment data saved successfully!");
+      } else {
+        throw new Error(json.message || "Failed to save shipment data");
+      }
+    } catch (error) {
+      console.error("Error saving shipment data:", error);
+      toast.error("Error saving shipment data. Please try again.");
+    } finally {
+      setActiveBlock(null);
+    }
+  };
+
   return (
     <>
       {/* header details */}
@@ -454,7 +698,7 @@ function Purchaseorderschedule({ ponumber }) {
 
       {/* Delivery sch details */}
       <form
-        onSubmit={!editGeneralData ? handleSubmitGendata : handleEditGendata}
+        onSubmit={!editStates.generalData ? handleSubmitGendata : handleEditGendata}
       >
         <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
           <div className="text-[14px] font-italic py-3 px-6  bg-cyan-600 text-white">
@@ -949,16 +1193,18 @@ function Purchaseorderschedule({ ponumber }) {
 
           <button
             type="submit"
-            onClick={!editGeneralData ? handleSubmitGendata : handleEditGendata}
+            onClick={!editStates.generalData ? handleSubmitGendata : handleEditGendata}
             className="absolute p-3 rounded-lg bg-sky-800/10 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3"
             disabled={activeBlock === "generalData"}
           >
-            {activeBlock === "generalData" ? "Saving..." : (!editGeneralData ? "Save" : "Edit")}
+            {activeBlock === "generalData" ? "Saving..." : (editStates.generalData ? "Edit" : "Save")}
           </button>
         </div>
+      </form>
 
-        {/* payment sch details */}
+      {/* payment sch details */}
 
+      <form onSubmit={handleSubmitPaymentdata}>
         <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
           <div className="text-[14px] font-italic py-3 px-6  bg-green-600 text-white">
             <h3 className="justify-center align-middle">
@@ -968,1565 +1214,1103 @@ function Purchaseorderschedule({ ponumber }) {
           </div>
 
           <div className="flex-1 shadow-xl px-3 bg-green-100/70">
-            <label
-              htmlFor="advpaiddate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="advpaiddate" className="block mb-2 text-sm font-medium text-gray-900">
               Advance Paid date
             </label>
-            {gendata?.paymentdata?.advpaiddate ? (
+            {gendata?.paymentdata?.advpaiddate && editStates.paymentData ? (
               <div className={savedFieldStyle}>
                 {moment(advpaiddate).format("DD-MM-YYYY")}
               </div>
             ) : (
               <DatePicker
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6"
                 selected={advpaiddate}
                 onChange={(date) => setAdvpaiddate(date)}
-                popperModifiers={[
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [5, 10],
-                    },
-                  },
-                  {
-                    name: "preventOverflow",
-                    options: {
-                      rootBoundary: "viewport",
-                      tether: false,
-                      altAxis: true,
-                    },
-                  },
-                ]}
+                dateFormat="dd-MM-yyyy"
               />
             )}
 
-            <label
-              htmlFor="advamountpaid"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label htmlFor="advamountpaid" className="block mb-2 text-sm font-medium text-gray-900">
               Advance Amount paid
             </label>
-            {gendata?.paymentdata?.advamountpaid ? (
-              <div className={savedFieldStyle}>
-                {advamountpaid}
-              </div>
+            {gendata?.paymentdata?.advamountpaid && editStates.paymentData ? (
+              <div className={savedFieldStyle}>{advamountpaid}</div>
             ) : (
               <input
                 type="text"
-                name="advamountpaid"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                id="advamountpaid"
-                // pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
                 value={advamountpaid}
-                // data-type="currency"
                 onChange={(e) => setAdvamountpaid(e.target.value)}
-                placeholder="e-g ..SAR10,000.00"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6"
+                placeholder="Enter advance amount"
               />
             )}
           </div>
 
           <div className="flex-1 shadow-xl px-3 bg-green-100/70">
-            <label
-              htmlFor="milestoneamountpaiddate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Milestone amount paid Date:
+            <label htmlFor="paymentcomments" className="block mb-2 text-sm font-medium text-gray-900">
+              Payment Comments
             </label>
-
-            {gendata?.paymentdata?.milestoneamountpaiddate ? (
-              <div className={savedFieldStyle}>
-                {moment(milestoneamountpaiddate).format("DD-MM-YYYY")}
-              </div>
-            ) : (
-              <DatePicker
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                selected={milestoneamountpaiddate}
-                onChange={(date) => setMilestoneamountpaiddate(date)}
-                popperModifiers={[
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [5, 10],
-                    },
-                  },
-                  {
-                    name: "preventOverflow",
-                    options: {
-                      rootBoundary: "viewport",
-                      tether: false,
-                      altAxis: true,
-                    },
-                  },
-                ]}
-              />
-            )}
-
-            <label
-              htmlFor="milestoneamtpaid"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Milestone amount paid
-            </label>
-
-            {gendata?.paymentdata?.milestoneamountpaid ? (
-              <div className={savedFieldStyle}>
-                {milestoneamountpaid}
-              </div>
+            {gendata?.paymentdata?.paymentcomments && editStates.paymentData ? (
+              <div className={savedFieldStyle}>{paymentcomments}</div>
             ) : (
               <input
                 type="text"
-                name="milestoneamtpaid"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                id="milestoneamountpaid"
-                // pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
-                value={milestoneamountpaid}
-                onChange={(e) => setMilestoneamountpaid(e.target.value)}
-                // data-type="currency"
-                placeholder="e.g ...SAR100,000.00"
+                value={paymentcomments}
+                onChange={(e) => setPaymentcomments(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Enter payment comments"
               />
             )}
           </div>
 
-          <div className="flex-1 shadow-xl px-3 bg-green-100/70">
-            <label
-              htmlFor="finalpaiddate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Final payment done on:
-            </label>
-
-            {gendata?.paymentdata?.finalpaiddate ? (
-              <div className={savedFieldStyle}>
-                {moment(finalpaiddate).format("DD-MM-YYYY")}
-              </div>
-            ) : (
-              <DatePicker
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                selected={finalpaiddate}
-                onChange={(date) => setFinalpaiddate(date)}
-                popperModifiers={[
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [5, 10],
-                    },
-                  },
-                  {
-                    name: "preventOverflow",
-                    options: {
-                      rootBoundary: "viewport",
-                      tether: false,
-                      altAxis: true,
-                    },
-                  },
-                ]}
-              />
-            )}
-
-            <label
-              htmlFor="finalpaidamt"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Final payment amount
-            </label>
-
-            {gendata?.paymentdata?.finalpaidamt ? (
-              <div className={savedFieldStyle}>
-                {finalpaidamt}
-              </div>
-            ) : (
-              <input
-                type="text"
-                name="finalpaidamt"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                id="abgamount"
-                // pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
-                value={finalpaidamt}
-                onChange={(e) => setFinalpaidamt(e.target.value)}
-                // data-type="currency"
-                placeholder="e.g ...SAR200,000.00"
-              />
-            )}
-
-            <label
-              htmlFor="finalcomments"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Remarks if any (deduction etc.)
-            </label>
-
-            {gendata?.paymentdata?.finalcomments ? (
-              <div className={savedFieldStyle}>
-                {finalcomments}
-              </div>
-            ) : (
-              <input
-                type="text"
-                name="finalcomments"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pb-24 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                id="finalcomments"
-                value={finalcomments}
-                onChange={(e) => setFinalpaidcomments(e.target.value)}
-                placeholder="e.g...2560SAR deducted for damaged fitting.."
-              />
-            )}
-          </div>
           <button
             type="submit"
             className="absolute p-3 rounded-lg bg-green-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3"
+            disabled={activeBlock === "paymentData"}
           >
-            {" "}
-            {!editGeneralData ? "Save" : "Edit"}{" "}
+            {activeBlock === "paymentData" ? "Saving..." : (editStates.paymentData ? "Edit" : "Save")}
           </button>
         </div>
+      </form>
 
-        {/* BG details */}
+      {/* Bank Guarantee Section */}
+      {!bgtab && (
+        <div className="relative py-6 mb-3 flex gap-1 overflow-hidden border-y-2 border-slate-400 rounded-lg shadow-lg m-9 pt-20 pb-20">
+          <div className="text-[14px] font-italic py-3 px-6 bg-sky-600 text-white">
+            <h3 className="justify-center align-middle">
+              Bank
+              <br /> Guarantee
+              <br /> Details
+            </h3>
+            <br />
+            <input
+              id="bgtabchk"
+              type="checkbox"
+              onChange={(e) => setBgtab(e.target.value)}
+              value="not applicable"
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="bgtabchk" className="ml-2 text-sm font-medium text-gray-300">
+              Not Applicable
+            </label>
+          </div>
 
-        {bgflagged ? null : (
-          <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
-            <div className="text-[14px] font-italic py-3 px-6  bg-sky-600 text-white">
-              <h3 className="justify-center align-middle">
-                {" "}
-                Adv/Performance <br /> Bank <br /> Guarantee <br /> Data{" "}
-              </h3>
-              <br />
-              <div className="flex items-center">
+          {/* Advance BG Section */}
+          <div className="flex-1 shadow-xl px-3 bg-sky-100/70">
+            <div className="px-3">
+              <label htmlFor="abgamount" className="block mb-2 text-sm font-medium text-gray-900">
+                Enter Advance BG amount
+              </label>
+              {gendata?.bgdata?.abgamount ? (
+                <div className={savedFieldStyle}>{abgamount}</div>
+              ) : (
                 <input
-                  id="bgtabchk"
-                  type="checkbox"
-                  onChange={(e) => setBgtab(e.target.value)}
-                  value="not applicable"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  type="text"
+                  name="abgamount"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-1"
+                  value={abgamount}
+                  onChange={(e) => setAbgamount(e.target.value)}
+                  placeholder="e.g. SAR500,000.00"
                 />
-                <label
-                  htmlFor="bgtabchk"
-                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >
-                  Not Applicable
-                </label>
-              </div>
+              )}
             </div>
 
-            <div className="flex-1 shadow-xl px-3 bg-sky-100/70">
-              <div className="px-3">
-                <label
-                  htmlFor="abgestdate"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Advance BG Date estimated as per PO term.
-                </label>
-
-                {gendata?.bgdata?.abgestdate ? (
-                  <div className={savedFieldStyle}>
-                    {moment(abgestdate).format("DD-MM-YYYY")}
-                  </div>
-                ) : (
-                  <DatePicker
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    selected={abgestdate}
-                    onChange={(date) => setAbgestdate(date)}
-                    popperModifiers={[
-                      {
-                        name: "offset",
-                        options: {
-                          offset: [5, 10],
-                        },
-                      },
-                      {
-                        name: "preventOverflow",
-                        options: {
-                          rootBoundary: "viewport",
-                          tether: false,
-                          altAxis: true,
-                        },
-                      },
-                    ]}
-                  />
-                )}
-
-                <label
-                  htmlFor="abgamount"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Enter Advance BG amount
-                </label>
-
-                {gendata?.bgdata?.abgamount ? (
-                  <div className={savedFieldStyle}>
-                    {abgamount}
-                  </div>
-                ) : (
-                  <input
-                    type="text"
-                    name="abgamount"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-1  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    id="abgamount"
-                    // pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
-                    value={abgamount}
-                    onChange={(e) => setAbgamount(e.target.value)}
-                    // data-type="currency"
-                    placeholder="e.g ..SAR500,000.00"
-                  />
-                )}
-              </div>
-              <div className="bg-sky-100/70 px-3">
-                <label
-                  htmlFor="abgactualdate"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Advance BG Date of fresh/extended start:
-                </label>
-
-                {gendata?.bgdata?.abgactualdate ? (
-                  <div className={savedFieldStyle}>
-                    {moment(abgactualdate).format("DD-MM-YYYY")}
-                  </div>
-                ) : (
-                  <DatePicker
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    selected={abgactualdate}
-                    onChange={(date) => setAbgactualdate(date)}
-                    popperModifiers={[
-                      {
-                        name: "offset",
-                        options: {
-                          offset: [5, 10],
-                        },
-                      },
-                      {
-                        name: "preventOverflow",
-                        options: {
-                          rootBoundary: "viewport",
-                          tether: false,
-                          altAxis: true,
-                        },
-                      },
-                    ]}
-                  />
-                )}
-
-                <label
-                  htmlFor="abgexpirydate"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Advance BG Date of expiry
-                </label>
-
-                {gendata?.bgdata?.abgexpirydate ? (
-                  <div className={savedFieldStyle}>
-                    {moment(abgexpirydate).format("DD-MM-YYYY")}
-                  </div>
-                ) : (
-                  <DatePicker
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    selected={abgexpirydate}
-                    onChange={(date) => setAbgexpirydate(date)}
-                    popperModifiers={[
-                      {
-                        name: "offset",
-                        options: {
-                          offset: [5, 10],
-                        },
-                      },
-                      {
-                        name: "preventOverflow",
-                        options: {
-                          rootBoundary: "viewport",
-                          tether: false,
-                          altAxis: true,
-                        },
-                      },
-                    ]}
-                  />
-                )}
-              </div>
+            <div className="px-3">
+              <label htmlFor="abgactualdate" className="block mb-2 text-sm font-medium text-gray-900">
+                Advance BG Date of fresh/extended start:
+              </label>
+              {gendata?.bgdata?.abgactualdate ? (
+                <div className={savedFieldStyle}>
+                  {moment(abgactualdate).format("DD-MM-YYYY")}
+                </div>
+              ) : (
+                <DatePicker
+                  selected={abgactualdate}
+                  onChange={(date) => setAbgactualdate(date)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6"
+                  dateFormat="dd-MM-yyyy"
+                />
+              )}
             </div>
 
-            {/* performance bank guarantee related data */}
-
-            <div className="flex-1 shadow-xl px-3 bg-sky-100/70 ">
-              <div className="px-3">
-                <label
-                  htmlFor="pbgestdate"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Performance BG Date estimated as per PO term.
-                </label>
-
-                {gendata?.bgdata?.pbgestdate ? (
-                  <div className={savedFieldStyle}>
-                    {moment(pbgestdate).format("DD-MM-YYYY")}
-                  </div>
-                ) : (
-                  <DatePicker
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    selected={pbgestdate}
-                    onChange={(date) => setPbgestdate(date)}
-                    popperModifiers={[
-                      {
-                        name: "offset",
-                        options: {
-                          offset: [5, 10],
-                        },
-                      },
-                      {
-                        name: "preventOverflow",
-                        options: {
-                          rootBoundary: "viewport",
-                          tether: false,
-                          altAxis: true,
-                        },
-                      },
-                    ]}
-                  />
-                )}
-
-                <label
-                  htmlFor="pbgamount"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Enter Performance BG amount
-                </label>
-
-                {gendata?.bgdata?.pbgamount ? (
-                  <div className={savedFieldStyle}>
-                    {pbgamount}
-                  </div>
-                ) : (
-                  <input
-                    type="text"
-                    name="pbgamount"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    id="pbgamount"
-                    // pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
-                    value={pbgamount}
-                    onChange={(e) => setPbgamount(e.target.value)}
-                    // data-type="currency"
-                    placeholder="e.g ...SAR500,000.00"
-                  />
-                )}
-              </div>
-
-              <div className="bg-sky-100/70 px-3">
-                <label
-                  htmlFor="pbgactualdate"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Performance BG Date fresh/extended start:
-                </label>
-
-                {gendata?.bgdata?.pbgactualdate ? (
-                  <div className={savedFieldStyle}>
-                    {moment(pbgactualdate).format("DD-MM-YYYY")}
-                  </div>
-                ) : (
-                  <DatePicker
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    selected={pbgactualdate}
-                    onChange={(date) => setPbgactualdate(date)}
-                    popperModifiers={[
-                      {
-                        name: "offset",
-                        options: {
-                          offset: [5, 10],
-                        },
-                      },
-                      {
-                        name: "preventOverflow",
-                        options: {
-                          rootBoundary: "viewport",
-                          tether: false,
-                          altAxis: true,
-                        },
-                      },
-                    ]}
-                  />
-                )}
-
-                <label
-                  htmlFor="pbgexpirydate"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Performance BG Expiry date:
-                </label>
-
-                {gendata?.bgdata?.pbgexpirydate ? (
-                  <div className={savedFieldStyle}>
-                    {moment(pbgexpirydate).format("DD-MM-YYYY")}
-                  </div>
-                ) : (
-                  <DatePicker
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    selected={pbgexpirydate}
-                    onChange={(date) => setPbgexpirydate(date)}
-                    popperModifiers={[
-                      {
-                        name: "offset",
-                        options: {
-                          offset: [5, 10],
-                        },
-                      },
-                      {
-                        name: "preventOverflow",
-                        options: {
-                          rootBoundary: "viewport",
-                          tether: false,
-                          altAxis: true,
-                        },
-                      },
-                    ]}
-                  />
-                )}
-              </div>
+            <div className="px-3">
+              <label htmlFor="abgexpirydate" className="block mb-2 text-sm font-medium text-gray-900">
+                Advance BG Date of expiry
+              </label>
+              {gendata?.bgdata?.abgexpirydate ? (
+                <div className={savedFieldStyle}>
+                  {moment(abgexpirydate).format("DD-MM-YYYY")}
+                </div>
+              ) : (
+                <DatePicker
+                  selected={abgexpirydate}
+                  onChange={(date) => setAbgexpirydate(date)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6"
+                  dateFormat="dd-MM-yyyy"
+                />
+              )}
             </div>
-            <div className="flex-1 shadow-xl px-3 bg-sky-100/70">
-              <label
-                htmlFor="abgreturned"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+          </div>
+
+          {/* Performance BG Section */}
+          <div className="flex-1 shadow-xl px-3 bg-sky-100/70">
+            <div className="px-3">
+              <label htmlFor="pbgestdate" className="block mb-2 text-sm font-medium text-gray-900">
+                Performance BG Date estimated as per PO term
+              </label>
+              {gendata?.bgdata?.pbgestdate ? (
+                <div className={savedFieldStyle}>
+                  {moment(pbgestdate).format("DD-MM-YYYY")}
+                </div>
+              ) : (
+                <DatePicker
+                  selected={pbgestdate}
+                  onChange={(date) => setPbgestdate(date)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6"
+                  dateFormat="dd-MM-yyyy"
+                />
+              )}
+            </div>
+
+            <div className="px-3">
+              <label htmlFor="pbgamount" className="block mb-2 text-sm font-medium text-gray-900">
+                Enter Performance BG amount
+              </label>
+              {gendata?.bgdata?.pbgamount ? (
+                <div className={savedFieldStyle}>{pbgamount}</div>
+              ) : (
+                <input
+                  type="text"
+                  name="pbgamount"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5"
+                  value={pbgamount}
+                  onChange={(e) => setPbgamount(e.target.value)}
+                  placeholder="e.g. SAR500,000.00"
+                />
+              )}
+            </div>
+
+            <div className="px-3">
+              <label htmlFor="pbgactualdate" className="block mb-2 text-sm font-medium text-gray-900">
+                Performance BG Date fresh/extended start:
+              </label>
+              {gendata?.bgdata?.pbgactualdate ? (
+                <div className={savedFieldStyle}>
+                  {moment(pbgactualdate).format("DD-MM-YYYY")}
+                </div>
+              ) : (
+                <DatePicker
+                  selected={pbgactualdate}
+                  onChange={(date) => setPbgactualdate(date)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6"
+                  dateFormat="dd-MM-yyyy"
+                />
+              )}
+            </div>
+
+            <div className="px-3">
+              <label htmlFor="pbgexpirydate" className="block mb-2 text-sm font-medium text-gray-900">
+                Performance BG Expiry date:
+              </label>
+              {gendata?.bgdata?.pbgexpirydate ? (
+                <div className={savedFieldStyle}>
+                  {moment(pbgexpirydate).format("DD-MM-YYYY")}
+                </div>
+              ) : (
+                <DatePicker
+                  selected={pbgexpirydate}
+                  onChange={(date) => setPbgexpirydate(date)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6"
+                  dateFormat="dd-MM-yyyy"
+                />
+              )}
+            </div>
+          </div>
+
+          {/* BG Returns Section */}
+          <div className="flex-1 shadow-xl px-3 bg-sky-100/70">
+            <div className="px-3">
+              <label htmlFor="abgreturneddate" className="block mb-2 text-sm font-medium text-gray-900">
                 ABG returned/extinguished date:
               </label>
-
               {gendata?.bgdata?.abgreturneddate ? (
                 <div className={savedFieldStyle}>
                   {moment(abgreturneddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
                 <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   selected={abgreturneddate}
                   onChange={(date) => setAbgreturneddate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6"
+                  dateFormat="dd-MM-yyyy"
                 />
               )}
+            </div>
 
-              <label
-                htmlFor="pbgreturneddate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+            <div className="px-3">
+              <label htmlFor="pbgreturneddate" className="block mb-2 text-sm font-medium text-gray-900">
                 PBG returned/extinguished date:
               </label>
-
               {gendata?.bgdata?.pbgreturneddate ? (
                 <div className={savedFieldStyle}>
                   {moment(pbgreturneddate).format("DD-MM-YYYY")}
                 </div>
               ) : (
                 <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   selected={pbgreturneddate}
                   onChange={(date) => setPbgreturneddate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6"
+                  dateFormat="dd-MM-yyyy"
                 />
               )}
+            </div>
 
-              <label
-                htmlFor="bgremarks"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+            <div className="px-3">
+              <label htmlFor="bgremarks" className="block mb-2 text-sm font-medium text-gray-900">
                 Remarks on BG's:
               </label>
-
               {gendata?.bgdata?.bgremarks ? (
-                <div className={savedFieldStyle}>
-                  {bgremarks}
-                </div>
+                <div className={savedFieldStyleWide}>{bgremarks}</div>
               ) : (
                 <input
                   type="text"
                   name="bgremarks"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pb-20 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  id="bgremarks"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pb-20 mb-6"
                   value={bgremarks}
                   onChange={(e) => setBgremarks(e.target.value)}
-                  placeholder="e.g....bank name which issued BG/ any free text comment by MM/finance"
+                  placeholder="e.g. bank name which issued BG/ any free text comment"
                 />
               )}
-            </div>
-            <button
-              type="submit"
-              onClick={!editGeneralData ? handleSubmitGendata : handleEditGendata}
-              className="absolute p-3 rounded-lg bg-sky-800/10 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3"
-              disabled={activeBlock === "generalData"}
-            >
-              {activeBlock === "generalData" ? "Saving..." : (!editGeneralData ? "Save" : "Edit")}
-            </button>
-
-            {/* Bonds / guarantees released back to supplier */}
-          </div>
-        )}
-
-        {/* L/C details */}
-
-        {lcflagged ? null : (
-          <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-44 pb-28 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
-            <div className="text-[14px] font-italic py-3 px-6  bg-purple-600 text-white">
-              <h3 className="justify-center align-middle">
-                {" "}
-                Letter of Credit
-                <br /> Data{" "}
-              </h3>
-              <br />
-
-              <input
-                  id="lctabchk"
-                  type="checkbox"
-                  onChange={(e) => setLctab(e.target.value)}
-                  value="not applicable"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  htmlFor="lctabchk"
-                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >
-                  Not Applicable
-                </label>
-            </div>
-
-            <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
-              <label
-                htmlFor="lcestopendate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                LC Open date estimated:{" "}
-              </label>
-
-              {gendata?.lcdata?.lcestopendate ? (
-                <div className={savedFieldStyleWide}>
-                  {moment(lcestopendate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={lcestopendate}
-                  onChange={(date) => setLcEstopendate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-
-              <label
-                htmlFor="lcincoterm"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                L C Incoterm:{" "}
-              </label>
-
-              {gendata?.lcdata?.lcincoterm ? (
-                <div className={savedFieldStyleWide}>
-                  {lcincoterm}
-                </div>
-              ) : (
-                <input
-                  type="text"
-                  id="lcincoterm"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="CIF/DDP/Ex-w..."
-                  value={lcincoterm}
-                  onChange={(e) => setLcincoterm(e.target.value)}
-                />
-              )}
-
-              <label
-                htmlFor="lcamount"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Enter L/C Amount
-              </label>
-
-              {gendata?.lcdata?.lcamount ? (
-                <div className={savedFieldStyleWide}>
-                  {lcamount}
-                </div>
-              ) : (
-                <input
-                  type="text"
-                  name="lcamount"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  id="lcamount"
-                  // pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
-                  value={lcamount}
-                  // data-type="currency"
-                  onChange={(e) => setLcamount(e.target.value)}
-                  placeholder="SAR500,000.00"
-                />
-              )}
-            </div>
-            <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
-              <label
-                htmlFor="lcdocuments"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                LC Documents:{" "}
-              </label>
-
-              {gendata?.lcdata?.lcdocuments ? (
-                <div className={savedFieldStyleWide}>
-                  {lcdocuments}
-                </div>
-              ) : (
-                <input
-                  type="text"
-                  id="lcdocuments"
-                  value={lcdocuments}
-                  onChange={(e) => setLcdocuments(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/4  p-2.5 pb-3 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Original Invoice/Bill of Lading/..."
-                />
-              )}
-
-              <label
-                htmlFor="lcdatadate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                LC data requested & received from supplier:
-              </label>
-
-              {gendata?.lcdata?.lcdatadate ? (
-                <div className={savedFieldStyleWide}>
-                  {moment(lcdatadate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={lcdatadate}
-                  onChange={(date) => setLcDatadate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-
-              <label
-                htmlFor="lcopeneddate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                LC opened date: (swift advice from bank)
-              </label>
-
-              {gendata?.lcdata?.lcopeneddate ? (
-                <div className={savedFieldStyleWide}>
-                  {moment(lcopeneddate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={lcopeneddate}
-                  popperPlacement="top-start"
-                  DayPickerInput-Overlay
-                  onChange={(date) => setLcOpeneddate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-            </div>
-
-            <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
-              <label
-                htmlFor="lcswift"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                LC Swift Number & Bank:
-              </label>
-
-              {gendata?.lcdata?.lcswift ? (
-                <div className={savedFieldStyleWide}>
-                  {lcswift}
-                </div>
-              ) : (
-                <input
-                  type="text"
-                  id="lcswift"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 pb-3 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Original Invoice/Bill of Lading/..."
-                  value={lcswift}
-                  onChange={(e) => setLcswift(e.target.value)}
-                />
-              )}
-
-              <label
-                htmlFor="lclastshipdate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                LC Last shipment date:
-              </label>
-
-              {gendata?.lcdata?.lclastshipdate ? (
-                <div className={savedFieldStyleWide}>
-                  {moment(lclastshipdate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={lclastshipdate}
-                  popperPlacement="top-start"
-                  onChange={(date) => setLcLastshipdate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-
-              <label
-                htmlFor="lcexpirydate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                LC Expiry Date:
-              </label>
-
-              {gendata?.lcdata?.lcexpirydate ? (
-                <div className={savedFieldStyleWide}>
-                  {moment(lcexpirydate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={lcexpirydate}
-                  popperPlacement="top-start"
-                  onChange={(date) => setLcExpirydate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-            </div>
-
-            <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
-              <label
-                htmlFor="lcremarks"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                LC Remarks
-              </label>
-
-              {gendata?.lcdata?.lcremarks ? (
-                <div className={savedFieldStyleWide}>
-                  {lcremarks}
-                </div>
-              ) : (
-                <input
-                  type="textarea"
-                  id="lcremarks"
-                  className="bg-gray-50 border border-gray-300 pb-64 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-1/2 p-2.5  mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Any free text remarks by JAL Fin / Proj/ MMD/..."
-                  value={lcremarks}
-                  onChange={(e) => setLcremarks(e.target.value)}
-                />
-              )}
-            </div>
-            <button
-              type="submit"
-              onClick={!editGeneralData ? handleSubmitGendata : handleEditGendata}
-              className="absolute p-3 rounded-lg bg-purple-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-2/3"
-              disabled={activeBlock === "generalData"}
-            >
-              {activeBlock === "generalData" ? "Saving..." : (!editGeneralData ? "Save" : "Edit")}
-            </button>
-          </div>
-        )}
-
-        {/* progress milestones */}
-
-        {testflagged ? null : (
-          <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
-            <div className="text-[14px] font-italic py-3 px-6  bg-fuchsia-600 text-white">
-              <h3 className="justify-center align-middle">
-                {" "}
-                Progress <br /> Milestones
-                <br /> Data
-              </h3>
-              <br />
-              <input
-                  id="testingtabchk"
-                  type="checkbox"
-                  onChange={(e) => setTesting(e.target.value)}
-                  value="not applicable"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  htmlFor="testingtabchk"
-                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >
-                  Not Applicable
-                </label>
-            </div>
-
-            <div className="flex-1 shadow-xl px-3 bg-fuchsia-100/70">
-              <label
-                htmlFor="mfgstart"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Actual Manufacturing start Date:
-              </label>
-
-              {gendata?.progressdata?.mfgstart ? (
-                <div className={savedFieldStyle}>
-                  {moment(mfgstart).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={mfgstart}
-                  onChange={(date) => setMfgstart(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-
-              <label
-                htmlFor="Fatdate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                FAT/Final inspection date:
-              </label>
-
-              {gendata?.progressdata?.Fatdate ? (
-                <div className={savedFieldStyle}>
-                  {moment(Fatdate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={Fatdate}
-                  onChange={(date) => setFatdate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-            </div>
-
-            <div className="flex-1 shadow-xl px-3 bg-fuchsia-100/70">
-              <label
-                htmlFor="Fatreportdate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                TPI /Final inspection report received date:
-              </label>
-
-              {gendata?.progressdata?.Fatreportdate ? (
-                <div className={savedFieldStyle}>
-                  {moment(Fatreportdate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={Fatreportdate}
-                  onChange={(date) => setFatreportdate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-
-              <label
-                htmlFor="Bldate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                B/L/ AWB booked date
-              </label>
-
-              {gendata?.progressdata?.Bldate ? (
-                <div className={savedFieldStyle}>
-                  {moment(Bldate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={Bldate}
-                  onChange={(date) => setBldate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-            </div>
-
-            <div className="flex-1 shadow-xl px-3 bg-fuchsia-100/70">
-              <label
-                htmlFor="vesselreacheddate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Flight/vessel reached date
-              </label>
-
-              {gendata?.progressdata?.vesselreacheddate ? (
-                <div className={savedFieldStyle}>
-                  {moment(vesselreacheddate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={vesselreacheddate}
-                  onChange={(date) => setVesselreacheddate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-
-              <label
-                htmlFor="customscleareddate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Customs cleared/ Bayyan paid date
-              </label>
-
-              {gendata?.progressdata?.customscleareddate ? (
-                <div className={savedFieldStyle}>
-                  {moment(customscleareddate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={customscleareddate}
-                  onChange={(date) => setCustomscleareddate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-            </div>
-            <button
-              type="submit"
-              onClick={!editGeneralData ? handleSubmitGendata : handleEditGendata}
-              className="absolute p-3 rounded-lg bg-fuchsia-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"
-              disabled={activeBlock === "generalData"}
-            >
-              {activeBlock === "generalData" ? "Saving..." : (!editGeneralData ? "Save" : "Edit")}
-            </button>
-          </div>
-        )}
-
-        {/* Packing & Shipment details */}
-
-        {shipflagged ? null : (
-          <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
-            <div className="text-[14px] font-italic py-3 px-6  bg-amber-600 text-white">
-              <h3 className="justify-center align-middle">
-                {" "}
-                Packing & <br /> Shipment <br /> Related <br /> Data (for
-                Ex-works only)
-              </h3>
-
-              <br /> 
-
-              <input
-                  id="shiptabchk"
-                  type="checkbox"
-                  onChange={(e) => setShipping(e.target.value)}
-                  value="not applicable"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  htmlFor="shiptabchk"
-                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >
-                  Not Applicable
-                </label>
-            </div>
-
-            <div className="flex-1 shadow-xl px-3 bg-amber-100/70">
-              <label
-                htmlFor="dimensions"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Gross weight/dimensions (appx) in KG/Metric dimensions
-              </label>
-
-              {gendata?.shipdata?.grossweight ? (
-                <div className={savedFieldStyle}>
-                  {grossweight}
-                </div>
-              ) : (
-                <input
-                  type="text"
-                  id="dimensions"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 pb-3 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Gross weight (Kg) and dimensions (Metric)/..."
-                  value={grossweight}
-                  onChange={(e) => setGrossweight(e.target.value)}
-                />
-              )}
-
-              <label
-                htmlFor="shipmentbookedddate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Shipment is booked on:
-              </label>
-
-              {gendata?.shipdata?.shipmentbookeddate ? (
-                <div className={savedFieldStyle}>
-                  {moment(shipmentbookeddate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={shipmentbookeddate}
-                  onChange={(date) => setShipmentbookeddate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-            </div>
-
-            <div className="flex-1 shadow-xl px-3 bg-amber-100/70">
-              <label
-                htmlFor="saberapplieddate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                SABER applied on:
-              </label>
-
-              {gendata?.shipdata?.saberapplieddate ? (
-                <div className={savedFieldStyle}>
-                  {moment(saberapplieddate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={saberapplieddate}
-                  onChange={(date) => setSaberapplieddate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-
-              <label
-                htmlFor="saberreceiveddate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                SABER received on:
-              </label>
-
-              {gendata?.shipdata?.saberreceiveddate ? (
-                <div className={savedFieldStyle}>
-                  {moment(saberreceiveddate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={saberreceiveddate}
-                  onChange={(date) => setSaberreceiveddate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-            </div>
-
-            <div className="flex-1 shadow-xl px-3 bg-amber-100/70">
-              <label
-                htmlFor="ffnominateddate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Freight forwarder nominated on
-              </label>
-
-              {gendata?.shipdata?.ffnoMinateddate ? (
-                <div className={savedFieldStyle}>
-                  {moment(ffnoMinateddate).format("DD-MM-YYYY")}
-                </div>
-              ) : (
-                <DatePicker
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  selected={ffnoMinateddate}
-                  onChange={(date) => setFfnoMinateddate(date)}
-                  popperModifiers={[
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [5, 10],
-                      },
-                    },
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        rootBoundary: "viewport",
-                        tether: false,
-                        altAxis: true,
-                      },
-                    },
-                  ]}
-                />
-              )}
-
-              <label
-                htmlFor="finalremarks"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                FINAL REMARKS ON PO:
-              </label>
-
-              {gendata?.shipdata?.finalremarks ? (
-                <div className={savedFieldStyle}>
-                  {finalremarks}
-                </div>
-              ) : (
-                <input
-                  type="text"
-                  id="finalremarks"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pb-28 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="FINAL REMARKS IF ANY..."
-                  value={finalremarks}
-                  onChange={(e) => setFinalremarks(e.target.value)}
-                />
-              )}
-            </div>
-
-            <button
-              type="submit"
-              onClick={!editGeneralData ? handleSubmitGendata : handleEditGendata}
-              className="absolute p-3 rounded-lg bg-amber-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"
-              disabled={activeBlock === "generalData"}
-            >
-              {activeBlock === "generalData" ? "Saving..." : (!editGeneralData ? "Save" : "Edit")}
-            </button>
-          </div>
-        )}
-      </form>
-
-      <section className="container px-4 w-full mx-auto">
-        <div className="flex flex-col">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-              <div className="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-gray-200 dark:bg-gray-800">
-                    <tr className="font-bold text-[12px] ">
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
-                      >
-                        Material code/group
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
-                      >
-                        Material description
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left rtl:text-right text-gray-500 dark:text-gray-400"
-                      >
-                        Quantity
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
-                      >
-                        Unit
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
-                      >
-                        Unit rate/currency
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left rtl:text-right text-gray-800 dark:text-gray-400"
-                      >
-                        Item value
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
-                      >
-                        Pending qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
-                      >
-                        Pending Value
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5  text-left rtl:text-right text-gray-500 dark:text-gray-400"
-                      >
-                        Pending Inv Quantity
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3.5 text-left rtl:text-right text-gray-500 dark:text-gray-400"
-                      >
-                        Pending Inv value
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                    {poheader.map((row, index) => (
-                      <tr key={index}>
-                        <td className="px-4 py-4 text-[12px] font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                          {row.material["matcode"]}/{row.material["matgroup"]}
-                        </td>
-                        <td className="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                          {row.material["matdescription"]}
-                        </td>
-                        <td className="px-4 py-4 text-[12px] font-light text-right text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                          {row["po-quantity"].$numberDecimal}
-                        </td>
-                        <td className="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                          {row["po-unit-of-measure"]}
-                        </td>
-                        <td className="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                          {row["po-unit-price"].toLocaleString()}/{row.currency}
-                        </td>
-                        <td className="px-4 py-4 text-[12px] font-medium text-right text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                          {row["po-value-sar"].toLocaleString("en-US", {
-                            style: "currency",
-                            currency: "SAR",
-                          })}
-                        </td>
-                        <td className="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                          {row["pending-qty"].$numberDecimal}
-                        </td>
-                        <td className="px-4 py-4 text-[12px] font-light text-right text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                          {row["pending-val-sar"].toLocaleString("en-US", {
-                            style: "currency",
-                            currency: "SAR",
-                          })}
-                        </td>
-                        <td className="px-4 py-4 text-[12px] font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                          {row["pending-inv-qty"].$numberDecimal}
-                        </td>
-                        <td className="px-4 py-4 text-[12px] text-right font-light text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                          {row["pending-inv-val"].toLocaleString("en-US", {
-                            style: "currency",
-                            currency: "SAR",
-                          })}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={handleSubmitBgdata}
+            className="absolute p-3 rounded-lg bg-sky-800/10 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/3"
+            disabled={activeBlock === "bgData"}
+          >
+            {activeBlock === "bgData" ? "Saving..." : (editStates.bgData ? "Edit" : "Save")}
+          </button>
         </div>
-      </section>
+      )}
+
+      {/* L/C details */}
+
+      {lcflagged ? null : (
+        <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-44 pb-28 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
+          <div className="text-[14px] font-italic py-3 px-6  bg-purple-600 text-white">
+            <h3 className="justify-center align-middle">
+              {" "}
+              Letter of Credit
+              <br /> Data{" "}
+            </h3>
+            <br />
+
+            <input
+                id="lctabchk"
+                type="checkbox"
+                onChange={(e) => setLctab(e.target.value)}
+                value="not applicable"
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+              <label
+                htmlFor="lctabchk"
+                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Not Applicable
+              </label>
+          </div>
+
+          <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
+            <label
+              htmlFor="lcestopendate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              LC Open date estimated:{" "}
+            </label>
+
+            {gendata?.lcdata?.lcestopendate ? (
+              <div className={savedFieldStyleWide}>
+                {moment(lcestopendate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={lcestopendate}
+                onChange={(date) => setLcEstopendate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+
+            <label
+              htmlFor="lcincoterm"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              L C Incoterm:{" "}
+            </label>
+
+            {gendata?.lcdata?.lcincoterm ? (
+              <div className={savedFieldStyleWide}>
+                {lcincoterm}
+              </div>
+            ) : (
+              <input
+                type="text"
+                id="lcincoterm"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="CIF/DDP/Ex-w..."
+                value={lcincoterm}
+                onChange={(e) => setLcincoterm(e.target.value)}
+              />
+            )}
+
+            <label
+              htmlFor="lcamount"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Enter L/C Amount
+            </label>
+
+            {gendata?.lcdata?.lcamount ? (
+              <div className={savedFieldStyleWide}>
+                {lcamount}
+              </div>
+            ) : (
+              <input
+                type="text"
+                name="lcamount"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="lcamount"
+                // pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+                value={lcamount}
+                // data-type="currency"
+                onChange={(e) => setLcamount(e.target.value)}
+                placeholder="SAR500,000.00"
+              />
+            )}
+          </div>
+          <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
+            <label
+              htmlFor="lcdocuments"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              LC Documents:{" "}
+            </label>
+
+            {gendata?.lcdata?.lcdocuments ? (
+              <div className={savedFieldStyleWide}>
+                {lcdocuments}
+              </div>
+            ) : (
+              <input
+                type="text"
+                id="lcdocuments"
+                value={lcdocuments}
+                onChange={(e) => setLcdocuments(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/4  p-2.5 pb-3 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Original Invoice/Bill of Lading/..."
+              />
+            )}
+
+            <label
+              htmlFor="lcdatadate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              LC data requested & received from supplier:
+            </label>
+
+            {gendata?.lcdata?.lcdatadate ? (
+              <div className={savedFieldStyleWide}>
+                {moment(lcdatadate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={lcdatadate}
+                onChange={(date) => setLcDatadate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+
+            <label
+              htmlFor="lcopeneddate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              LC opened date: (swift advice from bank)
+            </label>
+
+            {gendata?.lcdata?.lcopeneddate ? (
+              <div className={savedFieldStyleWide}>
+                {moment(lcopeneddate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={lcopeneddate}
+                popperPlacement="top-start"
+                DayPickerInput-Overlay
+                onChange={(date) => setLcOpeneddate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+          </div>
+
+          <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
+            <label
+              htmlFor="lcswift"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              LC Swift Number & Bank:
+            </label>
+
+            {gendata?.lcdata?.lcswift ? (
+              <div className={savedFieldStyleWide}>
+                {lcswift}
+              </div>
+            ) : (
+              <input
+                type="text"
+                id="lcswift"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 pb-3 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Original Invoice/Bill of Lading/..."
+                value={lcswift}
+                onChange={(e) => setLcswift(e.target.value)}
+              />
+            )}
+
+            <label
+              htmlFor="lclastshipdate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              LC Last shipment date:
+            </label>
+
+            {gendata?.lcdata?.lclastshipdate ? (
+              <div className={savedFieldStyleWide}>
+                {moment(lclastshipdate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={lclastshipdate}
+                popperPlacement="top-start"
+                onChange={(date) => setLcLastshipdate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+
+            <label
+              htmlFor="lcexpirydate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              LC Expiry Date:
+            </label>
+
+            {gendata?.lcdata?.lcexpirydate ? (
+              <div className={savedFieldStyleWide}>
+                {moment(lcexpirydate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={lcexpirydate}
+                popperPlacement="top-start"
+                onChange={(date) => setLcExpirydate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+          </div>
+
+          <div className="flex-1 shadow-xl px-3 bg-purple-100/70">
+            <label
+              htmlFor="lcremarks"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              LC Remarks
+            </label>
+
+            {gendata?.lcdata?.lcremarks ? (
+              <div className={savedFieldStyleWide}>
+                {lcremarks}
+              </div>
+            ) : (
+              <input
+                type="textarea"
+                id="lcremarks"
+                className="bg-gray-50 border border-gray-300 pb-64 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-1/2 p-2.5  mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Any free text remarks by JAL Fin / Proj/ MMD/..."
+                value={lcremarks}
+                onChange={(e) => setLcremarks(e.target.value)}
+              />
+            )}
+          </div>
+          <button
+            type="submit"
+            onClick={!editStates.generalData ? handleSubmitGendata : handleEditGendata}
+            className="absolute p-3 rounded-lg bg-purple-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-2/3"
+            disabled={activeBlock === "generalData"}
+          >
+            {activeBlock === "generalData" ? "Saving..." : (editStates.generalData ? "Edit" : "Save")}
+          </button>
+        </div>
+      )}
+
+      {/* progress milestones */}
+
+      {testflagged ? null : (
+        <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
+          <div className="text-[14px] font-italic py-3 px-6  bg-fuchsia-600 text-white">
+            <h3 className="justify-center align-middle">
+              {" "}
+              Progress <br /> Milestones
+              <br /> Data
+            </h3>
+            <br />
+            <input
+                id="testingtabchk"
+                type="checkbox"
+                onChange={(e) => setTesting(e.target.value)}
+                value="not applicable"
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+              <label
+                htmlFor="testingtabchk"
+                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Not Applicable
+              </label>
+          </div>
+
+          <div className="flex-1 shadow-xl px-3 bg-fuchsia-100/70">
+            <label
+              htmlFor="mfgstart"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Actual Manufacturing start Date:
+            </label>
+
+            {gendata?.progressdata?.mfgstart ? (
+              <div className={savedFieldStyle}>
+                {moment(mfgstart).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={mfgstart}
+                onChange={(date) => setMfgstart(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+
+            <label
+              htmlFor="Fatdate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              FAT/Final inspection date:
+            </label>
+
+            {gendata?.progressdata?.Fatdate ? (
+              <div className={savedFieldStyle}>
+                {moment(Fatdate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={Fatdate}
+                onChange={(date) => setFatdate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+          </div>
+
+          <div className="flex-1 shadow-xl px-3 bg-fuchsia-100/70">
+            <label
+              htmlFor="Fatreportdate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              TPI /Final inspection report received date:
+            </label>
+
+            {gendata?.progressdata?.Fatreportdate ? (
+              <div className={savedFieldStyle}>
+                {moment(Fatreportdate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={Fatreportdate}
+                onChange={(date) => setFatreportdate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+
+            <label
+              htmlFor="Bldate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              B/L/ AWB booked date
+            </label>
+
+            {gendata?.progressdata?.Bldate ? (
+              <div className={savedFieldStyle}>
+                {moment(Bldate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={Bldate}
+                onChange={(date) => setBldate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+          </div>
+
+          <div className="flex-1 shadow-xl px-3 bg-fuchsia-100/70">
+            <label
+              htmlFor="vesselreacheddate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Flight/vessel reached date
+            </label>
+
+            {gendata?.progressdata?.vesselreacheddate ? (
+              <div className={savedFieldStyle}>
+                {moment(vesselreacheddate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={vesselreacheddate}
+                onChange={(date) => setVesselreacheddate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+
+            <label
+              htmlFor="customscleareddate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Customs cleared/ Bayyan paid date
+            </label>
+
+            {gendata?.progressdata?.customscleareddate ? (
+              <div className={savedFieldStyle}>
+                {moment(customscleareddate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={customscleareddate}
+                onChange={(date) => setCustomscleareddate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+          </div>
+          <button
+            type="submit"
+            onClick={!editStates.generalData ? handleSubmitGendata : handleEditGendata}
+            className="absolute p-3 rounded-lg bg-fuchsia-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"
+            disabled={activeBlock === "generalData"}
+          >
+            {activeBlock === "generalData" ? "Saving..." : (editStates.generalData ? "Edit" : "Save")}
+          </button>
+        </div>
+      )}
+
+      {/* Packing & Shipment details */}
+
+      {shipflagged ? null : (
+        <div className="relative py-6 mb-3 flex gap-1 overflow-hidden  border-y-2 border-slate-400 rounded-lg shadow-lg  m-9 pt-20 pb-20 dark:bg-gray-600 duration-300 ease-in-out transition-transform transform hover:-translate-y-2">
+          <div className="text-[14px] font-italic py-3 px-6  bg-amber-600 text-white">
+            <h3 className="justify-center align-middle">
+              {" "}
+              Packing & <br /> Shipment <br /> Related <br /> Data (for
+              Ex-works only)
+            </h3>
+
+            <br /> 
+
+            <input
+                id="shiptabchk"
+                type="checkbox"
+                onChange={(e) => setShipping(e.target.value)}
+                value="not applicable"
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+              <label
+                htmlFor="shiptabchk"
+                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Not Applicable
+              </label>
+          </div>
+
+          <div className="flex-1 shadow-xl px-3 bg-amber-100/70">
+            <label
+              htmlFor="dimensions"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Gross weight/dimensions (appx) in KG/Metric dimensions
+            </label>
+
+            {gendata?.shipdata?.grossweight ? (
+              <div className={savedFieldStyle}>
+                {grossweight}
+              </div>
+            ) : (
+              <input
+                type="text"
+                id="dimensions"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 pb-3 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Gross weight (Kg) and dimensions (Metric)/..."
+                value={grossweight}
+                onChange={(e) => setGrossweight(e.target.value)}
+              />
+            )}
+
+            <label
+              htmlFor="shipmentbookedddate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Shipment is booked on:
+            </label>
+
+            {gendata?.shipdata?.shipmentbookeddate ? (
+              <div className={savedFieldStyle}>
+                {moment(shipmentbookeddate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={shipmentbookeddate}
+                onChange={(date) => setShipmentbookeddate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+          </div>
+
+          <div className="flex-1 shadow-xl px-3 bg-amber-100/70">
+            <label
+              htmlFor="saberapplieddate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              SABER applied on:
+            </label>
+
+            {gendata?.shipdata?.saberapplieddate ? (
+              <div className={savedFieldStyle}>
+                {moment(saberapplieddate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={saberapplieddate}
+                onChange={(date) => setSaberapplieddate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+
+            <label
+              htmlFor="saberreceiveddate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              SABER received on:
+            </label>
+
+            {gendata?.shipdata?.saberreceiveddate ? (
+              <div className={savedFieldStyle}>
+                {moment(saberreceiveddate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={saberreceiveddate}
+                onChange={(date) => setSaberreceiveddate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+          </div>
+
+          <div className="flex-1 shadow-xl px-3 bg-amber-100/70">
+            <label
+              htmlFor="ffnominateddate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Freight forwarder nominated on
+            </label>
+
+            {gendata?.shipdata?.ffnoMinateddate ? (
+              <div className={savedFieldStyle}>
+                {moment(ffnoMinateddate).format("DD-MM-YYYY")}
+              </div>
+            ) : (
+              <DatePicker
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                selected={ffnoMinateddate}
+                onChange={(date) => setFfnoMinateddate(date)}
+                popperModifiers={[
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [5, 10],
+                    },
+                  },
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      rootBoundary: "viewport",
+                      tether: false,
+                      altAxis: true,
+                    },
+                  },
+                ]}
+              />
+            )}
+
+            <label
+              htmlFor="finalremarks"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              FINAL REMARKS ON PO:
+            </label>
+
+            {gendata?.shipdata?.finalremarks ? (
+              <div className={savedFieldStyle}>
+                {finalremarks}
+              </div>
+            ) : (
+              <input
+                type="text"
+                id="finalremarks"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pb-28 mb-6  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="FINAL REMARKS IF ANY..."
+                value={finalremarks}
+                onChange={(e) => setFinalremarks(e.target.value)}
+              />
+            )}
+          </div>
+
+          <button
+            type="submit"
+            onClick={!editStates.generalData ? handleSubmitGendata : handleEditGendata}
+            className="absolute p-3 rounded-lg bg-amber-800/30 shadow-lg shadow-slate-500 text-sm text-slate-800 font-bold right-5 top-1/2"
+            disabled={activeBlock === "generalData"}
+          >
+            {activeBlock === "generalData" ? "Saving..." : (editStates.generalData ? "Edit" : "Save")}
+          </button>
+        </div>
+      )}
     </>
   );
 }

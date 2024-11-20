@@ -13,37 +13,28 @@ const handler = async (req, res) => {
 
       case "POST":
       case "PUT": {
+        const section = req.body.section;
+        const formData = req.body.formData;
+        
+        // Create update object based on section
         const updateData = {
           ponumber: ponumber,
-          generaldata: {
-            poackdate: req.body.poackdate,
-            podelydate: req.body.podelydate,
-            estdelydate: req.body.estdelydate,
-            delysch: req.body.delysch,
-            basedesignapprdate: req.body.basedesignapprdate,
-            basedesigncomments: req.body.basedesigncomments,
-            generalcomments: req.body.generalcomments,
-            basedesignrecdate: req.body.basedesignrecdate,
-            mfgclearancedate: req.body.mfgclearancedate,
-            itpapprdate: req.body.itpapprdate,
-            detdesignrecdate: req.body.detdesignrecdate,
-            detdesignaprdate: req.body.detdesignaprdate,
-            grdate: req.body.grdate,
-            finalworkcompleteddate: req.body.finalworkcompleteddate,
-          },
+          [`${section}`]: formData
         };
 
         const result = await db.collection("poschedule").updateOne(
           { ponumber: ponumber },
           { $set: updateData },
-          { upsert: true } // This will update if exists, or insert if it doesn't
+          { upsert: true }
         );
 
-        if (result.upsertedCount > 0 || result.modifiedCount > 0) {
-          const updatedDocument = await db.collection("poschedule").findOne({ ponumber: ponumber });
-          return res.status(200).json(updatedDocument);
+        if (result.acknowledged) {
+          const updatedDoc = await db.collection("poschedule").findOne({ ponumber: ponumber });
+          console.log("Updated Document:", updatedDoc);
+          console.log("Update input:", updateData);
+          return res.status(200).json(updatedDoc);
         } else {
-          return res.status(404).json({ error: "Document not found and not inserted" });
+          return res.status(404).json({ error: "Update failed" });
         }
       }
 
@@ -51,7 +42,7 @@ const handler = async (req, res) => {
         return res.status(405).json({ error: "Method not allowed" });
     }
   } catch (error) {
-    console.error(error);
+    console.error("API Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
