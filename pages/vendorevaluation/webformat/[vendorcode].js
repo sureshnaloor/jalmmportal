@@ -7,25 +7,52 @@ function vendorevaluation() {
   const router = useRouter();
   const [evalmarks, setEvalmarks] = useState({});
   const [evalmarks2, setEvalmarks2] = useState({});
-  let vendorcode = router.query.vendorcode;
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Get vendorcode from router
+  const { vendorcode } = router.query;
 
   useEffect(() => {
-    (async () => {
-      const result = await fetch(`/api/vendorevaluation/${vendorcode}`);
-      const json = await result.json();
-      setEvalmarks(json);
-    })();
+    // Only fetch if vendorcode is available
+    if (!vendorcode) return;
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const [result1, result2] = await Promise.all([
+          fetch(`/api/vendorevaluation/${vendorcode}`),
+          fetch(`/api/vendors/vendorevalfixed/${vendorcode}`)
+        ]);
+
+        if (!result1.ok || !result2.ok) {
+          throw new Error('Failed to fetch vendor data');
+        }
+
+        const json1 = await result1.json();
+        const json2 = await result2.json();
+
+        setEvalmarks(json1);
+        setEvalmarks2(json2);
+      } catch (err) {
+        console.error('Error fetching vendor data:', err);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, [vendorcode]);
+
+  // Add loading and error states to the return
+  if (!vendorcode) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading vendor data...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   console.log(evalmarks);
-
-  useEffect(() => {
-    (async () => {
-      const result = await fetch(`/api/vendors/vendorevalfixed/${vendorcode}`);
-      const json = await result.json();
-      setEvalmarks2(json);
-    })();
-  }, [vendorcode]);
 
   console.log(evalmarks2);
   const fixedscoretext = [

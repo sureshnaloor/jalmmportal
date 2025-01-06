@@ -2,6 +2,8 @@ import { connectToDatabase } from "../../../../lib/mongoconnect";
 
 const handler = async (req, res) => {
   const { vendornumber } = req.query;
+  const { vendorcode } = req.query;
+  console.log('API called with vendorcode:', vendorcode);
   const { db } = await connectToDatabase();
   // console.log(matcode)
 

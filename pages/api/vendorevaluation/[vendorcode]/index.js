@@ -2,6 +2,8 @@ import { connectToDatabase } from "../../../../lib/mongoconnect";
 
 const handler = async (req, res) => {
   const { vendorcode } = req.query;
+  
+  console.log('API called with vendorcode:', vendorcode);
   // handle different methods
   try {
     switch (req.method) {
