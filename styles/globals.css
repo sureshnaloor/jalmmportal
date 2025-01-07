@@ -29,6 +29,19 @@
           transform: scale(0.99);
         }
       }
+      .section-content {
+        transition: all 0.3s ease-in-out;
+      }
+      
+      .section-content.collapsed {
+        max-height: 0;
+        overflow: hidden;
+      }
+      
+      .section-content.expanded {
+        max-height: 1000px;
+      }
+
 
     
 
