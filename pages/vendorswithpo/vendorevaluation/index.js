@@ -10,7 +10,7 @@ import Vendormatgroups from "../../../components/Vendordetailed/Vendormatgroups"
 import HeaderComponent from "../../../components/HeaderComponent";
 import Vendorevaluationpastyears from "../../../components/Vendordetailed/vendorevaluationpastyears";
 import VendorevalRemarks from "../../../components/Vendordetailed/VendorevalRemarks";
-import Vendorfreetext  from "../../../components/Vendordetailed/Vendorfreetext"
+// import Vendorfreetext  from "../../../components/Vendordetailed/Vendorfreetext"
 
 
 import Router, { useRouter } from "next/router";
@@ -48,7 +48,7 @@ function Vendorevaluationcomp() {
       <VendorevalRemarks vendornumber={vendornumber} /> 
 
       <Vendorcompletecontacts vendornumber={vendornumber} />
-      <Vendorfreetext vendornumber = {vendornumber} />
+      {/* <Vendorfreetext vendornumber = {vendornumber} /> */}
       
     </div>
   );

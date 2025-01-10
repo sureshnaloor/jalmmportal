@@ -52,9 +52,9 @@ function vendorevaluation() {
   if (isLoading) return <div>Loading vendor data...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  console.log(evalmarks);
+  // console.log(evalmarks);
 
-  console.log(evalmarks2);
+  // console.log(evalmarks2);
   const fixedscoretext = [
     "Quote submission",
     "Payment terms",

@@ -23,7 +23,7 @@ const handler = async (req, res) => {
           { vendorcode: vendornumber },
           {
             $set: {
-              fixedevalyear1: req.body,
+              fixedevalyear2024: req.body,
             },
           },
           { upsert: true }
