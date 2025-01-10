@@ -65,7 +65,7 @@ function vendorevaluation() {
 
   return (
     <>
-      <div className="relative w-[800px] h-[600px] mt-3 mx-auto bg-rose-50 shadow-md sm:rounded-lg">
+      <div className="relative w-[90%] h-[80%] mt-3 mx-auto bg-stone-100 shadow-md sm:rounded-lg">
         <a
           href="/vendorevaluation/webformat"
           className="absolute top-0 right-1 bg-blue-300 p-1 text-sm font-bold"
@@ -74,8 +74,8 @@ function vendorevaluation() {
           X{" "}
         </a>
         {/* summary scores */}
-        <div className="flex flex-col justify-center pb-3">
-          <h1 className="text-[14px] font-bold italic pb-3">
+        <div className="flex flex-col justify-center pb-3 align-middle text-center">
+          <h1 className="text-[14px] font-bold italic pb-3 mx-auto">
             Summary scores for evaluated Vendor code: {evalmarks?.vendorcode}
           </h1>
           <h1 className="font-Lato text-xs font-bold text-blue-900">

@@ -45,7 +45,7 @@ function Vendorevaluationcomp() {
       <Vendorevaluationyear2023 vendornumber={vendornumber} /> */}
       <Vendorevaluationyear2024 vendornumber={vendornumber} />
       <Vendorevaluationpastyears vendornumber = {vendornumber} />    
-      <VendorevalRemarks vendornumber={vendornumber} /> 
+      {/* <VendorevalRemarks vendornumber={vendornumber} />  */}
 
       <Vendorcompletecontacts vendornumber={vendornumber} />
       {/* <Vendorfreetext vendornumber = {vendornumber} /> */}

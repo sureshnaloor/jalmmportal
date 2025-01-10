@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function Vendorevaluationyear2023({ vendornumber }) {
+function Vendorevaluationyear2024({ vendornumber }) {
   const [purchaseorders, setPurchaseorders] = useState([]);
   const [numpo, setNumpo] = useState(0);
 
@@ -72,7 +72,7 @@ function Vendorevaluationyear2023({ vendornumber }) {
             <h3 className="bg-slate-100 px-6 pt-16 text-slate-900 shadow-md mr-3 shadow-zinc-500">
               {" "}
               <span className="font-bold text-[12px] font-Lato tracking-wide">
-                2023 Year PO wise evaluation{" "}
+                2024 Year PO wise evaluation{" "}
               </span>{" "}
               <br /> result for the vendor <br />{" "}
               <span className="font-bold tracking-wide">{vendornumber}</span>
@@ -550,7 +550,7 @@ function Vendorevaluationyear2023({ vendornumber }) {
                       };
 
                       await fetch(
-                        `/api/vendors/vendorevalyearly3/${vendornumber}`,
+                        `/api/vendors/vendorevalyearly4/${vendornumber}`,
                         {
                           method: "PUT",
                           body: JSON.stringify(body),
@@ -563,7 +563,7 @@ function Vendorevaluationyear2023({ vendornumber }) {
 
                       // console.log(powiserating)
                       toast.success(
-                        `The PO-wise rating for the year 2023 for the vendor ${vendornumber} is completed, thanks!`,
+                        `The PO-wise rating for the year 2024 for the vendor ${vendornumber} is completed, thanks!`,
                         {
                           position: toast.POSITION.TOP_RIGHT,
                         }
@@ -597,4 +597,4 @@ function Vendorevaluationyear2023({ vendornumber }) {
   );
 }
 
-export default Vendorevaluationyear2023;
+export default Vendorevaluationyear2024;
