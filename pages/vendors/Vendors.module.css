@@ -48,15 +48,49 @@
 
 .editForm {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
+  border-color: aqua;
+  border-width: 1px;
+  background-color: #f1f6f6;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .editForm h3 {
   margin-bottom: 20px;
 }
 
+.formGroup {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.formGroupTitle {
+  font-size: 1.1rem;
+  color: #495057;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+}
+
 .label {
-  margin-bottom: 10px;
+  font-size: 0.9rem;
+  color: #495057;
+  margin-bottom: 5px;
 }
 
 .inputField {
@@ -78,4 +112,17 @@
 
 .saveButton:hover {
   background-color: #45a049;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 1024px) {
+  .formGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
 }
