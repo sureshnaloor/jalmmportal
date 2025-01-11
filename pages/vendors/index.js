@@ -27,6 +27,7 @@ export default function VendorsPage() {
     companywebsite: ''
   });
   const [shouldFetch, setShouldFetch] = useState(false);
+  const [showNewVendorModal, setShowNewVendorModal] = useState(false);
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -103,6 +104,52 @@ export default function VendorsPage() {
       });
       setShouldFetch(!shouldFetch); // Trigger re-fetch
     }
+  };
+
+  const handleNewVendorSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/api/registeredvendors', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create vendor');
+      }
+
+      await fetchVendors(); // Refresh the list
+      setShowNewVendorModal(false); // Close the modal
+      resetForm(); // Clear the form
+    } catch (error) {
+      console.error('Error creating vendor:', error);
+      // You might want to show an error message to the user here
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      vendorname: '',
+      countrycode: '',
+      city: '',
+      address1: '',
+      address2: '',
+      pobox: '',
+      zipcode: '',
+      telephone1: '',
+      telephone2: '',
+      salesname: '',
+      salesemail: '',
+      salesmobile: '',
+      fax: '',
+      companyregistrationnumber: '',
+      companyemail: '',
+      vendorcode: '',
+      companywebsite: ''
+    });
   };
 
   return (
@@ -300,6 +347,91 @@ export default function VendorsPage() {
             </div>
             
             <button onClick={handleSave} className={styles.saveButton}>Save</button>
+          </div>
+        </div>
+      )}
+      {/* Add New Button */}
+      <button 
+        className={styles.addNewButton}
+        onClick={() => setShowNewVendorModal(true)}
+      >
+        +
+      </button>
+
+      {/* New Vendor Modal */}
+      {showNewVendorModal && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h2>Add New Vendor</h2>
+              <button 
+                className={styles.closeButton}
+                onClick={() => setShowNewVendorModal(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <form onSubmit={handleNewVendorSubmit}>
+              {/* Company Information Group */}
+              <div className={styles.formGroup}>
+                <h4 className={styles.formGroupTitle}>Company Information</h4>
+                <div className={styles.formGrid}>
+                  <div className={styles.formField}>
+                    <label className={styles.label}>Vendor Name</label>
+                    <input
+                      type="text"
+                      value={formData.vendorname}
+                      onChange={(e) => setFormData({ 
+                        ...formData, 
+                        vendorname: e.target.value 
+                      })}
+                      className={styles.input}
+                      required
+                    />
+                  </div>
+                  
+                  <div className={styles.formField}>
+                    <label className={styles.label}>Country Code</label>
+                    <input
+                      type="text"
+                      value={formData.countrycode}
+                      onChange={(e) => setFormData({ 
+                        ...formData, 
+                        countrycode: e.target.value 
+                      })}
+                      className={styles.input}
+                      required
+                    />
+                  </div>
+                  
+                  <div className={styles.formField}>
+                    <label className={styles.label}>City</label>
+                    <input
+                      type="text"
+                      value={formData.city}
+                      onChange={(e) => setFormData({ 
+                        ...formData, 
+                        city: e.target.value 
+                      })}
+                      className={styles.input}
+                      required
+                    />
+                  </div>
+
+                  {/* Add more fields following the same pattern */}
+                </div>
+              </div>
+
+              <div className={styles.formActions}>
+                <button 
+                  type="submit" 
+                  className={styles.submitButton}
+                >
+                  Save Vendor
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
