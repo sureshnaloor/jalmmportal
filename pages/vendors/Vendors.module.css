@@ -3,11 +3,10 @@
 }
 
 .searchInput {
-  margin-bottom: 20px;
-  padding: 10px;
-  width: 100%;
-  max-width: 400px;
-  border: 1px solid #ccc;
+  flex: 1;
+  margin-right: 20px;
+  padding: 8px;
+  border: 1px solid #ddd;
   border-radius: 4px;
 }
 
@@ -69,11 +68,13 @@
 }
 
 .formGroupTitle {
-  font-size: 1.1rem;
-  color: #495057;
+  font-size: 1rem;
+  color: #53a0ec;
   margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 2px solid #dee2e6;
+  text-align: center;
+  font-weight: semibold;
 }
 
 .formGrid {
@@ -88,17 +89,30 @@
 }
 
 .label {
-  font-size: 0.9rem;
+  font-size: 14px;
   color: #495057;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  font-weight: 500;
 }
 
-.inputField {
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.input {
   width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  background-color: white;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.input::placeholder {
+  color: #aaa;
 }
 
 .saveButton {
@@ -128,26 +142,21 @@
 }
 
 .addNewButton {
-  position: fixed;
-  right: 30px;
-  bottom: 30px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
   background-color: #dc3545;
   color: white;
+  width: 40px;
+  height: 40px;
   border: none;
+  border-radius: 50%;
   font-size: 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s, background-color 0.2s;
+  transition: background-color 0.2s;
 }
 
 .addNewButton:hover {
-  transform: scale(1.1);
   background-color: #c82333;
 }
 
@@ -193,4 +202,25 @@
 
 .closeButton:hover {
   color: #333;
+}
+
+.cancelButton {
+  background: #dc3545;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #eee3e3;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.cancelButton:hover {
+  color: #de8080;
+}
+
+.headerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }

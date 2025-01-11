@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useDebounce from '../../lib/useDebounce'; // Adjust the path as necessary
 import styles from './Vendors.module.css'; // Adjust the path as necessary
+import Link from 'next/link';
 
 export default function VendorsPage() {
   const [vendors, setVendors] = useState([]);
@@ -46,7 +47,7 @@ export default function VendorsPage() {
   const handleEdit = (vendor) => {
     setSelectedVendor(vendor);
     setFormData({
-      vendorname: vendor.vendorname,
+      vendorname: vendor.vendorname || '',
       countrycode: vendor.address?.countrycode || '',
       city: vendor.address?.city || '',
       address1: vendor.address?.address1 || '',
@@ -106,31 +107,8 @@ export default function VendorsPage() {
     }
   };
 
-  const handleNewVendorSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('/api/registeredvendors', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create vendor');
-      }
-
-      await fetchVendors(); // Refresh the list
-      setShowNewVendorModal(false); // Close the modal
-      resetForm(); // Clear the form
-    } catch (error) {
-      console.error('Error creating vendor:', error);
-      // You might want to show an error message to the user here
-    }
-  };
-
-  const resetForm = () => {
+  const handleNewVendor = () => {
+    setSelectedVendor(null);
     setFormData({
       vendorname: '',
       countrycode: '',
@@ -150,17 +128,71 @@ export default function VendorsPage() {
       vendorcode: '',
       companywebsite: ''
     });
+    setShowNewVendorModal(true);
+  };
+
+  const handleNewVendorSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const vendorData = {
+        vendorname: formData.vendorname,
+        address: {
+          countrycode: formData.countrycode,
+          city: formData.city,
+          address1: formData.address1,
+          address2: formData.address2,
+          pobox: formData.pobox,
+          zipcode: formData.zipcode
+        },
+        contact: {
+          telephone1: formData.telephone1,
+          telephone2: formData.telephone2,
+          salesname: formData.salesname,
+          salesemail: formData.salesemail,
+          salesmobile: formData.salesmobile,
+          fax: formData.fax
+        },
+        companyregistrationnumber: formData.companyregistrationnumber,
+        companyemail: formData.companyemail,
+        vendorcode: formData.vendorcode,
+        companywebsite: formData.companywebsite
+      };
+
+      const response = await fetch('/api/registeredvendors', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(vendorData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create vendor');
+      }
+
+      await fetchVendors(); // Refresh the list
+      setShowNewVendorModal(false); // Close the modal
+    } catch (error) {
+      console.error('Error creating vendor:', error);
+      alert('Error creating vendor');
+    }
   };
 
   return (
     <div className={styles.container}>
-      <input
-        type="text"
-        placeholder="Search vendors..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className={styles.searchInput}
-      />
+      <div className={styles.headerSection}>
+        <input
+          type="text"
+          placeholder="Search vendors..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className={styles.searchInput}
+        />
+        <Link href="/vendors/new">
+          <button className={styles.addNewButton}>+</button>
+        </Link>
+      </div>
+
       <table className={styles.table}>
         <thead>
           <tr>
@@ -215,7 +247,7 @@ export default function VendorsPage() {
       {selectedVendor && (
         <div className={styles.editFormContainer}>
           <div className={styles.editForm}>
-            <h3>Edit Vendor {selectedVendor.vendorname}</h3>
+            <h3 className="text-lg font-bold text-sky-800">Edit Vendor {selectedVendor.vendorname}</h3>
             
             {/* Company Information Group */}
             <div className={styles.formGroup}>
@@ -350,13 +382,12 @@ export default function VendorsPage() {
           </div>
         </div>
       )}
-      {/* Add New Button */}
-      <button 
-        className={styles.addNewButton}
-        onClick={() => setShowNewVendorModal(true)}
-      >
-        +
-      </button>
+      {/* Add New Button - Now outside any conditional rendering */}
+      {/* <Link href="/vendors/new">
+        <button className={styles.addNewButton}>
+          +
+        </button>
+      </Link> */}
 
       {/* New Vendor Modal */}
       {showNewVendorModal && (
@@ -364,7 +395,7 @@ export default function VendorsPage() {
           <div className={styles.modalContent}>
             <div className={styles.modalHeader}>
               <h2>Add New Vendor</h2>
-              <button 
+              <button Edit 
                 className={styles.closeButton}
                 onClick={() => setShowNewVendorModal(false)}
               >
