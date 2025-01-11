@@ -157,7 +157,7 @@ function HeaderComponent() {
 
           </div>
 
-          <Link href="/notyetqualifiedvendors">
+          <Link href="/vendors">
             <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
               Non SAP Vendors{" "}
             </a>
