@@ -1,0 +1,349 @@
+.container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 10px;
+  background-color: #eedddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.headerText {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.groupsSection,
+.subgroupsSection {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+.selectedRow {
+  background-color: #b7d0ed;
+  font-weight: 400;
+  font-size: 12px;
+  color: #333;
+}
+
+.groupName {
+  font-weight: 400;
+  font-size: 12px;
+  color: #333;
+}
+
+.groupDescription {
+  font-weight: 400;
+  font-size: 12px;
+  color: #333;
+}
+
+.groupType {
+  font-weight: 400;
+  font-size: 12px;
+  color: #333;
+}
+
+.subgroupName {
+  font-weight: 600;
+  font-size: 12px;
+  color: #e85b62;
+  text-transform: uppercase;
+
+}
+
+.subgroupDescription {
+  font-weight: 600;
+  font-size: 12px;
+  color: #967aeb;
+  text-transform: uppercase;
+}
+
+.newButton {
+  background-color: #0070f3;
+  color: white;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.editButton {
+  background-color: #2e7d32;
+  color: white;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 400;
+
+}
+
+.deleteButton {
+  background-color: #d32f2f;
+  color: white;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.formOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.formContainer {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.formField {
+  margin-bottom: 15px;
+}
+
+.formField label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.formField input,
+.formField select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.formActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.submitButton {
+  background-color: #0070f3;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancelButton {
+  background-color: #666;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submitButton:hover {
+  background-color: #0051a2;
+}
+
+.cancelButton:hover {
+  background-color: #555;
+}
+
+.sortButton {
+  background-color: #ff9800;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.sortButton:hover {
+  background-color: #e68900;
+}
+
+.formPage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f5f5f5;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 10px;
+  color: #666;
+}
+
+.closeButton:hover {
+  color: #000;
+}
+
+.formContent {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formField {
+  margin-bottom: 20px;
+}
+
+.formField label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.formField input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.formActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.submitButton,
+.cancelButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submitButton {
+  background-color: #0070f3;
+  color: white;
+}
+
+.cancelButton {
+  background-color: #666;
+  color: white;
+}
+
+.submitButton:hover {
+  background-color: #0051a2;
+}
+
+.cancelButton:hover {
+  background-color: #555;
+}
+
+.errorMessage {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border: 1px solid #ef9a9a;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-size: 16px;
+} 
