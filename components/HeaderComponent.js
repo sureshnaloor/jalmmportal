@@ -145,13 +145,13 @@ function HeaderComponent() {
           <div className="flex">
           <Link href="/vendorevaluation/pdfformat/pdfview">
             <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
-              Vendor evaluation-PDF
+              Vendor eval-PDF
             </a>
           </Link>
 
           <Link href="/vendorevaluation/webformat">
             <a className="text-[10px] mr-2 my-auto py-2 px-1 bg-amber-100  hover:bg-amber-50 dark:bg-zinc-600 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white  font-semibold">
-              Vendor evaluation-WEB
+              Vendor eval-WEB
             </a>
           </Link>
 
@@ -181,6 +181,22 @@ function HeaderComponent() {
           <a className="text-[10px] mr-2 my-auto  py-2 px-1 bg-amber-900 hover:bg-amber-800 dark:bg-zinc-600 text-gray-50 dark:text-white hover:text-white dark:hover:text-white font-sembold">
             {" "}
             Request new Matcode{" "}
+          </a>
+          {/* </div> */}
+        </Link>
+        <Link href="/vendors/group-mapping">
+          {/* <div className=" w-[64px] my-auto py-1 px-3 bg-slate-400 text-white"> */}
+          <a className="text-[10px] mr-2 my-auto  py-2 px-1 bg-amber-900 hover:bg-amber-800 dark:bg-zinc-600 text-gray-50 dark:text-white hover:text-white dark:hover:text-white font-sembold">
+            {" "}
+            Vendor(SAP) Group Mapping
+          </a>
+          {/* </div> */}
+        </Link>
+        <Link href="/material-groups">
+          {/* <div className=" w-[64px] my-auto py-1 px-3 bg-slate-400 text-white"> */}
+          <a className="text-[10px] mr-2 my-auto  py-2 px-1 bg-amber-900 hover:bg-amber-800 dark:bg-zinc-600 text-gray-50 dark:text-white hover:text-white dark:hover:text-white font-sembold">
+            {" "}
+            Material Groups
           </a>
           {/* </div> */}
         </Link>

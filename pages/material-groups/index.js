@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from './MaterialGroups.module.css';
+import HeaderComponent from '../../components/HeaderComponent';
 
 export default function MaterialGroupsPage() {
   const router = useRouter();
@@ -292,7 +293,10 @@ export default function MaterialGroupsPage() {
   }
 
   return (
+    <>
+    <HeaderComponent />
     <div className={styles.container}>
+      
       <div className={styles.header}>
         <h1 className={styles.headerText}>Material & Service Groups Management</h1>
         <div className={styles.actions}>
@@ -413,6 +417,7 @@ export default function MaterialGroupsPage() {
         </div>
       )}
     </div>
+    </>
   );
 }
 
