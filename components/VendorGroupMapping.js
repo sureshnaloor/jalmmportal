@@ -1,31 +1,41 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Select from 'react-select';
 
-export default function VendorGroupMapping({ vendorCode }) {
-  const [groups, setGroups] = useState([]);  //array of groups
-  const [selectedOptions, setSelectedOptions] = useState([]); //array of selected options
+export default function VendorGroupMapping({ vendorCode, vendorName }) {
+  const [groups, setGroups] = useState([]);
+  const [filteredOptions, setFilteredOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchFilter, setSearchFilter] = useState('');
+  const selectRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch groups with subgroups
         const groupsResponse = await fetch('/api/materialgroups');
         const groupsData = await groupsResponse.json();
 
+        // Fetch existing mappings for this vendor
         const mappingsResponse = await fetch(`/api/vendorgroupmap?vendorCode=${vendorCode}`);
         const mappingsData = await mappingsResponse.json();
 
+        // Create options for the select component
         const options = groupsData.flatMap(group => 
           group.subgroups.map(subgroup => ({
             value: subgroup._id,
-            label: `${group.name} - ${subgroup.name}${subgroup.description ? ` (${subgroup.description})` : ''}`,
+            label: `${group.name} - ${subgroup.name}`,
+            groupName: group.name,
+            subgroupName: subgroup.name,
             isService: group.isService
           }))
         );
 
         setGroups(options);
+        setFilteredOptions(options);
 
+        // Set initial selections based on existing mappings
         const initialSelections = options.filter(option => 
           mappingsData.some(mapping => mapping.subgroupId === option.value)
         );
@@ -41,6 +51,21 @@ export default function VendorGroupMapping({ vendorCode }) {
 
     fetchData();
   }, [vendorCode]);
+
+  // Filter options based on search term
+  useEffect(() => {
+    if (!searchFilter) {
+      setFilteredOptions(groups);
+      return;
+    }
+
+    const searchRegex = new RegExp(searchFilter, 'i');
+    const filtered = groups.filter(option => 
+      searchRegex.test(option.groupName) || 
+      searchRegex.test(option.subgroupName)
+    );
+    setFilteredOptions(filtered);
+  }, [searchFilter, groups]);
 
   const handleSubmit = async () => {
     try {
@@ -59,7 +84,6 @@ export default function VendorGroupMapping({ vendorCode }) {
         throw new Error('Failed to update mappings');
       }
 
-      // Even if selectedOptions is empty, consider it a successful update
       alert('Mappings updated successfully');
     } catch (err) {
       console.error(err);
@@ -115,31 +139,60 @@ export default function VendorGroupMapping({ vendorCode }) {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="p-4" style={{ position: 'relative' }}>
+    <div className="p-4">
       <h2 className="text-xl font-bold mb-4">
-        Material/Service Group Mapping for Vendor: {vendorCode}
+        Material/Service Group Mapping for Vendor: {vendorName} ({vendorCode})
       </h2>
       
-      <div className="mb-4" style={{ position: 'relative' }}>
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">
+          Filter Groups
+        </label>
+        <div className="relative w-1/4 mb-4">
+          <input
+            type="text"
+            value={searchFilter}
+            onChange={(e) => {
+              setSearchFilter(e.target.value);
+              if (selectRef.current) {
+                selectRef.current.setState({ menuIsOpen: true });
+              }
+            }}
+            placeholder="Search groups or subgroups..."
+            className="w-full p-2 pr-8 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          {searchFilter && (
+            <button
+              onClick={() => setSearchFilter('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              aria-label="Clear search"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </button>
+          )}
+        </div>
+        
         <label className="block text-sm font-medium mb-2">
           Select Material/Service Groups
         </label>
-        <div style={{ position: 'relative', minHeight: '50px' }}>
-          <Select
-            isMulti
-            options={groups}
-            value={selectedOptions}
-            onChange={setSelectedOptions}
-            className="w-full"
-            classNamePrefix="select"
-            placeholder="Select groups..."
-            groupBy={option => option.isService ? 'Services' : 'Materials'}
-            styles={customStyles}
-            menuPlacement="auto"
-            closeMenuOnSelect={false}
-            isClearable={true}
-          />
-        </div>
+        <Select
+          ref={selectRef}
+          isMulti
+          options={filteredOptions}
+          value={selectedOptions}
+          onChange={setSelectedOptions}
+          className="w-full"
+          classNamePrefix="select"
+          placeholder="Select groups..."
+          groupBy={option => option.isService ? 'Services' : 'Materials'}
+          styles={customStyles}
+          menuPlacement="auto"
+          closeMenuOnSelect={false}
+          isClearable={true}
+          menuIsOpen={searchFilter.length > 0}
+        />
       </div>
 
       <button

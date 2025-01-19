@@ -47,10 +47,8 @@ export default function VendorGroupMappingPage() {
   };
 
   const handleVendorSelect = (vendor) => {
-    setSelectedVendor(vendor["vendor-code"]);
-    setSearchTerm(vendor.name);
-    console.log(vendor["vendor-code"]);
-    console.log(selectedVendor);
+    setSelectedVendor(vendor);
+    setSearchTerm(vendor.vendorname);
     setVendors([]); // Clear search results
   };
 
@@ -70,17 +68,16 @@ export default function VendorGroupMappingPage() {
           className="w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
 
-        {/* Search Results Dropdown */}
         {vendors.length > 0 && (
           <div className="absolute z-50 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
             {vendors.map((vendor) => (
               <div
-                key={vendor.code}
+                key={vendor.vendorcode}
                 onClick={() => handleVendorSelect(vendor)}
                 className="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
               >
-                <div className="font-medium text-sm  text-black">Vendor: {vendor["vendor-name"]}</div>
-                <div className="text-sm text-gray-600">Code: {vendor["vendor-code"]}</div>
+                <div className="font-medium">{vendor.vendorname}</div>
+                <div className="text-sm text-gray-600">Code: {vendor.vendorcode}</div>
               </div>
             ))}
           </div>
@@ -96,7 +93,10 @@ export default function VendorGroupMappingPage() {
       {/* Mapping Component */}
       {selectedVendor && (
         <div className="mt-4">
-          <VendorGroupMapping vendorCode={selectedVendor} />
+          <VendorGroupMapping 
+            vendorCode={selectedVendor.vendorcode}
+            vendorName={selectedVendor.vendorname}
+          />
         </div>
       )}
 

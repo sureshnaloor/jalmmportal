@@ -7,6 +7,7 @@ export default async function handler(req, res) {
 
   try {
     const { term } = req.query;
+    console.log('Search term received:', term);
 
     if (!term) {
       return res.status(400).json({ error: 'Search term is required' });
@@ -21,18 +22,26 @@ export default async function handler(req, res) {
       .find({
         $or: [
           { 'vendor-name': searchRegex },
-          
+          { 'vendor-code': searchRegex }
         ]
       })
-      .limit(10) // Limit results to prevent overwhelming the UI
       .project({
         'vendor-name': 1,
         'vendor-code': 1,
         _id: 0
       })
+      .limit(10)
       .toArray();
 
-    return res.status(200).json(vendors);
+    // Transform the response to match the expected format in the frontend
+    const transformedVendors = vendors.map(vendor => ({
+      vendorname: vendor['vendor-name'],
+      vendorcode: vendor['vendor-code']
+    }));
+
+    console.log('Search results:', transformedVendors);
+
+    return res.status(200).json(transformedVendors);
   } catch (error) {
     console.error('Search error:', error);
     return res.status(500).json({ error: 'Failed to search vendors' });
