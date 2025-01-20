@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useDebounce from '../../lib/useDebounce'; // Adjust the path as necessary
 import styles from './Vendors.module.css'; // Adjust the path as necessary
 import Link from 'next/link';
+import Select from 'react-select';
 
 export default function VendorsPage() {
   const [vendors, setVendors] = useState([]);
@@ -29,6 +30,10 @@ export default function VendorsPage() {
   });
   const [shouldFetch, setShouldFetch] = useState(false);
   const [showNewVendorModal, setShowNewVendorModal] = useState(false);
+  const [groupSearchTerm, setGroupSearchTerm] = useState('');
+  const [availableGroups, setAvailableGroups] = useState([]);
+  const [selectedGroups, setSelectedGroups] = useState([]);
+  const selectRef = useRef(null);
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -46,6 +51,7 @@ export default function VendorsPage() {
 
   const handleEdit = (vendor) => {
     setSelectedVendor(vendor);
+    handleGroupMapping(vendor);
     setFormData({
       vendorname: vendor.vendorname || '',
       countrycode: vendor.address?.countrycode || '',
@@ -178,6 +184,53 @@ export default function VendorsPage() {
     }
   };
 
+  const handleGroupMapping = async (vendor) => {
+    try {
+      const groupsResponse = await fetch('/api/materialgroups');
+      const groupsData = await groupsResponse.json();
+
+      const options = groupsData.flatMap(group => 
+        group.subgroups.map(subgroup => ({
+          value: subgroup._id,
+          label: `${group.name} - ${subgroup.name}`,
+          isService: group.isService
+        }))
+      );
+      setAvailableGroups(options);
+
+      const mappingsResponse = await fetch(`/api/unregisteredvendorgroupmap?vendorName=${encodeURIComponent(vendor.vendorname)}`);
+      const mappingsData = await mappingsResponse.json();
+
+      const initialSelections = options.filter(option => 
+        mappingsData.some(mapping => mapping.subgroupId === option.value)
+      );
+      setSelectedGroups(initialSelections);
+    } catch (error) {
+      console.error('Error loading group mappings:', error);
+    }
+  };
+
+  const handleSaveGroupMappings = async () => {
+    try {
+      const response = await fetch('/api/unregisteredvendorgroupmap', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          vendorName: selectedVendor.vendorname,
+          subgroupIds: selectedGroups.map(group => group.value)
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to save mappings');
+      alert('Group mappings saved successfully');
+    } catch (error) {
+      console.error('Error saving mappings:', error);
+      alert('Failed to save group mappings');
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.headerSection}>
@@ -249,7 +302,6 @@ export default function VendorsPage() {
           <div className={styles.editForm}>
             <h3 className="text-lg font-bold text-sky-800">Edit Vendor {selectedVendor.vendorname}</h3>
             
-            {/* Company Information Group */}
             <div className={styles.formGroup}>
               <h4 className={styles.formGroupTitle}>Company Information</h4>
               <div className={styles.formGrid}>
@@ -323,7 +375,6 @@ export default function VendorsPage() {
               </div>
             </div>
 
-            {/* You can continue with other groups following the same pattern */}
             <div className={styles.formGroup}>
               <h4 className={styles.formGroupTitle}>Contact Information</h4>
               <div className={styles.formGrid}>
@@ -378,18 +429,67 @@ export default function VendorsPage() {
               </div>
             </div>
             
+            <div className={styles.formGroup}>
+              <h4 className={styles.formGroupTitle}>Material/Service Group Mapping</h4>
+              <div className="mb-4">
+                <div className="relative w-1/4 mb-4">
+                  <input
+                    type="text"
+                    value={groupSearchTerm}
+                    onChange={(e) => {
+                      setGroupSearchTerm(e.target.value);
+                      if (selectRef.current) {
+                        selectRef.current.setState({ menuIsOpen: true });
+                      }
+                    }}
+                    placeholder="Search groups..."
+                    className="w-full p-2 pr-8 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  {groupSearchTerm && (
+                    <button
+                      onClick={() => setGroupSearchTerm('')}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+
+                <Select
+                  ref={selectRef}
+                  isMulti
+                  options={availableGroups.filter(option => 
+                    !groupSearchTerm || 
+                    option.label.toLowerCase().includes(groupSearchTerm.toLowerCase())
+                  )}
+                  value={selectedGroups}
+                  onChange={setSelectedGroups}
+                  className="w-full"
+                  classNamePrefix="select"
+                  placeholder="Select groups..."
+                  groupBy={option => option.isService ? 'Services' : 'Materials'}
+                  menuPlacement="auto"
+                  closeMenuOnSelect={false}
+                  isClearable={true}
+                  menuIsOpen={groupSearchTerm.length > 0}
+                />
+              </div>
+
+              <button
+                onClick={handleSaveGroupMappings}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                Save Group Mappings
+              </button>
+            </div>
+
             <button onClick={handleSave} className={styles.saveButton}>Save</button>
           </div>
         </div>
       )}
-      {/* Add New Button - Now outside any conditional rendering */}
-      {/* <Link href="/vendors/new">
-        <button className={styles.addNewButton}>
-          +
-        </button>
-      </Link> */}
 
-      {/* New Vendor Modal */}
       {showNewVendorModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
@@ -404,7 +504,6 @@ export default function VendorsPage() {
             </div>
 
             <form onSubmit={handleNewVendorSubmit}>
-              {/* Company Information Group */}
               <div className={styles.formGroup}>
                 <h4 className={styles.formGroupTitle}>Company Information</h4>
                 <div className={styles.formGrid}>
@@ -449,8 +548,6 @@ export default function VendorsPage() {
                       required
                     />
                   </div>
-
-                  {/* Add more fields following the same pattern */}
                 </div>
               </div>
 
