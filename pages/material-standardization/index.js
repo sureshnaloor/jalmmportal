@@ -5,8 +5,9 @@ import { OpenAI } from 'openai';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
-  apiKey: "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",
-  dangerouslyAllowBrowser: true 
+//  
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+dangerouslyAllowBrowser: true 
 });
 
 export default function MaterialStandardizationPage() {
@@ -36,6 +37,9 @@ export default function MaterialStandardizationPage() {
     { input: '', output: '' }  // Initial empty transformation
   ]);
 
+  // Add new state for visible results
+  const [visibleResults, setVisibleResults] = useState([]);
+
   // Function to add new transformation
   const addTransformation = () => {
     setTransformations([...transformations, { input: '', output: '' }]);
@@ -61,7 +65,7 @@ export default function MaterialStandardizationPage() {
 
   const processDescriptionWithAI = async (material) => {
     try {
-      const originalDesc = material.Description || material.description || material.DESCRIPTION || Object.values(material)[0];
+      const originalDesc = material.Description || material.description || material.DESCRIPTION || Object.values(material)[1];
       
       // Create example transformations text from state
       const exampleTransformations = transformations
@@ -96,7 +100,7 @@ RULES:
 
 Now standardize the input description: "${originalDesc}"
 
-if more than 40 characters, output "OVERSIZED"
+if transformed description is more than 40 characters, output "OVERSIZED"
 if you are not finding either 'Secondary' and 'Tertiary' in the description or if you are not sure that the material can be standardized, output "UNCLEANSED"
 if primary characteristic is missing, output "CHARACTERISTIC_NOT_AVAILABLE"
 
@@ -182,13 +186,9 @@ Output only the standardized description or one of these keywords: CHARACTERISTI
     setProgress(0);
 
     Papa.parse(uploadedFile, {
-      header: true, // Make sure this is true to parse CSV with headers
+      header: true,
       skipEmptyLines: true,
       complete: async (results) => {
-        // Debug the parsed CSV data
-        console.log('Parsed CSV data:', results.data);
-        console.log('CSV Headers:', results.meta.fields);
-
         const processed = {
           standardized: [],
           oversized: [],
@@ -196,31 +196,33 @@ Output only the standardized description or one of these keywords: CHARACTERISTI
           characteristic_notavailable: []
         };
 
-        // Process in smaller batches
         const batchSize = 3;
+        setVisibleResults([]); // Reset visible results
 
         for (let i = 0; i < results.data.length; i += batchSize) {
           const batch = results.data.slice(i, i + batchSize);
-          console.log('Processing batch:', batch);
           
           const batchPromises = batch.map(row => 
             processDescriptionWithAI(row)
           );
           
           const batchResults = await Promise.all(batchPromises);
+          
+          // Update processed results
           batchResults.forEach(({ type, material }) => {
             processed[type].push(material);
           });
 
+          // Update visible results with animation
+          setVisibleResults(prev => [...prev, ...batchResults]);
+          
           // Update progress
           const currentProgress = Math.round(((i + batchSize) / results.data.length) * 100);
           setProgress(Math.min(currentProgress, 100));
           setResults({...processed});
           
-          // Add delay between batches
-          if (i + batchSize < results.data.length) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-          }
+          // Wait for 1 second before next batch
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
         // Generate and download CSV files
@@ -231,7 +233,7 @@ Output only the standardized description or one of these keywords: CHARACTERISTI
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${type}_materials.csv`;
+            a.download = `${templateFields.primary.slice(0, 6)}_${type}_materials.csv`;
             a.click();
           }
         });
@@ -293,27 +295,27 @@ Output only the standardized description or one of these keywords: CHARACTERISTI
 
       {/* New transformations section */}
       <div className={styles.transformationsSection}>
-        <h2>Example Transformations</h2>
+        <h2 className="font-Lato text-[1rem] mb-2">Example Transformations</h2>
         <div className={styles.transformationsList}>
           {transformations.map((transformation, index) => (
             <div key={index} className={styles.transformationItem}>
               <div className={styles.transformationFields}>
                 <div className={styles.field}>
-                  <label>Input Example</label>
+                  <label className = "font-Lato text-[0.75rem] italic text-gray-500">Input Example</label>
                   <textarea
                     value={transformation.input}
                     onChange={(e) => updateTransformation(index, 'input', e.target.value)}
                     placeholder="e.g., spiral wound gasket, 2 inch 300#, ss316"
-                    rows={2}
+                    rows={1}
                   />
                 </div>
                 <div className={styles.field}>
-                  <label>Output Example</label>
+                  <label className = "font-Lato text-[0.75rem] italic text-gray-500">Output Example</label>
                   <textarea
                     value={transformation.output}
                     onChange={(e) => updateTransformation(index, 'output', e.target.value)}
                     placeholder="e.g., GASKET 2&quot; 300# SW SS316"
-                    rows={2}
+                    rows={1}
                   />
                 </div>
               </div>
@@ -330,13 +332,13 @@ Output only the standardized description or one of these keywords: CHARACTERISTI
             onClick={addTransformation}
             className={styles.addButton}
           >
-            + Add Example
+            + <br /> A <br /> D <br /> D
           </button>
         </div>
       </div>
 
       <div className={styles.uploadSection}>
-        <h2>Upload Materials File</h2>
+        <h2 className = "font-Lato text-[1rem] mb-2 text-gray-800 font-bold">Upload Raw/to cleanse Materials File</h2>
         <input
           type="file"
           accept=".csv"
@@ -363,28 +365,51 @@ Output only the standardized description or one of these keywords: CHARACTERISTI
         </div>
       )}
 
-      {Object.entries(results).map(([type, materials]) => (
-        materials.length > 0 && (
-          <div key={type} className={styles.resultSection}>
-            <h3>
-              {type === 'characteristic_notavailable' 
-                ? 'Missing Primary Characteristic' 
-                : type.charAt(0).toUpperCase() + type.slice(1) + ' Materials'}
-            </h3>
-            <p>Count: {materials.length}</p>
-            <div className={styles.preview}>
-              {materials.slice(0, 3).map((material, index) => (
-                <div key={index} className={styles.previewItem}>
-                  <p>Original: {material.originalDescription}</p>
-                  {material.standardDescription && (
-                    <p>Standardized: {material.standardDescription}</p>
-                  )}
-                </div>
-              ))}
+      <div className={styles.resultsContainer}>
+        <table className={styles.resultsTable}>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Original Description</th>
+              <th>Standardized Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {visibleResults.map((result, index) => (
+              <tr 
+                key={index}
+                className={`${styles.resultRow} ${styles.fadeIn}`}
+              >
+                <td className={styles.statusCell}>
+                  {result.type === 'characteristic_notavailable' 
+                    ? 'Primary Char Not Available'
+                    : result.type.charAt(0).toUpperCase() + result.type.slice(1)}
+                </td>
+                <td>{result.material.originalDescription}</td>
+                <td>{result.material.standardDescription || '-'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Summary section at bottom */}
+      <div className={styles.summarySection}>
+        {Object.entries(results).map(([type, materials]) => (
+          materials.length > 0 && (
+            <div key={type} className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>
+                {type === 'characteristic_notavailable' 
+                  ? 'Missing Primary Characteristic'
+                  : type.charAt(0).toUpperCase() + type.slice(1)}
+              </span>
+              <span className={styles.summaryCount}>
+                Count: {materials.length}
+              </span>
             </div>
-          </div>
-        )
-      ))}
+          )
+        ))}
+      </div>
     </div>
   );
 }
