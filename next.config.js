@@ -9,6 +9,7 @@ const nextConfig = {
       allowFutureImage: true,
     },
   },
+  cssModules: true,
 }
 
 module.exports = nextConfig
