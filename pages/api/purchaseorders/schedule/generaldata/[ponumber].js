@@ -1,50 +1,188 @@
-import { connectToDatabase } from "../../../../../lib/mongoconnect";
+import getMongoClient from "../../../../../lib/mongodb";
 
-const handler = async (req, res) => {
+// Helper function to convert date strings to Date objects
+const convertDatesToObjects = (data) => {
+  if (!data) return data;
+  
+  const result = { ...data };
+  
+  // Convert dates in generaldata
+  if (result.generaldata) {
+    Object.keys(result.generaldata).forEach(key => {
+      if (result.generaldata[key] && typeof result.generaldata[key] === 'string' && !isNaN(Date.parse(result.generaldata[key]))) {
+        result.generaldata[key] = new Date(result.generaldata[key]);
+      }
+    });
+  }
+
+  // Convert dates in paymentdata
+  if (result.paymentdata) {
+    if (result.paymentdata.advancePayments) {
+      result.paymentdata.advancePayments = result.paymentdata.advancePayments.map(payment => {
+        if (!payment) return null;
+        return {
+          ...payment,
+          date: payment.date && !isNaN(Date.parse(payment.date)) ? new Date(payment.date) : null
+        };
+      }).filter(Boolean);
+    }
+    if (result.paymentdata.milestonePayments) {
+      result.paymentdata.milestonePayments = result.paymentdata.milestonePayments.map(payment => {
+        if (!payment) return null;
+        return {
+          ...payment,
+          date: payment.date && !isNaN(Date.parse(payment.date)) ? new Date(payment.date) : null
+        };
+      }).filter(Boolean);
+    }
+    if (result.paymentdata.finalPayment) {
+      result.paymentdata.finalPayment = {
+        ...result.paymentdata.finalPayment,
+        date: result.paymentdata.finalPayment.date && !isNaN(Date.parse(result.paymentdata.finalPayment.date)) 
+          ? new Date(result.paymentdata.finalPayment.date) 
+          : null
+      };
+    }
+  }
+
+  // Convert dates in bgdata (excluding numeric fields)
+  if (result.bgdata) {
+    const numericFields = ['abgamount', 'pbgamount']; // Fields that should remain as numbers
+    Object.keys(result.bgdata).forEach(key => {
+      if (!numericFields.includes(key) && result.bgdata[key] && typeof result.bgdata[key] === 'string' && !isNaN(Date.parse(result.bgdata[key]))) {
+        result.bgdata[key] = new Date(result.bgdata[key]);
+      }
+    });
+  }
+
+  // Convert dates in lcdata
+  if (result.lcdata) {
+    Object.keys(result.lcdata).forEach(key => {
+      if (result.lcdata[key] && typeof result.lcdata[key] === 'string' && !isNaN(Date.parse(result.lcdata[key]))) {
+        result.lcdata[key] = new Date(result.lcdata[key]);
+      }
+    });
+  }
+
+  // Convert dates in progressdata
+  if (result.progressdata) {
+    Object.keys(result.progressdata).forEach(key => {
+      if (result.progressdata[key] && typeof result.progressdata[key] === 'string' && !isNaN(Date.parse(result.progressdata[key]))) {
+        result.progressdata[key] = new Date(result.progressdata[key]);
+      }
+    });
+  }
+
+  // Convert dates in shipdata
+  if (result.shipdata) {
+    Object.keys(result.shipdata).forEach(key => {
+      if (result.shipdata[key] && typeof result.shipdata[key] === 'string' && !isNaN(Date.parse(result.shipdata[key]))) {
+        result.shipdata[key] = new Date(result.shipdata[key]);
+      }
+    });
+  }
+
+  return result;
+};
+
+export default async function handler(req, res) {
   const { ponumber } = req.query;
-  const { db } = await connectToDatabase();
+  const { method } = req;
+
+  console.log('API Request:', { method, ponumber });
+
+  // Validate PO number
+  if (!ponumber || ponumber === 'undefined') {
+    console.error('Invalid PO number:', ponumber);
+    return res.status(400).json({ message: 'Invalid PO number' });
+  }
 
   try {
-    switch (req.method) {
-      case "GET": {
-        const result = await db.collection("poschedule").findOne({ ponumber: ponumber }) || {};
-        return res.json(result);
-      }
+    const db = await getMongoClient();
 
-      case "POST":
-      case "PUT": {
-        const section = req.body.section;
-        const formData = req.body.formData;
+    // List all collections
+    const collections = await db.listCollections().toArray();
+    console.log('Available collections:', collections.map(c => c.name));
+
+    switch (method) {
+      case 'GET':
+        console.log('Fetching schedule data for PO:', ponumber);
         
-        // Create update object based on section
-        const updateData = {
-          ponumber: ponumber,
-          [`${section}`]: formData
-        };
+        // Check if the collection exists
+        const collectionExists = collections.some(c => c.name === 'poschedule');
+        console.log('poschedule collection exists:', collectionExists);
 
-        const result = await db.collection("poschedule").updateOne(
-          { ponumber: ponumber },
-          { $set: updateData },
+        // Get count of documents in poschedule
+        if (collectionExists) {
+          const count = await db.collection('poschedule').countDocuments();
+          console.log('Number of documents in poschedule:', count);
+        }
+
+        const scheduleData = await db.collection('poschedule').findOne({ ponumber });
+        console.log('Found schedule data:', scheduleData);
+        
+        if (!scheduleData) {
+          console.log('No schedule data found for PO:', ponumber);
+          return res.status(404).json({ message: 'Schedule data not found' });
+        }
+
+        // Convert dates to ISO strings for JSON serialization
+        const serializedData = JSON.parse(JSON.stringify(scheduleData));
+        res.status(200).json(serializedData);
+        break;
+
+      case 'POST':
+        console.log('Received POST data:', req.body);
+        const {
+          generaldata,
+          paymentdata,
+          bgdata,
+          lcdata,
+          progressdata,
+          shipdata
+        } = req.body;
+
+        // Convert all date strings to Date objects before saving
+        const dataToSave = convertDatesToObjects({
+          generaldata,
+          paymentdata,
+          bgdata,
+          lcdata,
+          progressdata,
+          shipdata
+        });
+
+        console.log('Data to save:', dataToSave);
+
+        // Update or insert schedule data
+        const updateResult = await db.collection('poschedule').updateOne(
+          { ponumber },
+          {
+            $set: {
+              ponumber,
+              ...dataToSave,
+              updatedAt: new Date(),
+              updatedBy: req.body.user || 'System'
+            }
+          },
           { upsert: true }
         );
 
-        if (result.acknowledged) {
-          const updatedDoc = await db.collection("poschedule").findOne({ ponumber: ponumber });
-          console.log("Updated Document:", updatedDoc);
-          console.log("Update input:", updateData);
-          return res.status(200).json(updatedDoc);
-        } else {
-          return res.status(404).json({ error: "Update failed" });
-        }
-      }
+        console.log('Update result:', updateResult);
+
+        // Verify the saved data
+        const savedData = await db.collection('poschedule').findOne({ ponumber });
+        console.log('Saved data:', savedData);
+
+        res.status(200).json({ message: 'Schedule data updated successfully' });
+        break;
 
       default:
-        return res.status(405).json({ error: "Method not allowed" });
+        res.setHeader('Allow', ['GET', 'POST']);
+        res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (error) {
-    console.error("API Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error in schedule API:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-};
-
-export default handler;
+}
