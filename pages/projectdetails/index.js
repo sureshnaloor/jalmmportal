@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import {getSession} from 'next-auth/react'
 
 // import moment from 'moment'
-import HeaderComponent from "../../components/HeaderComponent";
+import HeaderNewComponent from "../../components/HeaderNewComponent";
 import FooterComponent from "../../components/FooterComponent";
 import Tablecomponent, {
   SelectColumnFilter,
@@ -104,7 +104,7 @@ function Projectdetails() {
   console.log(projectlist);
   return (
     <>
-      <HeaderComponent />
+      <HeaderNewComponent />
       <div className="min-h-screen bg-gray-50 text-gray-900 w-11/12 ml-9">
         <div className="mt-6">
           <p className="font-bold text-lg mb-3">

@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import {useSession} from 'next-auth/react';
-import Image from 'next/image'
+import Image from 'next/image';
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUserPlus,
+  faHome,
+  faSignInAlt,
+} from "@fortawesome/free-solid-svg-icons";
 
 
 function Loginpage() {
@@ -99,13 +106,35 @@ function Loginpage() {
             value={password}
           />
         </div>
-        <button
-          type="submit"
-          className="bg-sky-500 uppercase font-bold p-3 w-1/4 mx-auto"
-        >
-          {" "}
-          Login
-        </button>
+        <div className="flex flex-col gap-4 items-center mt-6">
+          <button
+            type="submit"
+            className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white uppercase font-bold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 transform hover:scale-105"
+          >
+            <FontAwesomeIcon icon={faSignInAlt} className="text-lg" />
+            Login
+          </button>
+          
+          <div className="mt-4 text-center">
+            <p className="text-sm text-gray-600 mb-3 font-medium">
+              New user? Please register to get started
+            </p>
+            <div className="flex gap-3 items-center justify-center">
+              <Link href="/auth/register" passHref legacyBehavior>
+                <a className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 transform hover:scale-105">
+                  <FontAwesomeIcon icon={faUserPlus} className="text-base" />
+                  Register
+                </a>
+              </Link>
+              <Link href="/" passHref legacyBehavior>
+                <a className="bg-gradient-to-r from-gray-500 to-slate-600 hover:from-gray-600 hover:to-slate-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 transform hover:scale-105">
+                  <FontAwesomeIcon icon={faHome} className="text-base" />
+                  Return to Home
+                </a>
+              </Link>
+            </div>
+          </div>
+        </div>
       </form>
       </div>
         <div>

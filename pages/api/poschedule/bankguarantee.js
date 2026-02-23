@@ -44,6 +44,26 @@ export default async function handler(req, res) {
           ])
         );
 
+        // Enforce date type for all date fields in bgdata
+        [
+          'abgestdate',
+          'abgactualdate',
+          'abgexpirydate',
+          'pbgestdate',
+          'pbgactualdate',
+          'pbgreturneddate',
+          'abgreturneddate',
+          'pbgexpirydate'
+        ].forEach(field => {
+          if (
+            cleanedBGData[field] &&
+            typeof cleanedBGData[field] === 'string'
+          ) {
+            const d = new Date(cleanedBGData[field]);
+            if (!isNaN(d)) cleanedBGData[field] = d;
+          }
+        });
+
         const result = await collection.updateOne(
           { ponumber },
           {

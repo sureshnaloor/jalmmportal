@@ -1,7 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import Select from 'react-select';
 
-export default function VendorGroupMapping({ vendorCode, vendorName }) {
+// Use unregisteredvendorgroupmap when: no SAP code (empty) or vendor-code is the same as name (name stored as code)
+function useUnregisteredVendorMap(vendorCode, vendorName) {
+  const name = (vendorName || '').trim();
+  if (vendorCode == null || String(vendorCode).trim() === '') return true;
+  if (name && String(vendorCode).trim() === name) return true; // name-as-code => unregistered
+  return false;
+}
+
+export default function VendorGroupMapping({ vendorCode, vendorName, onSaveSuccess }) {
   const [groups, setGroups] = useState([]);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -10,19 +18,51 @@ export default function VendorGroupMapping({ vendorCode, vendorName }) {
   const [searchFilter, setSearchFilter] = useState('');
   const selectRef = useRef(null);
 
+  const useUnregistered = useUnregisteredVendorMap(vendorCode, vendorName);
+  const effectiveVendorName = (vendorName || '').trim();
+
   useEffect(() => {
     const fetchData = async () => {
+      setError(null);
       try {
         // Fetch groups with subgroups
         const groupsResponse = await fetch('/api/materialgroups');
         const groupsData = await groupsResponse.json();
 
-        // Fetch existing mappings for this vendor
-        const mappingsResponse = await fetch(`/api/vendorgroupmap?vendorCode=${vendorCode}`);
-        const mappingsData = await mappingsResponse.json();
+        if (useUnregistered) {
+          if (!effectiveVendorName) {
+            setGroups([]);
+            setFilteredOptions([]);
+            setSelectedOptions([]);
+            setError('Vendor name is required for vendors without SAP code.');
+            setIsLoading(false);
+            return;
+          }
+          const mappingsResponse = await fetch(`/api/unregisteredvendorgroupmap?vendorName=${encodeURIComponent(effectiveVendorName)}`);
+          const mappingsData = await mappingsResponse.json();
+          const options = groupsData.flatMap(group =>
+            group.subgroups.map(subgroup => ({
+              value: subgroup._id,
+              label: `${group.name} - ${subgroup.name}`,
+              groupName: group.name,
+              subgroupName: subgroup.name,
+              isService: group.isService
+            }))
+          );
+          setGroups(options);
+          setFilteredOptions(options);
+          const initialSelections = options.filter(option =>
+            mappingsData.some(mapping => String(mapping.subgroupId) === String(option.value))
+          );
+          setSelectedOptions(initialSelections);
+          setIsLoading(false);
+          return;
+        }
 
-        // Create options for the select component
-        const options = groupsData.flatMap(group => 
+        // Registered vendor (SAP code): use vendorgroupmap
+        const mappingsResponse = await fetch(`/api/vendorgroupmap?vendorCode=${encodeURIComponent(vendorCode)}`);
+        const mappingsData = await mappingsResponse.json();
+        const options = groupsData.flatMap(group =>
           group.subgroups.map(subgroup => ({
             value: subgroup._id,
             label: `${group.name} - ${subgroup.name}`,
@@ -31,16 +71,12 @@ export default function VendorGroupMapping({ vendorCode, vendorName }) {
             isService: group.isService
           }))
         );
-
         setGroups(options);
         setFilteredOptions(options);
-
-        // Set initial selections based on existing mappings
-        const initialSelections = options.filter(option => 
-          mappingsData.some(mapping => mapping.subgroupId === option.value)
+        const initialSelections = options.filter(option =>
+          mappingsData.some(mapping => String(mapping.subgroupId) === String(option.value))
         );
         setSelectedOptions(initialSelections);
-
       } catch (err) {
         setError('Failed to load data');
         console.error(err);
@@ -50,7 +86,7 @@ export default function VendorGroupMapping({ vendorCode, vendorName }) {
     };
 
     fetchData();
-  }, [vendorCode]);
+  }, [vendorCode, vendorName, useUnregistered, effectiveVendorName]);
 
   // Filter options based on search term
   useEffect(() => {
@@ -69,6 +105,27 @@ export default function VendorGroupMapping({ vendorCode, vendorName }) {
 
   const handleSubmit = async () => {
     try {
+      if (useUnregistered) {
+        if (!effectiveVendorName) {
+          alert('Vendor name is required to save mappings for vendors without SAP code.');
+          return;
+        }
+        const response = await fetch('/api/unregisteredvendorgroupmap', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            vendorName: effectiveVendorName,
+            subgroupIds: selectedOptions.map(option => option.value)
+          }),
+        });
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}));
+          throw new Error(data.error || 'Failed to update mappings');
+        }
+        alert('Mappings updated successfully');
+        if (typeof onSaveSuccess === 'function') onSaveSuccess();
+        return;
+      }
       const response = await fetch('/api/vendorgroupmap', {
         method: 'POST',
         headers: {
@@ -81,13 +138,15 @@ export default function VendorGroupMapping({ vendorCode, vendorName }) {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update mappings');
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to update mappings');
       }
 
       alert('Mappings updated successfully');
+      if (typeof onSaveSuccess === 'function') onSaveSuccess();
     } catch (err) {
       console.error(err);
-      alert('Failed to update mappings');
+      alert(err.message || 'Failed to update mappings');
     }
   };
 
@@ -141,7 +200,7 @@ export default function VendorGroupMapping({ vendorCode, vendorName }) {
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">
-        Material/Service Group Mapping for Vendor: {vendorName} ({vendorCode})
+        Material/Service Group Mapping for Vendor: {vendorName} ({useUnregistered ? 'No SAP code' : vendorCode})
       </h2>
       
       <div className="mb-4">

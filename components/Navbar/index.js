@@ -78,6 +78,7 @@ const Navbar = () => {
                 smooth={true}
                 offset={-70}
                 duration={900}
+                className="flex items-center"
               >
                 Help
                 <FontAwesomeIcon
@@ -96,6 +97,7 @@ const Navbar = () => {
                 smooth={true}
                 offset={-70}
                 duration={500}
+                className="flex items-center"
               >
                 About
                 <FontAwesomeIcon
@@ -114,13 +116,14 @@ const Navbar = () => {
                 smooth={true}
                 offset={-70}
                 duration={500}
+                className="flex items-center"
               >
                 Contact
                 <FontAwesomeIcon
                   icon={faAddressBook}
                   className="color-primary fa-thin ml-2"
                 />
-              </Link>{" "}
+              </Link>
             </li>
           </button>
         </nav>

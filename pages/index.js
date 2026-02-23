@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 // import Navbar from '../components/Navbar'
 
 import {getSession} from "next-auth/react"
-import HeaderComponent from "../components/HeaderComponent";
+import HeaderNewComponent from "../components/HeaderNewComponent";
 import Matgrouplist from "../components/Matgrouplist";
 
 import FeaturesComponent from "../components/FeaturesComponent";
@@ -37,7 +37,7 @@ function Home() {
       </Head>
 
       <div>
-        <HeaderComponent />
+        <HeaderNewComponent />
         {/* <NavigationbetterComponent />  */}
       </div>
       <div className="flex w-full justify-between">

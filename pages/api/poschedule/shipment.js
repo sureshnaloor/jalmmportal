@@ -44,6 +44,22 @@ export default async function handler(req, res) {
           ])
         );
 
+        // Enforce date type for all date fields in shipdata
+        [
+          'shipmentbookeddate',
+          'saberapplieddate',
+          'saberreceiveddate',
+          'ffnoMinateddate'
+        ].forEach(field => {
+          if (
+            cleanedShipData[field] &&
+            typeof cleanedShipData[field] === 'string'
+          ) {
+            const d = new Date(cleanedShipData[field]);
+            if (!isNaN(d)) cleanedShipData[field] = d;
+          }
+        });
+
         const result = await collection.updateOne(
           { ponumber },
           {

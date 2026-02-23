@@ -17,10 +17,11 @@ function Matgrouplist({ matgroups, _ }) {
             <div className="w-full sm:w-1/2 md:w-1/3 xl:w-1/6 px-3">
               <div className="bg-white dark:bg-zinc-300 rounded-lg overflow-hidden mb-3 flex flex-col justify-center p-3">
                 <Image
-                  width={"100%"}
-                  height={"100%"}
+                  width={300}
+                  height={200}
                   src="/images/civil.jpg"
                   alt="civil materials"
+                  className="w-full h-auto"
                 />
                 <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
                   <h3>
@@ -95,10 +96,11 @@ function Matgrouplist({ matgroups, _ }) {
             <div className="w-full sm:w-1/2 md:w-1/3 xl:w-1/6 px-3">
               <div className="bg-stone-300 rounded-lg overflow-hidden mb-3 flex flex-col justify-center p-3">
                 <Image
-                  width={"100%"}
-                  height={"100%"}
+                  width={300}
+                  height={200}
                   src="/images/electrical.jpg"
                   alt="electrical materials"
+                  className="w-full h-auto"
                 />
                 <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
                   <h3>
@@ -172,10 +174,11 @@ function Matgrouplist({ matgroups, _ }) {
             <div className="w-full sm:w-1/2 md:w-1/3 xl:w-1/6 px-3">
               <div className="bg-white dark:bg-zinc-300 rounded-lg overflow-hidden mb-3 flex flex-col justify-items-center p-3">
                 <Image
-                  width={"100"}
-                  height={"100"}
+                  width={300}
+                  height={200}
                   src="/images/mechanical.jpg"
                   alt="mechanical materials"
+                  className="w-full h-auto"
                 />
                 <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
                   <h3>

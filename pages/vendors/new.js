@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from './Vendors.module.css';
 
 export default function NewVendorPage() {
   const router = useRouter();
+  const [matchingVendors, setMatchingVendors] = useState([]);
   const [formData, setFormData] = useState({
     vendorname: '',
     countrycode: '',
@@ -72,6 +73,25 @@ export default function NewVendorPage() {
     }
   };
 
+  const handleVendorNameChange = async (e) => {
+    const value = e.target.value;
+    setFormData({ ...formData, vendorname: value });
+    
+    if (value.length >= 4) {
+      try {
+        const response = await fetch(`/api/registeredvendors?search=${encodeURIComponent(value)}`);
+        if (response.ok) {
+          const data = await response.json();
+          setMatchingVendors(data);
+        }
+      } catch (error) {
+        console.error('Error searching vendors:', error);
+      }
+    } else {
+      setMatchingVendors([]);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.editForm}>
@@ -88,10 +108,22 @@ export default function NewVendorPage() {
                   type="text"
                   placeholder="Enter vendor name"
                   value={formData.vendorname}
-                  onChange={(e) => setFormData({ ...formData, vendorname: e.target.value })}
+                  onChange={handleVendorNameChange}
                   className={styles.input}
                   required
                 />
+                {matchingVendors.length > 0 && (
+                  <div className={styles.matchingVendors}>
+                    <h4 className={styles.matchingVendorsTitle}>Matching Vendors:</h4>
+                    <ul className={styles.matchingVendorsList}>
+                      {matchingVendors.map((vendor) => (
+                        <li key={vendor._id} className={styles.matchingVendorItem}>
+                          {vendor.vendorname}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
               
               <div className={styles.formField}>

@@ -11,13 +11,18 @@ const handler = async (req, res) => {
           .aggregate([
                        
             {
-              $group: { _id: {
-                "po-number":"$po-number",
-                "plant": "$plant-code",
-                "vendorcode" : "$vendorcode",
-                "vendorname": "$vendorname",
-                
-              },  openvalue: { $sum: "$pending-val-sar"} },
+              $group: { 
+                _id: {
+                  "po-number":"$po-number",
+                  "plant": "$plant-code",
+                  "vendorcode" : "$vendorcode",
+                  "vendorname": "$vendorname"
+                },  
+                "po-date": { $first: "$po-date" },
+                "delivery-date": { $first: "$delivery-date" },
+                openvalue: { $sum: "$pending-val-sar"},
+                povalue: { $sum: "$po-value-sar" }
+              }
             },
             {
                 $match: {

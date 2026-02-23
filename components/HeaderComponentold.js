@@ -68,9 +68,9 @@ function HeaderComponent() {
         <div className="order-2  pl-3 py-1 flex w-full lg:w-6/8">
           <div className="bg-sky-100 p-3  text-[14px] cursor-pointer my-3 mr-3  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
             <Link href="/">
-              <a>
+              <a className="flex items-center">
                 Home
-                <span>
+                <span className="ml-1">
                   <FontAwesomeIcon
                     icon={faHomeUser}
                     className="text-blue-900 dark:text-yellow-300 fa-thin  text-[12px]"
@@ -82,7 +82,7 @@ function HeaderComponent() {
 
           <div className="bg-sky-100 p-3 cursor-pointer my-3 mr-3  text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
             <Link href="/materials">
-              <a>
+              <a className="flex items-center">
                 Materials
                 <FontAwesomeIcon
                   icon={faPeopleGroup}
@@ -93,7 +93,7 @@ function HeaderComponent() {
           </div>
           <div className="bg-sky-100 p-3 cursor-pointer my-3 mr-3 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
             <Link href="/projects">
-              <a>
+              <a className="flex items-center">
                 Projects
                 <FontAwesomeIcon
                   icon={faCircleQuestion}
@@ -105,7 +105,7 @@ function HeaderComponent() {
 
           <div className="bg-sky-100 p-3 my-3 cursor-pointer mr-3 text-gray-900 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white font-semibold">
             <Link href="/vendorpage">
-              <a>
+              <a className="flex items-center">
                 Vendors
                 <FontAwesomeIcon
                   icon={faAddressCard}

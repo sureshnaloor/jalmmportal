@@ -1,4 +1,4 @@
-import getMongoClient from "../../../../../lib/mongodb";
+import { connectToDatabase } from "../../../../../lib/mongoconnect";
 
 // Helper function to convert date strings to Date objects
 const convertDatesToObjects = (data) => {
@@ -17,31 +17,80 @@ const convertDatesToObjects = (data) => {
 
   // Convert dates in paymentdata
   if (result.paymentdata) {
-    if (result.paymentdata.advancePayments) {
-      result.paymentdata.advancePayments = result.paymentdata.advancePayments.map(payment => {
-        if (!payment) return null;
-        return {
-          ...payment,
-          date: payment.date && !isNaN(Date.parse(payment.date)) ? new Date(payment.date) : null
-        };
-      }).filter(Boolean);
-    }
-    if (result.paymentdata.milestonePayments) {
-      result.paymentdata.milestonePayments = result.paymentdata.milestonePayments.map(payment => {
-        if (!payment) return null;
-        return {
-          ...payment,
-          date: payment.date && !isNaN(Date.parse(payment.date)) ? new Date(payment.date) : null
-        };
-      }).filter(Boolean);
-    }
-    if (result.paymentdata.finalPayment) {
-      result.paymentdata.finalPayment = {
-        ...result.paymentdata.finalPayment,
-        date: result.paymentdata.finalPayment.date && !isNaN(Date.parse(result.paymentdata.finalPayment.date)) 
-          ? new Date(result.paymentdata.finalPayment.date) 
-          : null
+    // Handle old paymentdata structure (flat object) and convert to new structure
+    if (result.paymentdata.advpaiddate || result.paymentdata.advamountpaid || 
+        result.paymentdata.milestoneamountpaiddate || result.paymentdata.milestoneamountpaid ||
+        result.paymentdata.finalpaiddate || result.paymentdata.finalpaidamt) {
+      
+      // Convert old structure to new structure
+      const newPaymentData = {
+        advancePayments: [],
+        milestonePayments: [],
+        finalPayment: { date: null, amount: '', comments: '' }
       };
+
+      // Convert advance payment data
+      if (result.paymentdata.advpaiddate || result.paymentdata.advamountpaid) {
+        newPaymentData.advancePayments.push({
+          date: result.paymentdata.advpaiddate && !isNaN(Date.parse(result.paymentdata.advpaiddate)) 
+            ? new Date(result.paymentdata.advpaiddate) 
+            : null,
+          amount: result.paymentdata.advamountpaid || '',
+          id: 1
+        });
+      }
+
+      // Convert milestone payment data
+      if (result.paymentdata.milestoneamountpaiddate || result.paymentdata.milestoneamountpaid) {
+        newPaymentData.milestonePayments.push({
+          date: result.paymentdata.milestoneamountpaiddate && !isNaN(Date.parse(result.paymentdata.milestoneamountpaiddate)) 
+            ? new Date(result.paymentdata.milestoneamountpaiddate) 
+            : null,
+          amount: result.paymentdata.milestoneamountpaid || '',
+          id: 1
+        });
+      }
+
+      // Convert final payment data
+      if (result.paymentdata.finalpaiddate || result.paymentdata.finalpaidamt || result.paymentdata.finalcomments) {
+        newPaymentData.finalPayment = {
+          date: result.paymentdata.finalpaiddate && !isNaN(Date.parse(result.paymentdata.finalpaiddate)) 
+            ? new Date(result.paymentdata.finalpaiddate) 
+            : null,
+          amount: result.paymentdata.finalpaidamt || '',
+          comments: result.paymentdata.finalcomments || ''
+        };
+      }
+
+      result.paymentdata = newPaymentData;
+    } else {
+      // Handle new paymentdata structure (arrays and objects)
+      if (result.paymentdata.advancePayments) {
+        result.paymentdata.advancePayments = result.paymentdata.advancePayments.map(payment => {
+          if (!payment) return null;
+          return {
+            ...payment,
+            date: payment.date && !isNaN(Date.parse(payment.date)) ? new Date(payment.date) : null
+          };
+        }).filter(Boolean);
+      }
+      if (result.paymentdata.milestonePayments) {
+        result.paymentdata.milestonePayments = result.paymentdata.milestonePayments.map(payment => {
+          if (!payment) return null;
+          return {
+            ...payment,
+            date: payment.date && !isNaN(Date.parse(payment.date)) ? new Date(payment.date) : null
+          };
+        }).filter(Boolean);
+      }
+      if (result.paymentdata.finalPayment) {
+        result.paymentdata.finalPayment = {
+          ...result.paymentdata.finalPayment,
+          date: result.paymentdata.finalPayment.date && !isNaN(Date.parse(result.paymentdata.finalPayment.date)) 
+            ? new Date(result.paymentdata.finalPayment.date) 
+            : null
+        };
+      }
     }
   }
 
@@ -98,7 +147,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const db = await getMongoClient();
+    const { db } = await connectToDatabase();
 
     // List all collections
     const collections = await db.listCollections().toArray();

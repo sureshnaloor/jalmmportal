@@ -76,8 +76,8 @@ const PDF = () => {
           <Image
             className="min-w-full"
             src="/images/civil.jpg"
-            width={"1500px"}
-            height="900px"
+            width={1500}
+            height={900}
           />
         </View>
         <View style={styles.table}>

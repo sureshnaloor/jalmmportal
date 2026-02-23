@@ -44,6 +44,23 @@ export default async function handler(req, res) {
           ])
         );
 
+        // Enforce date type for all date fields in lcdata
+        [
+          'lcestopendate',
+          'lcopeneddate',
+          'lcdatadate',
+          'lclastshipdate',
+          'lcexpirydate'
+        ].forEach(field => {
+          if (
+            cleanedLCData[field] &&
+            typeof cleanedLCData[field] === 'string'
+          ) {
+            const d = new Date(cleanedLCData[field]);
+            if (!isNaN(d)) cleanedLCData[field] = d;
+          }
+        });
+
         const result = await collection.updateOne(
           { ponumber },
           {

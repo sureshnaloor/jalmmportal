@@ -74,6 +74,16 @@ function Pocomments() {
   }, []);
 
   console.log(comments);
+  // Debug: Log the date values to see what's being received
+  comments.forEach((comment, index) => {
+    console.log(`Comment ${index}:`, {
+      title: comment.title,
+      updatedBy: comment.updatedBy,
+      rawUpdatedAt: comment.updatedAt,
+      parsedDate: moment.utc(comment.updatedAt).local().format("DD-MM-YYYY HH:mm"),
+      originalFormat: moment(comment.updatedAt).format("DD-MM-YYYY HH:mm")
+    });
+  });
   return (
     <div>
       {/* <Navigationcomp />  */}
@@ -91,7 +101,7 @@ function Pocomments() {
                 <p className="col-span-8 text-[12px] font-Lato text-stone-900" dangerouslySetInnerHTML = {{__html: comment.comment}}></p>
                 <div className="col-span-2 text-[10px] font-semibold italic flex justify-end flex-col">
                 <h3 className="font-bold tracking-widest">{comment.updatedBy}</h3>
-                <h3 className="text-sky-900 tracking-widest">{moment(comment.updatedAt).format("DD-MM-YYYY hh:m")} </h3>
+                <h3 className="text-sky-900 tracking-widest">{moment.utc(comment.updatedAt).local().format("DD-MM-YYYY HH:mm")} </h3>
                 </div>
               
               </div>

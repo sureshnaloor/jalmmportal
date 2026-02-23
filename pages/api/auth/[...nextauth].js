@@ -2,8 +2,10 @@ import NextAuth from "next-auth";
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectToDatabase } from "../../../lib/mongoconnect";
+import bcrypt from "bcrypt";
 
-export default NextAuth({
+const authOptions = {
+  debug: process.env.NODE_ENV === 'development',
   //configure auth providers
   providers: [
     CredentialsProvider({
@@ -29,13 +31,29 @@ export default NextAuth({
           return null;
         }
 
-        if (user.password !== credentials.password) {
+        // Support both plaintext (legacy) and bcrypt-hashed passwords
+        const candidate = credentials.password || "";
+        const stored = user.password || "";
+
+        let isValid = false;
+        try {
+          // If stored looks like a bcrypt hash, try compare; otherwise will likely return false fast
+          isValid = await bcrypt.compare(candidate, stored);
+        } catch (err) {
+          isValid = false;
+        }
+
+        if (!isValid) {
+          // Fallback for legacy plaintext passwords
+          isValid = stored === candidate;
+        }
+
+        if (!isValid) {
           console.log("nor right credentials");
           return null;
-        } else {
-          // console.log({ credentials });
-          return user;
         }
+
+        return user;
       },
     }),
   ],
@@ -44,10 +62,8 @@ export default NextAuth({
   },
 
   session: {
-    jwt: {
-      encryption: true,
-      maxAge: 30 * 24 * 60,
-    },
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
   },
 
   callbacks: {
@@ -55,15 +71,24 @@ export default NextAuth({
       // Persist the OAuth access_token to the token right after signin
       if (user) {
         token.role = user.role;
+        token.email = user.email;
+        token.name = user.name;
       }
       return token;
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       // Send properties to the client, like an access_token from a provider.
-      session.user.role = token.role;
+      if (token) {
+        session.user.role = token.role;
+        session.user.email = token.email;
+        session.user.name = token.name;
+      }
       return session;
     },
   },
  
-  secret: process.env.NEXTAUTH_SECRET,
-});
+  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-development',
+};
+
+export default NextAuth(authOptions);
+export { authOptions };

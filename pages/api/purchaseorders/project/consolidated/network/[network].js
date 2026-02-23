@@ -11,27 +11,47 @@ const handler = async (req, res) => {
         
         const purchaseorders = await db
           .collection("purchaseorders")
-          .find({"account.network" : network, "account.wbs" : null}).toArray()
+          .find({
+            "account.network": network,
+            $or: [
+              { "account.wbs": { $exists: false } },
+              { "account.wbs": null }
+            ]
+          }).toArray()
+
+        console.log("Fetched purchaseorders for network", network, purchaseorders);
           
-          // const povalue = purchaseorders.reduce((total,current) => current["po-value-sar"] + total, 0)
-          // const balgrvalue = purchaseorders.reduce((total, current) => current["pending-val-sar"] + total, 0)
-          // return res.json({ponum:purchaseorders[0]["po-number"],povalue, balgrvalue})
+        // const povalue = purchaseorders.reduce((total,current) => current["po-value-sar"] + total, 0)
+        // const balgrvalue = purchaseorders.reduce((total, current) => current["pending-val-sar"] + total, 0)
+        // return res.json({ponum:purchaseorders[0]["po-number"],povalue, balgrvalue})
 
-          let result = []
+        let result = []
 
-          purchaseorders.reduce((res,value) => {
-            if (!res[value["po-number"]]){
-              res[value["po-number"]] = {ponum: value["po-number"], podate: value["po-date"], vendor: value["vendorname"], poval:0, balgrval:0}
-              
-              result.push(res[value["po-number"]])
-              
+        purchaseorders.reduce((res,value) => {
+          if (!res[value["po-number"]]){
+            // Handle both possible field name formats
+            const vendorcode = value["vendorcode"] || value["vendor-code"] || "";
+            const vendorname = value["vendorname"] || value["vendor-name"] || "";
+            
+            res[value["po-number"]] = {
+              ponum: value["po-number"], 
+              podate: value["po-date"], 
+              "delivery-date": value["delivery-date"],
+              vendorcode: vendorcode, 
+              vendorname: vendorname, 
+              poval:0, 
+              balgrval:0
             }
-            res[value["po-number"]].poval += value["po-value-sar"];
-            res[value["po-number"]].balgrval += value["pending-val-sar"]
-            return res
-          }, {})
+            
+            result.push(res[value["po-number"]])
+            
+          }
+          res[value["po-number"]].poval += value["po-value-sar"] || 0;
+          res[value["po-number"]].balgrval += value["pending-val-sar"] || 0;
+          return res
+        }, {})
 
-          return res.json(result)
+        return res.json(result)
       }  
       
       default:

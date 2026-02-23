@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 
-import HeaderComponent from "../../components/HeaderComponent";
+import HeaderComponent from "../../components/HeaderNewComponent";
 
 import { getSession } from "next-auth/react";
 
@@ -21,17 +21,15 @@ function Matdocs() {
   };
 
   const { data, isSuccess, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useInfiniteQuery(
-      ["matdocs"],
-      ({ pageParam = 1 }) => fetchMatdocs(pageParam),
-      {
-        getNextPageParam: (lastPage, allPages) => {
-          const nextPage =
-            lastPage.length === LIMIT ? allPages.length + 1 : undefined;
-          return nextPage;
-        },
-      }
-    );
+    useInfiniteQuery({
+      queryKey: ["matdocs"],
+      queryFn: ({ pageParam = 1 }) => fetchMatdocs(pageParam),
+      getNextPageParam: (lastPage, allPages) => {
+        const nextPage =
+          lastPage.length === LIMIT ? allPages.length + 1 : undefined;
+        return nextPage;
+      },
+    });
 
   useEffect(() => {
     if (inView && hasNextPage) {

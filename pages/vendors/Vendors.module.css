@@ -224,3 +224,39 @@
   align-items: center;
   margin-bottom: 20px;
 }
+
+.matchingVendors {
+  margin-top: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.matchingVendorsTitle {
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4a5568;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.matchingVendorsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.matchingVendorItem {
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  color: #2d3748;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.matchingVendorItem:hover {
+  background-color: #f7fafc;
+}

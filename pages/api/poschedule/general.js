@@ -46,6 +46,17 @@ export default async function handler(req, res) {
           ])
         );
 
+        // Enforce date type for podelydate and estdelydate
+        ['podelydate', 'estdelydate'].forEach(field => {
+          if (
+            cleanedGeneralData[field] &&
+            typeof cleanedGeneralData[field] === 'string'
+          ) {
+            const d = new Date(cleanedGeneralData[field]);
+            if (!isNaN(d)) cleanedGeneralData[field] = d;
+          }
+        });
+
         const result = await collection.updateOne(
           { ponumber },
           {

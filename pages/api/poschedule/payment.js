@@ -44,6 +44,31 @@ export default async function handler(req, res) {
           ])
         );
 
+        // Enforce date type for all date fields in paymentdata
+        // Assuming advancePayments and milestonePayments are arrays of objects with date fields, and finalPayment has a date field
+        if (Array.isArray(cleanedPaymentData.advancePayments)) {
+          cleanedPaymentData.advancePayments = cleanedPaymentData.advancePayments.map(payment => {
+            if (payment.date && typeof payment.date === 'string') {
+              const d = new Date(payment.date);
+              if (!isNaN(d)) payment.date = d;
+            }
+            return payment;
+          });
+        }
+        if (Array.isArray(cleanedPaymentData.milestonePayments)) {
+          cleanedPaymentData.milestonePayments = cleanedPaymentData.milestonePayments.map(payment => {
+            if (payment.date && typeof payment.date === 'string') {
+              const d = new Date(payment.date);
+              if (!isNaN(d)) payment.date = d;
+            }
+            return payment;
+          });
+        }
+        if (cleanedPaymentData.finalPayment && typeof cleanedPaymentData.finalPayment.date === 'string') {
+          const d = new Date(cleanedPaymentData.finalPayment.date);
+          if (!isNaN(d)) cleanedPaymentData.finalPayment.date = d;
+        }
+
         const result = await collection.updateOne(
           { ponumber },
           {

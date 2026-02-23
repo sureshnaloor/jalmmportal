@@ -218,7 +218,7 @@ function Simlist() {
               </p>
             </div> : null }
 
-            { !props.row.original.cleansed && props.row.original["close-flag"] !== "true"?  ( <div className="flex justify-center"><Image  src="/images/datanotclean.png" alt="datanotclean" width={"100%"} height={"100%"} /> </div>) : (props.row.original["close-flag"]== "true" ? <p> Deleted</p> : null) }
+            { !props.row.original.cleansed && props.row.original["close-flag"] !== "true"?  ( <div className="flex justify-center"><Image  src="/images/datanotclean.png" alt="datanotclean" width={100} height={100} className="w-full h-auto" /> </div>) : (props.row.original["close-flag"]== "true" ? <p> Deleted</p> : null) }
           </h2>
         ),
       },
@@ -320,8 +320,8 @@ function Simlist() {
             <p> List of STC SIM Mobiles and routers </p>
             <button className="absolute top-3 right-5 text-[12px] font-semibold text-amber-100 bg-green-600 px-2 py-1 border-2 hover:text-white hover:bg-green-800">
               {" "}
-              <Link  href="/simlist/newsim">
-              + New SIM
+              <Link href="/simlist/newsim" className="text-amber-100 hover:text-white">
+                + New SIM
               </Link>
             </button>
           </div>

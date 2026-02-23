@@ -7,7 +7,7 @@ import Vendorevaluationyear2024 from "../../../components/Vendordetailed/Vendore
 import Vendorcompletecontacts from "../../../components/Vendordetailed/Vendorcontacts";
 import Vendormatgroups from "../../../components/Vendordetailed/Vendormatgroups";
 // import Navigationcomp from "../../../components/Navigationcomponent";
-import HeaderComponent from "../../../components/HeaderComponent";
+import HeaderComponent from "../../../components/HeaderNewComponent";
 import Vendorevaluationpastyears from "../../../components/Vendordetailed/vendorevaluationpastyears";
 import VendorevalRemarks from "../../../components/Vendordetailed/VendorevalRemarks";
 // import Vendorfreetext  from "../../../components/Vendordetailed/Vendorfreetext"

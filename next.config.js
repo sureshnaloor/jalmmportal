@@ -4,12 +4,12 @@ const nextConfig = {
   images:{
     domains: ['cdn.tailgrids.com', 'placeimg.com', 'dummyimage.com']
   },
-  experimental: {
-    images: {
-      allowFutureImage: true,
-    },
-  },
-  cssModules: true,
+  // experimental: {
+  //   images: {
+  //     allowFutureImage: true,
+  //   },
+  // },
+  // cssModules: true,
 }
 
 module.exports = nextConfig

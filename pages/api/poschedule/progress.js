@@ -44,6 +44,24 @@ export default async function handler(req, res) {
           ])
         );
 
+        // Enforce date type for all date fields in progressdata
+        [
+          'mfgstart',
+          'Bldate',
+          'Fatdate',
+          'Fatreportdate',
+          'vesselreacheddate',
+          'customscleareddate'
+        ].forEach(field => {
+          if (
+            cleanedProgressData[field] &&
+            typeof cleanedProgressData[field] === 'string'
+          ) {
+            const d = new Date(cleanedProgressData[field]);
+            if (!isNaN(d)) cleanedProgressData[field] = d;
+          }
+        });
+
         const result = await collection.updateOne(
           { ponumber },
           {

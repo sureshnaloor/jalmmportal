@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo, Fragment } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import HeaderComponent from "../../components/HeaderComponent";
+import HeaderComponent from "../../components/HeaderNewComponent";
+import FooterComponent from "../../components/FooterComponent";
 import dynamic from "next/dynamic";
 import moment from "moment";
 import Image from "next/image";
@@ -28,7 +29,7 @@ const matflag = [
 ];
 
 import { useSession } from "next-auth/react";
-import FooterComponent from "../../components/FooterComponent";
+
 import { CheckIcon } from "@heroicons/react/solid";
 import { getSession } from "next-auth/react";
 import { Listbox } from "@headlessui/react";
@@ -805,7 +806,7 @@ function Reqmatcode() {
       ) : null}
 
       <div className="mt-36">
-        <FooterComponent />
+       <FooterComponent />
       </div>
     </>
   );

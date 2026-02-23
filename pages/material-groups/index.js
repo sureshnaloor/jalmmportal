@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from './MaterialGroups.module.css';
-import HeaderComponent from '../../components/HeaderComponent';
+import HeaderComponent from '../../components/HeaderNewComponent';
+import FooterComponent from '../../components/FooterComponent';
 
 export default function MaterialGroupsPage() {
   const router = useRouter();
@@ -344,7 +345,7 @@ export default function MaterialGroupsPage() {
                 {groups.map(group => (
                   <tr 
                     key={group._id}
-                    className={selectedGroup?._id === group._id ? styles.selectedRow : ''}
+                    className={`${styles.groupRow} ${selectedGroup?._id === group._id ? styles.selectedRow : ''}`}
                     onClick={() => setSelectedGroup(group)}
                   >
                     <td className={styles.groupName}>{group.name}</td>
@@ -354,8 +355,9 @@ export default function MaterialGroupsPage() {
                       <button 
                         className={styles.editButton}
                         onClick={(e) => handleEditClick(e, 'group', group)}
+                        title="Edit"
                       >
-                        Edit
+                        ✏️
                       </button>
                       <button 
                         className={styles.deleteButton}
@@ -363,8 +365,9 @@ export default function MaterialGroupsPage() {
                           e.stopPropagation();
                           handleDelete('group', group._id);
                         }}
+                        title="Delete"
                       >
-                        Delete
+                        🗑️
                       </button>
                     </td>
                   </tr>
@@ -386,15 +389,16 @@ export default function MaterialGroupsPage() {
                 </thead>
                 <tbody>
                   {selectedGroup.subgroups.map(subgroup => (
-                    <tr key={subgroup._id}>
+                    <tr key={subgroup._id} className={styles.subgroupRow}>
                       <td className={styles.subgroupName} >{subgroup.name}</td>
                       <td className={styles.subgroupDescription}>{subgroup.description}</td>
                       <td>
                         <button 
                           className={styles.editButton}
                           onClick={(e) => handleEditClick(e, 'subgroup', subgroup)}
+                          title="Edit"
                         >
-                          Edit
+                          ✏️
                         </button>
                         <button 
                           className={styles.deleteButton}
@@ -402,8 +406,47 @@ export default function MaterialGroupsPage() {
                             e.stopPropagation();
                             handleDelete('subgroup', subgroup._id);
                           }}
+                          title="Delete"
                         >
-                          Delete
+                          🗑️
+                        </button>
+                        <button 
+                          className={styles.viewVendorsButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(`/material-groups/view-vendors?subgroupId=${subgroup._id}`, '_blank');
+                          }}
+                          title="View Vendors"
+                        >
+                          👁️
+                        </button>
+                        <button 
+                          className={styles.mapVendorButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(`/material-groups/map-vendor?subgroupId=${subgroup._id}`, '_blank');
+                          }}
+                          title="Map Vendor"
+                        >
+                          🔗
+                        </button>
+                        <button 
+                          className={styles.printVendorsButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const params = new URLSearchParams({
+                              subgroupId: subgroup._id,
+                              groupName: selectedGroup.name || '',
+                              subgroupName: subgroup.name || '',
+                              isService: String(!!selectedGroup.isService)
+                            });
+                            window.open(`/material-groups/print-vendors?${params.toString()}`, '_blank');
+                          }}
+                          title="print the mapped vendors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className={styles.printIcon} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H5a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clipRule="evenodd" />
+                          </svg>
                         </button>
                       </td>
                     </tr>
@@ -417,6 +460,7 @@ export default function MaterialGroupsPage() {
         </div>
       )}
     </div>
+    <FooterComponent />
     </>
   );
 }

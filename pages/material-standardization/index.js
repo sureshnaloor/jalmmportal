@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import styles from './MaterialStandardization.module.css';
 import Papa from 'papaparse';
 import { OpenAI } from 'openai';
+import styles from './MaterialStandardization.module.css';
+import HeaderComponent from '../../components/HeaderNewComponent';
+import FooterComponent from '../../components/FooterComponent';
+
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -34,7 +37,14 @@ export default function MaterialStandardizationPage() {
 
   // New state for example transformations
   const [transformations, setTransformations] = useState([
-    { input: '', output: '' }  // Initial empty transformation
+    { 
+      input: 'spiral wound gasket, 2 inch 300#, ss316',
+      output: 'GASKET 2" 300# SW SS316'
+    },
+    { 
+      input: '2 inch class 300 spiral wound ss316 gasket',
+      output: 'GASKET 2" 300# SW SS316'
+    }
   ]);
 
   // Add new state for visible results
@@ -58,7 +68,7 @@ export default function MaterialStandardizationPage() {
 
   // Function to remove transformation
   const removeTransformation = (index) => {
-    if (transformations.length > 1) {
+    if (transformations.length > 2) {
       setTransformations(transformations.filter((_, i) => i !== index));
     }
   };
@@ -82,6 +92,8 @@ Primary (must be first word): ${templateFields.primary}
 Secondary (size/rating): ${templateFields.secondary}
 Tertiary (material/type): ${templateFields.tertiary}
 Other specs: ${templateFields.other}
+
+If ${templateFields.secondary} has <model> in it, then use the model as the secondary characteristic. if it has <model><partnumber> in it, then use the model & partnumber as the secondary characteristic.
 
 EXAMPLE TRANSFORMATIONS:
 ${exampleTransformations}
@@ -245,106 +257,111 @@ Output only the standardized description or one of these keywords: CHARACTERISTI
   };
 
   return (
+    <>
+    <HeaderComponent />
     <div className={styles.container}>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"></div>
       <h1 className={styles.title}>Material Description Standardization</h1>
 
-      <div className={styles.templateSection}>
-        <h2>Example Descriptions</h2>
-        <div className={styles.templateFields}>
-          <div className={styles.field}>
-            <label>Primary Characteristic Examples</label>
-            <textarea
-              value={templateFields.primary}
-              onChange={(e) => setTemplateFields(prev => ({...prev, primary: e.target.value}))}
-              placeholder="e.g., GASKET, SEAL, O-RING"
-              rows={3}
-            />
-          </div>
+      <div className={styles.mainGrid}>
+        <div className={styles.templateSection}>
+          <h2>Example Descriptions</h2>
+          <div className={styles.templateFields}>
+            <div className={styles.field}>
+              <label>Primary Characteristic Examples</label>
+              <textarea
+                value={templateFields.primary}
+                onChange={(e) => setTemplateFields(prev => ({...prev, primary: e.target.value}))}
+                placeholder="e.g., GASKET, SEAL, O-RING"
+                rows={3}
+              />
+            </div>
 
-          <div className={styles.field}>
-            <label>Secondary Characteristic Examples</label>
-            <textarea
-              value={templateFields.secondary}
-              onChange={(e) => setTemplateFields(prev => ({...prev, secondary: e.target.value}))}
-              placeholder="e.g., 2 INCH 300#, 3 INCH 600#"
-              rows={3}
-            />
-          </div>
+            <div className={styles.field}>
+              <label>Secondary Characteristic Examples</label>
+              <textarea
+                value={templateFields.secondary}
+                onChange={(e) => setTemplateFields(prev => ({...prev, secondary: e.target.value}))}
+                placeholder="e.g., 2 INCH 300#, 3 INCH 600#"
+                rows={3}
+              />
+            </div>
 
-          <div className={styles.field}>
-            <label>Tertiary Characteristic Examples</label>
-            <textarea
-              value={templateFields.tertiary}
-              onChange={(e) => setTemplateFields(prev => ({...prev, tertiary: e.target.value}))}
-              placeholder="e.g., SPIRAL WOUND SS316, SW SS304"
-              rows={3}
-            />
-          </div>
+            <div className={styles.field}>
+              <label>Tertiary Characteristic Examples</label>
+              <textarea
+                value={templateFields.tertiary}
+                onChange={(e) => setTemplateFields(prev => ({...prev, tertiary: e.target.value}))}
+                placeholder="e.g., SPIRAL WOUND SS316, SW SS304"
+                rows={3}
+              />
+            </div>
 
-          <div className={styles.field}>
-            <label>Other Specification Examples</label>
-            <textarea
-              value={templateFields.other}
-              onChange={(e) => setTemplateFields(prev => ({...prev, other: e.target.value}))}
-              placeholder="e.g., RING JOINT, RTJ"
-              rows={3}
-            />
+            <div className={styles.field}>
+              <label>Other Specification Examples</label>
+              <textarea
+                value={templateFields.other}
+                onChange={(e) => setTemplateFields(prev => ({...prev, other: e.target.value}))}
+                placeholder="e.g., RING JOINT, RTJ"
+                rows={3}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* New transformations section */}
-      <div className={styles.transformationsSection}>
-        <h2 className="font-Lato text-[1rem] mb-2">Example Transformations</h2>
-        <div className={styles.transformationsList}>
-          {transformations.map((transformation, index) => (
-            <div key={index} className={styles.transformationItem}>
-              <div className={styles.transformationFields}>
-                <div className={styles.field}>
-                  <label className = "font-Lato text-[0.75rem] italic text-gray-500">Input Example</label>
-                  <textarea
-                    value={transformation.input}
-                    onChange={(e) => updateTransformation(index, 'input', e.target.value)}
-                    placeholder="e.g., spiral wound gasket, 2 inch 300#, ss316"
-                    rows={1}
-                  />
-                </div>
-                <div className={styles.field}>
-                  <label className = "font-Lato text-[0.75rem] italic text-gray-500">Output Example</label>
-                  <textarea
-                    value={transformation.output}
-                    onChange={(e) => updateTransformation(index, 'output', e.target.value)}
-                    placeholder="e.g., GASKET 2&quot; 300# SW SS316"
-                    rows={1}
-                  />
+        <div className={styles.transformationsSection}>
+          <h2>Example Transformations</h2>
+          <div className={styles.transformationsGrid}>
+            {transformations.map((transformation, index) => (
+              <div key={index} className={styles.transformationRow}>
+                <div className={styles.transformationFields}>
+                  <div className={styles.field}>
+                    <label>Input Example</label>
+                    <textarea
+                      value={transformation.input}
+                      onChange={(e) => updateTransformation(index, 'input', e.target.value)}
+                      placeholder="e.g., spiral wound gasket, 2 inch 300#, ss316"
+                      rows={2}
+                    />
+                  </div>
+                  <div className={styles.field}>
+                    <label>Output Example</label>
+                    <textarea
+                      value={transformation.output}
+                      onChange={(e) => updateTransformation(index, 'output', e.target.value)}
+                      placeholder="e.g., GASKET 2&quot; 300# SW SS316"
+                      rows={2}
+                    />
+                  </div>
+                  <button
+                    onClick={() => removeTransformation(index)}
+                    className={styles.removeButton}
+                    disabled={transformations.length <= 2}
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={() => removeTransformation(index)}
-                className={styles.removeButton}
-                disabled={transformations.length === 1}
-              >
-                Remove
-              </button>
-            </div>
-          ))}
+            ))}
+          </div>
           <button
             onClick={addTransformation}
             className={styles.addButton}
           >
-            + <br /> A <br /> D <br /> D
+            Add Example
           </button>
         </div>
-      </div>
 
-      <div className={styles.uploadSection}>
-        <h2 className = "font-Lato text-[1rem] mb-2 text-gray-800 font-bold">Upload Raw/to cleanse Materials File</h2>
-        <input
-          type="file"
-          accept=".csv"
-          onChange={(e) => setUploadedFile(e.target.files[0])}
-          className={styles.fileInput}
-        />
+        <div className={styles.uploadSection}>
+          <h2>Upload Raw Materials File</h2>
+          <input
+            type="file"
+            accept=".csv"
+            onChange={(e) => setUploadedFile(e.target.files[0])}
+            className={styles.fileInput}
+          />
+        </div>
       </div>
 
       <button
@@ -366,6 +383,7 @@ Output only the standardized description or one of these keywords: CHARACTERISTI
       )}
 
       <div className={styles.resultsContainer}>
+        <h2>Processing Results</h2>
         <table className={styles.resultsTable}>
           <thead>
             <tr>
@@ -393,7 +411,6 @@ Output only the standardized description or one of these keywords: CHARACTERISTI
         </table>
       </div>
 
-      {/* Summary section at bottom */}
       <div className={styles.summarySection}>
         {Object.entries(results).map(([type, materials]) => (
           materials.length > 0 && (
@@ -404,12 +421,14 @@ Output only the standardized description or one of these keywords: CHARACTERISTI
                   : type.charAt(0).toUpperCase() + type.slice(1)}
               </span>
               <span className={styles.summaryCount}>
-                Count: {materials.length}
+                {materials.length}
               </span>
             </div>
           )
         ))}
       </div>
     </div>
+    {/* <FooterComponent className="mt-32" /> */}
+    </>
   );
 }

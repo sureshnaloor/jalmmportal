@@ -3,6 +3,8 @@ import useDebounce from '../../lib/useDebounce'; // Adjust the path as necessary
 import styles from './Vendors.module.css'; // Adjust the path as necessary
 import Link from 'next/link';
 import Select from 'react-select';
+import HeaderComponent from '../../components/HeaderNewComponent';
+import FooterComponent from '../../components/FooterComponent';
 
 export default function VendorsPage() {
   const [vendors, setVendors] = useState([]);
@@ -232,7 +234,9 @@ export default function VendorsPage() {
   };
 
   return (
-    <div className={styles.container}>
+    
+    <div className={styles.container} >
+      <div className="mb-3"><HeaderComponent /></div>
       <div className={styles.headerSection}>
         <input
           type="text"
@@ -241,8 +245,8 @@ export default function VendorsPage() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className={styles.searchInput}
         />
-        <Link href="/vendors/new">
-          <button className={styles.addNewButton}>+</button>
+        <Link href="/vendors/new" className={styles.addNewButton}>
+          +
         </Link>
       </div>
 
