@@ -8,7 +8,7 @@ import Rodal from "rodal";
 import "rodal/lib/rodal.css";
 
 import HeaderComponent from "../../components/HeaderComponent";
-import Tablecomponent from "../../components/tablecomponent";
+import Tablecomponent from "../../components/Tablecomponent";
 import FooterComponent from "../../components/FooterComponent";
 import Geninfoform from "../../components/Geninfoequip";
 import Geninfoform1 from "../../components/Geninfoequip1";

@@ -10,7 +10,7 @@ import Tablecomponent, {
   Boldstyle3,
   Boldstyle4,
   Numberstyle,
-} from "../../components/tablecomponent";
+} from "../../components/Tablecomponent";
 import { FiArrowUp, FiArrowDown, FiFolder, FiShoppingCart, FiTrendingUp } from 'react-icons/fi';
 
 function OpenProjects() {

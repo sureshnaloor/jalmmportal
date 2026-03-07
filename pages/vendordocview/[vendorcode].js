@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import VendorDocumentViewer from '../../../components/Vendor/VendorDocumentViewer';
+import VendorDocumentViewer from '../../components/Vendor/VendorDocumentViewer';
 
 export default function VendorDocViewPage() {
   const { data: session } = useSession();

@@ -671,7 +671,7 @@ export default function DailyMeeting() {
                     <div className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
                       {actionBy}
                       <p className="text-xs mt-2 text-gray-500 dark:text-gray-500">
-                        Note: Original comments cannot be edited. Use "Add follow-up comment" in the task list to add new comments.
+                        Note: Original comments cannot be edited. Use &quot;Add follow-up comment&quot; in the task list to add new comments.
                       </p>
                     </div>
                   ) : (
@@ -695,7 +695,7 @@ export default function DailyMeeting() {
                   <div className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
                     {discussionPoint}
                     <p className="text-xs mt-2 text-gray-500 dark:text-gray-500">
-                      Note: Original comments cannot be edited. Use "Add follow-up comment" in the task list to add new comments.
+                      Note: Original comments cannot be edited. Use &quot;Add follow-up comment&quot; in the task list to add new comments.
                     </p>
                   </div>
                 ) : (

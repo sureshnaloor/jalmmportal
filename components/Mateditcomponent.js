@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // import ReactQuill from 'react-quill';
-const ReactQuill = dynamic(import('react-quill'), { ssr: false})
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
 
@@ -100,7 +100,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
 
   const handleEdit = async (e) => {
     const responsebody = {};
-    const body = {};
+    let body = {};
     // console.log("clicked");
     e.preventDefault();
     const data = new FormData(e.target);
@@ -150,7 +150,7 @@ function Mateditcomponent({ material, matgroupdet, setShowModal, editmode }) {
 
   const handlecomment = async (e) => {
     const responsebody = {};
-    const body = {};
+    let body = {};
     // console.log("clicked");
     e.preventDefault();
     const data = new FormData(e.target);

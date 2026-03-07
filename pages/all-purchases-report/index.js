@@ -51,7 +51,7 @@ const AllPurchasesReport = () => {
       }
     };
     fetchYears();
-  }, []);
+  }, [selectedYear]);
 
   useEffect(() => {
     if (selectedYear == null) return;

@@ -18,8 +18,8 @@ import { set } from "react-hook-form";
       backgroundColor: "#000fff",
     },
     viewer: {
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: "100%",
+      height: "100vh",
     },
     table: {
       display: 'table',
@@ -107,6 +107,10 @@ import { set } from "react-hook-form";
     useEffect(() => {
       setClient(true);
     }, []);
+  
+    if (typeof window === "undefined" || !client) {
+      return null;
+    }
   
     return (
       <PDFViewer style={styles.viewer}>

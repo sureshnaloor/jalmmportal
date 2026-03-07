@@ -166,4 +166,9 @@ export function SubgroupForm({ groupId, initialData, onSubmit, onCancel }) {
       </div>
     </form>
   );
-} 
+}
+
+// Dummy default export so Next.js doesn't treat this as an invalid page
+export default function MaterialGroupsFormsPage() {
+  return null;
+}  

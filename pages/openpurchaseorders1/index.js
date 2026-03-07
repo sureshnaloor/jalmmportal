@@ -12,7 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { parseISO } from 'date-fns';
 import { useRouter } from 'next/router';
 
-const ReactQuill = dynamic(import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
 

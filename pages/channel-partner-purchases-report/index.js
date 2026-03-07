@@ -51,7 +51,7 @@ const ChannelPartnerPurchasesReport = () => {
       }
     };
     fetchYears();
-  }, []);
+  }, [selectedYear]);
 
   useEffect(() => {
     if (selectedYear == null) return;

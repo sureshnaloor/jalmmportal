@@ -48,8 +48,6 @@ function GlobalFilter({
 export function SelectColumnFilter({
   column: { filterValue, setFilter, preFilteredRows, id, render },
 }) {
-  // Calculate the options for filtering
-  // using the preFilteredRows
   const options = React.useMemo(() => {
     const options = new Set();
     preFilteredRows.forEach((row) => {
@@ -58,7 +56,6 @@ export function SelectColumnFilter({
     return [...options.values()];
   }, [id, preFilteredRows]);
 
-  // Render a multi-select box
   return (
     <label className="flex gap-x-1 items-baseline">
       <span className="text-red-500 text-sm font-bold uppercase">
@@ -86,8 +83,6 @@ export function SelectColumnFilter({
   );
 }
 
-// function styling individual cells
-
 // first a utility function
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -114,8 +109,6 @@ export function Mattype({ value }) {
   );
 }
 
-// function to apply styliing to individual cells of user
-
 export function Cellstyle({ value }) {
   return (
     <span
@@ -128,7 +121,6 @@ export function Cellstyle({ value }) {
   );
 }
 
-// function to apply date format
 export function Datestyle({ value }) {
   return (
     <span className={classNames("px-3 py-1 text-indigo-900")}>
@@ -140,19 +132,15 @@ export function Datestyle({ value }) {
 export function Numberstyle({ value }) {
   return (
     <span className={classNames("px-3 text-yellow-900 text-[14px] font-bold py-1 text-copper-900  tracking-wider")}>
-    
-     {( Math.round(value * 100) / 100).toLocaleString("en-US", {style:"currency", currency:"SAR"})}
+      {(Math.round(value * 100) / 100).toLocaleString("en-US", { style: "currency", currency: "SAR" })}
     </span>
   );
 }
 
-
-
 export function Numberstylesim1({ value }) {
   return (
     <span className={classNames(" text-yellow-900 text-[12px] font-bold  text-copper-900 shadow-md shadow-stone-600")}>
-    
-     {( Math.round(value * 100) / 100).toLocaleString("en-US", {style:"currency", currency:"SAR"})}
+      {(Math.round(value * 100) / 100).toLocaleString("en-US", { style: "currency", currency: "SAR" })}
     </span>
   );
 }
@@ -161,12 +149,9 @@ export function Numberstylesim({ value }) {
   return (
     <span className={classNames(" text-yellow-900 text-[12px] font-bold  text-copper-900 shadow-md shadow-stone-600")}>
       {value}
-     
     </span>
   );
 }
-
-// function to apply bold and color
 
 export function Boldstyle1({ value }) {
   return (
@@ -192,7 +177,7 @@ export function Boldstylesim({ value }) {
   return (
     <span
       className={classNames(
-        "text-zinc-800 font-bold text-[12px]   "
+        "text-zinc-800 font-bold text-[12px]"
       )}
     >
       {value}
@@ -204,7 +189,7 @@ export function Boldstylesim1({ value }) {
   return (
     <span
       className={classNames(
-        "text-teal-900 font-black shadow-md shadow-cyan-800 px-1 py-1 text-[12px]   "
+        "text-teal-900 font-black shadow-md shadow-cyan-800 px-1 py-1 text-[12px]"
       )}
     >
       {value}
@@ -228,7 +213,7 @@ export function Specialstylesim({ value }) {
   return (
     <span
       className={classNames(
-        " text-white bg-cyan-800 px-2 py-1 shadow-md shadow-cyan-400 font-semibold text-[12px] tracking-tighter  "
+        " text-white bg-cyan-800 px-2 py-1 shadow-md shadow-cyan-400 font-semibold text-[12px] tracking-tighter"
       )}
     >
       {value}
@@ -240,7 +225,7 @@ export function Spstylesim({ value }) {
   return (
     <span
       className={classNames(
-        " text-white bg-teal-600 px-2 py-1 tracking-tight font-semibold text-[12px]  "
+        " text-white bg-teal-600 px-2 py-1 tracking-tight font-semibold text-[12px]"
       )}
     >
       {value}
@@ -252,13 +237,14 @@ export function Normalstylesim1({ value }) {
   return (
     <span
       className={classNames(
-        "text-blue-900 font-semibold text-[12px] tracking-tight "
+        "text-blue-900 font-semibold text-[12px] tracking-tight"
       )}
     >
       {value}
     </span>
   );
 }
+
 export function Boldstyle3({ value }) {
   return (
     <span
@@ -336,15 +322,12 @@ export function SortDownIcon({ className }) {
 }
 
 function Tablecomponent({ columns, data }) {
-  // Use the useTable Hook to send the columns and data to build the table
-
-  
   const {
-    getTableProps, // table props from react-table
-    getTableBodyProps, // table body props from react-table
-    headerGroups, // headerGroups, if your table has groupings
-    rows, // rows for the table based on the data passed
-    prepareRow, // Prepare the row (this function needs to be called for each row before getting the row props)
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
     state,
     preGlobalFilteredRows,
     setGlobalFilter,
@@ -352,7 +335,6 @@ function Tablecomponent({ columns, data }) {
     {
       columns,
       data,
-      
     },
     useFilters,
     useGlobalFilter,
@@ -368,20 +350,16 @@ function Tablecomponent({ columns, data }) {
   return (
     <>
       <div className="flex justify-between align-middle">
-        {/* search component */}
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
           globalFilter={state.globalFilter}
           setGlobalFilter={setGlobalFilter}
         />
 
-        {/* filters component */}
-
         {headerGroups.map((headerGroup) =>
           headerGroup.headers.map((column) =>
             column.Filter ? (
               <div key={column.id}>
-                {/* <label htmlFor={column.id}>{column.render("Header")}: </label> */}
                 {column.render("Filter")}
               </div>
             ) : null
@@ -389,7 +367,6 @@ function Tablecomponent({ columns, data }) {
         )}
       </div>
 
-      {/* table component */}
       <table className="mt-6  divide-y divide-gray-300">
         <thead
           className="bg-zinc-100 text-zinc-800  font-black"
@@ -434,18 +411,9 @@ function Tablecomponent({ columns, data }) {
               // eslint-disable-next-line react/jsx-key
               <tr
                 {...row.getRowProps()}
-                // onClick={() => {
-                //   setActiveMatcode(row.values["material-code"]);
-                //   // console.log("I am clicked!");
-                //   // console.log(row.values["material-code"])
-                // }}
               >
                 {row.cells.map((cell) => {
-                  // eslint-disable-next-line react/jsx-key
-
-                  // eslint-disable-next-line react/jsx-key
                   return (
-                    // eslint-disable-next-line react/jsx-key
                     <td
                       {...cell.getCellProps()}
                       className="px-2 py-2 text-[10px] text-zinc-600  whitespace-nowrap"
@@ -460,7 +428,7 @@ function Tablecomponent({ columns, data }) {
         </tbody>
       </table>
       <div>
-        {/* new */}
+        {/* debug state if needed */}
         {/* <pre>
           <code>{JSON.stringify(state, null, 2)}</code>
         </pre> */}
@@ -470,3 +438,4 @@ function Tablecomponent({ columns, data }) {
 }
 
 export default Tablecomponent;
+

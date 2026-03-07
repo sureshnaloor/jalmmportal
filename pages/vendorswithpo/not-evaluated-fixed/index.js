@@ -9,7 +9,7 @@ import FooterComponent from "../../../components/FooterComponent";
 import Tablecomponent, {
   SelectColumnFilter,
   Boldstyle3,
-} from "../../../components/tablecomponent";
+} from "../../../components/Tablecomponent";
 
 import { FiClipboard, FiMessageSquare, FiLayers, FiX } from 'react-icons/fi';
 import { ToastContainer, toast } from "react-toastify";
@@ -17,7 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 import dynamic from "next/dynamic";
 import moment from 'moment';
 
-const ReactQuill = dynamic(import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
 

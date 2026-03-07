@@ -15,7 +15,7 @@ import Tablecomponent, {
   Boldstyle3,
   Boldstyle4,
   Numberstyle,
-} from "../../components/tablecomponent";
+} from "../../components/Tablecomponent";
 
 import Purchaseorderschedule from "../../components/Purchaseorderschedule";
 // import { useSession } from "next-auth/react";
@@ -25,7 +25,7 @@ import moment from 'moment';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const ReactQuill = dynamic(import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
 

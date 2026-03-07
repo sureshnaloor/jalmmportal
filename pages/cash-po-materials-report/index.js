@@ -52,7 +52,7 @@ const CashPOMaterialsReport = () => {
       }
     };
     fetchYears();
-  }, []);
+  }, [selectedYear]);
 
   // Load data when year or "all" is selected
   useEffect(() => {

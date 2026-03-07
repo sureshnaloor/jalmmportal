@@ -34,7 +34,7 @@ import { CheckIcon } from "@heroicons/react/solid";
 import { getSession } from "next-auth/react";
 import { Listbox } from "@headlessui/react";
 
-const ReactQuill = dynamic(import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
 import { useRouter } from "next/router";

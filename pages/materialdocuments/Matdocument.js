@@ -2,6 +2,10 @@ import React from "react";
 import moment from "moment";
 
 const Matdocument = React.forwardRef(({ matdoc }, ref) => {
+  if (!matdoc) {
+    return null;
+  }
+
   const MatdocContent = (
     <div className="w-full">
       <div>
