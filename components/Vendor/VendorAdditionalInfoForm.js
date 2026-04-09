@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-function VendorAdditionalInfoForm({ vendorCode, onSaved }) {
+function VendorAdditionalInfoForm({ vendorCode, onSaved, onCancel }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState({
@@ -31,13 +32,15 @@ function VendorAdditionalInfoForm({ vendorCode, onSaved }) {
     const load = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/vendors/additional-info/${vendorCode}`);
+        const res = await fetch(`/api/vendors/additional-info/${encodeURIComponent(vendorCode)}`);
         if (res.ok) {
           const existing = await res.json();
-          if (existing && Object.keys(existing).length > 0) {
+          const keys = existing ? Object.keys(existing).filter((k) => k !== '_id' && k !== 'vendorCode' && k !== 'created_at' && k !== 'updated_at') : [];
+          if (existing && keys.length > 0) {
             setData(prev => ({
               ...prev,
               ...existing,
+              companyTypes: Array.isArray(existing.companyTypes) ? existing.companyTypes : [],
               numEmployees: existing.numEmployees ?? '',
               numTechnicalStaff: existing.numTechnicalStaff ?? '',
               numSkilledLabor: existing.numSkilledLabor ?? '',
@@ -81,7 +84,7 @@ function VendorAdditionalInfoForm({ vendorCode, onSaved }) {
     e.preventDefault();
     setSaving(true);
     try {
-      const res = await fetch(`/api/vendors/additional-info/${vendorCode}`, {
+      const res = await fetch(`/api/vendors/additional-info/${encodeURIComponent(vendorCode)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -97,7 +100,7 @@ function VendorAdditionalInfoForm({ vendorCode, onSaved }) {
       if (!res.ok) throw new Error('Failed to save');
       if (onSaved) onSaved();
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message || 'Failed to save');
     } finally {
       setSaving(false);
     }
@@ -214,9 +217,25 @@ function VendorAdditionalInfoForm({ vendorCode, onSaved }) {
         <textarea value={data.remarks} onChange={e => updateField('remarks', e.target.value)} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
       </div>
 
-      <button type="submit" disabled={saving} className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed">
-        {saving ? 'Saving...' : 'Save Additional Info'}
-      </button>
+      <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={saving}
+            className="w-full sm:w-auto py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Cancel
+          </button>
+        )}
+        <button
+          type="submit"
+          disabled={saving}
+          className="w-full sm:w-auto flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {saving ? 'Saving...' : 'Save'}
+        </button>
+      </div>
     </form>
   );
 }

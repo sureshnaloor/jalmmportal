@@ -24,6 +24,88 @@
   letter-spacing: 0.02em;
 }
 
+.searchSection {
+  margin-top: 12px;
+  margin-bottom: 16px;
+  padding: 10px 8px 12px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.searchLabel {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.searchInput {
+  margin-top: 6px;
+  width: 100%;
+  max-width: 420px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.searchInput:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
+}
+
+.searchHint {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.searchResultsSection {
+  grid-column: 1 / -1;
+  background: white;
+  padding: 12px 10px;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+  margin-bottom: 14px;
+}
+
+.searchResultsTable {
+  width: 90%;
+  margin: 10px auto 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.searchResultsTable th,
+.searchResultsTable td {
+  padding: 6px 4px;
+  font-size: 10px;
+}
+
+.searchResultsTable th:nth-child(1),
+.searchResultsTable td:nth-child(1) {
+  width: 20%;
+}
+
+.searchResultsTable th:nth-child(2),
+.searchResultsTable td:nth-child(2) {
+  width: 22%;
+}
+
+.searchResultsTable th:nth-child(3),
+.searchResultsTable td:nth-child(3) {
+  width: 34%;
+}
+
+.searchResultsTable th:nth-child(4),
+.searchResultsTable td:nth-child(4) {
+  width: 24%;
+  white-space: nowrap;
+}
+
 .content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -73,24 +155,24 @@
 /* Column width tuning so actions stay compact and buttons sit side by side */
 .table th:nth-child(1),
 .table td:nth-child(1) {
-  width: 25%;
+  width: 20%;
 }
 
 .table th:nth-child(2),
 .table td:nth-child(2) {
-  width: 55%;
+  width: 20%;
 }
 
 /* Actions column (3rd in subgroups table, 4th in groups table) */
 .table th:nth-child(3),
 .table td:nth-child(3) {
-  width: 20%;
+  width: 35%;
   white-space: nowrap;
 }
 
 .table th:nth-child(4),
 .table td:nth-child(4) {
-  width: 24%;
+  width: 20%;
   white-space: nowrap;
 }
 
@@ -132,6 +214,13 @@
   font-size: 12px;
   color: #6d28d9;
   text-transform: uppercase;
+}
+
+.searchResultsDescription {
+  font-weight: 500;
+  font-size: 10px;
+  color: #4b5563;
+  text-transform: none;
 }
 
 @keyframes slideFadeInDown {

@@ -9,7 +9,12 @@ function useUnregisteredVendorMap(vendorCode, vendorName) {
   return false;
 }
 
-export default function VendorGroupMapping({ vendorCode, vendorName, onSaveSuccess }) {
+function isNonsapObjectId(nonsapVendorId) {
+  if (nonsapVendorId == null) return false;
+  return /^[a-fA-F0-9]{24}$/.test(String(nonsapVendorId).trim());
+}
+
+export default function VendorGroupMapping({ vendorCode, vendorName, nonsapVendorId, onSaveSuccess }) {
   const [groups, setGroups] = useState([]);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -18,7 +23,8 @@ export default function VendorGroupMapping({ vendorCode, vendorName, onSaveSucce
   const [searchFilter, setSearchFilter] = useState('');
   const selectRef = useRef(null);
 
-  const useUnregistered = useUnregisteredVendorMap(vendorCode, vendorName);
+  const useNonsap = isNonsapObjectId(nonsapVendorId);
+  const useUnregistered = !useNonsap && useUnregisteredVendorMap(vendorCode, vendorName);
   const effectiveVendorName = (vendorName || '').trim();
 
   useEffect(() => {
@@ -28,6 +34,31 @@ export default function VendorGroupMapping({ vendorCode, vendorName, onSaveSucce
         // Fetch groups with subgroups
         const groupsResponse = await fetch('/api/materialgroups');
         const groupsData = await groupsResponse.json();
+
+        if (useNonsap) {
+          const id = String(nonsapVendorId).trim();
+          const mappingsResponse = await fetch(
+            `/api/nonsapvendorgroupmap?nonsapVendorId=${encodeURIComponent(id)}`
+          );
+          const mappingsData = await mappingsResponse.json();
+          const options = groupsData.flatMap((group) =>
+            group.subgroups.map((subgroup) => ({
+              value: subgroup._id,
+              label: `${group.name} - ${subgroup.name}`,
+              groupName: group.name,
+              subgroupName: subgroup.name,
+              isService: group.isService,
+            }))
+          );
+          setGroups(options);
+          setFilteredOptions(options);
+          const initialSelections = options.filter((option) =>
+            mappingsData.some((mapping) => String(mapping.subgroupId) === String(option.value))
+          );
+          setSelectedOptions(initialSelections);
+          setIsLoading(false);
+          return;
+        }
 
         if (useUnregistered) {
           if (!effectiveVendorName) {
@@ -86,7 +117,7 @@ export default function VendorGroupMapping({ vendorCode, vendorName, onSaveSucce
     };
 
     fetchData();
-  }, [vendorCode, vendorName, useUnregistered, effectiveVendorName]);
+  }, [vendorCode, vendorName, useUnregistered, useNonsap, nonsapVendorId, effectiveVendorName]);
 
   // Filter options based on search term
   useEffect(() => {
@@ -105,6 +136,24 @@ export default function VendorGroupMapping({ vendorCode, vendorName, onSaveSucce
 
   const handleSubmit = async () => {
     try {
+      if (useNonsap) {
+        const id = String(nonsapVendorId).trim();
+        const response = await fetch('/api/nonsapvendorgroupmap', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nonsapVendorId: id,
+            subgroupIds: selectedOptions.map((option) => option.value),
+          }),
+        });
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}));
+          throw new Error(data.error || 'Failed to update mappings');
+        }
+        if (typeof onSaveSuccess === 'function') onSaveSuccess();
+        else alert('Mappings updated successfully');
+        return;
+      }
       if (useUnregistered) {
         if (!effectiveVendorName) {
           alert('Vendor name is required to save mappings for vendors without SAP code.');
@@ -122,8 +171,8 @@ export default function VendorGroupMapping({ vendorCode, vendorName, onSaveSucce
           const data = await response.json().catch(() => ({}));
           throw new Error(data.error || 'Failed to update mappings');
         }
-        alert('Mappings updated successfully');
         if (typeof onSaveSuccess === 'function') onSaveSuccess();
+        else alert('Mappings updated successfully');
         return;
       }
       const response = await fetch('/api/vendorgroupmap', {
@@ -142,8 +191,8 @@ export default function VendorGroupMapping({ vendorCode, vendorName, onSaveSucce
         throw new Error(data.error || 'Failed to update mappings');
       }
 
-      alert('Mappings updated successfully');
       if (typeof onSaveSuccess === 'function') onSaveSuccess();
+      else alert('Mappings updated successfully');
     } catch (err) {
       console.error(err);
       alert(err.message || 'Failed to update mappings');
@@ -200,7 +249,8 @@ export default function VendorGroupMapping({ vendorCode, vendorName, onSaveSucce
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">
-        Material/Service Group Mapping for Vendor: {vendorName} ({useUnregistered ? 'No SAP code' : vendorCode})
+        Material/Service Group Mapping for Vendor: {vendorName} (
+        {useNonsap ? 'Non-SAP (internal ID)' : useUnregistered ? 'No SAP code' : vendorCode})
       </h2>
       
       <div className="mb-4">

@@ -4,6 +4,152 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import HeaderComponent from '../../components/HeaderNewComponent';
 import FooterComponent from '../../components/FooterComponent';
+import VendorAdditionalInfoForm from '../../components/Vendor/VendorAdditionalInfoForm';
+import VendorProfileOverviewForm from '../../components/Vendor/VendorProfileOverviewForm';
+import VendorGroupMapping from '../../components/VendorGroupMapping';
+
+const SERVICE_OVERVIEW_CARD_STYLES = [
+  'bg-violet-50 border-violet-200/90 text-violet-950 shadow-[0_8px_24px_rgba(124,58,237,0.12)]',
+  'bg-sky-50 border-sky-200/90 text-sky-950 shadow-[0_8px_24px_rgba(14,165,233,0.12)]',
+  'bg-amber-50 border-amber-200/90 text-amber-950 shadow-[0_8px_24px_rgba(245,158,11,0.12)]',
+  'bg-emerald-50 border-emerald-200/90 text-emerald-950 shadow-[0_8px_24px_rgba(16,185,129,0.12)]',
+  'bg-rose-50 border-rose-200/90 text-rose-950 shadow-[0_8px_24px_rgba(244,63,94,0.12)]',
+  'bg-cyan-50 border-cyan-200/90 text-cyan-950 shadow-[0_8px_24px_rgba(6,182,212,0.12)]',
+  'bg-fuchsia-50 border-fuchsia-200/90 text-fuchsia-950 shadow-[0_8px_24px_rgba(217,70,239,0.12)]',
+  'bg-teal-50 border-teal-200/90 text-teal-950 shadow-[0_8px_24px_rgba(20,184,166,0.12)]',
+];
+
+function getContactSegmentType(segment) {
+  const s = String(segment).trim();
+  if (!s) return 'text';
+  if (/\S+@\S+\.\S+/.test(s)) return 'email';
+  const digits = s.replace(/\D/g, '');
+  if (s.includes('+') && digits.length >= 8) return 'phone';
+  if (digits.length >= 9 && digits.length >= s.replace(/\s/g, '').length * 0.35) return 'phone';
+  return 'text';
+}
+
+function splitContactSegments(raw) {
+  if (!raw || typeof raw !== 'string') return [];
+  const bySemi = raw.split(/;|\n/).map((x) => x.trim()).filter(Boolean);
+  if (bySemi.length > 1) return bySemi;
+  return raw.trim() ? [raw.trim()] : [];
+}
+
+function splitServicesList(raw) {
+  if (!raw || typeof raw !== 'string') return [];
+  return raw
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function VendorProfileOverviewDisplay({ vendorOverview }) {
+  const recordName = vendorOverview['vendor-name'] || vendorOverview.vendorName || 'N/A';
+  const website = vendorOverview.website;
+  const contactRaw =
+    vendorOverview['contact-info'] ||
+    vendorOverview.contactInfo ||
+    vendorOverview.contact_info ||
+    '';
+  const servicesRaw =
+    vendorOverview['services-and-materials'] ||
+    vendorOverview.servicesAndMaterials ||
+    vendorOverview.services_and_materials ||
+    '';
+
+  const contactParts = splitContactSegments(contactRaw);
+  const serviceItems = splitServicesList(servicesRaw);
+
+  let otherContactLine = 0;
+  const contactLineStyles = contactParts.map((part) => {
+    const kind = getContactSegmentType(part);
+    if (kind === 'email') return 'text-emerald-700 font-semibold';
+    if (kind === 'phone') return 'text-amber-800 font-semibold';
+    const cls = otherContactLine % 2 === 0 ? 'text-blue-700 font-medium' : 'text-slate-900 font-medium';
+    otherContactLine += 1;
+    return cls;
+  });
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Vendor name</span>
+        <p className="mt-1 text-[0.825rem] md:text-[0.99rem] font-bold text-blue-700 leading-snug tracking-[0.1em] md:tracking-[0.12em]">
+          {recordName}
+        </p>
+      </div>
+
+      <div>
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Website</span>
+        <div className="mt-1 text-sm">
+          {website ? (
+            <a
+              href={website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-indigo-600 hover:text-indigo-500 hover:underline break-all"
+            >
+              {website}
+            </a>
+          ) : (
+            <span className="text-slate-500">N/A</span>
+          )}
+        </div>
+      </div>
+
+      <div>
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Contact information</h4>
+        {contactParts.length ? (
+          <ul className="flex flex-col gap-1.5">
+            {contactParts.map((part, idx) => {
+              const kind = getContactSegmentType(part);
+              const cls = `text-sm leading-relaxed ${contactLineStyles[idx]}`;
+              return (
+                <li key={idx} className={cls}>
+                  {kind === 'email' && /\S+@\S+\.\S+/.test(part) ? (
+                    <a href={`mailto:${part.replace(/^mailto:/i, '')}`} className="hover:underline">
+                      {part}
+                    </a>
+                  ) : kind === 'phone' ? (
+                    <a href={`tel:${part.replace(/\s/g, '')}`} className="hover:underline">
+                      {part}
+                    </a>
+                  ) : (
+                    part
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="text-slate-500 text-sm">N/A</p>
+        )}
+      </div>
+
+      <div>
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Services and materials</h4>
+        {serviceItems.length ? (
+          <div className="flex flex-wrap gap-3">
+            {serviceItems.map((item, idx) => {
+              const styleClass = SERVICE_OVERVIEW_CARD_STYLES[idx % SERVICE_OVERVIEW_CARD_STYLES.length];
+              return (
+                <div
+                  key={`${idx}-${item.slice(0, 24)}`}
+                  className={`inline-flex max-w-full md:max-w-[calc(50%-0.375rem)] lg:max-w-[calc(33.333%-0.5rem)] px-4 py-3 rounded-2xl border text-sm font-medium leading-snug transition-transform duration-200 hover:-translate-y-0.5 ${styleClass}`}
+                >
+                  {item}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-slate-500 text-sm">N/A</p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function VendorDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -13,15 +159,25 @@ export default function VendorDashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [editingContact, setEditingContact] = useState(false);
-  const [editingMappings, setEditingMappings] = useState(false);
   const [uploadedDocuments, setUploadedDocuments] = useState([]);
   const [uploadedDocsLoading, setUploadedDocsLoading] = useState(false);
   const [additionalInfo, setAdditionalInfo] = useState(null);
   const [additionalInfoLoading, setAdditionalInfoLoading] = useState(false);
+  const [editingAdditionalInfo, setEditingAdditionalInfo] = useState(false);
   const [vendorFeedback, setVendorFeedback] = useState([]);
   const [vendorFeedbackLoading, setVendorFeedbackLoading] = useState(false);
+  const [editingGroupMappings, setEditingGroupMappings] = useState(false);
+  const [vendorOverview, setVendorOverview] = useState(null);
+  const [vendorOverviewLoading, setVendorOverviewLoading] = useState(false);
+  const [editingVendorOverview, setEditingVendorOverview] = useState(false);
   
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  useEffect(() => {
+    setEditingAdditionalInfo(false);
+    setEditingGroupMappings(false);
+    setEditingVendorOverview(false);
+  }, [selectedVendor?.vendorcode]);
 
   // Search for vendors
   useEffect(() => {
@@ -85,7 +241,11 @@ export default function VendorDashboard() {
       const isRegisteredNoCode = data?.vendor?.source === 'registeredvendors' && (!data?.vendor?.vendorcode || data?.vendor?.vendorcode === 'NA');
       if (!isRegisteredNoCode) {
         loadAdditionalInfo(effectiveCode);
+        loadVendorOverview(effectiveCode);
         loadVendorFeedback(effectiveCode);
+      } else {
+        setVendorOverview(null);
+        setVendorOverviewLoading(false);
       }
     } catch (error) {
       console.error('Error loading vendor data:', error);
@@ -113,7 +273,7 @@ export default function VendorDashboard() {
   const loadAdditionalInfo = async (vendorcode) => {
     setAdditionalInfoLoading(true);
     try {
-      const res = await fetch(`/api/vendors/additional-info/${vendorcode}`);
+      const res = await fetch(`/api/vendors/additional-info/${encodeURIComponent(vendorcode)}`);
       if (!res.ok) throw new Error('Failed to load additional info');
       const info = await res.json();
       setAdditionalInfo(info && Object.keys(info).length ? info : null);
@@ -122,6 +282,27 @@ export default function VendorDashboard() {
       setAdditionalInfo(null);
     } finally {
       setAdditionalInfoLoading(false);
+    }
+  };
+
+  const loadVendorOverview = async (vendorcode) => {
+    setVendorOverviewLoading(true);
+    try {
+      const res = await fetch(`/api/vendors/overview/${encodeURIComponent(vendorcode)}`);
+      if (!res.ok) throw new Error('Failed to load vendor overview');
+      const doc = await res.json();
+      const codeVal = doc?.['vendor-code'] ?? doc?.vendorCode;
+      const hasRecord =
+        doc &&
+        typeof doc === 'object' &&
+        codeVal != null &&
+        String(codeVal).trim() !== '';
+      setVendorOverview(hasRecord ? doc : null);
+    } catch (err) {
+      console.error('Error loading vendor overview:', err);
+      setVendorOverview(null);
+    } finally {
+      setVendorOverviewLoading(false);
     }
   };
 
@@ -150,8 +331,10 @@ export default function VendorDashboard() {
     const hasNoCode = !vendor?.vendorcode || vendor.vendorcode === 'NA';
     const generatedCode = isRegistered && hasNoCode ? generateCodeFromName(vendor.vendorname) : vendor.vendorcode;
 
-    // Update selected vendor with effective code (do not persist anywhere)
-    setSelectedVendor({ ...vendor, vendorcode: generatedCode });
+    // Update selected vendor with effective code (do not persist anywhere).
+    // Empty vendorCode when saving group maps uses unregisteredvendorgroupmap (see VendorGroupMapping).
+    const usesUnregisteredGroupMap = isRegistered && hasNoCode;
+    setSelectedVendor({ ...vendor, vendorcode: generatedCode, usesUnregisteredGroupMap });
     // Pass vendorName and source so API can resolve base vendor record correctly
     loadVendorData(generatedCode, vendor.vendorname, vendor.source);
   };
@@ -162,28 +345,38 @@ export default function VendorDashboard() {
 
   const handleContactSave = async (contactData) => {
     try {
-      const response = await fetch(`/api/registeredvendors/update/${selectedVendor.vendorname}`, {
+      // SAP vendors (source: vendors) live in `vendors`; saves were incorrectly sent only to
+      // `registeredvendors` by name, so nothing matched and the UI never changed.
+      const isSapVendor = selectedVendor.source === 'vendors';
+      const url = isSapVendor
+        ? `/api/vendors/update-contact/${encodeURIComponent(selectedVendor.vendorcode)}`
+        : `/api/registeredvendors/update/${encodeURIComponent(selectedVendor.vendorname)}`;
+
+      const response = await fetch(url, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...contactData,
-          username: 'admin' // You might want to get this from session
-        }),
+          username: 'admin'
+        })
       });
 
-      if (response.ok) {
-        toast.success('Contact details updated successfully');
-        setEditingContact(false);
-        // Reload vendor data
-        loadVendorData(selectedVendor.vendorcode);
-      } else {
-        throw new Error('Failed to update contact details');
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(payload.error || 'Failed to update contact details');
       }
+
+      toast.success('Contact details updated successfully');
+      setEditingContact(false);
+      loadVendorData(
+        selectedVendor.vendorcode,
+        selectedVendor.vendorname,
+        selectedVendor.source
+      );
     } catch (error) {
       console.error('Error updating contact:', error);
-      toast.error('Failed to update contact details');
+      toast.error(error.message || 'Failed to update contact details');
     }
   };
 
@@ -307,9 +500,72 @@ export default function VendorDashboard() {
               </button>
             </div>
 
+              {/* Vendor profile overview (Mongo: vendorsdata, hyphen field names) */}
+          {!(vendorData.vendor?.source === 'registeredvendors' && (!vendorData.vendor?.vendorcode || vendorData.vendor?.vendorcode === 'NA')) && (
+            <div className="bg-gradient-to-br from-blue-50/90 via-white/95 to-violet-50/80 backdrop-blur-sm rounded-2xl border border-blue-100/80 shadow-[0_20px_55px_rgba(37,99,235,0.12)] p-6 transform transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(37,99,235,0.18)]">
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight bg-gradient-to-r from-blue-700 to-violet-700 bg-clip-text text-transparent">
+                  Vendor profile overview
+                </h3>
+                {!editingVendorOverview && (
+                  <div className="flex items-center gap-2">
+                    {vendorOverview ? (
+                      <button
+                        type="button"
+                        onClick={() => setEditingVendorOverview(true)}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-semibold tracking-wide shadow-[0_10px_25px_rgba(37,99,235,0.45)] hover:bg-blue-500 hover:-translate-y-0.5 transition-all"
+                      >
+                        Edit
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setEditingVendorOverview(true)}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 text-white rounded-full text-sm font-semibold tracking-wide shadow-[0_10px_25px_rgba(16,185,129,0.45)] hover:bg-emerald-500 hover:-translate-y-0.5 transition-all"
+                        title="Add vendor profile overview"
+                      >
+                        <span className="text-lg leading-none font-bold">+</span>
+                        Add overview
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+              <p className="text-sm text-slate-600 mb-4">
+                Public-style summary: website, contact details, and services or materials.
+              </p>
+              <div className="bg-white/95 rounded-2xl border border-blue-100/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_12px_40px_rgba(59,130,246,0.06)] px-6 py-5 md:px-8 md:py-6">
+                {editingVendorOverview ? (
+                  <VendorProfileOverviewForm
+                    key={`overview-${selectedVendor.vendorcode}`}
+                    vendorCode={selectedVendor.vendorcode}
+                    vendorName={selectedVendor.vendorname || vendorData.vendor?.vendorname || ''}
+                    onCancel={() => setEditingVendorOverview(false)}
+                    onSaved={() => {
+                      setEditingVendorOverview(false);
+                      loadVendorOverview(selectedVendor.vendorcode);
+                      toast.success('Vendor profile overview saved');
+                    }}
+                  />
+                ) : vendorOverviewLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+                    <span className="ml-2 text-gray-600">Loading overview…</span>
+                  </div>
+                ) : vendorOverview ? (
+                  <VendorProfileOverviewDisplay vendorOverview={vendorOverview} />
+                ) : (
+                  <p className="text-gray-500 text-center py-6">
+                    No profile overview yet. Use <span className="font-medium text-slate-700">+ Add overview</span> to create a record for this vendor code.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
             {/* Quick Stats */}
             {!(vendorData.vendor?.source === 'registeredvendors' && (!vendorData.vendor?.vendorcode || vendorData.vendor?.vendorcode === 'NA')) && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div className="bg-gradient-to-br from-blue-50 to-blue-100/90 p-4 rounded-2xl shadow-[0_14px_35px_rgba(37,99,235,0.32)] transform transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(37,99,235,0.48)]">
                   <h3 className="text-sm font-medium text-blue-600">Total PO Value</h3>
                   <p className="text-2xl font-bold text-blue-900">
@@ -320,10 +576,86 @@ export default function VendorDashboard() {
                   <h3 className="text-sm font-medium text-green-600">Number of POs</h3>
                   <p className="text-2xl font-bold text-green-900">{vendorData.poSummary?.poCount || 0}</p>
                 </div>
-              <div className="bg-gradient-to-br from-purple-50 to-fuchsia-100/90 p-4 rounded-2xl shadow-[0_14px_35px_rgba(147,51,234,0.32)] transform transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(147,51,234,0.5)]">
-                  <h3 className="text-sm font-medium text-purple-600">Group Mappings</h3>
-                  <p className="text-2xl font-bold text-purple-900">{vendorData.groupMappings?.length || 0}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Material & service groups (vendorgroupmap / unregisteredvendorgroupmap) */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-white/70 shadow-[0_20px_55px_rgba(15,23,42,0.22)] p-6 transform transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(15,23,42,0.38)]">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <h3 className="text-xl font-semibold text-slate-900 tracking-tight">Material &amp; service groups</h3>
+              {!editingGroupMappings && (
+                <button
+                  type="button"
+                  onClick={() => setEditingGroupMappings(true)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-semibold tracking-wide shadow-[0_10px_25px_rgba(37,99,235,0.45)] hover:bg-blue-500 hover:-translate-y-0.5 transition-all"
+                >
+                  Edit groups
+                </button>
+              )}
+            </div>
+            <p className="text-sm text-slate-600 mb-4">
+              Subgroups mapped to this vendor in{' '}
+              {vendorData.groupMappingsSource === 'unregistered'
+                ? 'unregistered vendor group map'
+                : 'vendor group map'}
+              . Use edit to add or remove mappings.
+            </p>
+            {editingGroupMappings ? (
+              <div className="bg-white/90 rounded-2xl border border-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] px-2 py-2 md:px-4">
+                <VendorGroupMapping
+                  key={`vgm-${selectedVendor.vendorcode}-${selectedVendor.vendorname}`}
+                  vendorCode={selectedVendor.usesUnregisteredGroupMap ? '' : selectedVendor.vendorcode}
+                  vendorName={selectedVendor.vendorname}
+                  onSaveSuccess={() => {
+                    setEditingGroupMappings(false);
+                    loadVendorData(
+                      selectedVendor.vendorcode,
+                      selectedVendor.vendorname,
+                      selectedVendor.source
+                    );
+                    toast.success('Material & service group mappings saved');
+                  }}
+                />
+                <div className="px-4 pb-4">
+                  <button
+                    type="button"
+                    onClick={() => setEditingGroupMappings(false)}
+                    className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50"
+                  >
+                    Cancel
+                  </button>
                 </div>
+              </div>
+            ) : (
+              <div className="bg-white/90 rounded-2xl border border-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] px-6 py-5 md:px-8 md:py-6">
+                {vendorData.groupMappings?.length > 0 ? (
+                  <ul className="flex flex-wrap gap-2">
+                    {vendorData.groupMappings.map((m) => (
+                      <li
+                        key={`${m.subgroupId}-${m.mappingId}`}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm bg-slate-100 text-slate-800 border border-slate-200/80"
+                      >
+                        <span className="font-medium text-slate-900">{m.groupName}</span>
+                        <span className="text-slate-400">·</span>
+                        <span>{m.subgroupName}</span>
+                        {m.isService ? (
+                          <span className="text-xs font-semibold uppercase tracking-wide text-violet-700 bg-violet-100/80 px-2 py-0.5 rounded-full">
+                            Service
+                          </span>
+                        ) : (
+                          <span className="text-xs font-semibold uppercase tracking-wide text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full">
+                            Material
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-slate-500 text-center py-6">
+                    No material or service groups mapped yet. Click <span className="font-medium text-slate-700">Edit groups</span> to add mappings.
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -414,57 +746,6 @@ export default function VendorDashboard() {
             </div>
           )}
 
-          {/* Group Mappings */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-white/70 shadow-[0_20px_55px_rgba(15,23,42,0.22)] p-6 transform transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(15,23,42,0.38)]">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-slate-900 tracking-tight">Material/Service Group Mappings</h3>
-              <button
-                onClick={() => setEditingMappings(true)}
-                className="px-4 py-2 bg-emerald-600 text-white rounded-full text-sm font-semibold tracking-wide shadow-[0_10px_25px_rgba(16,185,129,0.45)] hover:bg-emerald-500 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(16,185,129,0.6)] transition-all"
-              >
-                Edit Mappings
-              </button>
-            </div>
-            
-            {editingMappings ? (
-              <GroupMappingEditor
-                vendorCode={selectedVendor.vendorcode}
-                currentMappings={vendorData.groupMappings || []}
-                onSave={() => {
-                  setEditingMappings(false);
-                  loadVendorData(selectedVendor.vendorcode);
-                }}
-                onCancel={() => setEditingMappings(false)}
-              />
-            ) : (
-              <div>
-                {vendorData.groupMappings?.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {vendorData.groupMappings?.map((mapping, index) => (
-                      <div key={index} className="p-4 border border-slate-100 rounded-2xl bg-slate-50/80 shadow-[0_8px_24px_rgba(15,23,42,0.12)] hover:shadow-[0_16px_40px_rgba(15,23,42,0.22)] transition-shadow duration-300">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="font-medium text-gray-900">{mapping.groupName}</h4>
-                            <p className="text-sm text-gray-600">{mapping.subgroupName}</p>
-                          </div>
-                          <span className={`px-2 py-1 text-xs rounded-full ${
-                            mapping.isService 
-                              ? 'bg-blue-100 text-blue-800' 
-                              : 'bg-green-100 text-green-800'
-                          }`}>
-                            {mapping.isService ? 'Service' : 'Material'}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-gray-500 text-center py-8">No group mappings found. Click "Edit Mappings" to add some.</p>
-                )}
-              </div>
-            )}
-          </div>
-
           {/* Vendor Evaluation */}
           {!(vendorData.vendor?.source === 'registeredvendors' && (!vendorData.vendor?.vendorcode || vendorData.vendor?.vendorcode === 'NA')) && (
             <VendorEvaluationSection evaluation={vendorData.evaluation} />
@@ -508,12 +789,48 @@ export default function VendorDashboard() {
             )}
           </div>
 
-          {/* Additional Company Information (read-only) */}
+          {/* Additional Company Information */}
           {!(vendorData.vendor?.source === 'registeredvendors' && (!vendorData.vendor?.vendorcode || vendorData.vendor?.vendorcode === 'NA')) && (
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-white/70 shadow-[0_20px_55px_rgba(15,23,42,0.22)] p-6 transform transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(15,23,42,0.38)]">
-              <h3 className="text-xl font-semibold text-slate-900 mb-4 tracking-tight">Additional Company Information</h3>
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <h3 className="text-xl font-semibold text-slate-900 tracking-tight">Additional Company Information</h3>
+                {!editingAdditionalInfo && (
+                  <div className="flex items-center gap-2">
+                    {additionalInfo ? (
+                      <button
+                        type="button"
+                        onClick={() => setEditingAdditionalInfo(true)}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-semibold tracking-wide shadow-[0_10px_25px_rgba(37,99,235,0.45)] hover:bg-blue-500 hover:-translate-y-0.5 transition-all"
+                      >
+                        Edit
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setEditingAdditionalInfo(true)}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 text-white rounded-full text-sm font-semibold tracking-wide shadow-[0_10px_25px_rgba(16,185,129,0.45)] hover:bg-emerald-500 hover:-translate-y-0.5 transition-all"
+                        title="Add company information"
+                      >
+                        <span className="text-lg leading-none font-bold">+</span>
+                        Add information
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
               <div className="bg-white/90 rounded-2xl border border-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] px-6 py-5 md:px-8 md:py-6">
-                {additionalInfoLoading ? (
+                {editingAdditionalInfo ? (
+                  <VendorAdditionalInfoForm
+                    key={`addinfo-${selectedVendor.vendorcode}`}
+                    vendorCode={selectedVendor.vendorcode}
+                    onCancel={() => setEditingAdditionalInfo(false)}
+                    onSaved={() => {
+                      setEditingAdditionalInfo(false);
+                      loadAdditionalInfo(selectedVendor.vendorcode);
+                      toast.success('Additional company information saved');
+                    }}
+                  />
+                ) : additionalInfoLoading ? (
                   <div className="flex items-center justify-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                     <span className="ml-2 text-gray-600">Loading information...</span>
@@ -523,9 +840,13 @@ export default function VendorDashboard() {
                     <div>
                       <span className="font-medium text-slate-800">Company Type:</span>
                       <div className="mt-1 flex flex-wrap gap-2">
-                        {additionalInfo.companyTypes?.map((t, idx) => (
-                          <span key={idx} className="px-2 py-1 bg-slate-100 text-slate-800 rounded-full text-xs">{t}</span>
-                        )) || 'N/A'}
+                        {additionalInfo.companyTypes?.length ? (
+                          additionalInfo.companyTypes.map((t, idx) => (
+                            <span key={idx} className="px-2 py-1 bg-slate-100 text-slate-800 rounded-full text-xs">{t}</span>
+                          ))
+                        ) : (
+                          <span className="text-gray-500">N/A</span>
+                        )}
                       </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -580,7 +901,7 @@ export default function VendorDashboard() {
                     ) : null}
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-center py-8">No additional information provided</p>
+                  <p className="text-gray-500 text-center py-6">No additional information yet. Use <span className="font-medium text-slate-700">+ Add information</span> above to create a record.</p>
                 )}
               </div>
             </div>
@@ -687,6 +1008,8 @@ export default function VendorDashboard() {
               )}
             </div>
           )}
+
+         
           
         </div>
       )}
@@ -788,111 +1111,6 @@ function ContactEditForm({ contact, onSave, onCancel }) {
       </div>
     </form>
     
-  );
-}
-
-// Group Mapping Editor Component
-function GroupMappingEditor({ vendorCode, currentMappings, onSave, onCancel }) {
-  const [availableGroups, setAvailableGroups] = useState([]);
-  const [selectedGroups, setSelectedGroups] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const loadGroups = async () => {
-      try {
-        const response = await fetch('/api/materialgroups');
-        const data = await response.json();
-        
-        const options = data.flatMap(group => 
-          group.subgroups.map(subgroup => ({
-            value: subgroup._id,
-            label: `${group.name} - ${subgroup.name}`,
-            isService: group.isService
-          }))
-        );
-        setAvailableGroups(options);
-        
-        // Set current selections
-        const currentSelections = options.filter(option => 
-          currentMappings.some(mapping => 
-            mapping.groupName + ' - ' + mapping.subgroupName === option.label
-          )
-        );
-        setSelectedGroups(currentSelections);
-      } catch (error) {
-        console.error('Error loading groups:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadGroups();
-  }, [currentMappings]);
-
-  const handleSave = async () => {
-    try {
-      const response = await fetch('/api/vendorgroupmap', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          vendorCode: vendorCode,
-          subgroupIds: selectedGroups.map(group => group.value)
-        }),
-      });
-
-      if (response.ok) {
-        onSave();
-      } else {
-        throw new Error('Failed to save mappings');
-      }
-    } catch (error) {
-      console.error('Error saving mappings:', error);
-    }
-  };
-
-  if (isLoading) {
-    return <div className="text-center py-8">Loading groups...</div>;
-  }
-
-  return (
-    <div className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Select Material/Service Groups</label>
-        <select
-          multiple
-          value={selectedGroups.map(g => g.value)}
-          onChange={(e) => {
-            const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
-            const selected = availableGroups.filter(group => selectedValues.includes(group.value));
-            setSelectedGroups(selected);
-          }}
-          className="w-full h-40 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        >
-          {availableGroups.map((group) => (
-            <option key={group.value} value={group.value}>
-              {group.label} ({group.isService ? 'Service' : 'Material'})
-            </option>
-          ))}
-        </select>
-        <p className="text-sm text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple groups</p>
-      </div>
-      <div className="flex justify-end space-x-3">
-        <button
-          onClick={onCancel}
-          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleSave}
-          className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-        >
-          Save Mappings
-        </button>
-      </div>
-    </div>
   );
 }
 

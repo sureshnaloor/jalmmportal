@@ -1,5 +1,18 @@
 .container {
-  padding: 20px;
+  box-sizing: border-box;
+  max-width: min(1200px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 16px clamp(16px, 4vw, 40px) 32px;
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
 }
 
 .searchInput {
@@ -12,17 +25,37 @@
 
 .table {
   width: 100%;
-  border-collapse: collapse;
+  min-width: 960px;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   border: 1px solid #ddd;
   padding: 8px;
+  vertical-align: top;
 }
 
 .table th {
   background-color: #f2f2f2;
   text-align: left;
+}
+
+/* Keep Actions column visible when scrolling horizontally */
+.table thead th:last-child,
+.table tbody td:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  background: #fff;
+  box-shadow: -8px 0 12px -10px rgba(0, 0, 0, 0.35);
+  min-width: 9rem;
+}
+
+.table thead th:last-child {
+  z-index: 2;
+  background: #f2f2f2;
 }
 
 .editButton {
@@ -36,6 +69,24 @@
 
 .editButton:hover {
   background-color: #45a049;
+}
+
+.editLink {
+  background-color: #4caf50;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.editLink:hover {
+  background-color: #45a049;
+  color: white;
 }
 
 .editFormContainer {
@@ -126,6 +177,10 @@
 
 .saveButton:hover {
   background-color: #45a049;
+}
+
+.formActions {
+  margin-top: 12px;
 }
 
 /* Responsive grid adjustments */
@@ -259,4 +314,104 @@
 
 .matchingVendorItem:hover {
   background-color: #f7fafc;
+}
+
+.listMeta {
+  font-size: 0.875rem;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.monoId {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actionCell {
+  white-space: nowrap;
+}
+
+.actionCell button,
+.actionCell a {
+  margin-right: 6px;
+  margin-bottom: 4px;
+}
+
+.mapButton {
+  background-color: #2196f3;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.mapButton:hover {
+  background-color: #1976d2;
+}
+
+.loadMoreSentinel {
+  height: 1px;
+  margin-top: 8px;
+}
+
+.loadMoreHint {
+  text-align: center;
+  color: #666;
+  font-size: 0.875rem;
+  margin: 12px 0;
+}
+
+.mapModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.mapModalContent {
+  background: #fff;
+  border-radius: 8px;
+  max-width: 960px;
+  width: 100%;
+  padding: 16px 20px 24px;
+  margin-top: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.mapModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.mapModalClose {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+  padding: 0 4px;
+}
+
+.mapModalClose:hover {
+  color: #111;
+}
+
+.mapModalSub {
+  font-size: 0.875rem;
+  color: #555;
+  margin-bottom: 12px;
 }

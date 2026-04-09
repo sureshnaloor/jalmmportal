@@ -24,6 +24,30 @@ import LCData from '../../components/POSchedule/LCData';
 import ProgressMilestoneData from '../../components/POSchedule/ProgressMilestoneData';
 import ShipmentData from '../../components/POSchedule/ShipmentData';
 
+const PO_MILESTONE_ROWS = [
+  { key: 'baseDesignSubmittal', label: 'Base design submittal', daysFromPo: 14 },
+  { key: 'baseDesignApproval', label: 'Base design approval', daysFromPo: 28 },
+  { key: 'detailedDesignSubmittal', label: 'Detailed design submittal', daysFromPo: 45 },
+  { key: 'detailedDesignApproval', label: 'Detailed design approval', daysFromPo: 60 },
+  { key: 'manufacturingClearance', label: 'Manufacturing clearance', daysFromPo: 28 },
+  { key: 'itpApproval', label: 'ITP approval', daysFromPo: 90 },
+];
+
+const EMPTY_MILESTONE_ACTUALS = {
+  baseDesignSubmittal: null,
+  baseDesignApproval: null,
+  detailedDesignSubmittal: null,
+  detailedDesignApproval: null,
+  manufacturingClearance: null,
+  itpApproval: null,
+};
+
+function isScheduleMilestonesEligible(po) {
+  if (!po) return false;
+  const v = Number(po.povalue);
+  return !Number.isNaN(v) && v > 100000;
+}
+
 function Openpurchaseorders1() {
   const { data: session } = useSession();
   const router = useRouter();
@@ -38,6 +62,8 @@ function Openpurchaseorders1() {
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [selectedPO, setSelectedPO] = useState(null);
+  const [selectedSchedulePo, setSelectedSchedulePo] = useState(null);
+  const [milestoneActuals, setMilestoneActuals] = useState(() => ({ ...EMPTY_MILESTONE_ACTUALS }));
   const [comments, setComments] = useState([]);
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
@@ -59,14 +85,15 @@ function Openpurchaseorders1() {
   const [finalworkcompleteddate, setFinalworkcompleteddate] = useState(null);
   const [grdate, setGrdate] = useState(null);
 
-  // Payment schedule states
+  // Payment schedule states (date = paid date; requesteddate stored as requesteddate in MongoDB)
   const [advancePayments, setAdvancePayments] = useState([
-    { date: null, amount: "", remarks: "", id: 1 }
+    { requesteddate: null, date: null, amount: "", remarks: "", id: 1 }
   ]);
   const [milestonePayments, setMilestonePayments] = useState([
-    { date: null, amount: "", remarks: "", id: 1 }
+    { requesteddate: null, date: null, amount: "", remarks: "", id: 1 }
   ]);
   const [finalPayment, setFinalPayment] = useState({
+    requesteddate: null,
     date: null,
     amount: "",
     comments: ""
@@ -97,6 +124,16 @@ function Openpurchaseorders1() {
   const [lcremarks, setLcremarks] = useState("");
   const [lcswift, setLcswift] = useState("");
 
+  // Inspection (ITP / TPI) — stored as inspectiondata on poschedule
+  const [itpSubmittedDate, setItpSubmittedDate] = useState(null);
+  const [itpApprovedDate, setItpApprovedDate] = useState(null);
+  const [tpiRequestedDate, setTpiRequestedDate] = useState(null);
+  const [tpiPoIssuedDate, setTpiPoIssuedDate] = useState(null);
+  const [tpiPoNumber, setTpiPoNumber] = useState("");
+  const [fatInspectionDate, setFatInspectionDate] = useState(null);
+  const [tpiDraftReportReceivedDate, setTpiDraftReportReceivedDate] = useState(null);
+  const [tpiReportApprovedDate, setTpiReportApprovedDate] = useState(null);
+
   // Progress milestone states
   const [mfgstart, setMfgstart] = useState(null);
   const [Bldate, setBldate] = useState(null);
@@ -117,7 +154,7 @@ function Openpurchaseorders1() {
   const addAdvancePayment = () => {
     setAdvancePayments([
       ...advancePayments,
-      { date: null, amount: "", remarks: "", id: advancePayments.length + 1 }
+      { requesteddate: null, date: null, amount: "", remarks: "", id: advancePayments.length + 1 }
     ]);
   };
 
@@ -134,7 +171,7 @@ function Openpurchaseorders1() {
   const addMilestonePayment = () => {
     setMilestonePayments([
       ...milestonePayments,
-      { date: null, amount: "", remarks: "", id: milestonePayments.length + 1 }
+      { requesteddate: null, date: null, amount: "", remarks: "", id: milestonePayments.length + 1 }
     ]);
   };
 
@@ -187,6 +224,23 @@ function Openpurchaseorders1() {
 
     fetchPOSchedule();
   }, []);
+
+  useEffect(() => {
+    if (!showScheduleModal) {
+      setSelectedSchedulePo(null);
+    }
+  }, [showScheduleModal]);
+
+  useEffect(() => {
+    if (
+      showScheduleModal &&
+      selectedSchedulePo &&
+      !isScheduleMilestonesEligible(selectedSchedulePo) &&
+      activeTab === 'milestones'
+    ) {
+      setActiveTab('general');
+    }
+  }, [showScheduleModal, selectedSchedulePo, activeTab]);
 
   // Sort and filter data
   const sortedAndFilteredData = React.useMemo(() => {
@@ -353,6 +407,16 @@ function Openpurchaseorders1() {
           lcremarks,
           lcswift
         },
+        inspectiondata: {
+          itpSubmittedDate,
+          itpApprovedDate,
+          tpiRequestedDate,
+          tpiPoIssuedDate,
+          tpiPoNumber,
+          fatInspectionDate,
+          tpiDraftReportReceivedDate,
+          tpiReportApprovedDate
+        },
         progressdata: {
           mfgstart,
           Bldate,
@@ -389,6 +453,42 @@ function Openpurchaseorders1() {
       console.log('Submit response:', result);
 
       if (response.ok) {
+        if (isScheduleMilestonesEligible(selectedSchedulePo)) {
+          const milestonePayload = {
+            actuals: {
+              baseDesignSubmittal: milestoneActuals.baseDesignSubmittal
+                ? milestoneActuals.baseDesignSubmittal.toISOString()
+                : null,
+              baseDesignApproval: milestoneActuals.baseDesignApproval
+                ? milestoneActuals.baseDesignApproval.toISOString()
+                : null,
+              detailedDesignSubmittal: milestoneActuals.detailedDesignSubmittal
+                ? milestoneActuals.detailedDesignSubmittal.toISOString()
+                : null,
+              detailedDesignApproval: milestoneActuals.detailedDesignApproval
+                ? milestoneActuals.detailedDesignApproval.toISOString()
+                : null,
+              manufacturingClearance: milestoneActuals.manufacturingClearance
+                ? milestoneActuals.manufacturingClearance.toISOString()
+                : null,
+              itpApproval: milestoneActuals.itpApproval
+                ? milestoneActuals.itpApproval.toISOString()
+                : null,
+            },
+            user: session.user.name,
+            poIssueDate: selectedSchedulePo['po-date'] ?? null,
+            povalue: selectedSchedulePo.povalue,
+          };
+          const mRes = await fetch(`/api/purchaseorders/schedule/milestones/${selectedPO}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(milestonePayload),
+          });
+          if (!mRes.ok) {
+            const mErr = await mRes.json().catch(() => ({}));
+            toast.warn(mErr.message || 'Schedule saved, but milestone dates could not be saved.');
+          }
+        }
         toast.success('Schedule updated successfully!');
         setShowScheduleModal(false);
       } else {
@@ -411,8 +511,45 @@ function Openpurchaseorders1() {
     const poNumber = po._id['po-number'];
     console.log('Opening schedule for PO:', poNumber);
     setSelectedPO(poNumber);
+    setSelectedSchedulePo(po);
     setShowScheduleModal(true);
-    
+
+    const loadMilestoneActuals = async () => {
+      if (!isScheduleMilestonesEligible(po)) {
+        setMilestoneActuals({ ...EMPTY_MILESTONE_ACTUALS });
+        return;
+      }
+      try {
+        const mr = await fetch(`/api/purchaseorders/schedule/milestones/${poNumber}`);
+        const mdata = await mr.json();
+        if (mdata && mdata.actuals) {
+          setMilestoneActuals({
+            baseDesignSubmittal: mdata.actuals.baseDesignSubmittal
+              ? parseISO(mdata.actuals.baseDesignSubmittal)
+              : null,
+            baseDesignApproval: mdata.actuals.baseDesignApproval
+              ? parseISO(mdata.actuals.baseDesignApproval)
+              : null,
+            detailedDesignSubmittal: mdata.actuals.detailedDesignSubmittal
+              ? parseISO(mdata.actuals.detailedDesignSubmittal)
+              : null,
+            detailedDesignApproval: mdata.actuals.detailedDesignApproval
+              ? parseISO(mdata.actuals.detailedDesignApproval)
+              : null,
+            manufacturingClearance: mdata.actuals.manufacturingClearance
+              ? parseISO(mdata.actuals.manufacturingClearance)
+              : null,
+            itpApproval: mdata.actuals.itpApproval ? parseISO(mdata.actuals.itpApproval) : null,
+          });
+        } else {
+          setMilestoneActuals({ ...EMPTY_MILESTONE_ACTUALS });
+        }
+      } catch (e) {
+        console.error('Error loading milestone actuals:', e);
+        setMilestoneActuals({ ...EMPTY_MILESTONE_ACTUALS });
+      }
+    };
+
     try {
       const response = await fetch(`/api/purchaseorders/schedule/generaldata/${poNumber}`);
       
@@ -432,9 +569,9 @@ function Openpurchaseorders1() {
         setItpapprdate(null);
         setFinalworkcompleteddate(null);
         setGrdate(null);
-        setAdvancePayments([{ date: null, amount: '', remarks: '', id: 1 }]);
-        setMilestonePayments([{ date: null, amount: '', remarks: '', id: 1 }]);
-        setFinalPayment({ date: null, amount: '', comments: '' });
+        setAdvancePayments([{ requesteddate: null, date: null, amount: '', remarks: '', id: 1 }]);
+        setMilestonePayments([{ requesteddate: null, date: null, amount: '', remarks: '', id: 1 }]);
+        setFinalPayment({ requesteddate: null, date: null, amount: '', comments: '' });
         setAbgestdate(null);
         setAbgactualdate(null);
         setAbgexpirydate(null);
@@ -456,6 +593,14 @@ function Openpurchaseorders1() {
         setLcamount(0);
         setLcremarks('');
         setLcswift('');
+        setItpSubmittedDate(null);
+        setItpApprovedDate(null);
+        setTpiRequestedDate(null);
+        setTpiPoIssuedDate(null);
+        setTpiPoNumber('');
+        setFatInspectionDate(null);
+        setTpiDraftReportReceivedDate(null);
+        setTpiReportApprovedDate(null);
         setMfgstart(null);
         setBldate(null);
         setFatdate(null);
@@ -468,6 +613,7 @@ function Openpurchaseorders1() {
         setSaberreceiveddate(null);
         setFfnoMinateddate(null);
         setFinalremarks('');
+        await loadMilestoneActuals();
         return;
       }
 
@@ -507,11 +653,12 @@ function Openpurchaseorders1() {
             // Convert old structure to new structure for frontend
             const newAdvancePayments = [];
             const newMilestonePayments = [];
-            let newFinalPayment = { date: null, amount: '', comments: '' };
+            let newFinalPayment = { requesteddate: null, date: null, amount: '', comments: '' };
 
             // Convert advance payment data
             if (data.paymentdata.advpaiddate || data.paymentdata.advamountpaid) {
               newAdvancePayments.push({
+                requesteddate: null,
                 date: data.paymentdata.advpaiddate ? parseISO(data.paymentdata.advpaiddate) : null,
                 amount: data.paymentdata.advamountpaid || '',
                 remarks: data.paymentdata.advremarks || '',
@@ -522,6 +669,7 @@ function Openpurchaseorders1() {
             // Convert milestone payment data
             if (data.paymentdata.milestoneamountpaiddate || data.paymentdata.milestoneamountpaid) {
               newMilestonePayments.push({
+                requesteddate: null,
                 date: data.paymentdata.milestoneamountpaiddate ? parseISO(data.paymentdata.milestoneamountpaiddate) : null,
                 amount: data.paymentdata.milestoneamountpaid || '',
                 remarks: data.paymentdata.milestoneremarks || '',
@@ -532,6 +680,7 @@ function Openpurchaseorders1() {
             // Convert final payment data
             if (data.paymentdata.finalpaiddate || data.paymentdata.finalpaidamt || data.paymentdata.finalcomments) {
               newFinalPayment = {
+                requesteddate: null,
                 date: data.paymentdata.finalpaiddate ? parseISO(data.paymentdata.finalpaiddate) : null,
                 amount: data.paymentdata.finalpaidamt || '',
                 comments: data.paymentdata.finalcomments || ''
@@ -546,6 +695,7 @@ function Openpurchaseorders1() {
             // Handle advance payments
             const parsedAdvancePayments = (data.paymentdata.advancePayments || []).map((payment, index) => ({
               ...payment,
+              requesteddate: payment.requesteddate ? parseISO(payment.requesteddate) : null,
               date: payment.date ? parseISO(payment.date) : null,
               remarks: payment.remarks || '',
               id: payment.id || index + 1
@@ -555,6 +705,7 @@ function Openpurchaseorders1() {
             // Handle milestone payments
             const parsedMilestonePayments = (data.paymentdata.milestonePayments || []).map((payment, index) => ({
               ...payment,
+              requesteddate: payment.requesteddate ? parseISO(payment.requesteddate) : null,
               date: payment.date ? parseISO(payment.date) : null,
               remarks: payment.remarks || '',
               id: payment.id || index + 1
@@ -562,9 +713,10 @@ function Openpurchaseorders1() {
             setMilestonePayments(parsedMilestonePayments);
 
             // Handle final payment
-            const finalPayment = data.paymentdata.finalPayment || { date: null, amount: '', comments: '' };
+            const finalPayment = data.paymentdata.finalPayment || { requesteddate: null, date: null, amount: '', comments: '' };
             setFinalPayment({
               ...finalPayment,
+              requesteddate: finalPayment.requesteddate ? parseISO(finalPayment.requesteddate) : null,
               date: finalPayment.date ? parseISO(finalPayment.date) : null
             });
           }
@@ -599,6 +751,26 @@ function Openpurchaseorders1() {
           setLcswift(data.lcdata.lcswift || '');
         }
 
+        if (data.inspectiondata) {
+          setItpSubmittedDate(data.inspectiondata.itpSubmittedDate ? parseISO(data.inspectiondata.itpSubmittedDate) : null);
+          setItpApprovedDate(data.inspectiondata.itpApprovedDate ? parseISO(data.inspectiondata.itpApprovedDate) : null);
+          setTpiRequestedDate(data.inspectiondata.tpiRequestedDate ? parseISO(data.inspectiondata.tpiRequestedDate) : null);
+          setTpiPoIssuedDate(data.inspectiondata.tpiPoIssuedDate ? parseISO(data.inspectiondata.tpiPoIssuedDate) : null);
+          setTpiPoNumber(data.inspectiondata.tpiPoNumber || '');
+          setFatInspectionDate(data.inspectiondata.fatInspectionDate ? parseISO(data.inspectiondata.fatInspectionDate) : null);
+          setTpiDraftReportReceivedDate(data.inspectiondata.tpiDraftReportReceivedDate ? parseISO(data.inspectiondata.tpiDraftReportReceivedDate) : null);
+          setTpiReportApprovedDate(data.inspectiondata.tpiReportApprovedDate ? parseISO(data.inspectiondata.tpiReportApprovedDate) : null);
+        } else {
+          setItpSubmittedDate(null);
+          setItpApprovedDate(null);
+          setTpiRequestedDate(null);
+          setTpiPoIssuedDate(null);
+          setTpiPoNumber('');
+          setFatInspectionDate(null);
+          setTpiDraftReportReceivedDate(null);
+          setTpiReportApprovedDate(null);
+        }
+
         // Set progress data
         if (data.progressdata) {
           setMfgstart(data.progressdata.mfgstart ? parseISO(data.progressdata.mfgstart) : null);
@@ -619,9 +791,11 @@ function Openpurchaseorders1() {
           setFinalremarks(data.shipdata.finalremarks || '');
         }
       }
+      await loadMilestoneActuals();
     } catch (error) {
       console.error('Error fetching schedule data:', error);
       toast.error('Failed to fetch schedule data');
+      await loadMilestoneActuals();
     }
   };
 
@@ -969,6 +1143,16 @@ function Openpurchaseorders1() {
                       LC
                     </button>
                     <button
+                      onClick={() => setActiveTab('inspection')}
+                      className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                        activeTab === 'inspection'
+                          ? 'border-blue-500 text-blue-600'
+                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }`}
+                    >
+                      Inspection
+                    </button>
+                    <button
                       onClick={() => setActiveTab('progress')}
                       className={`py-2 px-1 border-b-2 font-medium text-sm ${
                         activeTab === 'progress'
@@ -988,6 +1172,19 @@ function Openpurchaseorders1() {
                     >
                       Shipping
                     </button>
+                    {isScheduleMilestonesEligible(selectedSchedulePo) && (
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab('milestones')}
+                        className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                          activeTab === 'milestones'
+                            ? 'border-red-600 text-red-600'
+                            : 'border-transparent text-red-600 hover:text-red-700 hover:border-red-300'
+                        }`}
+                      >
+                        Scheduled dates
+                      </button>
+                    )}
                   </nav>
                 </div>
 
@@ -1150,9 +1347,19 @@ function Openpurchaseorders1() {
                           </button>
                         </div>
                         {advancePayments.map((payment, index) => (
-                          <div key={payment.id} className="grid grid-cols-4 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+                          <div key={payment.id} className="grid grid-cols-5 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Requested Date</label>
+                              <DatePicker
+                                selected={payment.requesteddate}
+                                onChange={date => updateAdvancePayment(payment.id, 'requesteddate', date)}
+                                className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${payment.requesteddate ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
+                                dateFormat="MM/dd/yyyy"
+                                placeholderText="Select date"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Paid Date</label>
                               <DatePicker
                                 selected={payment.date}
                                 onChange={date => updateAdvancePayment(payment.id, 'date', date)}
@@ -1205,9 +1412,19 @@ function Openpurchaseorders1() {
                           </button>
                         </div>
                         {milestonePayments.map((payment, index) => (
-                          <div key={payment.id} className="grid grid-cols-4 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+                          <div key={payment.id} className="grid grid-cols-5 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Requested Date</label>
+                              <DatePicker
+                                selected={payment.requesteddate}
+                                onChange={date => updateMilestonePayment(payment.id, 'requesteddate', date)}
+                                className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${payment.requesteddate ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
+                                dateFormat="MM/dd/yyyy"
+                                placeholderText="Select date"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Paid Date</label>
                               <DatePicker
                                 selected={payment.date}
                                 onChange={date => updateMilestonePayment(payment.id, 'date', date)}
@@ -1251,9 +1468,19 @@ function Openpurchaseorders1() {
                       {/* Final Payment */}
                       <div className="col-span-3">
                         <h3 className="text-lg font-medium text-gray-900 mb-4">Final Payment</h3>
-                        <div className="grid grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+                        <div className="grid grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Requested Date</label>
+                            <DatePicker
+                              selected={finalPayment.requesteddate}
+                              onChange={date => setFinalPayment({ ...finalPayment, requesteddate: date })}
+                              className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${finalPayment.requesteddate ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
+                              dateFormat="MM/dd/yyyy"
+                              placeholderText="Select date"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Paid Date</label>
                             <DatePicker
                               selected={finalPayment.date}
                               onChange={date => setFinalPayment({ ...finalPayment, date })}
@@ -1504,6 +1731,91 @@ function Openpurchaseorders1() {
                     </div>
                   )}
 
+                  {activeTab === 'inspection' && (
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">ITP submitted date</label>
+                        <DatePicker
+                          selected={itpSubmittedDate}
+                          onChange={date => setItpSubmittedDate(date)}
+                          className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${itpSubmittedDate ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
+                          dateFormat="MM/dd/yyyy"
+                          placeholderText="Select date"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">ITP approved date</label>
+                        <DatePicker
+                          selected={itpApprovedDate}
+                          onChange={date => setItpApprovedDate(date)}
+                          className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${itpApprovedDate ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
+                          dateFormat="MM/dd/yyyy"
+                          placeholderText="Select date"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">TPI requested date</label>
+                        <DatePicker
+                          selected={tpiRequestedDate}
+                          onChange={date => setTpiRequestedDate(date)}
+                          className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${tpiRequestedDate ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
+                          dateFormat="MM/dd/yyyy"
+                          placeholderText="Select date"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">TPI PO issued date</label>
+                        <DatePicker
+                          selected={tpiPoIssuedDate}
+                          onChange={date => setTpiPoIssuedDate(date)}
+                          className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${tpiPoIssuedDate ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
+                          dateFormat="MM/dd/yyyy"
+                          placeholderText="Select date"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">TPI PO number</label>
+                        <input
+                          type="text"
+                          value={tpiPoNumber}
+                          onChange={(e) => setTpiPoNumber(e.target.value)}
+                          className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${tpiPoNumber ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
+                          placeholder="Enter TPI PO number"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">FAT / inspection date</label>
+                        <DatePicker
+                          selected={fatInspectionDate}
+                          onChange={date => setFatInspectionDate(date)}
+                          className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${fatInspectionDate ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
+                          dateFormat="MM/dd/yyyy"
+                          placeholderText="Select date"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">TPI draft report received date</label>
+                        <DatePicker
+                          selected={tpiDraftReportReceivedDate}
+                          onChange={date => setTpiDraftReportReceivedDate(date)}
+                          className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${tpiDraftReportReceivedDate ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
+                          dateFormat="MM/dd/yyyy"
+                          placeholderText="Select date"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">TPI report approved date</label>
+                        <DatePicker
+                          selected={tpiReportApprovedDate}
+                          onChange={date => setTpiReportApprovedDate(date)}
+                          className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${tpiReportApprovedDate ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
+                          dateFormat="MM/dd/yyyy"
+                          placeholderText="Select date"
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   {activeTab === 'progress' && (
                     <div className="grid grid-cols-3 gap-4">
                       <div>
@@ -1629,6 +1941,57 @@ function Openpurchaseorders1() {
                           className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 min-h-[80px] resize-y ${finalremarks ? 'bg-red-50 text-red-600 font-semibold' : 'bg-white text-gray-700'}`}
                           placeholder="Enter remarks"
                         />
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'milestones' && isScheduleMilestonesEligible(selectedSchedulePo) && (
+                    <div className="space-y-4">
+                      <p className="text-sm text-gray-600">
+                        Open POs over 100,000 SAR: scheduled dates are calendar dates (PO issue date + offset). Use{' '}
+                        <span className="font-medium text-red-600">Save Schedule</span> below to store actual dates.
+                      </p>
+                      <div className="grid grid-cols-1 gap-4">
+                        {PO_MILESTONE_ROWS.map((row) => {
+                          const poDateRaw = selectedSchedulePo['po-date'];
+                          const scheduledDisplay =
+                            poDateRaw != null && poDateRaw !== ''
+                              ? moment(poDateRaw).clone().add(row.daysFromPo, 'days').format('MM/DD/YYYY')
+                              : 'N/A';
+                          return (
+                            <div
+                              key={row.key}
+                              className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-100"
+                            >
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{row.label}</label>
+                                <p className="text-xs text-gray-500">+{row.daysFromPo} days from PO issue</p>
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Scheduled date</label>
+                                <div className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-white text-gray-800">
+                                  {scheduledDisplay}
+                                </div>
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Actual date</label>
+                                <DatePicker
+                                  selected={milestoneActuals[row.key]}
+                                  onChange={(date) =>
+                                    setMilestoneActuals((prev) => ({ ...prev, [row.key]: date }))
+                                  }
+                                  className={`w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${
+                                    milestoneActuals[row.key]
+                                      ? 'bg-red-50 text-red-600 font-semibold'
+                                      : 'bg-white text-gray-700'
+                                  }`}
+                                  dateFormat="MM/dd/yyyy"
+                                  placeholderText="Select date"
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}

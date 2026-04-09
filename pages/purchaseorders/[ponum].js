@@ -640,12 +640,13 @@ function PurchaseOrderDetail() {
               <h2 className="text-2xl font-bold text-purple-700 mb-4">PO Schedule</h2>
               {poSchedule ? (
                 <nav className="flex space-x-4 border-b border-purple-200">
-                  {['general', 'payment', 'bank', 'lc', 'progress', 'shipping'].map((tab) => {
+                  {['general', 'payment', 'bank', 'lc', 'inspection', 'progress', 'shipping'].map((tab) => {
                     const tabColors = {
                       general: 'text-blue-600',
                       payment: 'text-green-600',
                       bank: 'text-teal-600',
                       lc: 'text-cyan-600',
+                      inspection: 'text-indigo-600',
                       progress: 'text-orange-600',
                       shipping: 'text-red-600'
                     };
@@ -786,6 +787,28 @@ function PurchaseOrderDetail() {
                       </div>
                     ))}
                   </div>
+                )}
+                {scheduleTab === 'inspection' && (
+                  poSchedule.inspectiondata ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {Object.entries(poSchedule.inspectiondata).map(([key, value]) => (
+                        <div key={key} className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
+                          <label className="block text-xs font-semibold text-indigo-700 mb-1 uppercase tracking-wide">
+                            {key.replace(/([A-Z])/g, ' $1').trim()}
+                          </label>
+                          <p className="text-sm text-indigo-900">
+                            {value instanceof Date
+                              ? formatDate(value)
+                              : key.toLowerCase().includes('date') && value
+                                ? formatDate(value)
+                                : value || 'N/A'}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-indigo-600 text-sm">No inspection data has been entered for this PO yet.</p>
+                  )
                 )}
                 {scheduleTab === 'progress' && poSchedule.progressdata && (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

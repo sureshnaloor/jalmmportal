@@ -14,10 +14,62 @@ export default function MaterialGroupsPage() {
   const [sortOrder, setSortOrder] = useState('asc');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     fetchGroups();
   }, []);
+
+  // Debounce the raw search term so that we don't recompute on every key stroke
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm.trim());
+    }, 400);
+
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (!debouncedSearchTerm) {
+      setSearchResults([]);
+      return;
+    }
+
+    // Support multiple search terms separated by '*', matched anywhere
+    // within subgroup name or description (case-insensitive).
+    const terms = debouncedSearchTerm
+      .split('*')
+      .map(t => t.trim().toLowerCase())
+      .filter(Boolean);
+
+    if (terms.length === 0) {
+      setSearchResults([]);
+      return;
+    }
+
+    const matches = [];
+
+    groups.forEach(group => {
+      const subgroups = Array.isArray(group.subgroups) ? group.subgroups : [];
+      subgroups.forEach(subgroup => {
+        const name = subgroup.name || '';
+        const description = subgroup.description || '';
+        const haystack = `${name} ${description}`.toLowerCase();
+
+        // Require that all search terms appear somewhere in either
+        // the name or description.
+        const isMatch = terms.every(term => haystack.includes(term));
+
+        if (isMatch) {
+          matches.push({ group, subgroup });
+        }
+      });
+    });
+
+    setSearchResults(matches);
+  }, [debouncedSearchTerm, groups]);
 
   const fetchGroups = async () => {
     try {
@@ -324,12 +376,121 @@ export default function MaterialGroupsPage() {
         </div>
       </div>
 
+      <div className={styles.searchSection}>
+        <label className={styles.searchLabel}>
+          Search Material &amp; Service Subgroups (name or description)
+        </label>
+        <input
+          type="text"
+          className={styles.searchInput}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search by name or description, use * to separate multiple terms..."
+        />
+        <div className={styles.searchHint}>
+          {debouncedSearchTerm && (
+            searchResults.length > 0
+              ? `Found ${searchResults.length} matching subgroups`
+              : 'No matching subgroups found'
+          )}
+        </div>
+      </div>
+
       {error && <div className={styles.errorMessage}>{error}</div>}
       
       {loading ? (
         <div className={styles.loading}>Loading...</div>
       ) : (
         <div className={styles.content}>
+          {searchResults.length > 0 && (
+            <div className={styles.searchResultsSection}>
+              <h2>Matching Subgroups</h2>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Group</th>
+                    <th>Subgroup</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {searchResults.map(({ group, subgroup }) => (
+                    <tr
+                      key={subgroup._id}
+                      className={styles.subgroupRow}
+                      onClick={() => setSelectedGroup(group)}
+                    >
+                      <td className={styles.groupName}>{group.name}</td>
+                      <td className={styles.subgroupName}>{subgroup.name}</td>
+                      <td className={styles.subgroupDescription}>{subgroup.description}</td>
+                      <td>
+                        <button 
+                          className={styles.editButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditClick(e, 'subgroup', subgroup);
+                          }}
+                          title="Edit"
+                        >
+                          ✏️
+                        </button>
+                        <button 
+                          className={styles.deleteButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete('subgroup', subgroup._id);
+                          }}
+                          title="Delete"
+                        >
+                          🗑️
+                        </button>
+                        <button 
+                          className={styles.viewVendorsButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(`/material-groups/view-vendors?subgroupId=${subgroup._id}`, '_blank');
+                          }}
+                          title="View Vendors"
+                        >
+                          👁️
+                        </button>
+                        <button 
+                          className={styles.mapVendorButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(`/material-groups/map-vendor?subgroupId=${subgroup._id}`, '_blank');
+                          }}
+                          title="Map Vendor"
+                        >
+                          🔗
+                        </button>
+                        <button 
+                          className={styles.printVendorsButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const params = new URLSearchParams({
+                              subgroupId: subgroup._id,
+                              groupName: group.name || '',
+                              subgroupName: subgroup.name || '',
+                              isService: String(!!group.isService)
+                            });
+                            window.open(`/material-groups/print-vendors?${params.toString()}`, '_blank');
+                          }}
+                          title="print the mapped vendors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className={styles.printIcon} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H5a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
           <div className={styles.groupsSection}>
             <h2>Groups</h2>
             <table className={styles.table}>

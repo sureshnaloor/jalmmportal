@@ -52,6 +52,10 @@ export default async function handler(req, res) {
               const d = new Date(payment.date);
               if (!isNaN(d)) payment.date = d;
             }
+            if (payment.requesteddate && typeof payment.requesteddate === 'string') {
+              const d = new Date(payment.requesteddate);
+              if (!isNaN(d)) payment.requesteddate = d;
+            }
             return payment;
           });
         }
@@ -61,12 +65,20 @@ export default async function handler(req, res) {
               const d = new Date(payment.date);
               if (!isNaN(d)) payment.date = d;
             }
+            if (payment.requesteddate && typeof payment.requesteddate === 'string') {
+              const d = new Date(payment.requesteddate);
+              if (!isNaN(d)) payment.requesteddate = d;
+            }
             return payment;
           });
         }
         if (cleanedPaymentData.finalPayment && typeof cleanedPaymentData.finalPayment.date === 'string') {
           const d = new Date(cleanedPaymentData.finalPayment.date);
           if (!isNaN(d)) cleanedPaymentData.finalPayment.date = d;
+        }
+        if (cleanedPaymentData.finalPayment && typeof cleanedPaymentData.finalPayment.requesteddate === 'string') {
+          const d = new Date(cleanedPaymentData.finalPayment.requesteddate);
+          if (!isNaN(d)) cleanedPaymentData.finalPayment.requesteddate = d;
         }
 
         const result = await collection.updateOne(

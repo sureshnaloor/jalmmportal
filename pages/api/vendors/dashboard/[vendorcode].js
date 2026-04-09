@@ -77,40 +77,73 @@ export default async function handler(req, res) {
       poList = [];
     }
 
-    // Get vendor group mappings - support multiple vendorCode variants for NA vendors
+    // Material/service subgroup mappings: vendorgroupmap (SAP or real code) or unregisteredvendorgroupmap (no SAP code)
     let groupDetails = [];
+    let groupMappingsSource = 'vendorgroupmap';
     try {
-      // Fetch groups
-      const groupsResponse = await fetch(`${req.headers.origin || 'http://localhost:3000'}/api/materialgroups`);
-      const groupsData = await groupsResponse.json();
-
-      // Build vendorCode variants to handle different historical formats
-      const variants = Array.from(new Set([
-        vendorcode,
-        vendorcode.replace(/\s+/g, ''),
-        vendorcode.toUpperCase(),
-        vendorcode.replace(/\s+/g, '').toUpperCase()
-      ]));
-
-      // Query mappings directly to support $in variants
-      const mappingsData = await db.collection('vendorgroupmap')
-        .find({ vendorCode: { $in: variants } })
-        .toArray();
-
-      // Map subgroupId -> group/subgroup names
+      const groups = await db.collection('materialgroups').find({}).sort({ name: 1 }).toArray();
       const subgroupIdToInfo = new Map();
-      groupsData.forEach(group => {
-        group.subgroups.forEach(subgroup => {
+      for (const group of groups) {
+        const subgroups = await db.collection('materialsubgroups')
+          .find({ groupId: group._id })
+          .sort({ name: 1 })
+          .toArray();
+        for (const subgroup of subgroups) {
           subgroupIdToInfo.set(String(subgroup._id), {
             groupName: group.name,
             subgroupName: subgroup.name,
-            isService: group.isService
+            isService: !!group.isService
           });
-        });
-      });
+        }
+      }
+
+      const vendorDisplayName = vendor['vendor-name'] || vendor.vendorname || vendorName || '';
+      const regCode = registeredVendorDetails?.vendorcode;
+      const useUnregisteredMappings =
+        !vendorDetails &&
+        (!regCode || regCode === 'NA');
+
+      let mappingsData = [];
+      if (useUnregisteredMappings && vendorDisplayName) {
+        groupMappingsSource = 'unregistered';
+        mappingsData = await db.collection('unregisteredvendorgroupmap')
+          .find({ 'vendor-name': vendorDisplayName })
+          .toArray();
+      } else {
+        const codeForMap = vendorDetails
+          ? (vendorDetails['vendor-code'] ?? vendorcode)
+          : (regCode && regCode !== 'NA' ? regCode : vendorcode);
+        const trimmed = String(codeForMap).replace(/\s+/g, '');
+        const variants = new Set([
+          codeForMap,
+          vendorcode,
+          trimmed,
+          String(codeForMap).toUpperCase(),
+          String(vendorcode).toUpperCase(),
+          trimmed.toUpperCase()
+        ]);
+        if (/^\d+$/.test(trimmed)) {
+          const n = Number(trimmed);
+          if (!Number.isNaN(n)) variants.add(n);
+        }
+        mappingsData = await db.collection('vendorgroupmap')
+          .find({ vendorCode: { $in: [...variants] } })
+          .toArray();
+      }
 
       groupDetails = mappingsData
-        .map(m => subgroupIdToInfo.get(String(m.subgroupId)))
+        .map((m) => {
+          if (m.subgroupId == null) return null;
+          const info = subgroupIdToInfo.get(String(m.subgroupId));
+          if (!info) return null;
+          return {
+            mappingId: m._id,
+            subgroupId: String(m.subgroupId),
+            groupName: info.groupName,
+            subgroupName: info.subgroupName,
+            isService: info.isService
+          };
+        })
         .filter(Boolean);
     } catch (error) {
       console.error('Error fetching group mappings:', error);
@@ -181,6 +214,7 @@ export default async function handler(req, res) {
           poList: poList || []
         },
         groupMappings: groupDetails || [],
+        groupMappingsSource,
         evaluation: {
           marks: evaluationMarks || null,
           fixed: evaluationFixed || null

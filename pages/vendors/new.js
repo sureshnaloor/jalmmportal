@@ -50,7 +50,7 @@ export default function NewVendorPage() {
 
       console.log('Sending vendor data:', vendorData);
 
-      const response = await fetch('/api/registeredvendors', {
+      const response = await fetch('/api/nonsapvendors', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,6 +66,13 @@ export default function NewVendorPage() {
       const result = await response.json();
       console.log('Server response:', result);
 
+      try {
+        if (typeof window !== 'undefined' && window.opener && !window.opener.closed) {
+          window.opener.location.reload();
+        }
+      } catch (_) {
+        /* ignore cross-origin */
+      }
       router.push('/vendors');
     } catch (error) {
       console.error('Error creating vendor:', error);
@@ -79,10 +86,12 @@ export default function NewVendorPage() {
     
     if (value.length >= 4) {
       try {
-        const response = await fetch(`/api/registeredvendors?search=${encodeURIComponent(value)}`);
+        const response = await fetch(
+          `/api/nonsapvendors?search=${encodeURIComponent(value)}&limit=50&skip=0`
+        );
         if (response.ok) {
           const data = await response.json();
-          setMatchingVendors(data);
+          setMatchingVendors(data.vendors || data);
         }
       } catch (error) {
         console.error('Error searching vendors:', error);

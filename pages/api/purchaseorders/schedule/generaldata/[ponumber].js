@@ -26,7 +26,7 @@ const convertDatesToObjects = (data) => {
       const newPaymentData = {
         advancePayments: [],
         milestonePayments: [],
-        finalPayment: { date: null, amount: '', comments: '' }
+        finalPayment: { requesteddate: null, date: null, amount: '', comments: '' }
       };
 
       // Convert advance payment data
@@ -54,6 +54,7 @@ const convertDatesToObjects = (data) => {
       // Convert final payment data
       if (result.paymentdata.finalpaiddate || result.paymentdata.finalpaidamt || result.paymentdata.finalcomments) {
         newPaymentData.finalPayment = {
+          requesteddate: null,
           date: result.paymentdata.finalpaiddate && !isNaN(Date.parse(result.paymentdata.finalpaiddate)) 
             ? new Date(result.paymentdata.finalpaiddate) 
             : null,
@@ -70,7 +71,8 @@ const convertDatesToObjects = (data) => {
           if (!payment) return null;
           return {
             ...payment,
-            date: payment.date && !isNaN(Date.parse(payment.date)) ? new Date(payment.date) : null
+            date: payment.date && !isNaN(Date.parse(payment.date)) ? new Date(payment.date) : null,
+            requesteddate: payment.requesteddate && !isNaN(Date.parse(payment.requesteddate)) ? new Date(payment.requesteddate) : null
           };
         }).filter(Boolean);
       }
@@ -79,7 +81,8 @@ const convertDatesToObjects = (data) => {
           if (!payment) return null;
           return {
             ...payment,
-            date: payment.date && !isNaN(Date.parse(payment.date)) ? new Date(payment.date) : null
+            date: payment.date && !isNaN(Date.parse(payment.date)) ? new Date(payment.date) : null,
+            requesteddate: payment.requesteddate && !isNaN(Date.parse(payment.requesteddate)) ? new Date(payment.requesteddate) : null
           };
         }).filter(Boolean);
       }
@@ -88,6 +91,9 @@ const convertDatesToObjects = (data) => {
           ...result.paymentdata.finalPayment,
           date: result.paymentdata.finalPayment.date && !isNaN(Date.parse(result.paymentdata.finalPayment.date)) 
             ? new Date(result.paymentdata.finalPayment.date) 
+            : null,
+          requesteddate: result.paymentdata.finalPayment.requesteddate && !isNaN(Date.parse(result.paymentdata.finalPayment.requesteddate))
+            ? new Date(result.paymentdata.finalPayment.requesteddate)
             : null
         };
       }
@@ -109,6 +115,16 @@ const convertDatesToObjects = (data) => {
     Object.keys(result.lcdata).forEach(key => {
       if (result.lcdata[key] && typeof result.lcdata[key] === 'string' && !isNaN(Date.parse(result.lcdata[key]))) {
         result.lcdata[key] = new Date(result.lcdata[key]);
+      }
+    });
+  }
+
+  // Convert dates in inspectiondata (tpiPoNumber is text)
+  if (result.inspectiondata) {
+    Object.keys(result.inspectiondata).forEach(key => {
+      if (key === 'tpiPoNumber') return;
+      if (result.inspectiondata[key] && typeof result.inspectiondata[key] === 'string' && !isNaN(Date.parse(result.inspectiondata[key]))) {
+        result.inspectiondata[key] = new Date(result.inspectiondata[key]);
       }
     });
   }
@@ -187,6 +203,7 @@ export default async function handler(req, res) {
           paymentdata,
           bgdata,
           lcdata,
+          inspectiondata,
           progressdata,
           shipdata
         } = req.body;
@@ -197,6 +214,7 @@ export default async function handler(req, res) {
           paymentdata,
           bgdata,
           lcdata,
+          inspectiondata,
           progressdata,
           shipdata
         });

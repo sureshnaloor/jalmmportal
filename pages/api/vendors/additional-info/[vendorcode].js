@@ -1,5 +1,21 @@
 import { connectToDatabase } from '../../../../lib/mongoconnect';
 
+function vendorCodeVariants(vendorcode) {
+  const trimmed = String(vendorcode).replace(/\s+/g, '');
+  const set = new Set([vendorcode, trimmed]);
+  if (/^\d+$/.test(trimmed)) {
+    const n = Number(trimmed);
+    if (!Number.isNaN(n)) set.add(n);
+  }
+  return [...set];
+}
+
+function vendorCodeFilter(vendorcode) {
+  const list = vendorCodeVariants(vendorcode);
+  if (list.length === 1) return { vendorCode: list[0] };
+  return { $or: list.map((c) => ({ vendorCode: c })) };
+}
+
 export default async function handler(req, res) {
   const { vendorcode } = req.query;
 
@@ -10,17 +26,21 @@ export default async function handler(req, res) {
   try {
     const { db } = await connectToDatabase();
     const collection = db.collection('vendor_additional_info');
+    const filter = vendorCodeFilter(vendorcode);
 
     if (req.method === 'GET') {
-      const doc = await collection.findOne({ vendorCode: vendorcode });
+      const doc = await collection.findOne(filter);
       return res.status(200).json(doc || {});
     }
 
     if (req.method === 'POST' || req.method === 'PUT') {
       const body = req.body || {};
+      const existing = await collection.findOne(filter);
+      const canonicalVendorCode =
+        existing?.vendorCode != null ? existing.vendorCode : String(vendorcode).replace(/\s+/g, '');
 
       const payload = {
-        vendorCode: vendorcode,
+        vendorCode: canonicalVendorCode,
         companyTypes: Array.isArray(body.companyTypes) ? body.companyTypes : [],
         yearEstablished: body.yearEstablished || '',
         companyLegalType: body.companyLegalType || '',
@@ -38,7 +58,7 @@ export default async function handler(req, res) {
       };
 
       await collection.updateOne(
-        { vendorCode: vendorcode },
+        filter,
         { $set: payload, $setOnInsert: { created_at: new Date() } },
         { upsert: true }
       );
