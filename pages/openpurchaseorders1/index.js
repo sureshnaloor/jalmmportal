@@ -3,6 +3,7 @@ import { useSession, getSession } from "next-auth/react";
 import moment from "moment";
 import HeaderComponent from "../../components/HeaderNewComponent";
 import FooterComponent from "../../components/FooterComponent";
+import DelayedPOReportButton from "../../components/DelayedPOReportButton";
 import { FiSearch, FiArrowUp, FiArrowDown, FiMessageSquare, FiCalendar, FiEye } from 'react-icons/fi';
 import dynamic from "next/dynamic";
 import { ToastContainer, toast } from "react-toastify";
@@ -809,6 +810,14 @@ function Openpurchaseorders1() {
       <HeaderComponent />
       
       <main className="container mx-auto px-4 py-8 flex-1 flex flex-col">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Open Purchase Orders</h1>
+            <p className="text-sm text-gray-600 mt-1">Manage schedules, comments, and delayed PO reports</p>
+          </div>
+          <DelayedPOReportButton />
+        </div>
+
         {/* Search Section */}
         <div className="max-w-2xl mx-auto mb-8">
           <div className="flex items-center gap-4">

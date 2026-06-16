@@ -6,6 +6,7 @@ import BankGuaranteeAlertList from '../../components/BankGuaranteeAlertList';
 import LCAlertList from '../../components/LCAlertList';
 import HeaderComponent from '../../components/HeaderNewComponent';
 import FooterComponent from '../../components/FooterComponent';
+import DelayedPOReportButton from '../../components/DelayedPOReportButton';
 
 const POAlertReport = () => {
   const [deliveryAlerts, setDeliveryAlerts] = useState([]);
@@ -92,11 +93,14 @@ const POAlertReport = () => {
                 Comprehensive view of all purchase order alerts requiring attention
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-500">Report Date</p>
-              <p className="text-lg font-semibold text-gray-900">
-                {moment().format('MMM D, YYYY')}
-              </p>
+            <div className="text-right flex flex-col items-end gap-3">
+              <DelayedPOReportButton />
+              <div>
+                <p className="text-sm text-gray-500">Report Date</p>
+                <p className="text-lg font-semibold text-gray-900">
+                  {moment().format('MMM D, YYYY')}
+                </p>
+              </div>
             </div>
           </div>
         </div>

@@ -4,6 +4,9 @@ import moment from "moment";
 import HeaderNewComponent from "../../components/HeaderNewComponent";
 import { FiSearch, FiArrowUp, FiArrowDown, FiFolder, FiShoppingCart, FiClipboard, FiUsers, FiBarChart2, FiX, FiGrid, FiList, FiDownload } from 'react-icons/fi';
 import FooterComponent from "../../components/FooterComponent";
+import ProjectPOReportActions from "../../components/ProjectPOReportActions";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Projects1() {
   const [projects, setProjects] = useState([]);
@@ -650,7 +653,7 @@ function Projects1() {
                         </p>
                       )}
                     </div>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex flex-wrap items-center justify-end gap-3">
                       <button
                         onClick={() => window.open(`/projectpurchasetimelines/${selectedProject}`, '_blank')}
                         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
@@ -667,6 +670,17 @@ function Projects1() {
                         <FiDownload className="mr-2" />
                         Download Excel
                       </button>
+                      <ProjectPOReportActions
+                        projectId={selectedProject}
+                        projectName={
+                          projectDetails?.["project-name"] ||
+                          sortedProjects.find((p) => p["project-wbs"]?.replace("/", "%2F") === selectedProject)?.["project-name"] ||
+                          selectedProject
+                        }
+                        layout="toolbar"
+                        showOpenOnlySwitch
+                        defaultOpenOnly
+                      />
                       <div className="flex items-center space-x-2">
                         <span className="text-sm text-gray-600">Layout:</span>
                         <div className="flex bg-gray-100 rounded-lg p-1">
@@ -995,7 +1009,8 @@ function Projects1() {
         )}
       </main>
 
-        <FooterComponent />
+      <ToastContainer position="top-right" autoClose={3000} />
+      <FooterComponent />
       
     </div>
   );

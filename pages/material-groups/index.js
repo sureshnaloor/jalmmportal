@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import styles from './MaterialGroups.module.css';
 import HeaderComponent from '../../components/HeaderNewComponent';
 import FooterComponent from '../../components/FooterComponent';
 
 export default function MaterialGroupsPage() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const userRole = (session?.user?.role || '').toLowerCase();
+  const isAdmin = userRole === 'admin';
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -353,13 +357,15 @@ export default function MaterialGroupsPage() {
       <div className={styles.header}>
         <h1 className={styles.headerText}>Material & Service Groups Management</h1>
         <div className={styles.actions}>
-          <button 
-            className={styles.newButton}
-            onClick={() => handleNewClick('group')}
-          >
-            New Group
-          </button>
-          {selectedGroup && (
+          {isAdmin && (
+            <button 
+              className={styles.newButton}
+              onClick={() => handleNewClick('group')}
+            >
+              New Group
+            </button>
+          )}
+          {isAdmin && selectedGroup && (
             <button 
               className={styles.newButton}
               onClick={() => handleNewClick('subgroup', selectedGroup._id)}
@@ -425,64 +431,74 @@ export default function MaterialGroupsPage() {
                       <td className={styles.subgroupName}>{subgroup.name}</td>
                       <td className={styles.subgroupDescription}>{subgroup.description}</td>
                       <td>
-                        <button 
-                          className={styles.editButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEditClick(e, 'subgroup', subgroup);
-                          }}
-                          title="Edit"
-                        >
-                          ✏️
-                        </button>
-                        <button 
-                          className={styles.deleteButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete('subgroup', subgroup._id);
-                          }}
-                          title="Delete"
-                        >
-                          🗑️
-                        </button>
-                        <button 
-                          className={styles.viewVendorsButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            window.open(`/material-groups/view-vendors?subgroupId=${subgroup._id}`, '_blank');
-                          }}
-                          title="View Vendors"
-                        >
-                          👁️
-                        </button>
-                        <button 
-                          className={styles.mapVendorButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            window.open(`/material-groups/map-vendor?subgroupId=${subgroup._id}`, '_blank');
-                          }}
-                          title="Map Vendor"
-                        >
-                          🔗
-                        </button>
-                        <button 
-                          className={styles.printVendorsButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const params = new URLSearchParams({
-                              subgroupId: subgroup._id,
-                              groupName: group.name || '',
-                              subgroupName: subgroup.name || '',
-                              isService: String(!!group.isService)
-                            });
-                            window.open(`/material-groups/print-vendors?${params.toString()}`, '_blank');
-                          }}
-                          title="print the mapped vendors"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" className={styles.printIcon} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H5a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clipRule="evenodd" />
-                          </svg>
-                        </button>
+                        {isAdmin && (
+                          <>
+                            <button 
+                              className={styles.editButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditClick(e, 'subgroup', subgroup);
+                              }}
+                              title="Edit"
+                            >
+                              ✏️
+                            </button>
+                            <button 
+                              className={styles.deleteButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete('subgroup', subgroup._id);
+                              }}
+                              title="Delete"
+                            >
+                              🗑️
+                            </button>
+                          </>
+                        )}
+                        {(isAdmin || userRole === 'user' || userRole === 'project') && (
+                          <button 
+                            className={styles.viewVendorsButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(`/material-groups/view-vendors?subgroupId=${subgroup._id}`, '_blank');
+                            }}
+                            title="View Vendors"
+                          >
+                            👁️
+                          </button>
+                        )}
+                        {isAdmin && (
+                          <>
+                            <button 
+                              className={styles.mapVendorButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(`/material-groups/map-vendor?subgroupId=${subgroup._id}`, '_blank');
+                              }}
+                              title="Map Vendor"
+                            >
+                              🔗
+                            </button>
+                            <button 
+                              className={styles.printVendorsButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const params = new URLSearchParams({
+                                  subgroupId: subgroup._id,
+                                  groupName: group.name || '',
+                                  subgroupName: subgroup.name || '',
+                                  isService: String(!!group.isService)
+                                });
+                                window.open(`/material-groups/print-vendors?${params.toString()}`, '_blank');
+                              }}
+                              title="print the mapped vendors"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className={styles.printIcon} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H5a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clipRule="evenodd" />
+                              </svg>
+                            </button>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -499,7 +515,7 @@ export default function MaterialGroupsPage() {
                   <th>Name</th>
                   <th>Description</th>
                   <th>Type</th>
-                  <th>Actions</th>
+                  {isAdmin && <th>Actions</th>}
                 </tr>
               </thead>
               <tbody>
@@ -512,25 +528,27 @@ export default function MaterialGroupsPage() {
                     <td className={styles.groupName}>{group.name}</td>
                     <td className={styles.groupDescription}>{group.description}</td>
                     <td className={styles.groupType}>{group.isService ? 'Service' : 'Material'}</td>
-                    <td>
-                      <button 
-                        className={styles.editButton}
-                        onClick={(e) => handleEditClick(e, 'group', group)}
-                        title="Edit"
-                      >
-                        ✏️
-                      </button>
-                      <button 
-                        className={styles.deleteButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete('group', group._id);
-                        }}
-                        title="Delete"
-                      >
-                        🗑️
-                      </button>
-                    </td>
+                    {isAdmin && (
+                      <td>
+                        <button 
+                          className={styles.editButton}
+                          onClick={(e) => handleEditClick(e, 'group', group)}
+                          title="Edit"
+                        >
+                          ✏️
+                        </button>
+                        <button 
+                          className={styles.deleteButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete('group', group._id);
+                          }}
+                          title="Delete"
+                        >
+                          🗑️
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -554,61 +572,71 @@ export default function MaterialGroupsPage() {
                       <td className={styles.subgroupName} >{subgroup.name}</td>
                       <td className={styles.subgroupDescription}>{subgroup.description}</td>
                       <td>
-                        <button 
-                          className={styles.editButton}
-                          onClick={(e) => handleEditClick(e, 'subgroup', subgroup)}
-                          title="Edit"
-                        >
-                          ✏️
-                        </button>
-                        <button 
-                          className={styles.deleteButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete('subgroup', subgroup._id);
-                          }}
-                          title="Delete"
-                        >
-                          🗑️
-                        </button>
-                        <button 
-                          className={styles.viewVendorsButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            window.open(`/material-groups/view-vendors?subgroupId=${subgroup._id}`, '_blank');
-                          }}
-                          title="View Vendors"
-                        >
-                          👁️
-                        </button>
-                        <button 
-                          className={styles.mapVendorButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            window.open(`/material-groups/map-vendor?subgroupId=${subgroup._id}`, '_blank');
-                          }}
-                          title="Map Vendor"
-                        >
-                          🔗
-                        </button>
-                        <button 
-                          className={styles.printVendorsButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const params = new URLSearchParams({
-                              subgroupId: subgroup._id,
-                              groupName: selectedGroup.name || '',
-                              subgroupName: subgroup.name || '',
-                              isService: String(!!selectedGroup.isService)
-                            });
-                            window.open(`/material-groups/print-vendors?${params.toString()}`, '_blank');
-                          }}
-                          title="print the mapped vendors"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" className={styles.printIcon} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H5a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clipRule="evenodd" />
-                          </svg>
-                        </button>
+                        {isAdmin && (
+                          <>
+                            <button 
+                              className={styles.editButton}
+                              onClick={(e) => handleEditClick(e, 'subgroup', subgroup)}
+                              title="Edit"
+                            >
+                              ✏️
+                            </button>
+                            <button 
+                              className={styles.deleteButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete('subgroup', subgroup._id);
+                              }}
+                              title="Delete"
+                            >
+                              🗑️
+                            </button>
+                          </>
+                        )}
+                        {(isAdmin || userRole === 'user' || userRole === 'project') && (
+                          <button 
+                            className={styles.viewVendorsButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(`/material-groups/view-vendors?subgroupId=${subgroup._id}`, '_blank');
+                            }}
+                            title="View Vendors"
+                          >
+                            👁️
+                          </button>
+                        )}
+                        {isAdmin && (
+                          <>
+                            <button 
+                              className={styles.mapVendorButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(`/material-groups/map-vendor?subgroupId=${subgroup._id}`, '_blank');
+                              }}
+                              title="Map Vendor"
+                            >
+                              🔗
+                            </button>
+                            <button 
+                              className={styles.printVendorsButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const params = new URLSearchParams({
+                                  subgroupId: subgroup._id,
+                                  groupName: selectedGroup.name || '',
+                                  subgroupName: subgroup.name || '',
+                                  isService: String(!!selectedGroup.isService)
+                                });
+                                window.open(`/material-groups/print-vendors?${params.toString()}`, '_blank');
+                              }}
+                              title="print the mapped vendors"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className={styles.printIcon} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H5a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clipRule="evenodd" />
+                              </svg>
+                            </button>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))}

@@ -3,6 +3,9 @@ import { useSession, getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import HeaderNewComponent from "../../components/HeaderNewComponent";
 import FooterComponent from "../../components/FooterComponent";
+import ProjectPOReportActions from "../../components/ProjectPOReportActions";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Tablecomponent, {
   SelectColumnFilter,
   Boldstyle1,
@@ -201,13 +204,17 @@ function OpenProjects() {
         Header: "Actions",
         accessor: 'actions',
         Cell: ({ row }) => (
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-start gap-2">
             <button
               onClick={() => handleViewPOs(row.original.projectId)}
               className="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-3 rounded"
             >
               View POs
             </button>
+            <ProjectPOReportActions
+              projectId={row.original.projectId}
+              projectName={row.original.projectName || row.original.projectWbs || row.original.projectId}
+            />
           </div>
         ),
       },
@@ -225,6 +232,7 @@ function OpenProjects() {
             <p className="mt-4 text-gray-600">Loading open projects...</p>
           </div>
         </div>
+        <ToastContainer position="top-right" autoClose={3000} />
         <FooterComponent />
       </>
     );
@@ -314,6 +322,7 @@ function OpenProjects() {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-right" autoClose={3000} />
       <FooterComponent />
     </>
   );

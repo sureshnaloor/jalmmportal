@@ -1,4 +1,43 @@
 import { connectToDatabase } from "../../../lib/mongoconnect";
+import { buildNetworkToProjectMap } from "../../../lib/projectPurchaseOrders";
+
+const OPEN_BALANCE_THRESHOLD = 100;
+
+function ensureProjectEntry(projectsMap, projectId) {
+  if (!projectsMap[projectId]) {
+    projectsMap[projectId] = {
+      projectId,
+      openPOs: [],
+      seenPonumbers: new Set(),
+      totalPOValue: 0,
+      totalOpenValue: 0,
+      openPOCount: 0,
+    };
+  }
+  return projectsMap[projectId];
+}
+
+function addPOToProject(projectsMap, projectId, poData, materialDocsByPO) {
+  const project = ensureProjectEntry(projectsMap, projectId);
+  const ponumber = poData.ponum;
+
+  if (project.seenPonumbers.has(ponumber)) {
+    const existing = project.openPOs.find((po) => po.ponum === ponumber);
+    if (existing && poData.assignmentType && existing.assignmentType !== poData.assignmentType) {
+      existing.assignmentType = 'WBS + Network';
+    }
+    return;
+  }
+
+  project.seenPonumbers.add(ponumber);
+  project.openPOs.push({
+    ...poData,
+    materialDocs: materialDocsByPO[ponumber] || [],
+  });
+  project.totalPOValue += poData.poval;
+  project.totalOpenValue += poData.balgrval;
+  project.openPOCount += 1;
+}
 
 const handler = async (req, res) => {
   const { db } = await connectToDatabase();
@@ -6,97 +45,132 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case "GET": {
-        // First, get all purchase orders and group by project and PO number
-        // Optimized: Match balance condition early and use projection to reduce memory
-        const purchaseOrders = await db
-          .collection("purchaseorders")
-          .aggregate([
+        const [wbsPurchaseOrders, networkPurchaseOrders, networkToProject] = await Promise.all([
+          db.collection("purchaseorders").aggregate([
             {
               $match: {
                 "account.wbs": { $exists: true, $ne: null },
-                "pending-val-sar": { $gt: 100 } // Filter early to reduce data
-              }
+                "pending-val-sar": { $gt: OPEN_BALANCE_THRESHOLD },
+              },
             },
             {
               $project: {
                 "po-number": 1,
                 "po-date": 1,
                 "delivery-date": 1,
-                "vendorcode": 1,
+                vendorcode: 1,
                 "vendor-code": 1,
-                "vendorname": 1,
+                vendorname: 1,
                 "vendor-name": 1,
                 "po-value-sar": 1,
                 "pending-val-sar": 1,
-                projectId: { $substr: ["$account.wbs", 0, 12] }
-              }
+                projectId: { $substr: ["$account.wbs", 0, 12] },
+              },
             },
             {
               $group: {
                 _id: {
                   projectId: "$projectId",
-                  ponumber: "$po-number"
+                  ponumber: "$po-number",
                 },
                 "po-date": { $first: "$po-date" },
                 "delivery-date": { $first: "$delivery-date" },
-                vendorcode: { $first: { $ifNull: ["$vendorcode", { $ifNull: ["$vendor-code", ""] }] } },
-                vendorname: { $first: { $ifNull: ["$vendorname", { $ifNull: ["$vendor-name", ""] }] } },
+                vendorcode: {
+                  $first: { $ifNull: ["$vendorcode", { $ifNull: ["$vendor-code", ""] }] },
+                },
+                vendorname: {
+                  $first: { $ifNull: ["$vendorname", { $ifNull: ["$vendor-name", ""] }] },
+                },
                 poval: { $sum: { $ifNull: ["$po-value-sar", 0] } },
-                balgrval: { $sum: { $ifNull: ["$pending-val-sar", 0] } }
-              }
+                balgrval: { $sum: { $ifNull: ["$pending-val-sar", 0] } },
+              },
             },
             {
               $match: {
-                balgrval: { $gt: 100 } // Only open POs (balance > 100)
-              }
+                balgrval: { $gt: OPEN_BALANCE_THRESHOLD },
+              },
+            },
+            { $limit: 10000 },
+          ]).toArray(),
+          db.collection("purchaseorders").aggregate([
+            {
+              $match: {
+                "account.network": { $exists: true, $ne: null },
+                $or: [{ "account.wbs": { $exists: false } }, { "account.wbs": null }],
+                "pending-val-sar": { $gt: OPEN_BALANCE_THRESHOLD },
+              },
             },
             {
-              $limit: 10000 // Safety limit to prevent memory issues
-            }
-          ])
-          .toArray();
+              $project: {
+                "po-number": 1,
+                "po-date": 1,
+                "delivery-date": 1,
+                vendorcode: 1,
+                "vendor-code": 1,
+                vendorname: 1,
+                "vendor-name": 1,
+                "po-value-sar": 1,
+                "pending-val-sar": 1,
+                network: "$account.network",
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  network: "$network",
+                  ponumber: "$po-number",
+                },
+                "po-date": { $first: "$po-date" },
+                "delivery-date": { $first: "$delivery-date" },
+                vendorcode: {
+                  $first: { $ifNull: ["$vendorcode", { $ifNull: ["$vendor-code", ""] }] },
+                },
+                vendorname: {
+                  $first: { $ifNull: ["$vendorname", { $ifNull: ["$vendor-name", ""] }] },
+                },
+                poval: { $sum: { $ifNull: ["$po-value-sar", 0] } },
+                balgrval: { $sum: { $ifNull: ["$pending-val-sar", 0] } },
+              },
+            },
+            {
+              $match: {
+                balgrval: { $gt: OPEN_BALANCE_THRESHOLD },
+              },
+            },
+            { $limit: 10000 },
+          ]).toArray(),
+          buildNetworkToProjectMap(db),
+        ]);
 
-        // Get all unique PO numbers that are open
-        const openPONumbers = [...new Set(purchaseOrders.map(po => po._id.ponumber))];
+        const openPONumbers = [
+          ...new Set([
+            ...wbsPurchaseOrders.map((po) => po._id.ponumber),
+            ...networkPurchaseOrders.map((po) => po._id.ponumber),
+          ]),
+        ];
 
-        // Fetch material documents for these POs to cross-reference
-        // Limit to prevent memory issues if there are too many POs
-        const materialDocs = openPONumbers.length > 0 
-          ? await db
-              .collection("materialdocumentsforpo")
-              .find({ ponumber: { $in: openPONumbers.slice(0, 1000) } }) // Limit to first 1000 POs
-              .project({ ponumber: 1, "delivery-date": 1, status: 1 }) // Only fetch needed fields
-              .limit(5000) // Safety limit
-              .toArray()
-          : [];
+        const materialDocs =
+          openPONumbers.length > 0
+            ? await db
+                .collection("materialdocumentsforpo")
+                .find({ ponumber: { $in: openPONumbers.slice(0, 1000) } })
+                .project({ ponumber: 1, "delivery-date": 1, status: 1 })
+                .limit(5000)
+                .toArray()
+            : [];
 
-        // Group material documents by PO number to get delivery info
         const materialDocsByPO = {};
-        materialDocs.forEach(doc => {
+        materialDocs.forEach((doc) => {
           if (!materialDocsByPO[doc.ponumber]) {
             materialDocsByPO[doc.ponumber] = [];
           }
           materialDocsByPO[doc.ponumber].push(doc);
         });
 
-        // Now group by project
         const projectsMap = {};
 
-        purchaseOrders.forEach(po => {
-          const projectId = po._id.projectId;
-          
-          if (!projectsMap[projectId]) {
-            projectsMap[projectId] = {
-              projectId: projectId,
-              openPOs: [],
-              totalPOValue: 0,
-              totalOpenValue: 0,
-              openPOCount: 0
-            };
-          }
-
-          // Add PO to project
-          const poData = {
+        wbsPurchaseOrders.forEach((po) => {
+          addPOToProject(projectsMap, po._id.projectId, {
             ponum: po._id.ponumber,
             podate: po["po-date"],
             "delivery-date": po["delivery-date"],
@@ -104,71 +178,75 @@ const handler = async (req, res) => {
             vendorname: po.vendorname,
             poval: po.poval,
             balgrval: po.balgrval,
-            materialDocs: materialDocsByPO[po._id.ponumber] || []
-          };
-
-          projectsMap[projectId].openPOs.push(poData);
-          projectsMap[projectId].totalPOValue += po.poval;
-          projectsMap[projectId].totalOpenValue += po.balgrval;
-          projectsMap[projectId].openPOCount += 1;
+            assignmentType: "WBS",
+          }, materialDocsByPO);
         });
 
-        // Convert to array and get project details
-        const projectsArray = Object.values(projectsMap);
+        networkPurchaseOrders.forEach((po) => {
+          const projectId = networkToProject[po._id.network];
+          if (!projectId) return;
 
-        // Fetch project names from projects collection
-        const projectIds = projectsArray.map(p => p.projectId);
+          addPOToProject(projectsMap, projectId, {
+            ponum: po._id.ponumber,
+            podate: po["po-date"],
+            "delivery-date": po["delivery-date"],
+            vendorcode: po.vendorcode,
+            vendorname: po.vendorname,
+            poval: po.poval,
+            balgrval: po.balgrval,
+            assignmentType: "Network",
+          }, materialDocsByPO);
+        });
+
+        const projectsArray = Object.values(projectsMap).map((project) => {
+          const { seenPonumbers, ...rest } = project;
+          return rest;
+        });
+
+        const projectIds = projectsArray.map((p) => p.projectId);
         let projectsInfo = [];
-        
+
         if (projectIds.length > 0) {
-          // Build regex pattern for matching project WBS
-          const regexPatterns = projectIds.map(id => 
-            new RegExp(`^${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)
-          );
-          
           projectsInfo = await db
             .collection("projects")
             .find({
-              $or: projectIds.map(id => ({
-                "project-wbs": { $regex: `^${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}` }
-              }))
+              $or: projectIds.map((id) => ({
+                "project-wbs": { $regex: `^${id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}` },
+              })),
             })
             .toArray();
         }
 
-        // Create a map of project WBS to project name
         const projectInfoMap = {};
-        projectsInfo.forEach(proj => {
+        projectsInfo.forEach((proj) => {
           const wbs = proj["project-wbs"];
           if (wbs) {
             const projId = wbs.substring(0, 12);
             if (!projectInfoMap[projId]) {
               projectInfoMap[projId] = {
                 projectName: proj["project-name"] || "",
-                projectWbs: proj["project-wbs"] || ""
+                projectWbs: proj["project-wbs"] || "",
               };
             }
           }
         });
 
-        // Add project names to results
-        const result = projectsArray.map(proj => ({
+        const result = projectsArray.map((proj) => ({
           ...proj,
           projectName: projectInfoMap[proj.projectId]?.projectName || "",
-          projectWbs: projectInfoMap[proj.projectId]?.projectWbs || proj.projectId
+          projectWbs: projectInfoMap[proj.projectId]?.projectWbs || proj.projectId,
         }));
 
-        // Calculate totals
         const totals = {
           totalProjects: result.length,
-          totalPOs: purchaseOrders.length,
+          totalPOs: result.reduce((sum, p) => sum + p.openPOCount, 0),
           totalPOValue: result.reduce((sum, p) => sum + p.totalPOValue, 0),
-          totalOpenValue: result.reduce((sum, p) => sum + p.totalOpenValue, 0)
+          totalOpenValue: result.reduce((sum, p) => sum + p.totalOpenValue, 0),
         };
 
         return res.json({
           projects: result,
-          totals: totals
+          totals,
         });
       }
 

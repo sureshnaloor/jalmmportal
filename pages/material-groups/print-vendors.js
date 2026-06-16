@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import HeaderComponent from '../../components/HeaderNewComponent';
 import FooterComponent from '../../components/FooterComponent';
+import SubgroupVendorReportButton from '../../components/SubgroupVendorReportButton';
 
 function getVendorDisplay(vendor) {
   const name = vendor['vendor-name'] || vendor.vendorname || 'N/A';
@@ -426,6 +427,14 @@ export default function PrintVendorsPage() {
                 >
                   {loadingPrintData ? 'Loading...' : `Print Portrait (${selectedCount})`}
                 </button>
+                {subgroupId && (
+                  <SubgroupVendorReportButton
+                    subgroupId={subgroupId}
+                    groupName={groupName}
+                    subgroupName={subgroupName}
+                    isService={isServiceGroup}
+                  />
+                )}
                 <button
                   type="button"
                   onClick={() => fetchPrintData('landscape')}
