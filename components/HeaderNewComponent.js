@@ -40,6 +40,8 @@ function HeaderNewComponent() {
       href: "/projects1",
       sublinks: [
         { href: "/projects1", label: "Projects" },
+        { href: "/projectpurchaseorders", label: "Project-wise POs" },
+        { href: "/wbsdescriptions", label: "WBS Descriptions Upload" },
         { href: "/projectdetails", label: "Project Details" },
         { href: "/openprojects", label: "Open Projects- open PO's" },
         { href: "/tracking", label: "Tracking" },
@@ -65,6 +67,7 @@ function HeaderNewComponent() {
       href: "/openpurchaseorders1",
       sublinks: [
         { href: "/openpurchaseorders1", label: "Open PO" },
+        { href: "/allpurchaseorders", label: "All POs" },
         { href: "/purchaseordersearch", label: "PO Complete Details" },
         { href: "/po-alert-report", label: "PO Alerts" },
         { href: "/po-feedback", label: "PO Feedback" },
@@ -83,6 +86,8 @@ function HeaderNewComponent() {
       href: "/vendors1",
       sublinks: [
         { href: "/vendors1", label: "Vendors" },
+        { href: "/dormant-vendors", label: "Dormant Vendors" },
+        { href: "/active-vendors", label: "Active Vendors" },
         { href: "/vendor-dashboard", label: "Vendor Dashboard" },
         { href: "/vendor-extract", label: "Vendor Extract (OpenAI)" },
         { href: "/vendorswithpo", label: "Vendor Details" },

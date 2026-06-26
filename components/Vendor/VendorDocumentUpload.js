@@ -19,6 +19,7 @@ function VendorDocumentUpload({ vendorCode, onUploadSuccess, onUploadError }) {
     { value: 'INSURANCE', label: 'Insurance Certificate' },
     { value: 'ZATCA', label: 'ZATCA certificate' },
     { value: 'BANK_ACCOUNT_LETTER', label: 'Bank account letter' },
+    { value: 'NATIONAL_ADDRESS', label: 'National Address' },
     { value: 'CLIENT_REFERENCES', label: 'Client references and project references list' },
     { value: 'APPROVAL_LETTERS', label: 'Approval letters from reputed clients' },
     { value: 'PREQUALIFICATION_SHEET', label: 'Vendor pre-qualification filledin sheet' },

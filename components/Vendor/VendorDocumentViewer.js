@@ -112,6 +112,7 @@ function VendorDocumentViewer({ vendorCode, refreshTrigger }) {
       'INSURANCE': 'bg-pink-100 text-pink-800',
       'ZATCA': 'bg-teal-100 text-teal-800',
       'BANK_ACCOUNT_LETTER': 'bg-orange-100 text-orange-800',
+      'NATIONAL_ADDRESS': 'bg-teal-100 text-teal-800',
       'CLIENT_REFERENCES': 'bg-cyan-100 text-cyan-800',
       'APPROVAL_LETTERS': 'bg-lime-100 text-lime-800',
       'PREQUALIFICATION_SHEET': 'bg-amber-100 text-amber-800',
