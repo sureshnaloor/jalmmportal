@@ -52,10 +52,10 @@ function HeaderNewComponent() {
             <Link href="/" passHref legacyBehavior>
               <a className="flex items-center">
                 <Image
-                  src="/images/JAL_LOGO.jpg"
+                  src="/images/levlup.png"
                   width={70}
                   height={70}
-                  alt="JAL"
+                  alt="levlup"
                   className="rounded shadow"
                 />
               </a>

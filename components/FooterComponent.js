@@ -49,7 +49,7 @@ function FooterComponent({ id }) {
             Legal
           </h3>
           <p className="text-[10px] dark:text-fuchsia-400 text-fuchsia-900 pt-3">
-            This Website is a copyrighted work belonging to JAL International.
+            This Website is a copyrighted work belonging to Suresh Naloor.
           </p>
           <p className="text-[8px] pt-3 dark:text-gray-300 text-gray-900">
             Account Creation. For you to use the Site, you have to register. You
