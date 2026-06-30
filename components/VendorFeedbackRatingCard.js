@@ -34,14 +34,24 @@ function StarRow({ label, value, onChange, disabled, isOverall }) {
   );
 }
 
-function CategoryColumn({ title, labels, ratings, onChange, disabled }) {
+function CategoryColumn({ title, labels, ratings, onChange, disabled, allowClear }) {
   const overall = computeCategoryOverall(ratings);
   const hasAnyIndividualRating = [1, 2, 3, 4, 5, 6, 7, 8, 9].some((k) => ratings[k] != null && ratings[k] >= 1 && ratings[k] <= 5);
   const hasManualOverall = ratings[10] != null && ratings[10] >= 1 && ratings[10] <= 5;
+  const hasAnyRating = Object.values(ratings).some((v) => v != null);
   return (
     <div className="flex-1 min-w-0 flex flex-col border border-gray-200 rounded-lg bg-white shadow-sm overflow-hidden">
-      <div className="px-4 py-3 bg-gray-700 text-white font-semibold text-sm">
-        {title}
+      <div className="px-4 py-3 bg-gray-700 text-white font-semibold text-sm flex items-center justify-between gap-2">
+        <span>{title}</span>
+        {allowClear && !disabled && hasAnyRating && (
+          <button
+            type="button"
+            onClick={() => onChange({})}
+            className="text-xs font-medium px-2 py-0.5 rounded bg-white/15 hover:bg-white/25 text-white"
+          >
+            Clear
+          </button>
+        )}
       </div>
       <div className="p-3 space-y-0">
         {labels.map((label, i) => {
@@ -76,6 +86,7 @@ export default function VendorFeedbackRatingCard({
   onMaterialsChange,
   onServicesChange,
   disabled = false,
+  allowClear = false,
 }) {
   return (
     <div className="rounded-xl border-2 border-gray-300 bg-gray-100 p-4 shadow-md">
@@ -90,6 +101,7 @@ export default function VendorFeedbackRatingCard({
           ratings={ratingMaterials}
           onChange={onMaterialsChange}
           disabled={disabled}
+          allowClear={allowClear}
         />
         <CategoryColumn
           title="Services (if applicable)"
@@ -97,6 +109,7 @@ export default function VendorFeedbackRatingCard({
           ratings={ratingServices}
           onChange={onServicesChange}
           disabled={disabled}
+          allowClear={allowClear}
         />
       </div>
     </div>
