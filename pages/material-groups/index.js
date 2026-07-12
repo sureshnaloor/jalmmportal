@@ -379,6 +379,27 @@ export default function MaterialGroupsPage() {
           >
             Sort by Type
           </button>
+          <button
+            type="button"
+            className={styles.newButton}
+            onClick={() => router.push('/material-groups/map-materials')}
+          >
+            Map Materials
+          </button>
+          <button
+            type="button"
+            className={styles.newButton}
+            onClick={() => router.push('/material-groups/mapped-materials')}
+          >
+            Mapped Materials
+          </button>
+          <button
+            type="button"
+            className={styles.newButton}
+            onClick={() => router.push('/material-groups/service-group-map')}
+          >
+            Service Group Map
+          </button>
         </div>
       </div>
 

@@ -673,4 +673,285 @@
   padding: 20px;
   color: #666;
   font-size: 16px;
-} 
+}
+
+.successMessage {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border: 1px solid #6ee7b7;
+}
+
+.sectionHint {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6b7280;
+  margin: 4px 0 12px;
+}
+
+.selectionBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.selectionCount {
+  font-size: 12px;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.paginationBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.paginationButton {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.15s ease-out;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.paginationButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationInfo {
+  font-size: 12px;
+  color: #6b7280;
+  min-width: 100px;
+  text-align: center;
+}
+
+.sortableHeader {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortableHeader:hover {
+  color: #2563eb;
+}
+
+.checkboxCol {
+  width: 36px !important;
+  text-align: center;
+}
+
+.emptyMessage {
+  font-size: 13px;
+  font-weight: 400;
+  color: #6b7280;
+  padding: 16px 0;
+}
+
+.mappingPanel {
+  margin-top: 12px;
+}
+
+.formField {
+  margin-bottom: 16px;
+}
+
+.formField label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.selectionSummary {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #1e40af;
+  margin-bottom: 12px;
+}
+
+.selectedTarget {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: #166534;
+}
+
+.selectedTarget p {
+  margin: 0;
+  font-weight: 400;
+}
+
+.reactSelect {
+  font-size: 13px;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modalContent {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+  max-width: 480px;
+  width: 100%;
+  padding: 24px;
+}
+
+.modalTitle {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.modalMessage {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4b5563;
+  font-weight: 400;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modalConfirmPrimary {
+  background-color: #2563eb;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.modalConfirmPrimary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.modalConfirmDanger {
+  background-color: #ef4444;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.modalConfirmDanger:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.modalConfirmPrimary:disabled,
+.modalConfirmDanger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mappedSubgroupCol {
+  font-size: 12px;
+  color: #1d4ed8;
+  font-weight: 500;
+}
+
+.uploadActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.templateLink {
+  font-size: 12px;
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.statCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+}
+
+.statValue {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e40af;
+}
+
+.statLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.parseWarnings {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin: 12px 0;
+  font-size: 12px;
+  color: #92400e;
+  font-weight: 400;
+}
+
+.parseWarnings ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
