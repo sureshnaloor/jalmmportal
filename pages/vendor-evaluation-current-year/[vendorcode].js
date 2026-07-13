@@ -8,6 +8,7 @@ import FooterComponent from '../../components/FooterComponent';
 import VendorFeedbackRatingCard from '../../components/VendorFeedbackRatingCard';
 import POEvaluationCard from '../../components/VendorEvaluation/POEvaluationCard';
 import VendorEvaluationGroupSection from '../../components/VendorEvaluation/VendorEvaluationGroupSection';
+import SupplementaryEvaluationSections from '../../components/VendorEvaluation/SupplementaryEvaluationSections';
 import { FiArrowLeft, FiSave, FiPrinter, FiCheck, FiEdit3 } from 'react-icons/fi';
 import { getVendorEvaluationYear } from '../../lib/vendorEvaluationYear';
 import {
@@ -90,6 +91,24 @@ function VendorEvaluationDetail() {
   const allowClear = !isApproved && !isEvaluated;
   const scoreEditedBySch = hasScoreEditsBySupplyChainHead(data?.evaluation);
 
+  const reloadEvaluation = async () => {
+    if (!vendorcode) return;
+    const reload = await fetch(`/api/vendors/annual-evaluation/${vendorcode}`);
+    if (reload.ok) {
+      const json = await reload.json();
+      setData(json);
+    }
+  };
+
+  const handleSupplementarySaved = async () => {
+    await reloadEvaluation();
+    toast.success('Supplementary evaluation saved');
+  };
+
+  const handleSupplementaryError = (message) => {
+    toast.error(message || 'Failed to save supplementary evaluation');
+  };
+
   const handleSave = async () => {
     if (!vendorcode || isApproved) return;
     if (isEvaluated && !editScoresMode) return;
@@ -134,12 +153,8 @@ function VendorEvaluationDetail() {
       toast.success(
         editScoresMode ? 'Scores updated by supply chain head' : 'Vendor evaluation saved successfully'
       );
-      const reload = await fetch(`/api/vendors/annual-evaluation/${vendorcode}`);
-      if (reload.ok) {
-        const json = await reload.json();
-        setData(json);
-        if (editScoresMode) setEditScoresMode(false);
-      }
+      await reloadEvaluation();
+      if (editScoresMode) setEditScoresMode(false);
     } catch (err) {
       console.error(err);
       toast.error(err.message || 'Failed to save evaluation');
@@ -377,6 +392,15 @@ function VendorEvaluationDetail() {
             </button>
           </div>
         )}
+
+        <SupplementaryEvaluationSections
+          vendorcode={vendorcode}
+          evaluation={data?.evaluation}
+          disabled={isApproved}
+          rankedBy={session?.user?.name || session?.user?.email}
+          onSaved={handleSupplementarySaved}
+          onError={handleSupplementaryError}
+        />
       </main>
       <FooterComponent />
     </div>

@@ -184,6 +184,15 @@
   box-shadow: inset 2px 0 0 #2563eb;
 }
 
+.disabledRow {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.disabledRow:hover {
+  background-color: inherit;
+}
+
 .groupName {
   font-weight: 500;
   font-size: 13px;
@@ -755,6 +764,26 @@
 
 .sortableHeader:hover {
   color: #2563eb;
+}
+
+.tableScroll {
+  max-height: 70vh;
+  overflow: auto;
+  margin-top: 15px;
+  border: 1px solid #eef2f7;
+  border-radius: 6px;
+}
+
+.tableScroll .table {
+  margin-top: 0;
+}
+
+.tableScroll thead th {
+  position: sticky;
+  top: 0;
+  background: #f9fafb;
+  z-index: 1;
+  box-shadow: 0 1px 0 #eef2f7;
 }
 
 .checkboxCol {

@@ -389,6 +389,13 @@ export default function MaterialGroupsPage() {
           <button
             type="button"
             className={styles.newButton}
+            onClick={() => router.push('/material-groups/map-hana-materials')}
+          >
+            Map HANA Materials
+          </button>
+          <button
+            type="button"
+            className={styles.newButton}
             onClick={() => router.push('/material-groups/mapped-materials')}
           >
             Mapped Materials
