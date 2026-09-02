@@ -177,11 +177,6 @@ const styles = StyleSheet.create({
     fontSize: 6.5,
     color: '#0f172a',
   },
-  timelineItem: {
-    fontSize: 6,
-    color: '#64748b',
-    marginBottom: 1,
-  },
   scoreSection: {
     backgroundColor: '#f0fdf4',
     borderWidth: 1,
@@ -369,13 +364,6 @@ function ScoreCard({ label, percent, sublabel }) {
   );
 }
 
-function formatVariance(days) {
-  if (days == null) return 'N/A';
-  if (days === 0) return 'On time';
-  if (days > 0) return `${days}d late`;
-  return `${Math.abs(days)}d early`;
-}
-
 function CompactPOBox({ po, index }) {
   const ev = po.evaluation || {};
 
@@ -389,28 +377,6 @@ function CompactPOBox({ po, index }) {
         <Text style={styles.poLabel}>PO Date</Text>
         <Text style={styles.poValue}>{po.podate ? moment(po.podate).format('DD/MM/YY') : 'N/A'}</Text>
       </View>
-      <View style={styles.poRow}>
-        <Text style={styles.poLabel}>Planned Delivery</Text>
-        <Text style={styles.poValue}>{po.deliveryDate ? moment(po.deliveryDate).format('DD/MM/YY') : 'N/A'}</Text>
-      </View>
-      <View style={styles.poRow}>
-        <Text style={styles.poLabel}>Actual Delivery</Text>
-        <Text style={styles.poValue}>{po.actualDeliveryDate ? moment(po.actualDeliveryDate).format('DD/MM/YY') : 'N/A'}</Text>
-      </View>
-      <View style={styles.poRow}>
-        <Text style={styles.poLabel}>Variance</Text>
-        <Text style={styles.poValue}>{formatVariance(po.deliveryVarianceDays)}</Text>
-      </View>
-
-      {po.timeline?.length > 0 && (
-        <View style={{ marginTop: 4, marginBottom: 4 }}>
-          {po.timeline.slice(0, 4).map((event, i) => (
-            <Text key={i} style={styles.timelineItem}>
-              • {event.label}: {moment(event.date).format('DD MMM YY')}
-            </Text>
-          ))}
-        </View>
-      )}
 
       <View style={styles.poRow}>
         <Text style={styles.poLabel}>Price ({PO_EVALUATION_WEIGHTS.price.weight}%)</Text>

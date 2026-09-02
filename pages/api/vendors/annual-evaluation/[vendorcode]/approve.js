@@ -85,7 +85,7 @@ export default async function handler(req, res) {
       ...savedEval,
       approved: true,
       approvedAt: new Date(),
-      approvedBy: userEmail,
+      approvedBy: session.user.name || userEmail,
     };
 
     await db.collection('vendorevaluation').updateOne(

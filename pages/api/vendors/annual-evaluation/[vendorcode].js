@@ -136,7 +136,18 @@ export default async function handler(req, res) {
 
       const topPOs = await Promise.all(topPOsRaw.map((po) => enrichPOWithSchedule(db, po)));
 
-      const savedEval = evalDoc?.[storageKey] || null;
+      let savedEval = evalDoc?.[storageKey] || null;
+
+      // Resolve approver email to display name for print/UI (legacy records stored email)
+      if (savedEval?.approvedBy && String(savedEval.approvedBy).includes('@')) {
+        const approver = await db.collection('users').findOne(
+          { email: String(savedEval.approvedBy) },
+          { projection: { name: 1 } }
+        );
+        if (approver?.name) {
+          savedEval = { ...savedEval, approvedBy: approver.name };
+        }
+      }
 
       return res.status(200).json({
         evaluationYear,
