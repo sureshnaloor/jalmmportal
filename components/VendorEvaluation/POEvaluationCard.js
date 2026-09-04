@@ -36,6 +36,7 @@ export default function POEvaluationCard({
   disabled = false,
   allowClear = false,
   rank,
+  rankLabel,
 }) {
   const weightedScore = computeWeightedPOVariableScore(
     evaluation.priceRating,
@@ -72,7 +73,9 @@ export default function POEvaluationCard({
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       <div className="px-5 py-4 bg-gradient-to-r from-slate-700 to-slate-800 text-white flex flex-wrap items-center justify-between gap-2">
         <div>
-          <p className="text-xs uppercase tracking-wide text-slate-300">Top PO #{rank}</p>
+          <p className="text-xs uppercase tracking-wide text-slate-300">
+            {rankLabel || `Top PO #${rank}`}
+          </p>
           <h3 className="text-lg font-bold">{po.ponumber}</h3>
         </div>
         <div className="text-right">

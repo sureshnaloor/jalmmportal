@@ -1,78 +1,19 @@
 import { connectToDatabase } from '../../../../lib/mongoconnect';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/[...nextauth]';
-import {
-  getVendorEvaluationYear,
-  getVendorEvaluationYearRange,
-  getAnnualEvaluationStorageKey,
-} from '../../../../lib/vendorEvaluationYear';
 import { MIN_VENDOR_PO_VALUE_SAR } from '../../../../lib/vendorEvaluationConfig';
 import { isEvaluationComplete } from '../../../../lib/vendorEvaluationApproval';
+import { getVendorGroupAssignments } from '../../../../lib/vendorGroupMappings';
 import {
-  toNumber,
-  resolveActualDeliveryDate,
-  computeDeliveryVarianceDays,
-  buildPOTimelineEvents,
-  mapPOLineItem,
-} from '../../../../lib/poEvaluationHelpers';
-
-async function getTopPOsForVendor(db, vendorcode, yearStart, yearEnd) {
-  const rows = await db
-    .collection('purchaseorders')
-    .find({
-      vendorcode,
-      'po-date': { $gte: yearStart, $lte: yearEnd },
-    })
-    .toArray();
-
-  const poMap = new Map();
-  rows.forEach((row) => {
-    const ponum = row['po-number'];
-    if (!ponum) return;
-    if (!poMap.has(ponum)) {
-      poMap.set(ponum, {
-        ponumber: ponum,
-        podate: row['po-date'],
-        deliveryDate: row['delivery-date'],
-        vendorname: row.vendorname,
-        plant: row['plant-code'] || '',
-        povalue: 0,
-        lineItems: [],
-      });
-    }
-    const po = poMap.get(ponum);
-    po.povalue += toNumber(row['po-value-sar']);
-    po.lineItems.push(mapPOLineItem(row));
-  });
-
-  return [...poMap.values()]
-    .sort((a, b) => b.povalue - a.povalue)
-    .slice(0, 2);
-}
-
-async function enrichPOWithSchedule(db, po) {
-  const [schedule, deliveryDocs] = await Promise.all([
-    db.collection('poschedule').findOne({ ponumber: po.ponumber }),
-    db.collection('materialdocumentsforpo').find({ ponumber: po.ponumber }).toArray(),
-  ]);
-
-  const actualDeliveryDate = resolveActualDeliveryDate(schedule, deliveryDocs);
-  const deliveryVarianceDays = computeDeliveryVarianceDays(po.podate, actualDeliveryDate);
-
-  return {
-    ...po,
-    povalue: Math.round(po.povalue * 100) / 100,
-    actualDeliveryDate,
-    deliveryVarianceDays,
-    timeline: buildPOTimelineEvents({
-      podate: po.podate,
-      deliveryDate: po.deliveryDate,
-      actualDeliveryDate,
-      schedule,
-    }),
-    hasSchedule: Boolean(schedule),
-  };
-}
+  getEvaluationTrackContext,
+  parseEvaluationTrack,
+} from '../../../../lib/vendorEvaluationYear';
+import {
+  getEvaluationPOs,
+  enrichPOWithSchedule,
+  getVendorPoTotals,
+  getCurrentYearEligibleVendorCodes,
+} from '../../../../lib/vendorEvaluationPOs';
 
 export default async function handler(req, res) {
   const { vendorcode } = req.query;
@@ -80,65 +21,56 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'vendorcode is required' });
   }
 
-  const evaluationYear = req.query.year
-    ? parseInt(req.query.year, 10)
-    : getVendorEvaluationYear();
-  const { yearStart, yearEnd } = getVendorEvaluationYearRange(evaluationYear);
-  const storageKey = getAnnualEvaluationStorageKey(evaluationYear);
+  const ctx = getEvaluationTrackContext(parseEvaluationTrack(req.query.track));
+  const { evaluationYear, storageKey, yearStart, yearEnd, isPriorPo, track } = ctx;
 
   try {
     const { db } = await connectToDatabase();
 
     if (req.method === 'GET') {
+      if (isPriorPo) {
+        const excludedCodes = await getCurrentYearEligibleVendorCodes(db, yearStart, yearEnd);
+        if (excludedCodes.has(String(vendorcode))) {
+          return res.status(404).json({
+            error: 'This vendor is covered under current-year evaluation and is not in the prior-PO list.',
+          });
+        }
+      }
+
       const [vendorDetails, evalDoc, topPOsRaw] = await Promise.all([
         db.collection('vendors').findOne({ 'vendor-code': vendorcode }),
         db.collection('vendorevaluation').findOne({ vendorcode: String(vendorcode) }),
-        getTopPOsForVendor(db, vendorcode, yearStart, yearEnd),
+        getEvaluationPOs(db, vendorcode, track, yearStart, yearEnd),
       ]);
 
       if (!topPOsRaw.length) {
         return res.status(404).json({
-          error: `No qualifying POs found for vendor in ${evaluationYear}`,
+          error: isPriorPo
+            ? 'No purchase orders found for this vendor'
+            : `No qualifying POs found for vendor in ${evaluationYear}`,
         });
       }
 
-      const allVendorRows = await db
-        .collection('purchaseorders')
-        .aggregate([
-          {
-            $match: {
-              vendorcode,
-              'po-date': { $gte: yearStart, $lte: yearEnd },
-            },
-          },
-          {
-            $group: {
-              _id: '$po-number',
-              povalue: { $sum: '$po-value-sar' },
-            },
-          },
-          {
-            $group: {
-              _id: null,
-              totalValue: { $sum: '$povalue' },
-              poCount: { $sum: 1 },
-            },
-          },
-        ])
-        .toArray();
+      const vendorTotals = await getVendorPoTotals(
+        db,
+        vendorcode,
+        isPriorPo ? null : yearStart,
+        isPriorPo ? null : yearEnd
+      );
 
-      const vendorTotals = allVendorRows[0] || { totalValue: 0, poCount: 0 };
-      if (vendorTotals.totalValue <= MIN_VENDOR_PO_VALUE_SAR) {
+      if (!isPriorPo && vendorTotals.totalValue <= MIN_VENDOR_PO_VALUE_SAR) {
         return res.status(404).json({
           error: `Vendor total PO value must exceed ${MIN_VENDOR_PO_VALUE_SAR} SAR`,
         });
       }
 
-      const topPOs = await Promise.all(topPOsRaw.map((po) => enrichPOWithSchedule(db, po)));
+      const [topPOs, groupAssignments] = await Promise.all([
+        Promise.all(topPOsRaw.map((po) => enrichPOWithSchedule(db, po))),
+        getVendorGroupAssignments(db, vendorcode),
+      ]);
 
       let savedEval = evalDoc?.[storageKey] || null;
 
-      // Resolve approver email to display name for print/UI (legacy records stored email)
       if (savedEval?.approvedBy && String(savedEval.approvedBy).includes('@')) {
         const approver = await db.collection('users').findOne(
           { email: String(savedEval.approvedBy) },
@@ -150,14 +82,19 @@ export default async function handler(req, res) {
       }
 
       return res.status(200).json({
+        track,
         evaluationYear,
+        previousCalendarYear: ctx.previousCalendarYear,
         vendorcode: String(vendorcode),
         vendorname: vendorDetails?.['vendor-name'] || topPOs[0]?.vendorname || '',
         vendorDetails: vendorDetails || null,
         totalPoValue: vendorTotals.totalValue,
         poCount: vendorTotals.poCount,
+        lastPoDate: vendorTotals.lastPoDate || null,
         topPOs,
         evaluation: savedEval,
+        materialGroups: groupAssignments.materialGroups,
+        serviceGroups: groupAssignments.serviceGroups,
       });
     }
 
@@ -175,7 +112,7 @@ export default async function handler(req, res) {
         return res.status(403).json({ error: 'Approved evaluations cannot be modified.' });
       }
 
-      const topPOsRaw = await getTopPOsForVendor(db, vendorcode, yearStart, yearEnd);
+      const topPOsRaw = await getEvaluationPOs(db, vendorcode, track, yearStart, yearEnd);
       const requiredPoNumbers = topPOsRaw.map((po) => po.ponumber);
       if (existingEval && isEvaluationComplete(existingEval, requiredPoNumbers)) {
         return res.status(403).json({
@@ -185,6 +122,7 @@ export default async function handler(req, res) {
 
       const payload = {
         evaluationYear,
+        track,
         ratingMaterials: body.ratingMaterials || {},
         ratingServices: body.ratingServices || {},
         poEvaluations: Array.isArray(body.poEvaluations) ? body.poEvaluations : [],

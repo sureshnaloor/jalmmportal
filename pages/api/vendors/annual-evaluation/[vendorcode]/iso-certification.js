@@ -1,7 +1,10 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../../auth/[...nextauth]';
 import { connectToDatabase } from '../../../../../lib/mongoconnect';
-import { getVendorEvaluationYear } from '../../../../../lib/vendorEvaluationYear';
+import {
+  getEvaluationTrackContext,
+  parseEvaluationTrack,
+} from '../../../../../lib/vendorEvaluationYear';
 import {
   getIsoCertificationOption,
   ISO_CERTIFICATION_OPTIONS,
@@ -17,7 +20,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'vendorcode is required' });
   }
 
-  const evaluationYear = getVendorEvaluationYear();
+  const ctx = getEvaluationTrackContext(parseEvaluationTrack(req.query.track));
+  const { evaluationYear, storageKey } = ctx;
 
   try {
     const { db } = await connectToDatabase();
@@ -27,7 +31,8 @@ export default async function handler(req, res) {
         db,
         vendorcode,
         'isoCertification',
-        evaluationYear
+        evaluationYear,
+        storageKey
       );
       return res.status(200).json({
         evaluationYear,
@@ -57,6 +62,7 @@ export default async function handler(req, res) {
         option,
         rankedBy,
         evaluationYear,
+        storageKey,
       });
 
       return res.status(200).json({

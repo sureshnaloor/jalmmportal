@@ -407,6 +407,13 @@ export default function MaterialGroupsPage() {
           >
             Service Group Map
           </button>
+          <button
+            type="button"
+            className={styles.newButton}
+            onClick={() => window.open('/material-groups/vendor-mapping-print', '_blank')}
+          >
+            Print Vendor Mapping
+          </button>
         </div>
       </div>
 

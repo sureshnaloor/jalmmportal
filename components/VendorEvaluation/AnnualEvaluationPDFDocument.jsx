@@ -10,6 +10,8 @@ import moment from 'moment';
 import { PO_EVALUATION_WEIGHTS } from '../../lib/vendorEvaluationConfig';
 import { getPriceSelectionLabel } from '../../lib/vendorEvaluationApproval';
 
+const SCM_HEAD_PRINT_NAME = 'Suresh Unnikrishnan- Head, SCM';
+
 const styles = StyleSheet.create({
   page: {
     padding: 24,
@@ -293,6 +295,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
+  draftBadge: {
+    fontSize: 9,
+    color: '#92400e',
+    backgroundColor: '#fef3c7',
+    padding: 8,
+    borderRadius: 3,
+    marginTop: 12,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  draftWatermark: {
+    position: 'absolute',
+    top: '42%',
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    fontSize: 64,
+    color: '#fecaca',
+    opacity: 0.28,
+    letterSpacing: 8,
+  },
   pageTwoHeader: {
     backgroundColor: '#1e3a8a',
     padding: 12,
@@ -310,6 +333,160 @@ const styles = StyleSheet.create({
     color: '#e0e7ff',
     textAlign: 'center',
     marginTop: 3,
+  },
+  signatureHint: {
+    fontSize: 8,
+    color: '#64748b',
+    textAlign: 'center',
+    marginBottom: 18,
+  },
+  signatureGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  signatureBox: {
+    width: '48%',
+    minHeight: 168,
+    borderWidth: 1,
+    borderColor: '#cbd5e1',
+    borderRadius: 4,
+    padding: 12,
+    marginBottom: 16,
+    backgroundColor: '#f8fafc',
+  },
+  signatureRole: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#1e3a8a',
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
+    marginBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#cbd5e1',
+    paddingBottom: 6,
+  },
+  signatureSpace: {
+    height: 72,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderStyle: 'dashed',
+    backgroundColor: '#fff',
+    marginBottom: 12,
+    justifyContent: 'flex-end',
+    padding: 6,
+  },
+  signatureSpaceLabel: {
+    fontSize: 7,
+    color: '#94a3b8',
+    textAlign: 'center',
+  },
+  signatureField: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginBottom: 8,
+  },
+  signatureFieldLabel: {
+    width: '18%',
+    fontSize: 7.5,
+    color: '#475569',
+    fontWeight: 'bold',
+  },
+  signatureLine: {
+    width: '82%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#94a3b8',
+    height: 12,
+  },
+  groupsHint: {
+    fontSize: 8,
+    color: '#64748b',
+    marginBottom: 14,
+    textAlign: 'center',
+  },
+  groupSection: {
+    marginBottom: 16,
+  },
+  groupSectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#f8fafc',
+    borderWidth: 1,
+    borderColor: '#cbd5e1',
+    borderBottomWidth: 0,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+  },
+  groupSectionTitle: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#1e3a8a',
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
+  },
+  groupCount: {
+    fontSize: 8,
+    color: '#475569',
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    backgroundColor: '#1e3a8a',
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+  },
+  tableHeaderCell: {
+    fontSize: 8,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: '#e2e8f0',
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+  },
+  tableRowAlt: {
+    backgroundColor: '#f8fafc',
+  },
+  tableCell: {
+    fontSize: 8,
+    color: '#0f172a',
+  },
+  typeCol: {
+    width: '48%',
+    paddingRight: 8,
+  },
+  groupCol: {
+    width: '52%',
+  },
+  parentTypeCell: {
+    fontWeight: 'bold',
+    color: '#1e3a8a',
+  },
+  groupItem: {
+    fontSize: 8,
+    color: '#0f172a',
+    marginBottom: 3,
+  },
+  emptyBox: {
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
+    padding: 14,
+    backgroundColor: '#fafafa',
+  },
+  emptyText: {
+    fontSize: 8,
+    color: '#94a3b8',
+    textAlign: 'center',
   },
 });
 
@@ -364,13 +541,13 @@ function ScoreCard({ label, percent, sublabel }) {
   );
 }
 
-function CompactPOBox({ po, index }) {
+function CompactPOBox({ po, index, isPriorPo = false }) {
   const ev = po.evaluation || {};
 
   return (
     <View style={styles.poBox} wrap={false}>
       <Text style={styles.poTitle}>
-        PO #{index + 1}: {po.ponumber} — {po.povalue?.toLocaleString()} SAR
+        {isPriorPo ? 'Most recent PO' : 'PO'} #{index + 1}: {po.ponumber} — {po.povalue?.toLocaleString()} SAR
       </Text>
 
       <View style={styles.poRow}>
@@ -416,6 +593,146 @@ function CompactPOBox({ po, index }) {
   );
 }
 
+function PageFooter({ evaluationYear, isDraft }) {
+  return (
+    <Text
+      style={styles.footer}
+      fixed
+      render={({ pageNumber, totalPages }) =>
+        `JAL Materials Management Portal — Vendor Evaluation ${evaluationYear}${isDraft ? ' — DRAFT' : ''} — Page ${pageNumber} of ${totalPages}`
+      }
+    />
+  );
+}
+
+function DraftWatermark({ approved }) {
+  if (approved) return null;
+  return (
+    <Text style={styles.draftWatermark} fixed>
+      DRAFT
+    </Text>
+  );
+}
+
+function groupByParentType(rows) {
+  const grouped = [];
+  const indexByParent = new Map();
+
+  (rows || []).forEach((row) => {
+    const parent = row.groupName || '—';
+    if (!indexByParent.has(parent)) {
+      indexByParent.set(parent, grouped.length);
+      grouped.push({ parentType: parent, groups: [] });
+    }
+    grouped[indexByParent.get(parent)].groups.push(row.subgroupName || '—');
+  });
+
+  return grouped;
+}
+
+function GroupAssignmentTable({ title, typeLabel, groupLabel, rows = [] }) {
+  const grouped = groupByParentType(rows);
+
+  return (
+    <View style={styles.groupSection}>
+      <View style={styles.groupSectionHeader}>
+        <Text style={styles.groupSectionTitle}>{title}</Text>
+        <Text style={styles.groupCount}>
+          {rows.length} assigned
+        </Text>
+      </View>
+      <View style={styles.tableHeader}>
+        <Text style={[styles.tableHeaderCell, styles.typeCol]}>{typeLabel}</Text>
+        <Text style={[styles.tableHeaderCell, styles.groupCol]}>{groupLabel}</Text>
+      </View>
+      {grouped.length === 0 ? (
+        <View style={styles.emptyBox}>
+          <Text style={styles.emptyText}>None assigned to this vendor</Text>
+        </View>
+      ) : (
+        grouped.map((block, blockIndex) => (
+          <View
+            key={`${block.parentType}-${blockIndex}`}
+            style={[styles.tableRow, blockIndex % 2 === 1 ? styles.tableRowAlt : null]}
+            wrap={false}
+          >
+            <Text style={[styles.tableCell, styles.typeCol, styles.parentTypeCell]}>
+              {block.parentType}
+            </Text>
+            <View style={styles.groupCol}>
+              {block.groups.map((name, groupIndex) => (
+                <Text key={`${name}-${groupIndex}`} style={styles.groupItem}>
+                  {name}
+                </Text>
+              ))}
+            </View>
+          </View>
+        ))
+      )}
+    </View>
+  );
+}
+
+function SignatureBlock({ role }) {
+  return (
+    <View style={styles.signatureBox} wrap={false}>
+      <Text style={styles.signatureRole}>{role}</Text>
+      <View style={styles.signatureSpace}>
+        <Text style={styles.signatureSpaceLabel}>Signature</Text>
+      </View>
+      <View style={styles.signatureField}>
+        <Text style={styles.signatureFieldLabel}>Name</Text>
+        <View style={styles.signatureLine} />
+      </View>
+      <View style={styles.signatureField}>
+        <Text style={styles.signatureFieldLabel}>Date</Text>
+        <View style={styles.signatureLine} />
+      </View>
+    </View>
+  );
+}
+
+function SignaturePageContent() {
+  return (
+    <>
+      <Text style={styles.signatureHint}>
+        Affix signatures in the boxes below. This draft is for circulation before supply chain head approval.
+      </Text>
+      <View style={styles.signatureGrid}>
+        <SignatureBlock role="Project Team" />
+        <SignatureBlock role="Department" />
+        <SignatureBlock role="Finance" />
+        <SignatureBlock role="MMD" />
+      </View>
+    </>
+  );
+}
+
+function AssignedGroupsPageContent({ summary }) {
+  const materialGroups = summary.materialGroups || [];
+  const serviceGroups = summary.serviceGroups || [];
+
+  return (
+    <>
+      <Text style={styles.groupsHint}>
+        Material and service groups mapped to this vendor, with the parent type for each assignment
+      </Text>
+      <GroupAssignmentTable
+        title="Material Groups"
+        typeLabel="Material Type"
+        groupLabel="Material Group"
+        rows={materialGroups}
+      />
+      <GroupAssignmentTable
+        title="Service Groups"
+        typeLabel="Service Type"
+        groupLabel="Service Group"
+        rows={serviceGroups}
+      />
+    </>
+  );
+}
+
 function FinalScoresPageContent({ summary, scores }) {
   return (
     <>
@@ -457,7 +774,9 @@ function FinalScoresPageContent({ summary, scores }) {
       <View style={styles.metaSection}>
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Evaluated By</Text>
-          <Text style={styles.metaValue}>{summary.evaluatedBy || '—'}</Text>
+          <Text style={styles.metaValue}>
+            {summary.evaluatedBy ? SCM_HEAD_PRINT_NAME : '—'}
+          </Text>
         </View>
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Evaluated On</Text>
@@ -467,7 +786,9 @@ function FinalScoresPageContent({ summary, scores }) {
         </View>
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Approved By</Text>
-          <Text style={styles.metaValue}>{summary.approvedBy || '—'}</Text>
+          <Text style={styles.metaValue}>
+            {summary.approvedBy || summary.approved ? SCM_HEAD_PRINT_NAME : '—'}
+          </Text>
         </View>
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Approved On</Text>
@@ -477,8 +798,10 @@ function FinalScoresPageContent({ summary, scores }) {
         </View>
       </View>
 
-      {summary.approved && (
+      {summary.approved ? (
         <Text style={styles.badge}>APPROVED BY SUPPLY CHAIN HEAD</Text>
+      ) : (
+        <Text style={styles.draftBadge}>DRAFT — PENDING APPROVAL</Text>
       )}
     </>
   );
@@ -488,15 +811,20 @@ export default function AnnualEvaluationPDFDocument({ summary }) {
   if (!summary) return null;
 
   const scores = summary.finalScores || {};
+  const isPriorPo = summary.track === 'prior-po';
+  const poValueLabel = isPriorPo
+    ? 'Lifetime PO Value'
+    : `Total PO Value (${summary.evaluationYear})`;
+  const headerSub = isPriorPo
+    ? `Fresh evaluation ${summary.evaluationYear} — most recent POs (no qualifying PO in ${summary.previousCalendarYear})${summary.approved ? '' : ' — DRAFT'} — Generated ${moment().format('DD MMM YYYY')}`
+    : `Evaluation Year ${summary.evaluationYear}${summary.approved ? '' : ' — DRAFT'} — Generated ${moment().format('DD MMM YYYY')}`;
 
   return (
     <Document title={`Vendor Evaluation ${summary.vendorcode}`}>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Vendor Evaluation Report</Text>
-          <Text style={styles.headerSub}>
-            Evaluation Year {summary.evaluationYear} — Generated {moment().format('DD MMM YYYY')}
-          </Text>
+          <Text style={styles.headerSub}>{headerSub}</Text>
         </View>
 
         <View style={styles.pageOneMain}>
@@ -504,11 +832,14 @@ export default function AnnualEvaluationPDFDocument({ summary }) {
             <Text style={styles.infoCardTitle}>Vendor Information</Text>
             <InfoRow label="Vendor Code" value={summary.vendorcode} />
             <InfoRow label="Vendor Name" value={summary.vendorname} />
-            <InfoRow
-              label={`Total PO Value (${summary.evaluationYear})`}
-              value={`${summary.totalPoValue?.toLocaleString()} SAR`}
-            />
-            <InfoRow label="PO Count" value={String(summary.poCount ?? '—')} />
+            <InfoRow label={poValueLabel} value={`${summary.totalPoValue?.toLocaleString()} SAR`} />
+            <InfoRow label={isPriorPo ? 'Lifetime PO Count' : 'PO Count'} value={String(summary.poCount ?? '—')} />
+            {isPriorPo && summary.lastPoDate ? (
+              <InfoRow
+                label="Last PO Date"
+                value={moment(summary.lastPoDate).format('DD MMM YYYY')}
+              />
+            ) : null}
           </View>
 
           <View style={styles.sectionBlock}>
@@ -532,18 +863,21 @@ export default function AnnualEvaluationPDFDocument({ summary }) {
           </View>
 
           <View style={styles.sectionBlock}>
-            <Text style={styles.sectionTitle}>PO Variable Parameters (Price 30% · Delivery 20% · Quality 10%)</Text>
+            <Text style={styles.sectionTitle}>
+              {isPriorPo
+                ? 'Most Recent POs — Variable Parameters (Price 30% · Delivery 20% · Quality 10%)'
+                : 'PO Variable Parameters (Price 30% · Delivery 20% · Quality 10%)'}
+            </Text>
             <View style={styles.twoColumn}>
               {(summary.poSummaries || []).map((po, idx) => (
-                <CompactPOBox key={po.ponumber} po={po} index={idx} />
+                <CompactPOBox key={po.ponumber} po={po} index={idx} isPriorPo={isPriorPo} />
               ))}
             </View>
           </View>
         </View>
 
-        <Text style={styles.footer}>
-          JAL Materials Management Portal — Vendor Evaluation {summary.evaluationYear} — Page 1 of 2
-        </Text>
+        <DraftWatermark approved={summary.approved} />
+        <PageFooter evaluationYear={summary.evaluationYear} isDraft={!summary.approved} />
       </Page>
 
       <Page size="A4" style={styles.page}>
@@ -551,6 +885,7 @@ export default function AnnualEvaluationPDFDocument({ summary }) {
           <Text style={styles.pageTwoHeaderTitle}>Vendor Evaluation Summary</Text>
           <Text style={styles.pageTwoHeaderSub}>
             {summary.vendorcode} — {summary.vendorname} — {summary.evaluationYear}
+            {summary.approved ? '' : ' — DRAFT'}
           </Text>
         </View>
 
@@ -558,10 +893,39 @@ export default function AnnualEvaluationPDFDocument({ summary }) {
           <FinalScoresPageContent summary={summary} scores={scores} />
         </View>
 
-        <Text style={styles.footer}>
-          JAL Materials Management Portal — Vendor Evaluation {summary.evaluationYear} — Page 2 of 2
-        </Text>
+        <DraftWatermark approved={summary.approved} />
+        <PageFooter evaluationYear={summary.evaluationYear} isDraft={!summary.approved} />
       </Page>
+
+      <Page size="A4" style={styles.page}>
+        <View style={styles.pageTwoHeader}>
+          <Text style={styles.pageTwoHeaderTitle}>Assigned Material & Service Groups</Text>
+          <Text style={styles.pageTwoHeaderSub}>
+            {summary.vendorcode} — {summary.vendorname} — {summary.evaluationYear}
+            {summary.approved ? '' : ' — DRAFT'}
+          </Text>
+        </View>
+
+        <AssignedGroupsPageContent summary={summary} />
+
+        <DraftWatermark approved={summary.approved} />
+        <PageFooter evaluationYear={summary.evaluationYear} isDraft={!summary.approved} />
+      </Page>
+
+      {!summary.approved && (
+        <Page size="A4" style={styles.page}>
+          <View style={styles.pageTwoHeader}>
+            <Text style={styles.pageTwoHeaderTitle}>Signature Sheet</Text>
+            <Text style={styles.pageTwoHeaderSub}>
+              {summary.vendorcode} — {summary.vendorname} — {summary.evaluationYear} — DRAFT
+            </Text>
+          </View>
+
+          <SignaturePageContent />
+
+          <PageFooter evaluationYear={summary.evaluationYear} isDraft />
+        </Page>
+      )}
     </Document>
   );
 }

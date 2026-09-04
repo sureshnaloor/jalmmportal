@@ -4,8 +4,17 @@ import { useSession } from 'next-auth/react';
 import moment from 'moment';
 import { FiX, FiCheck, FiAlertCircle, FiEdit3 } from 'react-icons/fi';
 import { isSupplyChainHead, buildEvaluationSummary } from '../../lib/vendorEvaluationApproval';
+import { withTrackQuery } from '../../lib/vendorEvaluationYear';
 
-export default function ApprovalModal({ vendorcode, vendorname, open, onClose, onApproved }) {
+export default function ApprovalModal({
+  vendorcode,
+  vendorname,
+  open,
+  onClose,
+  onApproved,
+  track = 'current-year',
+  listPath = '/vendor-evaluation-current-year',
+}) {
   const router = useRouter();
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
@@ -22,7 +31,7 @@ export default function ApprovalModal({ vendorcode, vendorname, open, onClose, o
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/vendors/annual-evaluation/${vendorcode}`);
+        const res = await fetch(withTrackQuery(`/api/vendors/annual-evaluation/${vendorcode}`, track));
         if (!res.ok) throw new Error('Failed to load evaluation');
         const data = await res.json();
         setSummary(buildEvaluationSummary(data));
@@ -33,13 +42,13 @@ export default function ApprovalModal({ vendorcode, vendorname, open, onClose, o
     };
 
     load();
-  }, [open, vendorcode]);
+  }, [open, vendorcode, track]);
 
   const handleApprove = async () => {
     setApproving(true);
     setError(null);
     try {
-      const res = await fetch(`/api/vendors/annual-evaluation/${vendorcode}/approve`, {
+      const res = await fetch(withTrackQuery(`/api/vendors/annual-evaluation/${vendorcode}/approve`, track), {
         method: 'POST',
       });
       const json = await res.json();
@@ -128,6 +137,15 @@ export default function ApprovalModal({ vendorcode, vendorname, open, onClose, o
               ))}
 
               {error && <p className="text-red-600 text-sm">{error}</p>}
+              {summary && !summary.approved && !summary.supplementaryComplete && (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+                  Additional evaluation parameters are still pending
+                  {summary.missingSupplementary?.length
+                    ? `: ${summary.missingSupplementary.join(' and ')}`
+                    : ''}
+                  . Complete them before approval.
+                </div>
+              )}
             </div>
           ) : null}
         </div>
@@ -145,7 +163,7 @@ export default function ApprovalModal({ vendorcode, vendorname, open, onClose, o
               type="button"
               onClick={() => {
                 onClose();
-                router.push(`/vendor-evaluation-current-year/${vendorcode}?editScores=1`);
+                router.push(`${listPath}/${vendorcode}?editScores=1`);
               }}
               className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-amber-600 rounded-lg hover:bg-amber-700"
             >
@@ -157,7 +175,12 @@ export default function ApprovalModal({ vendorcode, vendorname, open, onClose, o
             <button
               type="button"
               onClick={handleApprove}
-              disabled={approving || summary.approved}
+              disabled={approving || summary.approved || !summary.supplementaryComplete}
+              title={
+                summary.supplementaryComplete
+                  ? undefined
+                  : 'Complete Payment Terms and ISO Certification before approval'
+              }
               className="inline-flex items-center px-5 py-2 text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 disabled:opacity-50"
             >
               <FiCheck className="mr-2" />

@@ -4,6 +4,7 @@ import {
   PAYMENT_TERMS_OPTIONS,
   ISO_CERTIFICATION_OPTIONS,
 } from '../../lib/vendorSupplementaryEvaluationConfig';
+import { withTrackQuery } from '../../lib/vendorEvaluationYear';
 
 function formatDateTime(value) {
   if (!value) return '—';
@@ -85,6 +86,8 @@ export default function SupplementaryEvaluationSections({
   rankedBy,
   onSaved,
   onError,
+  highlight = false,
+  track = 'current-year',
 }) {
   const [paymentTermsId, setPaymentTermsId] = useState('');
   const [isoCertificationId, setIsoCertificationId] = useState('');
@@ -105,7 +108,10 @@ export default function SupplementaryEvaluationSections({
     setSavingPaymentTerms(true);
     try {
       const res = await fetch(
-        `/api/vendors/annual-evaluation/${encodeURIComponent(vendorcode)}/payment-terms`,
+        withTrackQuery(
+          `/api/vendors/annual-evaluation/${encodeURIComponent(vendorcode)}/payment-terms`,
+          track
+        ),
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -129,7 +135,10 @@ export default function SupplementaryEvaluationSections({
     setSavingIso(true);
     try {
       const res = await fetch(
-        `/api/vendors/annual-evaluation/${encodeURIComponent(vendorcode)}/iso-certification`,
+        withTrackQuery(
+          `/api/vendors/annual-evaluation/${encodeURIComponent(vendorcode)}/iso-certification`,
+          track
+        ),
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -149,7 +158,10 @@ export default function SupplementaryEvaluationSections({
   };
 
   return (
-    <section className="mt-10">
+    <section
+      id="additional-evaluation"
+      className={`mt-10 scroll-mt-24 ${highlight ? 'rounded-xl p-4 bg-amber-50 ring-2 ring-amber-300' : ''}`}
+    >
       <h2 className="text-lg font-semibold text-gray-800 mb-4">Additional Evaluation Parameters</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SupplementaryCard

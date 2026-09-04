@@ -1,11 +1,38 @@
 import { connectToDatabase } from '../../../../lib/mongoconnect';
-import {
-  getVendorEvaluationYear,
-  getVendorEvaluationYearRange,
-  getAnnualEvaluationStorageKey,
-} from '../../../../lib/vendorEvaluationYear';
 import { MIN_VENDOR_PO_VALUE_SAR } from '../../../../lib/vendorEvaluationConfig';
-import { computeEvaluationDisplayScores } from '../../../../lib/vendorEvaluationApproval';
+import {
+  computeEvaluationDisplayScores,
+  isSupplementaryEvaluationComplete,
+  getMissingSupplementarySections,
+} from '../../../../lib/vendorEvaluationApproval';
+import {
+  getEvaluationTrackContext,
+  parseEvaluationTrack,
+} from '../../../../lib/vendorEvaluationYear';
+import { getCurrentYearEligibleVendorCodes } from '../../../../lib/vendorEvaluationPOs';
+
+function mapSavedEvaluation(vendor, saved) {
+  const evaluated = Boolean(
+    saved &&
+      (Object.keys(saved.ratingMaterials || {}).length ||
+        Object.keys(saved.ratingServices || {}).length ||
+        saved.poEvaluations?.length)
+  );
+  const { fixedOverall, variableOverall } = computeEvaluationDisplayScores(saved);
+  return {
+    ...vendor,
+    evaluated,
+    evaluatedAt: saved?.updatedAt || saved?.createdAt || null,
+    approved: Boolean(saved?.approved),
+    approvedAt: saved?.approvedAt || null,
+    approvedBy: saved?.approvedBy || null,
+    fixedOverall,
+    variableOverall,
+    scoreEditedBySupplyChainHead: Boolean(saved?.scoreEditedBySupplyChainHead),
+    supplementaryComplete: isSupplementaryEvaluationComplete(saved),
+    missingSupplementary: getMissingSupplementarySections(saved),
+  };
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -13,87 +40,104 @@ export default async function handler(req, res) {
   }
 
   try {
-    const evaluationYear = req.query.year
-      ? parseInt(req.query.year, 10)
-      : getVendorEvaluationYear();
-    const { yearStart, yearEnd } = getVendorEvaluationYearRange(evaluationYear);
-    const storageKey = getAnnualEvaluationStorageKey(evaluationYear);
-
+    const ctx = getEvaluationTrackContext(parseEvaluationTrack(req.query.track));
     const { db } = await connectToDatabase();
 
-    const vendors = await db
-      .collection('purchaseorders')
-      .aggregate([
-        {
-          $match: {
-            'po-date': { $gte: yearStart, $lte: yearEnd },
-            vendorcode: { $exists: true, $nin: [null, ''] },
+    let vendors = [];
+
+    if (ctx.isPriorPo) {
+      const excludedCodes = await getCurrentYearEligibleVendorCodes(db, ctx.yearStart, ctx.yearEnd);
+      const rows = await db
+        .collection('purchaseorders')
+        .aggregate([
+          {
+            $match: {
+              vendorcode: { $exists: true, $nin: [null, ''] },
+            },
           },
-        },
-        {
-          $group: {
-            _id: '$vendorcode',
-            vendorname: { $first: '$vendorname' },
-            totalValue: { $sum: '$po-value-sar' },
-            poNumbers: { $addToSet: '$po-number' },
+          {
+            $group: {
+              _id: '$vendorcode',
+              vendorname: { $first: '$vendorname' },
+              totalValue: { $sum: '$po-value-sar' },
+              poNumbers: { $addToSet: '$po-number' },
+              lastPoDate: { $max: '$po-date' },
+            },
           },
-        },
-        {
-          $match: {
-            totalValue: { $gt: MIN_VENDOR_PO_VALUE_SAR },
+          {
+            $project: {
+              _id: 0,
+              vendorcode: '$_id',
+              vendorname: 1,
+              totalValue: 1,
+              lastPoDate: 1,
+              poCount: { $size: '$poNumbers' },
+            },
           },
-        },
-        {
-          $project: {
-            _id: 0,
-            vendorcode: '$_id',
-            vendorname: 1,
-            totalValue: 1,
-            poCount: { $size: '$poNumbers' },
+          { $sort: { lastPoDate: -1 } },
+        ])
+        .toArray();
+
+      vendors = rows.filter((vendor) => !excludedCodes.has(String(vendor.vendorcode)));
+    } else {
+      vendors = await db
+        .collection('purchaseorders')
+        .aggregate([
+          {
+            $match: {
+              'po-date': { $gte: ctx.yearStart, $lte: ctx.yearEnd },
+              vendorcode: { $exists: true, $nin: [null, ''] },
+            },
           },
-        },
-        { $sort: { totalValue: -1 } },
-      ])
-      .toArray();
+          {
+            $group: {
+              _id: '$vendorcode',
+              vendorname: { $first: '$vendorname' },
+              totalValue: { $sum: '$po-value-sar' },
+              poNumbers: { $addToSet: '$po-number' },
+            },
+          },
+          {
+            $match: {
+              totalValue: { $gt: MIN_VENDOR_PO_VALUE_SAR },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              vendorcode: '$_id',
+              vendorname: 1,
+              totalValue: 1,
+              poCount: { $size: '$poNumbers' },
+            },
+          },
+          { $sort: { totalValue: -1 } },
+        ])
+        .toArray();
+    }
 
     const vendorCodes = vendors.map((v) => String(v.vendorcode));
     const evaluations = vendorCodes.length
       ? await db
           .collection('vendorevaluation')
           .find({ vendorcode: { $in: vendorCodes } })
-          .project({ vendorcode: 1, [storageKey]: 1 })
+          .project({ vendorcode: 1, [ctx.storageKey]: 1 })
           .toArray()
       : [];
 
     const evalMap = new Map(
-      evaluations.map((doc) => [String(doc.vendorcode), doc[storageKey] || null])
+      evaluations.map((doc) => [String(doc.vendorcode), doc[ctx.storageKey] || null])
     );
 
-    const result = vendors.map((v) => {
-      const saved = evalMap.get(String(v.vendorcode));
-      const evaluated = Boolean(
-        saved &&
-          (Object.keys(saved.ratingMaterials || {}).length ||
-            Object.keys(saved.ratingServices || {}).length ||
-            saved.poEvaluations?.length)
-      );
-      const { fixedOverall, variableOverall } = computeEvaluationDisplayScores(saved);
-      return {
-        ...v,
-        evaluated,
-        evaluatedAt: saved?.updatedAt || saved?.createdAt || null,
-        approved: Boolean(saved?.approved),
-        approvedAt: saved?.approvedAt || null,
-        approvedBy: saved?.approvedBy || null,
-        fixedOverall,
-        variableOverall,
-        scoreEditedBySupplyChainHead: Boolean(saved?.scoreEditedBySupplyChainHead),
-      };
-    });
+    const result = vendors.map((vendor) =>
+      mapSavedEvaluation(vendor, evalMap.get(String(vendor.vendorcode)))
+    );
 
     return res.status(200).json({
-      evaluationYear,
-      minPoValue: MIN_VENDOR_PO_VALUE_SAR,
+      track: ctx.track,
+      evaluationYear: ctx.evaluationYear,
+      previousCalendarYear: ctx.previousCalendarYear,
+      minPoValue: ctx.isPriorPo ? 0 : MIN_VENDOR_PO_VALUE_SAR,
       vendors: result,
       totalVendors: result.length,
       evaluatedCount: result.filter((v) => v.evaluated).length,

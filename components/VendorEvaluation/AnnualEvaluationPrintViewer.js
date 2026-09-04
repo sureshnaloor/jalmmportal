@@ -6,7 +6,9 @@ import AnnualEvaluationPDFDocument from './AnnualEvaluationPDFDocument';
 export default function AnnualEvaluationPrintViewer({ summary, onPrint }) {
   if (!summary) return null;
 
-  const fileName = `vendor-evaluation-${summary.vendorcode}-${summary.evaluationYear}.pdf`;
+  const fileName = summary.approved
+    ? `${summary.track === 'prior-po' ? 'vendor-evaluation-prior-po' : 'vendor-evaluation'}-${summary.vendorcode}-${summary.evaluationYear}.pdf`
+    : `${summary.track === 'prior-po' ? 'vendor-evaluation-prior-po' : 'vendor-evaluation'}-${summary.vendorcode}-${summary.evaluationYear}-draft.pdf`;
 
   return (
     <div>

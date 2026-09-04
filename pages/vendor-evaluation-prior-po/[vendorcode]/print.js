@@ -2,8 +2,8 @@ import { getSession } from 'next-auth/react';
 import VendorEvaluationPrintPage from '../../../components/VendorEvaluation/VendorEvaluationPrintPage';
 import { EVALUATION_TRACK } from '../../../lib/vendorEvaluationYear';
 
-export default function VendorEvaluationCurrentYearPrint() {
-  return <VendorEvaluationPrintPage track={EVALUATION_TRACK.CURRENT_YEAR} />;
+export default function VendorEvaluationPriorPoPrint() {
+  return <VendorEvaluationPrintPage track={EVALUATION_TRACK.PRIOR_PO} />;
 }
 
 export async function getServerSideProps(context) {

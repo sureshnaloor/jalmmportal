@@ -2,37 +2,19 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../../auth/[...nextauth]';
 import { connectToDatabase } from '../../../../../lib/mongoconnect';
 import {
-  getVendorEvaluationYear,
-  getVendorEvaluationYearRange,
-  getAnnualEvaluationStorageKey,
+  getEvaluationTrackContext,
+  parseEvaluationTrack,
 } from '../../../../../lib/vendorEvaluationYear';
 import {
   isSupplyChainHead,
   isEvaluationComplete,
   extractScoreSnapshot,
 } from '../../../../../lib/vendorEvaluationApproval';
+import { getEvaluationPOs } from '../../../../../lib/vendorEvaluationPOs';
 
-async function getRequiredPoNumbers(db, vendorcode, yearStart, yearEnd) {
-  const rows = await db
-    .collection('purchaseorders')
-    .aggregate([
-      {
-        $match: {
-          vendorcode,
-          'po-date': { $gte: yearStart, $lte: yearEnd },
-        },
-      },
-      {
-        $group: {
-          _id: '$po-number',
-          povalue: { $sum: '$po-value-sar' },
-        },
-      },
-      { $sort: { povalue: -1 } },
-      { $limit: 2 },
-    ])
-    .toArray();
-  return rows.map((r) => r._id).filter(Boolean);
+async function getRequiredPoNumbers(db, vendorcode, ctx) {
+  const pos = await getEvaluationPOs(db, vendorcode, ctx.track, ctx.yearStart, ctx.yearEnd);
+  return pos.map((po) => po.ponumber);
 }
 
 function validateScorePayload(body) {
@@ -66,9 +48,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'vendorcode is required' });
   }
 
-  const evaluationYear = getVendorEvaluationYear();
-  const { yearStart, yearEnd } = getVendorEvaluationYearRange(evaluationYear);
-  const storageKey = getAnnualEvaluationStorageKey(evaluationYear);
+  const ctx = getEvaluationTrackContext(parseEvaluationTrack(req.query.track));
+  const { storageKey } = ctx;
 
   try {
     const { db } = await connectToDatabase();
@@ -85,7 +66,7 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'Approved evaluations cannot be modified.' });
     }
 
-    const requiredPoNumbers = await getRequiredPoNumbers(db, vendorcode, yearStart, yearEnd);
+    const requiredPoNumbers = await getRequiredPoNumbers(db, vendorcode, ctx);
     if (!isEvaluationComplete(existingEval, requiredPoNumbers)) {
       return res.status(400).json({ error: 'Evaluation is incomplete. All parameters must be scored first.' });
     }

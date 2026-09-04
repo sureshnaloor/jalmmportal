@@ -2,37 +2,15 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../../auth/[...nextauth]';
 import { connectToDatabase } from '../../../../../lib/mongoconnect';
 import {
-  getVendorEvaluationYear,
-  getVendorEvaluationYearRange,
-  getAnnualEvaluationStorageKey,
+  getEvaluationTrackContext,
+  parseEvaluationTrack,
 } from '../../../../../lib/vendorEvaluationYear';
 import {
   isSupplyChainHead,
   isEvaluationComplete,
+  isSupplementaryEvaluationComplete,
 } from '../../../../../lib/vendorEvaluationApproval';
-
-async function getRequiredPoNumbers(db, vendorcode, yearStart, yearEnd) {
-  const rows = await db
-    .collection('purchaseorders')
-    .aggregate([
-      {
-        $match: {
-          vendorcode,
-          'po-date': { $gte: yearStart, $lte: yearEnd },
-        },
-      },
-      {
-        $group: {
-          _id: '$po-number',
-          povalue: { $sum: '$po-value-sar' },
-        },
-      },
-      { $sort: { povalue: -1 } },
-      { $limit: 2 },
-    ])
-    .toArray();
-  return rows.map((r) => r._id).filter(Boolean);
-}
+import { getEvaluationPOs } from '../../../../../lib/vendorEvaluationPOs';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -57,9 +35,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'vendorcode is required' });
   }
 
-  const evaluationYear = getVendorEvaluationYear();
-  const { yearStart, yearEnd } = getVendorEvaluationYearRange(evaluationYear);
-  const storageKey = getAnnualEvaluationStorageKey(evaluationYear);
+  const ctx = getEvaluationTrackContext(parseEvaluationTrack(req.query.track));
 
   try {
     const { db } = await connectToDatabase();
@@ -67,7 +43,7 @@ export default async function handler(req, res) {
       .collection('vendorevaluation')
       .findOne({ vendorcode: String(vendorcode) });
 
-    const savedEval = evalDoc?.[storageKey];
+    const savedEval = evalDoc?.[ctx.storageKey];
     if (!savedEval) {
       return res.status(400).json({ error: 'Evaluation not found. Complete evaluation first.' });
     }
@@ -76,9 +52,21 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Evaluation is already approved.' });
     }
 
-    const requiredPoNumbers = await getRequiredPoNumbers(db, vendorcode, yearStart, yearEnd);
+    const requiredPos = await getEvaluationPOs(
+      db,
+      vendorcode,
+      ctx.track,
+      ctx.yearStart,
+      ctx.yearEnd
+    );
+    const requiredPoNumbers = requiredPos.map((po) => po.ponumber);
     if (!isEvaluationComplete(savedEval, requiredPoNumbers)) {
       return res.status(400).json({ error: 'Evaluation is incomplete. All parameters must be scored.' });
+    }
+    if (!isSupplementaryEvaluationComplete(savedEval)) {
+      return res.status(400).json({
+        error: 'Complete additional evaluation parameters (Payment Terms and ISO Certification) before approval.',
+      });
     }
 
     const approvedPayload = {
@@ -90,7 +78,7 @@ export default async function handler(req, res) {
 
     await db.collection('vendorevaluation').updateOne(
       { vendorcode: String(vendorcode) },
-      { $set: { [storageKey]: approvedPayload } }
+      { $set: { [ctx.storageKey]: approvedPayload } }
     );
 
     return res.status(200).json({
