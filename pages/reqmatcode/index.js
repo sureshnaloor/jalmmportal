@@ -186,6 +186,16 @@ function Reqmatcode() {
                   codes{" "}
                 </p>
                 <h4 className="bg-sky-800 text-white p-3"> Please mail to <span className="bg-white text-slate-900"> <br /> suresh.n@jalint.com.sa</span> <br />to get access to this page </h4>
+                <p className="mt-6 text-sm text-slate-800">
+                  You can still request a new material code from the open page{" "}
+                  <a
+                    href="/reqmatcodeall"
+                    className="font-bold text-sky-800 underline"
+                  >
+                    /reqmatcodeall
+                  </a>
+                  , which first checks similar materials in the master.
+                </p>
               </div>
             </div>
           </div>

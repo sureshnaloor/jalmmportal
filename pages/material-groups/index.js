@@ -357,6 +357,14 @@ export default function MaterialGroupsPage() {
       <div className={styles.header}>
         <h1 className={styles.headerText}>Material & Service Groups Management</h1>
         <div className={styles.actions}>
+          <button
+            type="button"
+            className={styles.printTypesGroupsButton}
+            onClick={() => window.open('/material-groups/type-group-print', '_blank')}
+            title="Print material & service types with their mapped groups (PDF portrait)"
+          >
+            Print Types &amp; Groups
+          </button>
           {isAdmin && (
             <button 
               className={styles.newButton}

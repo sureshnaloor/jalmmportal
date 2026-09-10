@@ -302,6 +302,28 @@
 .subgroupsSection .table tbody tr:nth-child(14) { animation-delay: 0.42s; }
 .subgroupsSection .table tbody tr:nth-child(15) { animation-delay: 0.45s; }
 
+.printTypesGroupsButton {
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: white;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  margin-left: 0;
+  margin-right: 2px;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  box-shadow: 0 4px 10px rgba(15, 118, 110, 0.35);
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, background 0.15s ease-out;
+}
+
+.printTypesGroupsButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(15, 118, 110, 0.45);
+  background: linear-gradient(135deg, #0d9488, #2dd4bf);
+}
+
 .newButton {
   background: linear-gradient(135deg, #2563eb, #4f46e5);
   color: white;
