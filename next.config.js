@@ -26,6 +26,12 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    serverComponentsExternalPackages: [
+      "@modelcontextprotocol/sdk",
+      "mongodb-mcp-server",
+    ],
+  },
 
   // experimental: {
   //   images: {

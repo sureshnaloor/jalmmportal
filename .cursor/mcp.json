@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "mongodb": {
+      "command": "node",
+      "args": ["scripts/mongodb-mcp-stdio.js"],
+      "env": {
+        "MDB_MCP_READ_ONLY": "true"
+      }
+    }
+  }
+}

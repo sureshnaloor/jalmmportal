@@ -13,6 +13,7 @@ import {
   faKey,
   faUser,
   faCalendar,
+  faComments,
 } from "@fortawesome/free-solid-svg-icons";
 import { mainNavigationItems } from "../lib/navigationConfig";
 
@@ -99,6 +100,23 @@ function HeaderNewComponent() {
                 >
                   <FontAwesomeIcon icon={faCalendar} className="text-sm" />
                   Daily Meeting
+                </a>
+              </Link>
+
+              <Link href="/db-chat" passHref legacyBehavior>
+                <a
+                  className={`px-4 py-2 rounded font-bold text-sm flex items-center gap-2 transition-all shadow-sm ${
+                    router.pathname.startsWith("/db-chat")
+                      ? "text-white bg-emerald-700"
+                      : "text-emerald-900 bg-emerald-200 hover:bg-emerald-100"
+                  }`}
+                  style={{
+                    fontFamily: "Montserrat, sans-serif",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faComments} className="text-sm" />
+                  DB Chat
                 </a>
               </Link>
 
