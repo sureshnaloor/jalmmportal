@@ -9,6 +9,7 @@ import {
   FiMessageSquare,
   FiTrash2,
   FiZap,
+  FiCpu,
 } from "react-icons/fi";
 import HeaderComponent from "../../components/HeaderNewComponent";
 import FooterComponent from "../../components/FooterComponent";
@@ -16,6 +17,7 @@ import {
   DocumentGallery,
   RichAssistantText,
 } from "../../components/DbChatResults";
+import DbAgentChatModal from "../../components/DbAgentChatModal";
 
 const EXAMPLE_PROMPTS = [
   "List the collections in this database",
@@ -56,6 +58,7 @@ export default function DbChatPage() {
   const [database, setDatabase] = useState("");
   const [collectionsError, setCollectionsError] = useState("");
   const [loadingCollections, setLoadingCollections] = useState(true);
+  const [agentOpen, setAgentOpen] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -214,6 +217,14 @@ export default function DbChatPage() {
             <FiShield />
             Fetch only
           </div>
+          <button
+            type="button"
+            className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-800 ring-1 ring-violet-100 hover:bg-violet-100"
+            onClick={() => setAgentOpen(true)}
+          >
+            <FiCpu />
+            Open Agent Chat for grouping and joins
+          </button>
 
           <h3 className="mt-6 text-xs font-semibold uppercase tracking-wider text-gray-500">
             Collections
@@ -259,17 +270,27 @@ export default function DbChatPage() {
                 are translated to MongoDB find / aggregate / count through MCP.
               </p>
             </div>
-            <button
-              type="button"
-              className="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
-              onClick={() => {
-                setMessages([]);
-                setStatus("");
-              }}
-            >
-              <FiTrash2 />
-              Clear
-            </button>
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                type="button"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-3 py-2 text-xs font-semibold text-white hover:bg-violet-700"
+                onClick={() => setAgentOpen(true)}
+              >
+                <FiCpu />
+                Agent Chat
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
+                onClick={() => {
+                  setMessages([]);
+                  setStatus("");
+                }}
+              >
+                <FiTrash2 />
+                Clear
+              </button>
+            </div>
           </header>
 
           <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
@@ -391,6 +412,11 @@ export default function DbChatPage() {
       </main>
 
       <FooterComponent />
+      <DbAgentChatModal
+        open={agentOpen}
+        onClose={() => setAgentOpen(false)}
+        sessionName={session?.user?.name || session?.user?.email || ""}
+      />
     </div>
   );
 }

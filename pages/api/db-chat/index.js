@@ -1,6 +1,10 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
-import { listReadableCollections, runDbChat } from "../../../lib/mcp/dbChatAgent";
+import {
+  listReadableCollections,
+  runDbAgentChat,
+  runDbChat,
+} from "../../../lib/mcp/dbChatAgent";
 
 export const config = {
   api: {
@@ -61,8 +65,11 @@ export default async function handler(req, res) {
   res.setHeader("X-Accel-Buffering", "no");
   res.flushHeaders?.();
 
+  const mode = req.body?.mode === "agent" ? "agent" : "simple";
+  const runner = mode === "agent" ? runDbAgentChat : runDbChat;
+
   try {
-    const result = await runDbChat({
+    const result = await runner({
       messages,
       onEvent: (event) => writeSse(res, event.type, event),
     });
