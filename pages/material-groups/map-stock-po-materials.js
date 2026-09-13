@@ -11,13 +11,15 @@ const PAGE_SIZE = 100;
 const SORT_COLUMNS = [
   { key: 'material-code', label: 'Material Code' },
   { key: 'material-description', label: 'Description' },
+  { key: 'material-type', label: 'SAP Type' },
   { key: 'material-group', label: 'SAP Group' },
   { key: 'unit-measure', label: 'UOM' },
 ];
 
-export default function MapMaterialsPage() {
+export default function MapStockOpenPoMaterialsPage() {
   const router = useRouter();
   const [materials, setMaterials] = useState([]);
+  const [summary, setSummary] = useState(null);
   const [selectedCodes, setSelectedCodes] = useState(new Set());
   const [subgroupOptions, setSubgroupOptions] = useState([]);
   const [selectedSubgroup, setSelectedSubgroup] = useState(null);
@@ -26,6 +28,7 @@ export default function MapMaterialsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [unmappedOnly, setUnmappedOnly] = useState(true);
   const [sortConfig, setSortConfig] = useState({ key: 'material-code', direction: 'asc' });
   const [loading, setLoading] = useState(false);
   const [mapping, setMapping] = useState(false);
@@ -79,19 +82,23 @@ export default function MapMaterialsPage() {
         pageSize: String(PAGE_SIZE),
         sortBy: sortConfig.key,
         sortOrder: sortConfig.direction,
+        unmappedOnly: String(unmappedOnly),
       });
 
       if (debouncedSearch) {
         params.set('str', debouncedSearch);
       }
 
-      const response = await fetch(`/api/materialsubgroupmap/unmapped?${params.toString()}`);
+      const response = await fetch(
+        `/api/materialsubgroupmap/stock-po-list?${params.toString()}`
+      );
       if (!response.ok) {
         throw new Error('Failed to fetch materials');
       }
 
       const data = await response.json();
       setMaterials(data.materials || []);
+      setSummary(data.summary || null);
       setTotalPages(data.totalPages || 1);
       setTotalCount(data.totalCount || 0);
 
@@ -99,17 +106,19 @@ export default function MapMaterialsPage() {
         setPage(data.totalPages);
       }
     } catch (err) {
-      console.error('Error fetching materials:', err);
-      setError('Failed to load unmapped materials');
+      console.error('Error fetching stock/open PO materials:', err);
+      setError('Failed to load stock and open PO materials');
       setMaterials([]);
     } finally {
       setLoading(false);
     }
-  }, [page, debouncedSearch, sortConfig]);
+  }, [page, debouncedSearch, sortConfig, unmappedOnly]);
 
   useEffect(() => {
     fetchMaterials();
   }, [fetchMaterials]);
+
+  const isSelectable = (material) => material.inMaster && !material.mapped;
 
   const handleSort = (key) => {
     setSortConfig((prev) => ({
@@ -119,7 +128,9 @@ export default function MapMaterialsPage() {
     setPage(1);
   };
 
-  const toggleMaterial = (code) => {
+  const toggleMaterial = (material) => {
+    if (!isSelectable(material)) return;
+    const code = material['material-code'];
     setSelectedCodes((prev) => {
       const next = new Set(prev);
       if (next.has(code)) {
@@ -131,9 +142,12 @@ export default function MapMaterialsPage() {
     });
   };
 
+  const selectableOnPage = materials.filter(isSelectable);
+
   const toggleSelectAll = () => {
-    const pageCodes = materials.map((m) => m['material-code']);
-    const allSelected = pageCodes.length > 0 && pageCodes.every((code) => selectedCodes.has(code));
+    const pageCodes = selectableOnPage.map((m) => m['material-code']);
+    const allSelected =
+      pageCodes.length > 0 && pageCodes.every((code) => selectedCodes.has(code));
 
     setSelectedCodes((prev) => {
       const next = new Set(prev);
@@ -199,7 +213,7 @@ export default function MapMaterialsPage() {
   };
 
   const selectAllOnPage = () => {
-    const pageCodes = materials.map((m) => m['material-code']);
+    const pageCodes = selectableOnPage.map((m) => m['material-code']);
     setSelectedCodes((prev) => {
       const next = new Set(prev);
       pageCodes.forEach((code) => next.add(code));
@@ -212,7 +226,8 @@ export default function MapMaterialsPage() {
   };
 
   const allOnPageSelected =
-    materials.length > 0 && materials.every((m) => selectedCodes.has(m['material-code']));
+    selectableOnPage.length > 0 &&
+    selectableOnPage.every((m) => selectedCodes.has(m['material-code']));
 
   const sortIndicator = (key) => {
     if (sortConfig.key !== key) return '';
@@ -224,14 +239,16 @@ export default function MapMaterialsPage() {
       <HeaderComponent />
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1 className={styles.headerText}>Map Materials to Subgroups</h1>
+          <h1 className={styles.headerText}>
+            Map Stock and Open PO Materials to Groups
+          </h1>
           <div className={styles.actions}>
             <button
               type="button"
               className={styles.newButton}
-              onClick={() => router.push('/material-groups/map-stock-po-materials')}
+              onClick={() => router.push('/material-groups/map-materials')}
             >
-              Map stock and open PO materials to groups
+              Map All Materials
             </button>
             <button
               type="button"
@@ -251,25 +268,56 @@ export default function MapMaterialsPage() {
         </div>
 
         {error && <div className={styles.errorMessage}>{error}</div>}
-        {success && (
-          <div className={styles.successMessage}>{success}</div>
-        )}
+        {success && <div className={styles.successMessage}>{success}</div>}
 
         <div className={styles.content}>
           <div className={styles.groupsSection}>
-            <h2>Unmapped Materials</h2>
+            <h2>Stock and Open PO Materials</h2>
             <p className={styles.sectionHint}>
-              Only materials not yet assigned to a subgroup are shown. Select one or more, then choose a subgroup on the right.
+              2,739 materials from <em>MATERIALS TOBE HANA QAS.xlsx</em>. Existing SAP
+              type and group are shown from the material master (or the Excel list).
+              Assign unmapped items to a group–subgroup. Already mapped items use the
+              same <code>materialsubgroupmap</code> collection as View Mapped Materials
+              and cannot be selected again.
             </p>
 
+            {summary && (
+              <div className={styles.searchHint} style={{ marginBottom: '1rem' }}>
+                {summary.totalInList.toLocaleString()} in Excel ·{' '}
+                {summary.inMasterCount.toLocaleString()} in material master ·{' '}
+                {summary.mappedCount.toLocaleString()} already mapped ·{' '}
+                {summary.unmappedCount.toLocaleString()} still unmapped
+                {summary.missingFromMasterCount > 0 &&
+                  ` · ${summary.missingFromMasterCount} not in master`}
+              </div>
+            )}
+
+            <label
+              className={styles.searchLabel}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <input
+                type="checkbox"
+                checked={unmappedOnly}
+                onChange={(e) => {
+                  setUnmappedOnly(e.target.checked);
+                  setPage(1);
+                  setSelectedCodes(new Set());
+                }}
+              />
+              Show unmapped only (hide already mapped)
+            </label>
+
             <div className={styles.searchSection}>
-              <label className={styles.searchLabel}>Search materials (code or description)</label>
+              <label className={styles.searchLabel}>
+                Search materials (code, description, SAP type or group)
+              </label>
               <input
                 type="text"
                 className={styles.searchInput}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="e.g. cable or cable*240*arm"
+                placeholder="e.g. cable or ZCVL*CM10"
               />
               <div className={styles.searchHint}>
                 Use * to separate multiple search terms. Results are paginated in batches of 100.
@@ -278,7 +326,8 @@ export default function MapMaterialsPage() {
 
             <div className={styles.paginationBar}>
               <span>
-                {totalCount.toLocaleString()} unmapped material{totalCount === 1 ? '' : 's'}
+                {totalCount.toLocaleString()} material{totalCount === 1 ? '' : 's'}
+                {unmappedOnly ? ' unmapped' : ''}
                 {debouncedSearch ? ` matching "${debouncedSearch}"` : ''}
               </span>
               <div className={styles.paginationControls}>
@@ -308,7 +357,7 @@ export default function MapMaterialsPage() {
               <button
                 type="button"
                 className={styles.paginationButton}
-                disabled={loading || materials.length === 0 || allOnPageSelected}
+                disabled={loading || selectableOnPage.length === 0 || allOnPageSelected}
                 onClick={selectAllOnPage}
               >
                 Select All
@@ -333,62 +382,99 @@ export default function MapMaterialsPage() {
             ) : materials.length === 0 ? (
               <p className={styles.emptyMessage}>
                 {debouncedSearch
-                  ? 'No unmapped materials match your search.'
-                  : 'All materials have been mapped to subgroups.'}
+                  ? 'No materials match your search.'
+                  : unmappedOnly
+                    ? 'All stock and open PO materials in this list have been mapped.'
+                    : 'No materials found in the stock and open PO list.'}
               </p>
             ) : (
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th className={styles.checkboxCol}>
-                      <input
-                        type="checkbox"
-                        checked={allOnPageSelected}
-                        onChange={toggleSelectAll}
-                        title="Select all on this page"
-                      />
-                    </th>
-                    {SORT_COLUMNS.map((col) => (
-                      <th
-                        key={col.key}
-                        className={styles.sortableHeader}
-                        onClick={() => handleSort(col.key)}
-                      >
-                        {col.label}
-                        {sortIndicator(col.key)}
+              <div className={styles.tableScroll}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th className={styles.checkboxCol}>
+                        <input
+                          type="checkbox"
+                          checked={allOnPageSelected}
+                          disabled={selectableOnPage.length === 0}
+                          onChange={toggleSelectAll}
+                          title="Select all unmapped materials on this page"
+                        />
                       </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {materials.map((material) => {
-                    const code = material['material-code'];
-                    const isSelected = selectedCodes.has(code);
-                    return (
-                      <tr
-                        key={code}
-                        className={`${styles.groupRow} ${isSelected ? styles.selectedRow : ''}`}
-                        onClick={() => toggleMaterial(code)}
-                      >
-                        <td className={styles.checkboxCol}>
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => toggleMaterial(code)}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        </td>
-                        <td className={styles.groupName}>{code}</td>
-                        <td className={styles.groupDescription}>
-                          {material['material-description']}
-                        </td>
-                        <td className={styles.groupType}>{material['material-group'] || '—'}</td>
-                        <td>{material['unit-measure'] || '—'}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                      {SORT_COLUMNS.map((col) => (
+                        <th
+                          key={col.key}
+                          className={styles.sortableHeader}
+                          onClick={() => handleSort(col.key)}
+                        >
+                          {col.label}
+                          {sortIndicator(col.key)}
+                        </th>
+                      ))}
+                      {!unmappedOnly && <th>Mapped To</th>}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {materials.map((material) => {
+                      const code = material['material-code'];
+                      const isSelected = selectedCodes.has(code);
+                      const selectable = isSelectable(material);
+                      const typeLabel = material['material-type-description']
+                        ? `${material['material-type']} — ${material['material-type-description']}`
+                        : material['material-type'] || '—';
+                      const groupLabel = material['material-group-description']
+                        ? `${material['material-group']} — ${material['material-group-description']}`
+                        : material['material-group'] || '—';
+                      return (
+                        <tr
+                          key={code}
+                          className={`${styles.groupRow} ${isSelected ? styles.selectedRow : ''} ${
+                            !selectable ? styles.disabledRow : ''
+                          }`}
+                          onClick={() => toggleMaterial(material)}
+                          title={
+                            material.mapped
+                              ? `Already mapped to ${material.mappedSubgroup?.label || 'a subgroup'}`
+                              : !material.inMaster
+                                ? 'Not found in the material master'
+                                : undefined
+                          }
+                        >
+                          <td className={styles.checkboxCol}>
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              disabled={!selectable}
+                              onChange={() => toggleMaterial(material)}
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                          </td>
+                          <td className={styles.groupName}>{code}</td>
+                          <td className={styles.groupDescription}>
+                            {material['material-description']}
+                          </td>
+                          <td className={styles.groupType} title={typeLabel}>
+                            {material['material-type'] || '—'}
+                          </td>
+                          <td className={styles.groupType} title={groupLabel}>
+                            {material['material-group'] || '—'}
+                          </td>
+                          <td>{material['unit-measure'] || '—'}</td>
+                          {!unmappedOnly && (
+                            <td>
+                              {material.mapped
+                                ? material.mappedSubgroup?.label || 'Already mapped'
+                                : !material.inMaster
+                                  ? 'Not in master'
+                                  : '—'}
+                            </td>
+                          )}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
 
             {!loading && materials.length > 0 && totalPages > 1 && (
@@ -421,7 +507,8 @@ export default function MapMaterialsPage() {
           <div className={styles.subgroupsSection}>
             <h2>Assign to Subgroup</h2>
             <p className={styles.sectionHint}>
-              Material groups only — service groups are excluded.
+              Material groups only — service groups are excluded. Same search-and-select
+              dropdown as Map Materials.
             </p>
 
             <div className={styles.mappingPanel}>
@@ -441,7 +528,8 @@ export default function MapMaterialsPage() {
               </div>
 
               <div className={styles.selectionSummary}>
-                <strong>{selectedCodes.size}</strong> material{selectedCodes.size === 1 ? '' : 's'} selected
+                <strong>{selectedCodes.size}</strong> material
+                {selectedCodes.size === 1 ? '' : 's'} selected
               </div>
 
               {selectedSubgroup && (
