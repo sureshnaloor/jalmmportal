@@ -40,3 +40,7 @@ yarn-error.log*
 
 # local script exports
 /exports
+
+# DB chat agent runtime traces (may contain query results)
+/data/db-chat-agent-traces.jsonl
+/data/db-chat-agent-traces-*.jsonl.bak

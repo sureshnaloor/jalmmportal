@@ -18,6 +18,7 @@ import {
   RichAssistantText,
 } from "../../components/DbChatResults";
 import DbAgentChatModal from "../../components/DbAgentChatModal";
+import { isSupplyChainHead } from "../../lib/vendorEvaluationApproval";
 
 const EXAMPLE_PROMPTS = [
   "List the collections in this database",
@@ -48,7 +49,7 @@ function parseSseBuffer(buffer, onEvent) {
   return rest;
 }
 
-export default function DbChatPage() {
+export default function DbChatPage({ canUseAgentChat = false }) {
   const { data: session } = useSession();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -217,14 +218,23 @@ export default function DbChatPage() {
             <FiShield />
             Fetch only
           </div>
-          <button
-            type="button"
-            className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-800 ring-1 ring-violet-100 hover:bg-violet-100"
-            onClick={() => setAgentOpen(true)}
-          >
-            <FiCpu />
-            Open Agent Chat for grouping and joins
-          </button>
+          {canUseAgentChat ? (
+            <button
+              type="button"
+              className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-800 ring-1 ring-violet-100 hover:bg-violet-100"
+              onClick={() => setAgentOpen(true)}
+            >
+              <FiCpu />
+              Open Agent Chat for grouping and joins
+            </button>
+          ) : (
+            <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3 text-xs leading-5 text-amber-900">
+              <p className="font-semibold">Currently under testing</p>
+              <p className="mt-1">
+                Agent Chat is available only for admin users.
+              </p>
+            </div>
+          )}
 
           <h3 className="mt-6 text-xs font-semibold uppercase tracking-wider text-gray-500">
             Collections
@@ -271,14 +281,21 @@ export default function DbChatPage() {
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-2">
-              <button
-                type="button"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-3 py-2 text-xs font-semibold text-white hover:bg-violet-700"
-                onClick={() => setAgentOpen(true)}
-              >
-                <FiCpu />
-                Agent Chat
-              </button>
+              {canUseAgentChat ? (
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-3 py-2 text-xs font-semibold text-white hover:bg-violet-700"
+                  onClick={() => setAgentOpen(true)}
+                >
+                  <FiCpu />
+                  Agent Chat
+                </button>
+              ) : (
+                <div className="max-w-[220px] rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] leading-4 text-amber-900">
+                  <p className="font-semibold">Currently under testing</p>
+                  <p>This feature is available only for admin users.</p>
+                </div>
+              )}
               <button
                 type="button"
                 className="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
@@ -412,11 +429,13 @@ export default function DbChatPage() {
       </main>
 
       <FooterComponent />
-      <DbAgentChatModal
-        open={agentOpen}
-        onClose={() => setAgentOpen(false)}
-        sessionName={session?.user?.name || session?.user?.email || ""}
-      />
+      {canUseAgentChat ? (
+        <DbAgentChatModal
+          open={agentOpen}
+          onClose={() => setAgentOpen(false)}
+          sessionName={session?.user?.name || session?.user?.email || ""}
+        />
+      ) : null}
     </div>
   );
 }
@@ -431,5 +450,10 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  return { props: { session } };
+  return {
+    props: {
+      session,
+      canUseAgentChat: isSupplyChainHead(session.user?.email),
+    },
+  };
 }

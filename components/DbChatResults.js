@@ -1,38 +1,5 @@
 import React from "react";
 
-const CARD_TONES = [
-  {
-    wrap: "from-sky-500 to-cyan-500",
-    body: "bg-sky-50 border-sky-100",
-    chip: "bg-sky-100 text-sky-800",
-  },
-  {
-    wrap: "from-violet-500 to-fuchsia-500",
-    body: "bg-violet-50 border-violet-100",
-    chip: "bg-violet-100 text-violet-800",
-  },
-  {
-    wrap: "from-emerald-500 to-teal-500",
-    body: "bg-emerald-50 border-emerald-100",
-    chip: "bg-emerald-100 text-emerald-800",
-  },
-  {
-    wrap: "from-amber-500 to-orange-500",
-    body: "bg-amber-50 border-amber-100",
-    chip: "bg-amber-100 text-amber-800",
-  },
-  {
-    wrap: "from-rose-500 to-pink-500",
-    body: "bg-rose-50 border-rose-100",
-    chip: "bg-rose-100 text-rose-800",
-  },
-  {
-    wrap: "from-indigo-500 to-blue-500",
-    body: "bg-indigo-50 border-indigo-100",
-    chip: "bg-indigo-100 text-indigo-800",
-  },
-];
-
 const HIDDEN_FIELDS = new Set(["_id", "id", "__v"]);
 
 function prettyLabel(key) {
@@ -84,40 +51,217 @@ function flattenObject(value, prefix = "") {
   });
 }
 
-function pickTitle(doc) {
+function isObjectIdString(value) {
+  return typeof value === "string" && /^[a-f0-9]{24}$/i.test(value);
+}
+
+function firstVendor(doc) {
+  const nested =
+    (Array.isArray(doc.vendorDetails) && doc.vendorDetails[0]) ||
+    (Array.isArray(doc.vendor) && doc.vendor[0]) ||
+    (Array.isArray(doc.vendors) && doc.vendors[0]) ||
+    (doc.vendorDetails && !Array.isArray(doc.vendorDetails) ? doc.vendorDetails : null) ||
+    (doc.vendor && !Array.isArray(doc.vendor) ? doc.vendor : null);
+  return nested && typeof nested === "object" ? nested : null;
+}
+
+function flattenDocumentsForTable(documents) {
+  return (documents || []).map((doc) => {
+    if (!doc || typeof doc !== "object" || Array.isArray(doc)) return doc;
+    const row = { ...doc };
+    if (
+      row._id != null &&
+      !isObjectIdString(String(row._id)) &&
+      row["po-number"] == null &&
+      row.poNumber == null
+    ) {
+      row["po-number"] = row._id;
+    }
+    const vendor = firstVendor(row);
+    if (vendor) {
+      if (vendor["vendor-name"] && !row["vendor-name"] && !row.vendorname) {
+        row["vendor-name"] = vendor["vendor-name"];
+      }
+      if (vendor["vendor-code"] && !row["vendor-code"] && !row.vendorcode) {
+        row["vendor-code"] = vendor["vendor-code"];
+      }
+      delete row.vendorDetails;
+      delete row.vendor;
+      delete row.vendors;
+    }
+    return row;
+  });
+}
+
+const PREFERRED_COLUMNS = [
+  "po-number",
+  "totalValue",
+  "totalvalue",
+  "vendorcode",
+  "vendor-code",
+  "vendorname",
+  "vendor-name",
+  "po-date",
+  "lineItems",
+];
+
+function visibleColumns(documents) {
+  const columns = [];
+  documents.forEach((doc) => {
+    Object.keys(doc || {}).forEach((key) => {
+      if (HIDDEN_FIELDS.has(key)) return;
+      if (!columns.includes(key)) columns.push(key);
+    });
+  });
+  const preferred = PREFERRED_COLUMNS.filter((key) => columns.includes(key));
+  const rest = columns.filter((key) => !preferred.includes(key));
+  return [...preferred, ...rest];
+}
+
+function ArrayTable({ rows }) {
+  const docs = rows.filter((item) => item && typeof item === "object");
+  if (!docs.length) {
+    return (
+      <span className="text-sm font-medium text-slate-800">
+        {rows.map((item) => formatScalar(item)).filter(Boolean).join(", ") || "—"}
+      </span>
+    );
+  }
+  const headers = visibleColumns(docs).slice(0, 8);
   return (
-    doc["vendor-name"] ||
-    doc.vendorname ||
-    doc["material-description"] ||
-    doc["po-number"] ||
-    doc["project-name"] ||
-    doc.name ||
-    doc.title ||
-    null
+    <table className="min-w-[220px] border-collapse text-left text-[12px]">
+      <thead>
+        <tr className="bg-slate-100 text-slate-600">
+          {headers.map((col) => (
+            <th key={col} className="border border-slate-200 px-2 py-1 font-semibold">
+              {prettyLabel(col)}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {docs.slice(0, 40).map((doc, index) => (
+          <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-slate-50"}>
+            {headers.map((col) => (
+              <td key={col} className="border border-slate-200 px-2 py-1 align-top text-slate-800">
+                {formatScalar(
+                  typeof doc[col] === "object" ? JSON.stringify(doc[col]) : doc[col]
+                ) || "—"}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 
-function pickCode(doc) {
+function CellValue({ value }) {
+  if (value == null || value === "") {
+    return <span className="text-slate-300">—</span>;
+  }
+  if (Array.isArray(value)) {
+    if (!value.length) return <span className="text-slate-300">—</span>;
+    if (value.some((item) => item && typeof item === "object")) {
+      return <ArrayTable rows={value} />;
+    }
+    return (
+      <span className="text-sm font-medium text-slate-800">
+        {value.map((item) => formatScalar(item)).join(", ")}
+      </span>
+    );
+  }
+  if (typeof value === "object") {
+    const entries = flattenObject(value).filter(
+      (item) => item.value != null && item.value !== ""
+    );
+    if (!entries.length) return <span className="text-slate-300">—</span>;
+    return (
+      <table className="border-collapse text-left text-[12px]">
+        <tbody>
+          {entries.map((item) => (
+            <tr key={item.label}>
+              <th className="border border-slate-200 bg-slate-50 px-2 py-1 font-semibold text-slate-600">
+                {item.label}
+              </th>
+              <td className="border border-slate-200 px-2 py-1 text-slate-800">
+                {formatScalar(
+                  typeof item.value === "object"
+                    ? JSON.stringify(item.value)
+                    : item.value
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+  const text = formatScalar(value);
+  if (/^[A-Z0-9-]{3,12}$/.test(String(value)) || /^\d{5,}$/.test(String(value))) {
+    return <span className="font-mono text-[13px] font-semibold text-slate-900">{text}</span>;
+  }
+  return <span className="text-sm font-medium text-slate-800">{text}</span>;
+}
+
+export function RichHtmlTable({ columns, rows, documents }) {
+  const docs = Array.isArray(documents) ? flattenDocumentsForTable(documents) : null;
+  const headers = docs ? visibleColumns(docs) : columns;
+  const dataRows = docs
+    ? docs.map((doc) => headers.map((col) => doc?.[col]))
+    : rows;
+
   return (
-    doc["vendor-code"] ||
-    doc.vendorcode ||
-    doc["po-number"] ||
-    doc["material-code"] ||
-    doc.matcode ||
-    null
+    <div className="overflow-hidden rounded-xl border border-slate-200 shadow-sm">
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse text-left">
+          <thead>
+            <tr className="bg-slate-700 text-white">
+              {headers.map((col) => (
+                <th
+                  key={col}
+                  className="border-b border-slate-600 px-3 py-2 text-[11px] font-bold uppercase tracking-wider"
+                >
+                  {prettyLabel(col)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {(dataRows || []).map((row, rowIndex) => (
+              <tr
+                key={rowIndex}
+                className={rowIndex % 2 === 0 ? "bg-white" : "bg-slate-50"}
+              >
+                {row.map((cell, cellIndex) => (
+                  <td
+                    key={cellIndex}
+                    className="border-t border-slate-200 px-3 py-2 align-top"
+                  >
+                    <CellValue value={cell} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
 
-function initials(text) {
-  const parts = String(text || "")
-    .split(/\s+/)
-    .filter(Boolean);
-  if (!parts.length) return "?";
-  return parts
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
+export function DocumentGallery({ documents }) {
+  if (!Array.isArray(documents) || !documents.length) return null;
+  return (
+    <div className="mt-4">
+      <div className="mb-2">
+        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          {documents.length} row{documents.length === 1 ? "" : "s"}
+        </span>
+      </div>
+      <RichHtmlTable documents={documents} />
+    </div>
+  );
 }
 
 function stripMarkdownTables(text) {
@@ -200,9 +344,8 @@ export function RichAssistantText({ text, hideTables = false }) {
                 .map((line, lineIndex) => (
                   <li
                     key={lineIndex}
-                    className="flex gap-2 rounded-lg bg-white/80 px-3 py-2 ring-1 ring-sky-100"
+                    className="border-b border-slate-100 px-1 py-1 last:border-b-0"
                   >
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-sky-500" />
                     <span
                       dangerouslySetInnerHTML={{
                         __html: richInline(line.replace(/^\s*[-*•]\s+/, "")),
@@ -216,209 +359,13 @@ export function RichAssistantText({ text, hideTables = false }) {
         return (
           <p
             key={index}
-            className="rounded-xl bg-gradient-to-r from-sky-50 to-white px-4 py-3 text-slate-800 ring-1 ring-sky-100"
+            className="text-slate-800"
             dangerouslySetInnerHTML={{
               __html: richInline(block).replace(/\n/g, "<br />"),
             }}
           />
         );
       })}
-    </div>
-  );
-}
-
-function NestedChips({ value, tone }) {
-  const entries = flattenObject(value).filter(
-    (item) => item.value != null && item.value !== ""
-  );
-  if (!entries.length) return <span className="text-slate-400">—</span>;
-  return (
-    <div className="flex flex-col gap-1">
-      {entries.map((item) => (
-        <div key={item.label} className="flex flex-wrap items-center gap-1.5">
-          <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${tone.chip}`}>
-            {item.label}
-          </span>
-          <span className="text-sm font-medium text-slate-800">
-            {formatScalar(item.value)}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function CellValue({ value, tone }) {
-  if (value == null || value === "") {
-    return <span className="text-slate-300">—</span>;
-  }
-  if (Array.isArray(value)) {
-    return (
-      <div className="flex flex-wrap gap-1">
-        {value.slice(0, 6).map((item, index) => (
-          <span
-            key={index}
-            className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${tone.chip}`}
-          >
-            {typeof item === "object" ? JSON.stringify(item) : formatScalar(item)}
-          </span>
-        ))}
-      </div>
-    );
-  }
-  if (typeof value === "object") {
-    return <NestedChips value={value} tone={tone} />;
-  }
-  const text = formatScalar(value);
-  if (/^[A-Z0-9-]{3,12}$/.test(String(value)) || /^\d{5,}$/.test(String(value))) {
-    return (
-      <span className="inline-flex rounded-lg bg-slate-900 px-2 py-0.5 font-mono text-[12px] font-semibold text-amber-200">
-        {text}
-      </span>
-    );
-  }
-  return <span className="font-medium text-slate-800">{text}</span>;
-}
-
-function visibleColumns(documents) {
-  const columns = [];
-  documents.slice(0, 12).forEach((doc) => {
-    Object.keys(doc || {}).forEach((key) => {
-      if (HIDDEN_FIELDS.has(key)) return;
-      if (!columns.includes(key)) columns.push(key);
-    });
-  });
-  return columns.slice(0, 8);
-}
-
-export function RichHtmlTable({ columns, rows, documents }) {
-  const docs = Array.isArray(documents) ? documents : null;
-  const headers = docs ? visibleColumns(docs) : columns;
-  const dataRows = docs
-    ? docs.slice(0, 25).map((doc) => headers.map((col) => doc?.[col]))
-    : rows;
-
-  return (
-    <div className="overflow-hidden rounded-2xl border border-sky-100 shadow-md">
-      <div className="overflow-x-auto">
-        <table className="min-w-full border-separate border-spacing-0 text-left">
-          <thead>
-            <tr className="bg-gradient-to-r from-sky-600 via-cyan-600 to-teal-500 text-white">
-              {headers.map((col) => (
-                <th
-                  key={col}
-                  className="px-3 py-3 text-[11px] font-bold uppercase tracking-wider"
-                >
-                  {prettyLabel(col)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {dataRows.map((row, rowIndex) => {
-              const tone = CARD_TONES[rowIndex % CARD_TONES.length];
-              return (
-                <tr
-                  key={rowIndex}
-                  className={rowIndex % 2 === 0 ? "bg-white" : "bg-sky-50/70"}
-                >
-                  {row.map((cell, cellIndex) => (
-                    <td
-                      key={cellIndex}
-                      className="max-w-[240px] border-t border-sky-100 px-3 py-3 align-top"
-                    >
-                      <CellValue value={cell} tone={tone} />
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function ResultCard({ doc, index }) {
-  const tone = CARD_TONES[index % CARD_TONES.length];
-  const title = pickTitle(doc) || `Record ${index + 1}`;
-  const code = pickCode(doc);
-  const skip = new Set([
-    ...HIDDEN_FIELDS,
-    "vendor-name",
-    "vendorname",
-    "vendor-code",
-    "vendorcode",
-    "material-description",
-    "po-number",
-    "project-name",
-    "name",
-    "title",
-  ]);
-  const details = Object.entries(doc).filter(([key, value]) => {
-    if (skip.has(key)) return false;
-    if (value == null || value === "") return false;
-    return true;
-  });
-
-  return (
-    <article className={`overflow-hidden rounded-2xl bg-gradient-to-br ${tone.wrap} p-[2px] shadow-md`}>
-      <div className={`h-full rounded-[14px] ${tone.body} p-4`}>
-        <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-sm font-black text-slate-700 shadow-sm">
-            {initials(title)}
-          </div>
-          <div className="min-w-0">
-            <h3 className="text-base font-extrabold leading-snug text-slate-900">
-              {title}
-            </h3>
-            {code && (
-              <div className="mt-1 inline-flex rounded-full bg-slate-900 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-amber-200">
-                {code}
-              </div>
-            )}
-          </div>
-        </div>
-        <dl className="mt-3 space-y-2">
-          {details.slice(0, 8).map(([key, value]) => (
-            <div key={key} className="rounded-xl bg-white/80 px-3 py-2 ring-1 ring-white">
-              <dt className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                {prettyLabel(key)}
-              </dt>
-              <dd className="mt-1">
-                <CellValue value={value} tone={tone} />
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-    </article>
-  );
-}
-
-export function DocumentGallery({ documents }) {
-  if (!Array.isArray(documents) || !documents.length) return null;
-  const useCards =
-    documents.length <= 12 &&
-    documents.some((doc) => pickTitle(doc) || pickCode(doc));
-
-  return (
-    <div className="mt-4">
-      <div className="mb-2 flex items-center justify-between">
-        <span className="rounded-full bg-gradient-to-r from-sky-600 to-teal-500 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
-          {documents.length} result{documents.length === 1 ? "" : "s"}
-        </span>
-      </div>
-      {useCards ? (
-        <div className="grid gap-3 md:grid-cols-2">
-          {documents.slice(0, 12).map((doc, index) => (
-            <ResultCard key={index} doc={doc} index={index} />
-          ))}
-        </div>
-      ) : (
-        <RichHtmlTable documents={documents} />
-      )}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import {
   runDbAgentChat,
   runDbChat,
 } from "../../../lib/mcp/dbChatAgent";
+import { isSupplyChainHead } from "../../../lib/vendorEvaluationApproval";
 
 export const config = {
   api: {
@@ -60,12 +61,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "A user prompt is required" });
   }
 
+  const mode = req.body?.mode === "agent" ? "agent" : "simple";
+  if (mode === "agent" && !isSupplyChainHead(session.user?.email)) {
+    return res.status(403).json({
+      error:
+        "Currently under testing. This feature is available only for admin users.",
+    });
+  }
+
   res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
   res.setHeader("Connection", "keep-alive");
   res.setHeader("X-Accel-Buffering", "no");
   res.flushHeaders?.();
 
-  const mode = req.body?.mode === "agent" ? "agent" : "simple";
   const runner = mode === "agent" ? runDbAgentChat : runDbChat;
 
   try {

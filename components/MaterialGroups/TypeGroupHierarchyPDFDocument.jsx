@@ -9,7 +9,7 @@ const COLORS = {
   groups: '#1e3a8a',
   groupsSoft: '#e0e7ff',
   accent: '#c2410c',
-  accentSoft: '#ffedd5',
+  accentSoft: '#eef6fb',
   text: '#0f172a',
   muted: '#64748b',
   border: '#e2e8f0',
@@ -135,6 +135,14 @@ const styles = StyleSheet.create({
   },
   typeMetaValue: {
     fontSize: 9,
+    fontFamily: 'Helvetica-Bold',
+    color: '#fff',
+    width: '82%',
+    lineHeight: 1.35,
+  },
+  typeDescValue: {
+    fontSize: 8,
+    fontFamily: 'Helvetica-Oblique',
     color: '#fff',
     width: '82%',
     lineHeight: 1.35,
@@ -162,8 +170,8 @@ const styles = StyleSheet.create({
   tableHeader: {
     flexDirection: 'row',
     backgroundColor: COLORS.accent,
-    paddingVertical: 6,
-    paddingHorizontal: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
   },
   tableHeaderCell: {
     fontSize: 8,
@@ -176,28 +184,28 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderColor: COLORS.border,
-    paddingVertical: 6,
-    paddingHorizontal: 8,
+    paddingVertical: 8.5,
+    paddingHorizontal: 10,
     alignItems: 'flex-start',
   },
   tableRowAlt: {
     backgroundColor: COLORS.accentSoft,
   },
   tableCell: {
-    fontSize: 8.5,
     color: COLORS.text,
     lineHeight: 1.35,
   },
-  colCode: { width: '16%', paddingRight: 4 },
-  colName: { width: '28%', paddingRight: 4 },
-  colDesc: { width: '56%' },
-  codeText: {
-    fontFamily: 'Helvetica-Bold',
-    color: COLORS.accent,
-  },
+  colName: { width: '38%', paddingRight: 12 },
+  colDesc: { width: '62%', paddingLeft: 4 },
   nameText: {
+    fontSize: 8,
     fontFamily: 'Helvetica-Bold',
     color: COLORS.groups,
+  },
+  descText: {
+    fontSize: 7.5,
+    fontFamily: 'Helvetica-Oblique',
+    color: COLORS.text,
   },
   emptyBox: {
     borderWidth: 1,
@@ -226,6 +234,12 @@ const styles = StyleSheet.create({
   },
 });
 
+function asUpper(value) {
+  const text = String(value || '').trim();
+  if (!text || text === '—') return text || '—';
+  return text.toUpperCase();
+}
+
 function PageFooter() {
   return (
     <Text
@@ -243,18 +257,14 @@ function TypePage({ type }) {
     <Page size="A4" orientation="portrait" style={styles.page}>
       <View style={[styles.typeBanner, type.isService ? styles.typeBannerService : null]} wrap={false}>
         <Text style={styles.typeKicker}>{type.typeLabel}</Text>
-        <Text style={styles.typeTitle}>{type.name}</Text>
-        <View style={styles.typeMetaRow}>
-          <Text style={styles.typeMetaLabel}>Code</Text>
-          <Text style={styles.typeMetaValue}>{type.code}</Text>
-        </View>
+        <Text style={styles.typeTitle}>{asUpper(type.name)}</Text>
         <View style={styles.typeMetaRow}>
           <Text style={styles.typeMetaLabel}>Name</Text>
-          <Text style={styles.typeMetaValue}>{type.name}</Text>
+          <Text style={styles.typeMetaValue}>{asUpper(type.name)}</Text>
         </View>
         <View style={styles.typeMetaRow}>
           <Text style={styles.typeMetaLabel}>Description</Text>
-          <Text style={styles.typeMetaValue}>{type.description || '—'}</Text>
+          <Text style={styles.typeDescValue}>{asUpper(type.description)}</Text>
         </View>
       </View>
 
@@ -264,7 +274,6 @@ function TypePage({ type }) {
           <Text style={styles.sectionHeaderMeta}>{type.groupCount} group{type.groupCount === 1 ? '' : 's'}</Text>
         </View>
         <View style={styles.tableHeader}>
-          <Text style={[styles.tableHeaderCell, styles.colCode]}>Code</Text>
           <Text style={[styles.tableHeaderCell, styles.colName]}>Name</Text>
           <Text style={[styles.tableHeaderCell, styles.colDesc]}>Description</Text>
         </View>
@@ -281,9 +290,12 @@ function TypePage({ type }) {
             style={[styles.tableRow, index % 2 === 1 ? styles.tableRowAlt : null]}
             wrap={false}
           >
-            <Text style={[styles.tableCell, styles.colCode, styles.codeText]}>{group.code}</Text>
-            <Text style={[styles.tableCell, styles.colName, styles.nameText]}>{group.name}</Text>
-            <Text style={[styles.tableCell, styles.colDesc]}>{group.description || '—'}</Text>
+            <Text style={[styles.tableCell, styles.colName, styles.nameText]}>
+              {asUpper(group.name)}
+            </Text>
+            <Text style={[styles.tableCell, styles.colDesc, styles.descText]}>
+              {asUpper(group.description)}
+            </Text>
           </View>
         ))
       )}
@@ -331,7 +343,7 @@ export default function TypeGroupHierarchyPDFDocument({ report }) {
           <Text style={styles.legendTitle}>Colour key</Text>
           <View style={styles.legendRow}>
             <View style={[styles.swatch, { backgroundColor: COLORS.type }]} />
-            <Text style={styles.legendText}>Teal — Material / Service Type header (code, name, description)</Text>
+            <Text style={styles.legendText}>Teal — Material / Service Type header (name, description)</Text>
           </View>
           <View style={styles.legendRow}>
             <View style={[styles.swatch, { backgroundColor: COLORS.groups }]} />
@@ -339,7 +351,11 @@ export default function TypeGroupHierarchyPDFDocument({ report }) {
           </View>
           <View style={styles.legendRow}>
             <View style={[styles.swatch, { backgroundColor: COLORS.accent }]} />
-            <Text style={styles.legendText}>Amber — Group table header / group codes</Text>
+            <Text style={styles.legendText}>Amber — Group table header</Text>
+          </View>
+          <View style={styles.legendRow}>
+            <View style={[styles.swatch, { backgroundColor: COLORS.accentSoft }]} />
+            <Text style={styles.legendText}>Light blue — Alternate group rows</Text>
           </View>
           <Text style={[styles.legendText, { marginTop: 6 }]}>
             Each following page is one type. All groups mapped to that type are listed underneath.

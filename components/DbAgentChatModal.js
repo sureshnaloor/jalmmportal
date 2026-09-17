@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  FiBook,
   FiCheck,
   FiCpu,
   FiDatabase,
@@ -13,6 +14,7 @@ import {
   FiZap,
 } from "react-icons/fi";
 import { DocumentGallery, RichAssistantText } from "./DbChatResults";
+import DbAgentTrace from "./DbAgentTrace";
 
 const AGENT_EXAMPLE_PROMPTS = [
   "Group open purchase orders by vendor and sum pending-val-sar",
@@ -54,6 +56,147 @@ function stageIcon(stage) {
   if (stage === "query") return <FiDatabase />;
   if (stage === "review") return <FiEye />;
   return <FiCheck />;
+}
+
+function TrainingPanel({ message, disabled, onSaved, onRetry }) {
+  const [collections, setCollections] = useState(
+    (message.plan?.collections || message.missingCollections || []).join(", ")
+  );
+  const [joins, setJoins] = useState("");
+  const [groupBy, setGroupBy] = useState((message.plan?.groupBy || []).join(", "));
+  const [fields, setFields] = useState("");
+  const [notes, setNotes] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [saved, setSaved] = useState(Boolean(message.trained));
+
+  const submit = async (retry) => {
+    if (saved || saving || disabled) return;
+    setSaving(true);
+    setError("");
+    try {
+      const response = await fetch("/api/db-chat/training", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          question: message.sourceQuestion || "",
+          collections,
+          joins,
+          groupBy,
+          fields,
+          notes,
+          reviewerIssues: message.reviewIssues || [],
+          plan: message.plan || null,
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to save training");
+      }
+      setSaved(true);
+      onSaved?.(data.count);
+      if (retry && message.sourceQuestion) {
+        onRetry?.(message.sourceQuestion);
+      }
+    } catch (err) {
+      setError(err.message || "Failed to save training");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50/80 p-3 text-slate-800">
+      <div className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-amber-900">
+        <FiBook />
+        Teach the agent
+      </div>
+      <p className="mb-3 text-[12px] leading-relaxed text-amber-900">
+        The reviewer did not approve this answer. Name the real collections and the
+        fields to join or group by. This is saved to{" "}
+        <code className="rounded bg-white px-1">data/db-chat-agent-training.json</code>{" "}
+        and used on every later prompt.
+      </p>
+      <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-amber-800">
+        Collections
+        <input
+          value={collections}
+          onChange={(event) => setCollections(event.target.value)}
+          disabled={saved || saving || disabled}
+          placeholder="purchaseorders, vendors"
+          className="mt-1 w-full rounded-lg border border-amber-200 bg-white px-2.5 py-1.5 text-sm font-normal text-slate-800 outline-none focus:border-violet-400"
+        />
+      </label>
+      <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-amber-800">
+        Join / link fields
+        <textarea
+          value={joins}
+          onChange={(event) => setJoins(event.target.value)}
+          disabled={saved || saving || disabled}
+          rows={2}
+          placeholder={"vendors.vendor-code = purchaseorders.vendorcode"}
+          className="mt-1 w-full rounded-lg border border-amber-200 bg-white px-2.5 py-1.5 text-sm font-normal text-slate-800 outline-none focus:border-violet-400"
+        />
+      </label>
+      <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-amber-800">
+        Group by
+        <input
+          value={groupBy}
+          onChange={(event) => setGroupBy(event.target.value)}
+          disabled={saved || saving || disabled}
+          placeholder="po-number, vendorcode"
+          className="mt-1 w-full rounded-lg border border-amber-200 bg-white px-2.5 py-1.5 text-sm font-normal text-slate-800 outline-none focus:border-violet-400"
+        />
+      </label>
+      <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-amber-800">
+        Important fields
+        <input
+          value={fields}
+          onChange={(event) => setFields(event.target.value)}
+          disabled={saved || saving || disabled}
+          placeholder="purchaseorders: po-number, pending-val-sar"
+          className="mt-1 w-full rounded-lg border border-amber-200 bg-white px-2.5 py-1.5 text-sm font-normal text-slate-800 outline-none focus:border-violet-400"
+        />
+      </label>
+      <label className="mb-3 block text-[11px] font-semibold uppercase tracking-wide text-amber-800">
+        Notes
+        <textarea
+          value={notes}
+          onChange={(event) => setNotes(event.target.value)}
+          disabled={saved || saving || disabled}
+          rows={2}
+          placeholder="POs are line-level. Sum pending-val-sar after grouping by po-number."
+          className="mt-1 w-full rounded-lg border border-amber-200 bg-white px-2.5 py-1.5 text-sm font-normal text-slate-800 outline-none focus:border-violet-400"
+        />
+      </label>
+      {error && <p className="mb-2 text-xs text-rose-600">{error}</p>}
+      {saved ? (
+        <p className="text-xs font-semibold text-emerald-800">
+          Training saved. The agent will use it on the next prompt.
+        </p>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className="rounded-lg bg-violet-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-700 disabled:bg-violet-300"
+            disabled={saving || disabled}
+            onClick={() => submit(false)}
+          >
+            {saving ? "Saving…" : "Save training"}
+          </button>
+          <button
+            type="button"
+            className="rounded-lg bg-amber-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-900 disabled:opacity-60"
+            disabled={saving || disabled}
+            onClick={() => submit(true)}
+          >
+            Save and retry this question
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function PipelineSteps({ current, plan, compact }) {
@@ -99,9 +242,28 @@ export default function DbAgentChatModal({ open, onClose, sessionName }) {
   const [pipelineStage, setPipelineStage] = useState("");
   const [livePlan, setLivePlan] = useState(null);
   const [liveTools, setLiveTools] = useState([]);
+  const [liveTrace, setLiveTrace] = useState([]);
   const [sending, setSending] = useState(false);
+  const [trainingCount, setTrainingCount] = useState(0);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/db-chat/training", { credentials: "include" });
+        const json = await res.json();
+        if (!cancelled && res.ok) setTrainingCount(json.count || 0);
+      } catch {
+        // training count is optional
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -137,6 +299,7 @@ export default function DbAgentChatModal({ open, onClose, sessionName }) {
     setPipelineStage("plan");
     setLivePlan(null);
     setLiveTools([]);
+    setLiveTrace([]);
 
     const assistant = {
       role: "assistant",
@@ -147,6 +310,12 @@ export default function DbAgentChatModal({ open, onClose, sessionName }) {
       plan: null,
       pipeline: [],
       reviewed: false,
+      needsTraining: false,
+      sourceQuestion: prompt,
+      reviewIssues: [],
+      missingCollections: [],
+      trained: false,
+      trace: null,
     };
 
     try {
@@ -190,6 +359,9 @@ export default function DbAgentChatModal({ open, onClose, sessionName }) {
               : `Querying with ${payload.name}…`
           );
         }
+        if (event === "trace" && payload.step) {
+          setLiveTrace((prev) => [...prev, payload.step]);
+        }
         if (event === "review") {
           setStatus(
             payload.approved
@@ -224,6 +396,11 @@ export default function DbAgentChatModal({ open, onClose, sessionName }) {
       assistant.plan = donePayload.plan || assistant.plan;
       assistant.pipeline = donePayload.pipeline || [];
       assistant.reviewed = Boolean(donePayload.reviewed);
+      assistant.needsTraining = Boolean(donePayload.needsTraining);
+      assistant.sourceQuestion = donePayload.question || prompt;
+      assistant.reviewIssues = donePayload.reviewIssues || [];
+      assistant.missingCollections = donePayload.missingCollections || [];
+      assistant.trace = donePayload.trace || null;
       setMessages([...nextMessages, assistant]);
     } catch (error) {
       assistant.error = error.message || "Failed to fetch from MongoDB";
@@ -237,6 +414,7 @@ export default function DbAgentChatModal({ open, onClose, sessionName }) {
       setPipelineStage("");
       setLivePlan(null);
       setLiveTools([]);
+      setLiveTrace([]);
       inputRef.current?.focus();
     }
   };
@@ -265,7 +443,10 @@ export default function DbAgentChatModal({ open, onClose, sessionName }) {
             <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
               {sessionName ? `${sessionName} · ` : ""}
               This mode plans collections, runs aggregations and joins, then a
-              reviewer checks the evidence before showing an answer.
+              reviewer checks the evidence before showing an answer. When a
+              review fails, you can teach the collections and join fields; that
+              training is reused on every later prompt
+              {trainingCount > 0 ? ` (${trainingCount} lesson${trainingCount === 1 ? "" : "s"} saved)` : ""}.
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
@@ -390,6 +571,22 @@ export default function DbAgentChatModal({ open, onClose, sessionName }) {
                   {message.error && (
                     <p className="mt-2 text-xs text-rose-600">{message.error}</p>
                   )}
+                  {!isUser && message.trace && <DbAgentTrace trace={message.trace} />}
+                  {!isUser && message.needsTraining && (
+                    <TrainingPanel
+                      message={message}
+                      disabled={sending}
+                      onSaved={(count) => {
+                        if (typeof count === "number") setTrainingCount(count);
+                        setMessages((prev) =>
+                          prev.map((item, itemIndex) =>
+                            itemIndex === index ? { ...item, trained: true } : item
+                          )
+                        );
+                      }}
+                      onRetry={(question) => sendPrompt(question)}
+                    />
+                  )}
                 </div>
               </div>
             );
@@ -413,6 +610,20 @@ export default function DbAgentChatModal({ open, onClose, sessionName }) {
                       {tool.collection ? ` · ${tool.collection}` : ""}
                     </span>
                   ))}
+                </div>
+              )}
+              {liveTrace.filter((step) => step.kind === "mongo").length > 0 && (
+                <div className="mt-2 space-y-1 text-[11px] text-violet-900">
+                  {liveTrace
+                    .filter((step) => step.kind === "mongo")
+                    .map((step, index) => (
+                      <p key={`${step.tool}-${index}`}>
+                        {step.tool}
+                        {step.collection ? ` · ${step.collection}` : ""}
+                        {step.resultCount != null ? ` · ${step.resultCount} row(s)` : ""}
+                        {step.error ? " · error" : ""}
+                      </p>
+                    ))}
                 </div>
               )}
             </div>

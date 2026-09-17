@@ -1,0 +1,256 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-17T09:07:06.980Z",
+  "lessons": [
+    {
+      "id": "e2d16862-3c3c-4c8f-968c-b0bf300e3c72",
+      "createdAt": "2026-09-14T13:30:20.969Z",
+      "createdBy": "suresh.naloor@jalint.com.sa",
+      "question": "for material PLATE 8MM 1.2MX2.4M  what is the current stock - check from com plete stock as well as special stock and display the current stock with all details",
+      "collections": [
+        "completestock",
+        "specialstock",
+        "materials"
+      ],
+      "joins": [],
+      "groupBy": [],
+      "fields": "",
+      "notes": "the latest stock date is mentioned as \"stock-date\" , stock-qty and stock-val can be fetched to get the quantity and value for the material, join the material-code fields of collections, after getting the material-code from material-description in the \"materials\" collection",
+      "reviewerIssues": [
+        "The draft states that there are no records found in all three collections, which is supported by the evidence. However, it does not clarify that the query was executed on all required collections as per the plan.",
+        "The draft does not mention the specific collections checked, which could provide clarity."
+      ],
+      "plan": {
+        "collections": [
+          "completestock",
+          "specialstock",
+          "materials"
+        ],
+        "needsJoin": true,
+        "needsGrouping": false,
+        "groupBy": [],
+        "queryStrategy": "find with filters"
+      }
+    },
+    {
+      "id": "fd6d6f30-4d21-4933-9eac-8a023b96c387",
+      "createdAt": "2026-09-15T09:15:08.963Z",
+      "createdBy": "suresh.naloor@jalint.com.sa",
+      "question": "for the answer which displayed only 'vendor code' and 'total PO value', please indicate the vendor name, and the Purchase order numbers and date included in the total PO value.",
+      "collections": [
+        "vendors",
+        "purchaseorders"
+      ],
+      "joins": [],
+      "groupBy": [
+        "vendors.vendor-code"
+      ],
+      "fields": "",
+      "notes": "The detailed information for the top vendors with the highest total purchase order (PO) values, including their names, PO numbers, and dates, is as follows: 1. **Vendor Name:** AL FANAR COMPANY LTD - **Vendor Code:** 200039 - **Total PO Value:** 98,983,803.50 SAR - **Purchase Orders:** - PO Number: 4500001086, PO Date: 2019-07-04 - PO Number: 4500001976, PO Date: 2021-06-23 - PO Number: 4500002055, PO Date: 2021-08-10 - (Additional PO numbers and dates are available) 2. **Vendor Name:** SIEMENS LIMITED - **Vendor Code:** 100141 - **Total PO Value:** 86,964,958.67 SAR - **Purchase Orders:** - PO Number: 4500000070, PO Date: 2016-09-15 - PO Number: 4500002091, PO Date: 2021-08-30 - (Additional PO numbers and dates are available) 3. **Vendor Name:** SAUDI POWER TRANSFORMERS COMPANY LTD. - SPTC - **Vendor Code:** 201023 - **Total PO Value:** 82,166,645.83 SAR - **Purchase Orders:** - PO Number: 4500001492, PO Date: 2020-07-23 - PO Number: 4500002290, PO Date: 2022-01-17 - (Additional PO numbers and dates are available) 4. **Vendor Name:** HITACHI ENERGY LTD. - **Vendor Code:** 201022 - **Total PO Value:** 65,606,516.90 SAR - **Purchase Orders:** - PO Number: 4500001483, PO Date: 2020-07-16 - PO Number: 4500001683, PO Date: 2020-12-03 - (Additional PO numbers and dates are available) These results were obtained from the `vendors` and `purchaseorders` collections, providing a comprehensive view of the vendors with their respective PO details.\n\nthis result is actually ok, so retry and display the result. the only issue is this provides non-unique purchaseorder numbers because it is not aggregating by line numbers",
+      "reviewerIssues": [
+        "The draft claims to provide purchase order numbers and dates, but the evidence shows that the 'purchaseorders' collection returned no results."
+      ],
+      "plan": {
+        "collections": [
+          "vendors",
+          "purchaseorders",
+          "vendorsandtheirpo"
+        ],
+        "needsJoin": true,
+        "needsGrouping": true,
+        "groupBy": [
+          "vendors.vendor-code"
+        ],
+        "queryStrategy": "aggregate $lookup to join vendors and purchaseorders, then $group by vendor code"
+      }
+    },
+    {
+      "id": "042ff004-c230-4abe-b549-d9ec6d0b98e7",
+      "createdAt": "2026-09-17T07:09:40.645Z",
+      "createdBy": "suresh.naloor@jalint.com.sa",
+      "question": "fetch the top 5 valued purchase numbers issued in 2026 from 1st January till now. please note purchaseorders collection has PO line numbers, the po-value-sar field value has to be summed up for all line items of PO which are created (po_date) between 01-Jan-2026 and todate. only one collection 'purchaseorders' has all details, no need for any link. but needs aggregation to sum values of po-value-sar",
+      "collections": [
+        "purchaseorders",
+        "vendors"
+      ],
+      "joins": [],
+      "groupBy": [
+        "po-number"
+      ],
+      "fields": "",
+      "notes": "the problem seems to be in this block, lte has wrong dats 'currentDate'  please mention the \"$lte\": \"2026-09-01\" or any such valid date",
+      "reviewerIssues": [
+        "The draft does not explain the aggregation process or the lack of results clearly.",
+        "The query plan indicates a need for aggregation, but the draft simply states no results were found without detailing the aggregation steps."
+      ],
+      "plan": {
+        "collections": [
+          "purchaseorders",
+          "vendors"
+        ],
+        "needsJoin": false,
+        "needsGrouping": true,
+        "groupBy": [
+          "po-number"
+        ],
+        "queryStrategy": "aggregate $match then $group then $sort then $limit"
+      }
+    },
+    {
+      "id": "baee9867-2e14-47fe-bf9c-cb3e32e956c6",
+      "createdAt": "2026-09-17T07:31:58.996Z",
+      "createdBy": "suresh.naloor@jalint.com.sa",
+      "question": "fetch the top 5 valued purchase numbers issued in 2026 from 1st January till now. please note purchaseorders collection has PO line numbers, the po-value-sar field value has to be summed up for all line items of PO which are created (po_date) between 01-Jan-2026 and todate. only one collection 'purchaseorders' has all details, no need for any link. but needs aggregation to sum values of po-value-sar. todate has to be determined using separate function for getting the today's date.",
+      "collections": [
+        "purchaseorders",
+        "vendors"
+      ],
+      "joins": [],
+      "groupBy": [
+        "po-number"
+      ],
+      "fields": "",
+      "notes": "NIL  or empty result is due to incorrect date format, Use ISODate, not \"YYYY-MM-DD\":{\n  \"database\": \"mmportal\",\n  \"collection\": \"purchaseorders\",\n  \"pipeline\": [\n    {\n      \"$match\": {\n        \"po-date\": {\n          \"$gte\": ISODate(\"2026-01-01T00:00:00.000Z\"),\n          \"$lte\": ISODate(\"2026-09-01T23:59:59.999Z\")\n        }\n      }\n    },\n    {\n      \"$group\": {\n        \"_id\": \"$po-number\",\n        \"totalValue\": { \"$sum\": \"$po-value-sar\" }\n      }\n    },\n    { \"$sort\": { \"totalValue\": -1 } },\n    { \"$limit\": 5 }\n  ]\n}\nif only json is accepted, \"po-date\": {\n  \"$gte\": { \"$date\": \"2026-01-01T00:00:00.000Z\" },\n  \"$lte\": { \"$date\": \"2026-09-01T23:59:59.999Z\" }\n}",
+      "reviewerIssues": [],
+      "plan": {
+        "collections": [
+          "purchaseorders",
+          "vendors"
+        ],
+        "needsJoin": false,
+        "needsGrouping": true,
+        "groupBy": [
+          "po-number"
+        ],
+        "queryStrategy": "aggregate $match then $group then $sort then $limit"
+      }
+    },
+    {
+      "id": "cb875555-7cb6-46cf-bc8f-2eacea739200",
+      "createdAt": "2026-09-17T07:35:23.094Z",
+      "createdBy": "suresh.naloor@jalint.com.sa",
+      "question": "fetch the top 5 valued purchase numbers issued in 2026 from 1st January till now. please note purchaseorders collection has PO line numbers, the po-value-sar field value has to be summed up for all line items of PO which are created (po_date) between 01-Jan-2026 and todate. only one collection 'purchaseorders' has all details, no need for any link. but needs aggregation to sum values of po-value-sar. todate has to be determined using separate function for getting the today's date. use the correct date format, see training notes.",
+      "collections": [
+        "purchaseorders",
+        "vendors"
+      ],
+      "joins": [],
+      "groupBy": [
+        "po-number"
+      ],
+      "fields": "",
+      "notes": "why 2023 year was used for upper range (LTE)  {\n      \"$match\": {\n        \"po-date\": {\n          \"$gte\": {\n            \"$date\": \"2026-01-01T00:00:00.000Z\"\n          },\n          \"$lte\": {\n            \"$date\": \"2023-10-01T23:59:59.999Z\"\n          }\n        }\n      }\n    },\nplease use correct year which is 2026, month - september, date -16",
+      "reviewerIssues": [
+        "The draft does not suggest checking the date range or the presence of relevant entries in the collection, which could help the user understand why no results were found."
+      ],
+      "plan": {
+        "collections": [
+          "purchaseorders",
+          "vendors"
+        ],
+        "needsJoin": false,
+        "needsGrouping": true,
+        "groupBy": [
+          "po-number"
+        ],
+        "queryStrategy": "aggregate $match then $group"
+      }
+    },
+    {
+      "id": "088f0cbf-dad0-485c-9802-d0593e38a15d",
+      "createdAt": "2026-09-17T08:24:58.489Z",
+      "createdBy": "suresh.naloor@jalint.com.sa",
+      "question": "sorry it was a wrong prompt- please display top 5 purchase orders for the year 2024. (1st January till 31st Dec 2024)",
+      "collections": [
+        "purchaseorders"
+      ],
+      "joins": [],
+      "groupBy": [
+        "po-number"
+      ],
+      "fields": "",
+      "notes": "the draft answer was correct, yes the user requested only purchase order details, so po line item and vendor need not have been fetrched, but the agent went over and above the request which is ok, please let reviewer appove the result where trhe agent gives some result which is more than what is requested by user but however the answer is correct which reviewer accepts - see the comments - The draft answer includes details about the purchase orders, but it does not fully align with the evidence provided. The draft claims to show the top 5 purchase orders for 2024, but it does not confirm that the query was executed with the correct date filters or that it aggregated the results properly. Additionally, the draft includes line items and vendor details that may not be fully supported by the evidence.\n\nThe draft does not confirm that the query was executed with the correct date filters for the year 2024.\nThe draft includes line items and vendor details that may not be fully supported by the evidence.\nThe draft does not specify if the aggregation was performed correctly to ensure the top 5 purchase orders were accurately identified.\nRetry: Run an aggregate query on the 'purchaseorders' collection with a $match stage to filter for the date range from January 1, 2024, to December 31, 2024. Then, group by 'po-number' and sum 'po-value-sar', followed by sorting the results in descending order and limiting the output to the top 5 purchase orders.",
+      "reviewerIssues": [
+        "The draft does not confirm that the query was executed with the correct date filters for the year 2024.",
+        "The draft includes line items and vendor details that may not be fully supported by the evidence.",
+        "The draft does not specify if the aggregation was performed correctly to ensure the top 5 purchase orders were accurately identified."
+      ],
+      "plan": {
+        "collections": [
+          "purchaseorders"
+        ],
+        "needsJoin": false,
+        "needsGrouping": true,
+        "groupBy": [
+          "po-number"
+        ],
+        "queryStrategy": "aggregate $match then $group then $sort then $limit"
+      }
+    },
+    {
+      "id": "bec02a11-3e04-4aa5-aadc-6bab60ffb77d",
+      "createdAt": "2026-09-17T08:32:21.771Z",
+      "createdBy": "suresh.naloor@jalint.com.sa",
+      "question": "good, now for the above result i.e, top 5 valued purchase orders for year 2024, please display the vendor name also and display the po line items along with line items SAR values also",
+      "collections": [
+        "purchaseorders",
+        "vendors",
+        "vendorsandtheirpo"
+      ],
+      "joins": [],
+      "groupBy": [
+        "po-number"
+      ],
+      "fields": "",
+      "notes": "Retry: Run an aggregate query on the 'purchaseorders' collection with a $match stage to filter for the date range from January 1, 2024, to December 31, 2024. Then, group by 'po-number' and sum 'po-value-sar', followed by a $lookup to join with the 'vendors' collection to fetch vendor names. Ensure that the line items are included in the results and that the aggregation is performed correctly to avoid non-unique purchase order numbers.",
+      "reviewerIssues": [
+        "The draft does not confirm that the query was executed with the correct date filters for the year 2024.",
+        "The draft does not specify if the aggregation was performed correctly to ensure the top 5 purchase orders were accurately identified.",
+        "The draft includes non-unique purchase order numbers, indicating a potential issue with the aggregation."
+      ],
+      "plan": {
+        "collections": [
+          "purchaseorders",
+          "vendors",
+          "vendorsandtheirpo"
+        ],
+        "needsJoin": true,
+        "needsGrouping": true,
+        "groupBy": [
+          "po-number"
+        ],
+        "queryStrategy": "aggregate $match then $group, followed by $lookup for vendor details and line items"
+      }
+    },
+    {
+      "id": "c80df6da-f189-4d9f-90e0-ca332887564d",
+      "createdAt": "2026-09-17T09:07:06.980Z",
+      "createdBy": "suresh.naloor@jalint.com.sa",
+      "question": "please display top 5 purchase orders for the year 2024. (1st January till 31st Dec 2024)",
+      "collections": [
+        "purchaseorders"
+      ],
+      "joins": [],
+      "groupBy": [
+        "po-number"
+      ],
+      "fields": "",
+      "notes": "the result is perfectly valid, it shows top 5 purchase orders, it shows the vendors and also displays the line items of each PO with their values, reviewer to approve the result, since the result is as expected",
+      "reviewerIssues": [
+        "The draft does not confirm that the query was executed with the correct date filters for the year 2024.",
+        "The draft does not specify if the aggregation was performed correctly to ensure the top 5 purchase orders were accurately identified."
+      ],
+      "plan": {
+        "collections": [
+          "purchaseorders"
+        ],
+        "needsJoin": false,
+        "needsGrouping": true,
+        "groupBy": [
+          "po-number"
+        ],
+        "queryStrategy": "aggregate $match then $group"
+      }
+    }
+  ]
+}

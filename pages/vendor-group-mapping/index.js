@@ -3,8 +3,13 @@ import { useRouter } from 'next/router';
 import HeaderNewComponent from '../../components/HeaderNewComponent';
 import FooterComponent from '../../components/FooterComponent';
 
+function escapeRegex(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 export default function VendorGroupMappingPage() {
   const router = useRouter();
+  const searchBoxRef = useRef(null);
   const [groups, setGroups] = useState([]);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -27,15 +32,15 @@ export default function VendorGroupMappingPage() {
           const data = await response.json();
           
           // Create options for the search - flatten groups and subgroups
-          const options = data.flatMap(group => 
-            group.subgroups.map(subgroup => ({
+          const options = data.flatMap((group) =>
+            (group.subgroups || []).map((subgroup) => ({
               value: subgroup._id,
               label: `${group.name} - ${subgroup.name}`,
               groupName: group.name,
               subgroupName: subgroup.name,
               groupId: group._id,
               subgroupId: subgroup._id,
-              isService: group.isService
+              isService: group.isService,
             }))
           );
           
@@ -56,18 +61,30 @@ export default function VendorGroupMappingPage() {
 
   // Filter options based on search term
   useEffect(() => {
-    if (!searchFilter) {
-      setFilteredOptions(groups);
+    const term = searchFilter.trim();
+    if (term.length < 3) {
+      setFilteredOptions([]);
       return;
     }
 
-    const searchRegex = new RegExp(searchFilter, 'i');
-    const filtered = groups.filter(option => 
-      searchRegex.test(option.groupName) || 
+    const searchRegex = new RegExp(escapeRegex(term), 'i');
+    const filtered = groups.filter((option) =>
+      searchRegex.test(option.label) ||
+      searchRegex.test(option.groupName) ||
       searchRegex.test(option.subgroupName)
     );
     setFilteredOptions(filtered);
   }, [searchFilter, groups]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Fetch vendors when option is selected
   useEffect(() => {
@@ -100,7 +117,11 @@ export default function VendorGroupMappingPage() {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchFilter(value);
-    setShowDropdown(value.length > 0);
+    setShowDropdown(value.trim().length > 0);
+    if (selectedOption && value !== selectedOption.label) {
+      setSelectedOption(null);
+      setVendors([]);
+    }
   };
 
   const handleOptionSelect = (option) => {
@@ -142,8 +163,8 @@ export default function VendorGroupMappingPage() {
           </div>
 
           {/* Search Controls */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/70 shadow-[0_18px_45px_rgba(15,23,42,0.18)] p-6 mb-8 transform transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(15,23,42,0.35)]">
-            <div className="relative">
+          <div className="relative z-20 bg-white/90 rounded-2xl border border-white/70 shadow-[0_18px_45px_rgba(15,23,42,0.18)] p-6 mb-8">
+            <div ref={searchBoxRef}>
               <label htmlFor="groupSearch" className="block text-xs md:text-sm font-semibold text-slate-800 mb-2 tracking-wide uppercase">
                 Search Group-Subgroup Combinations
                 {loading && (
@@ -156,13 +177,15 @@ export default function VendorGroupMappingPage() {
                   type="text"
                   value={searchFilter}
                   onChange={handleSearchChange}
-                  onFocus={() => setShowDropdown(searchFilter.length > 0)}
+                  onFocus={() => setShowDropdown(searchFilter.trim().length > 0)}
                   placeholder="Type to search groups or subgroups (min 3 characters)..."
                   disabled={loading}
-                  className="w-full px-3 py-2 pr-10 border border-slate-200 rounded-xl shadow-inner bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100 disabled:cursor-not-allowed placeholder:text-slate-400 text-sm md:text-base"
+                  autoComplete="off"
+                  className="w-full px-3 py-2 pr-10 border border-slate-200 rounded-xl shadow-inner bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100 disabled:cursor-not-allowed placeholder:text-slate-400 text-sm md:text-base"
                 />
                 {searchFilter && (
                   <button
+                    type="button"
                     onClick={clearSelection}
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                     aria-label="Clear search"
@@ -174,35 +197,41 @@ export default function VendorGroupMappingPage() {
                 )}
               </div>
 
-              {/* Dropdown Results */}
-              {showDropdown && filteredOptions.length > 0 && (
-                <div className="absolute z-50 w-full mt-1 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-xl shadow-[0_16px_40px_rgba(15,23,42,0.25)] max-h-60 overflow-y-auto">
-                  {filteredOptions.map((option) => (
-                    <div
-                      key={option.value}
-                      onClick={() => handleOptionSelect(option)}
-                      className="p-3 hover:bg-blue-50/80 cursor-pointer border-b border-slate-100 last:border-b-0 transition-colors duration-150"
-                    >
-                      <div className="font-medium text-slate-900">{option.label}</div>
-                      <div className="text-xs md:text-sm text-slate-600">
-                        {option.isService ? 'Service' : 'Material'} Group
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* No results message */}
-              {showDropdown && searchFilter.length >= 3 && filteredOptions.length === 0 && (
-                <div className="absolute z-50 w-full mt-1 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-xl shadow-[0_16px_40px_rgba(15,23,42,0.25)] p-3 text-center text-slate-500 text-sm">
-                  No groups or subgroups found matching "{searchFilter}"
-                </div>
-              )}
-
-              {/* Minimum characters message */}
-              {showDropdown && searchFilter.length > 0 && searchFilter.length < 3 && (
-                <div className="absolute z-50 w-full mt-1 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-xl shadow-[0_16px_40px_rgba(15,23,42,0.25)] p-3 text-center text-slate-500 text-sm">
+              {showDropdown && searchFilter.trim().length > 0 && searchFilter.trim().length < 3 && (
+                <div className="mt-3 rounded-xl border border-slate-200 bg-white p-3 text-center text-slate-500 text-sm">
                   Please enter at least 3 characters to search
+                </div>
+              )}
+
+              {showDropdown && searchFilter.trim().length >= 3 && filteredOptions.length === 0 && (
+                <div className="mt-3 rounded-xl border border-slate-200 bg-white p-3 text-center text-slate-500 text-sm">
+                  No groups or subgroups found matching "{searchFilter.trim()}"
+                </div>
+              )}
+
+              {showDropdown && searchFilter.trim().length >= 3 && filteredOptions.length > 0 && (
+                <div className="mt-3 rounded-xl border border-slate-200 bg-white shadow-inner">
+                  <div className="sticky top-0 z-10 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-600 bg-slate-50 border-b border-slate-200 rounded-t-xl">
+                    {filteredOptions.length} matching group{filteredOptions.length === 1 ? '' : 's'}
+                  </div>
+                  <ul className="max-h-[min(28rem,70vh)] overflow-y-auto overscroll-contain">
+                    {filteredOptions.map((option) => (
+                      <li key={option.value}>
+                        <button
+                          type="button"
+                          onClick={() => handleOptionSelect(option)}
+                          className={`w-full text-left p-3 hover:bg-blue-50 cursor-pointer border-b border-slate-100 last:border-b-0 transition-colors duration-150 ${
+                            selectedOption?.value === option.value ? 'bg-blue-50' : ''
+                          }`}
+                        >
+                          <div className="font-medium text-slate-900">{option.label}</div>
+                          <div className="text-xs md:text-sm text-slate-600">
+                            {option.isService ? 'Service' : 'Material'} Group
+                          </div>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>
@@ -356,7 +385,7 @@ export default function VendorGroupMappingPage() {
           )}
 
           {/* Instructions */}
-          {!selectedOption && (
+          {!selectedOption && !showDropdown && (
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-white/70 shadow-[0_18px_45px_rgba(15,23,42,0.18)] p-8 text-center">
               <svg className="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
