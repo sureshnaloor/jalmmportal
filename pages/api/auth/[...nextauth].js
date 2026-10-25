@@ -4,8 +4,33 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { connectToDatabase } from "../../../lib/mongoconnect";
 import bcrypt from "bcrypt";
 
+function isStaleJwtCookieError(code, metadata) {
+  const name = metadata?.name || metadata?.error?.name || "";
+  const message = metadata?.message || metadata?.error?.message || "";
+  return (
+    code === "JWT_SESSION_ERROR" &&
+    (name === "JWEDecryptionFailed" || /decryption operation failed/i.test(message))
+  );
+}
+
 const authOptions = {
-  debug: process.env.NODE_ENV === 'development',
+  debug: process.env.NODE_ENV === "development",
+  // Stale next-auth cookies (old secret / leftover session) fail decrypt but
+  // login still works. Do not log those as errors.
+  logger: {
+    error(code, metadata) {
+      if (isStaleJwtCookieError(code, metadata)) return;
+      console.error("[next-auth][error][%s]", code, metadata);
+    },
+    warn(code) {
+      console.warn("[next-auth][warn][%s]", code);
+    },
+    debug(code, metadata) {
+      if (process.env.NODE_ENV === "development") {
+        console.debug("[next-auth][debug][%s]", code, metadata);
+      }
+    },
+  },
   //configure auth providers
   providers: [
     CredentialsProvider({
@@ -87,7 +112,7 @@ const authOptions = {
     },
   },
  
-  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-development',
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);

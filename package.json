@@ -10,6 +10,7 @@
     "lint": "next lint",
     "export:open-balances": "node scripts/exportOpenGrAndStockBalance.js",
     "index:material-vectors": "node scripts/indexMaterialVectors.js",
+    "index:material-vectors-2": "node scripts/indexMaterialVectors2.js",
     "mcp:mongodb": "node scripts/mongodb-mcp-stdio.js",
     "mcp:mongodb:check": "node scripts/mongodb-mcp-stdio.js --check"
   },

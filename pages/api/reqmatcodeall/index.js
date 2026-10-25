@@ -58,6 +58,8 @@ export default async function handler(req, res) {
         similarMaterialCodes: Array.isArray(req.body.similarMaterialCodes)
           ? req.body.similarMaterialCodes
           : [],
+        copiedFromMaterialCode: String(req.body.copiedFromMaterialCode || "").trim(),
+        copiedFromDescription: String(req.body.copiedFromDescription || "").trim(),
       });
 
       return res.status(201).json({
